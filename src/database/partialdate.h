@@ -83,7 +83,7 @@ private:
 	unsigned char m_month;
 	unsigned char m_day;
     bool m_bIsValid;
-	QString numberToString(int d, QChar fill = '0') const;
+    QString numberToString(int d, QChar fill = QChar('0')) const;
 };
 
 const PartialDate PDMaxDate(9999);

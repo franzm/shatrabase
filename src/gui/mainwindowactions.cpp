@@ -45,6 +45,8 @@
 #include <QPixmap>
 #include <QProgressBar>
 #include <QStatusBar>
+#include <QMessageBox>
+#include <QMenu>
 
 #include <QDebug>
 

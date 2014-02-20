@@ -26,8 +26,12 @@ TableView::TableView(QWidget *parent)
 	verticalHeader()->hide();
 	horizontalHeader()->setHighlightSections(false);
     horizontalHeader()->setStretchLastSection(true);
+#if QT_VERSION >= 0x050000
+    horizontalHeader()->setSectionsMovable(true);
+#else
     horizontalHeader()->setMovable(true);
-	setTabKeyNavigation(false);
+#endif
+    setTabKeyNavigation(false);
     setContextMenuPolicy(Qt::CustomContextMenu);
     horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 

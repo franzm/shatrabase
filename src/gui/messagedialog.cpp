@@ -15,6 +15,7 @@
 #include <QtGui>
 #include <QMessageBox>
 #include <QApplication>
+#include <QPushButton>
 
 void MessageDialog::error(const QString& text, const QString& title)
 {
