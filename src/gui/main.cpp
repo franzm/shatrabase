@@ -18,6 +18,7 @@
 #include "settings.h"
 #include "logstream.h"
 
+#include "boardview.h"
 int main(int argc, char** argv)
 {
 	AppSettings = new Settings;

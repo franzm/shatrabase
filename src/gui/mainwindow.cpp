@@ -100,7 +100,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	m_boardView->setObjectName("BoardView");
     m_boardView->setMinimumSize(200, 320);
     m_boardView->resize(400, 640);
-	connect(this, SIGNAL(reconfigure()), m_boardView, SLOT(configure()));
+    connect(this, SIGNAL(reconfigure()), m_boardView, SLOT(configure()));
     connect(m_boardView, SIGNAL(moveMade(Square, Square, int)), SLOT(slotBoardMove(Square, Square, int)));
     connect(m_boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotBoardClick(Square, int, QPoint)));
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));

@@ -51,13 +51,18 @@ BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
     QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	policy.setHeightForWidth(true);
 	setSizePolicy(policy);
-	setMouseTracking(true);
-	installEventFilter(this);
+    setMouseTracking(true);
+    //installEventFilter(this); XXX currently not used
 	m_board.setStandardPosition();
+
+    setBackgroundRole(QPalette::Link);
+    setAutoFillBackground(true);
 }
 
 BoardView::~BoardView()
-{}
+{
+
+}
 
 bool BoardView::eventFilter(QObject *obj, QEvent *ev)
 {
@@ -97,8 +102,6 @@ void BoardView::showMoveIndicator(bool visible )
 void BoardView::drawSquares(QPaintEvent* event)
 {
     QPainter p(this); int x, y;
-    setBackgroundRole(QPalette::Link);
-    setAutoFillBackground(true);
 
     for (Square sq = fsq; sq <= lsq; sq++)
     {
@@ -239,9 +242,11 @@ void BoardView::resizeBoard()
     m_scale = ((size+12)>>3) + 1;
 }
 
-void BoardView::resizeEvent(QResizeEvent*)
+void BoardView::resizeEvent(QResizeEvent * event)
 {
+    QWidget::resizeEvent(event);
     resizeBoard();
+
 //    parentWidget()->updateGeometry();
 //    parentWidget()->layout()->update();
 }
