@@ -44,26 +44,26 @@ public:
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
             square (square),
-            selected (false)
+            highlight (false)
     { }
+
+    Square square;
+    bool highlight;
+    QBrush highlightBrush;
 
 protected:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
     {
         QGraphicsPixmapItem::paint(painter, option, widget);
-        if (selected)
+        if (highlight)
         {
             painter->setPen(QPen(Qt::NoPen));
-            painter->setBrush(QBrush(QColor(100,255,100,100)));
+            painter->setBrush(highlightBrush);
             painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
         }
     }
 
-public:
-
-    Square square;
-    bool selected;
 };
 
 class PieceItem : public QGraphicsPixmapItem
@@ -87,7 +87,6 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     QGraphicsView   (parent),
     m_theme         (theme),
     m_scene         (new QGraphicsScene(this)),
-    m_selected_square(0),
     m_drag_piece    (0),
     m_center        (4.5,7),
     m_size          (50),
@@ -120,8 +119,6 @@ void BoardPainter::createBoard_(const Board& board)
     for (size_t i=0; i<m_squares.size(); ++i)
         delete m_squares[i];
     m_squares.clear();
-
-    m_selected_square = 0;
 
     // create board squares
     for (Square i=fsq; i<=lsq; ++i)
@@ -231,31 +228,34 @@ SquareItem * BoardPainter::squareItemAt(Square sq) const
 
 // ---------------- highlights ---------------------
 
-void BoardPainter::selectSquare(Square sq)
+void BoardPainter::setSquareColor(Square sq, const QColor& color)
 {
-    //if previously selected
-    if (m_selected_square)
+    SquareItem * s = squareItemAt(sq);
+    if (!s) return;
+
+    QColor col(color);
+    col.setAlpha(100);
+
+    s->highlight = true;
+    s->highlightBrush = QBrush(col);
+    s->update();
+}
+
+void BoardPainter::clearSquareColor(Square sq)
+{
+    SquareItem * s = squareItemAt(sq);
+    if (s) { s->highlight = false; s->update(); }
+}
+
+void BoardPainter::clearSquareColors()
+{
+    for (size_t i=0; i<m_squares.size(); ++i)
     {
-        // dont update what's not needed
-        if (m_selected_square->square == sq)
-            return;
-
-        // unslect
-        if (m_selected_square->selected)
-        {
-            m_selected_square->selected = false;
-            m_selected_square->update();
-        }
-    }
-
-    m_selected_square = squareItemAt(sq);
-
-    if (m_selected_square)
-    {
-        m_selected_square->selected = true;
-        m_selected_square->update();
+        m_squares[i]->highlight = false;
+        m_squares[i]->update();
     }
 }
+
 
 void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
 {

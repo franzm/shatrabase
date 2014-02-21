@@ -503,24 +503,22 @@ void BoardView::configure()
 
 void BoardView::selectSquare(Square s)
 {
-    if (m_view)
-        m_view->selectSquare(s);
-    m_selectedSquare = s;
+    if (s == m_selectedSquare) return;
 
-    /*
     unselectSquare();
-    update(squareRect(s));
-    */
+
+    if (m_view)
+        m_view->setSquareColor(s, m_theme.color(BoardTheme::Highlight));
+
+    m_selectedSquare = s;
 }
 
 void BoardView::unselectSquare()
 {
-    if (m_view)
-        m_view->selectSquare(InvalidSquare);
-    //Square prev = m_selectedSquare;
+    if (m_selectedSquare != InvalidSquare && m_view)
+        m_view->clearSquareColor(m_selectedSquare);
+
     m_selectedSquare = InvalidSquare;
-    //if (prev != InvalidSquare)
-    //    update(squareRect(prev));
 }
 /*
 QRect BoardView::squareRect(Square square)

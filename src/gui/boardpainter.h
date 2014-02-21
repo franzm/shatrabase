@@ -52,10 +52,11 @@ public:
 
     // --------- inidicators ---------
 
-    /** Shows selection frame for Square @p sq.
-        Turns off selection if sq == InvalidSquare.
-        Any previous selection will be cleared. */
-    void selectSquare(Square sq = InvalidSquare);
+    /** Shows a half-transparent rect on Square @p sq.
+        Any previous color will be overwritten. */
+    void setSquareColor(Square sq, const QColor& color);
+    void clearSquareColor(Square sq);
+    void clearSquareColors();
 
     /** Starts drag/move animation.
         @p view is the mouse coords for the piece.
@@ -95,7 +96,7 @@ protected:
 
     std::vector<SquareItem*> m_squares;
     std::vector<PieceItem*> m_pieces;
-    SquareItem * m_selected_square;
+    /** currently dragged piece */
     PieceItem * m_drag_piece;
 
     /** center position (in squares) of board */
