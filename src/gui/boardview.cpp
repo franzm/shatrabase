@@ -13,6 +13,7 @@
 #include "boardview.h"
 #include "settings.h"
 #include "movelist.h"
+#include "boardpainter.h"
 
 #include <QApplication>
 #include <QSizePolicy>
@@ -40,6 +41,7 @@ const int gBoard[64][2] = // graphics board x, y
 
 
 BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
+    m_view(0),
     m_flipped(false), m_showFrame(false), m_showCurrentMove(true),
     m_selectedSquare(InvalidSquare), m_hoverSquare(InvalidSquare),
     m_hiFrom(InvalidSquare), m_hiTo(InvalidSquare),
@@ -57,6 +59,7 @@ BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
 
     setBackgroundRole(QPalette::Link);
     setAutoFillBackground(true);
+
 }
 
 BoardView::~BoardView()
@@ -224,17 +227,18 @@ void BoardView::drawPieces(QPaintEvent* event)
 }
 void BoardView::paintEvent(QPaintEvent* event)
 {
+    QWidget::paintEvent(event);/*
     drawSquares(event);
     drawSquareAnnotations(event);
     drawPieces(event);
     drawMoveIndicator(event);
     drawArrowAnnotations(event);
-    drawDraggedPieces(event);
+    drawDraggedPieces(event);*/
 }
 
 void BoardView::resizeBoard()
 {
-    int xsize = width() / 7;
+    int xsize = width() / (1+7+1);
     int ysize = height() / 14;
     int size = xsize < ysize? xsize : ysize;
     m_theme.setSize(QSize(size, size));
@@ -460,6 +464,11 @@ void BoardView::configure()
     AppSettings->endGroup();
     m_theme.configure();
 	unselectSquare();
+
+    // recreate BoardPainter
+    if (m_view) delete m_view;
+    m_view = new BoardPainter(&m_theme, this);
+
 	update();
 }
 
