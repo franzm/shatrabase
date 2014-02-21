@@ -91,9 +91,14 @@ public:
             piece  (piece),
             square (square)
     { }
-
+    /** associated Piece */
     Piece piece;
-    Square square;
+    /** assoiciated Square */
+    Square square,
+    /** Square to go to in animation */
+        squareTo;
+    /** should this piece be animated (square > squareTo) */
+    bool animate;
 };
 
 
@@ -109,14 +114,22 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_scene         (new QGraphicsScene(this)),
     m_drag_piece    (0),
     m_center        (4.5,7),
-    m_size          (50),
-    m_flipped       (false)
+    m_size          (0),
+    m_flipped       (false),
+    m_anim_speed    (6)
 {    
     setScene(m_scene);
 
-    m_theme->setSize(QSize(m_size, m_size));
+    // get size of the bitmaps
+    m_size = m_theme->rect().width();
 
+    // get hover events
     setMouseTracking(true);
+
+    // timer for animations
+    m_timer.setInterval(1000/30);
+    connect(&m_timer, &QTimer::timeout, this, &BoardPainter::animationStep);
+
 #if (0) // XXX that basically works ;)
     QTransform t = transform();
     t.rotate(70, Qt::XAxis);
@@ -129,6 +142,19 @@ void BoardPainter::setBoard(const Board& board, int from, int to)
 {
     createBoard_(board);
     createPieces_(board);
+    if (from != InvalidSquare && to != InvalidSquare)
+    {
+        PieceItem * p = pieceItemAt(to);
+        if (!p) return; // or throw a logic exception ;)
+
+        // setup the piece to animate
+        p->square = from; // put back to start
+        p->squareTo = to;
+        p->animate = true;
+        p->setPos(squarePos(p->square));
+        // run an animation thread
+        startAnimation_(from,to);
+    }
 }
 
 
@@ -259,6 +285,17 @@ SquareItem * BoardPainter::squareItemAt(Square sq) const
     return 0;
 }
 
+PieceItem * BoardPainter::pieceItemAt(Square sq) const
+{
+    if (!(sq>=fsq && sq<=lsq)) return 0;
+
+    // search the PieceItem that fits
+    for (size_t i=0; i<m_pieces.size(); ++i)
+        if (m_pieces[i]->square == sq)
+            return m_pieces[i];
+
+    return 0;
+}
 
 // ---------------- highlights ---------------------
 
@@ -313,4 +350,63 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
     }
 
     m_drag_piece->setPos(mapToScene(view) - QPointF(m_size>>1,m_size>>1));
+}
+
+
+
+
+// --------------------- animation -------------------------
+
+void BoardPainter::startAnimation_(Square from, Square to)
+{
+    qreal dx = gBoard[from][0] - gBoard[to][0],
+          dy = gBoard[from][1] - gBoard[to][1],
+          dist = sqrt(dx*dx + dy*dy);
+
+    if (dist <= 0) return;
+
+    m_anim_length = m_anim_speed / dist;
+
+    m_anim_t = 0;
+    m_timer.start();
+}
+
+void BoardPainter::stopAnimation_()
+{
+    m_timer.stop();
+
+    // set pieces to final positions (to be safe)
+    for (size_t i=0; i<m_pieces.size(); ++i)
+    if (m_pieces[i]->animate)
+    {
+        m_pieces[i]->square = m_pieces[i]->squareTo;
+
+        m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
+    }
+
+    emit moveFinished();
+}
+
+void BoardPainter::animationStep()
+{
+    const qreal step = m_anim_length * m_timer.interval() / 1000.0;
+    m_anim_t += step;
+
+    if (m_anim_t >= 1)
+        stopAnimation_();
+
+    // go through all pieces
+    // XXX This is the generalized approach to move
+    // more than one piece at the same time (but why?)
+    for (size_t i=0; i<m_pieces.size(); ++i)
+    if (m_pieces[i]->animate)
+    {
+        QPointF
+            from = squarePos(m_pieces[i]->square),
+            to = squarePos(m_pieces[i]->squareTo);
+
+        from += m_anim_t * (to - from);
+
+        m_pieces[i]->setPos(from);
+    }
 }

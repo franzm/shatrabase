@@ -193,8 +193,8 @@ void BoardTheme::updateSquares()
 		m_square[1] =  m_originalSquare[1].scaled(size(), Qt::IgnoreAspectRatio,
 				Qt::SmoothTransformation);
 	} else {
-		m_square[0] =  m_originalSquare[0].copy(rect());
-		m_square[1] =  m_originalSquare[1].copy(rect());
+        m_square[0] =  m_originalSquare[0].copy(rect());
+        m_square[1] =  m_originalSquare[1].copy(rect());
 	}
 }
 

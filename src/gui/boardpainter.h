@@ -16,6 +16,7 @@
 #include <QGraphicsView>
 #include <QPoint>
 #include <QMouseEvent>
+#include <QTimer>
 
 #include "../database/common.h"
 #include "board.h"
@@ -47,7 +48,12 @@ public:
     // --------- board/pieces --------
 
     /** Updates/creates the board pieces, and performs the animation if
-     *  from and to != InvalidSquare */
+        from and to != InvalidSquare.
+        Currently this clears all hightlights.
+        If @p from and @p to are set appropriately an animation will be
+        triggered for that piece and the moveFinished() signal is emitted
+        when the animation is done.
+        */
     void setBoard(const Board& board, int from = InvalidSquare, int to = InvalidSquare);
 
     // --------- inidicators ---------
@@ -63,7 +69,13 @@ public:
         Set @p sq to InvalidSquare to stop dragging. */
     void setDragPiece(Square sq = InvalidSquare, Piece piece = InvalidPiece,
                       const QPoint& view = QPoint());
-public slots:
+signals:
+
+    void moveFinished();
+
+protected slots:
+
+    void animationStep();
 
     // ________ PROTECTED ____________
 protected:
@@ -82,17 +94,28 @@ protected:
 
     /** Returns the SquareItem for the position, or 0 */
     SquareItem * squareItemAt(Square sq) const;
+    /** Returns the PieceItem for the position, or 0 */
+    PieceItem * pieceItemAt(Square sq) const;
 
     // --------- internal ------------
 
     void createBoard_(const Board& board);
     void createPieces_(const Board& board);
 
+    /** starts the animation thread and animates all
+        flagged pieces. @p from and @p to are only
+        used to derive the animation length */
+    void startAnimation_(Square from, Square to);
+    /** stops animation and sets pieces to final position. */
+    void stopAnimation_();
+
     // ----------- member ------------
 
     BoardTheme * m_theme;
 
     QGraphicsScene * m_scene;
+
+    QTimer m_timer;
 
     std::vector<SquareItem*> m_squares;
     std::vector<PieceItem*> m_pieces;
@@ -107,6 +130,13 @@ protected:
 
     bool m_flipped;
 
+    qreal
+    /** piece move animation speed in squares per second */
+        m_anim_speed,
+    /** length of animations in seconds (calculated from speed) */
+        m_anim_length,
+    /** current animation from 0 to 1 */
+        m_anim_t;
 };
 
 #endif // BOARDPAINTER_H

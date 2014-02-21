@@ -496,6 +496,11 @@ void BoardView::configure()
     m_theme.setColor(BoardTheme::CurrentMove, AppSettings->getValue("currentMoveColor").value<QColor>());
     AppSettings->endGroup();
     m_theme.configure();
+    /** @bug There is a segfault at a QPixmap::~QPixmap() in BoardTheme::updateSquares()
+     *  when this is first time called by BoardPainter().
+     *  Might have to do with the runtime qt warnings: 'QPixmap::scaled: Pixmap is a null pixmap'
+     */
+    m_theme.setSize(QSize(50,50));
 	unselectSquare();
 
     // recreate BoardPainter
