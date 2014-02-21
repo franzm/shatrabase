@@ -74,7 +74,7 @@ signals:
     void pieceDropped(Square to, Piece p);
 protected:
     /* Redraws whole board if necessary. */
-    virtual void paintEvent(QPaintEvent*);
+    //virtual void paintEvent(QPaintEvent*);
     /* Automatically resizes pieces and redisplays board. */
     virtual void resizeEvent(QResizeEvent*);
     /* Handle mouse events */
@@ -95,8 +95,6 @@ protected: //Drag'n'Drop Support
 private:
     /* Resizes pieces for new board size. */
     void resizeBoard();
-    /* Calculate size and position of square */
-    QRect squareRect(Square s);
     /* @return square at given position */
     Square squareAt(const QPoint& p) const;
     /* Selects given square. Previously selected square is unselected automatically. */
@@ -105,9 +103,9 @@ private:
     void unselectSquare();
     /* Check if piece at square @p square can be dragged */
     bool canDrag(Square s);
-    /* Catch mouse events */
-    bool eventFilter(QObject *obj, QEvent *ev);
+    //bool eventFilter(QObject *obj, QEvent *ev);
 
+#if(0)
     void drawSquares(QPaintEvent* event);
     void drawPieces(QPaintEvent* event);
     void drawMoveIndicator(QPaintEvent* event);
@@ -117,7 +115,7 @@ private:
     void drawSquareAnnotation(QPaintEvent* event, QString annotation);
     void drawArrowAnnotations(QPaintEvent* event);
     void drawArrowAnnotation(QPaintEvent* event, QString annotation);
-
+#endif
     Board m_board;
     BoardTheme m_theme;
     BoardPainter * m_view;
@@ -135,6 +133,7 @@ private:
 	bool m_coordinates;
     int m_scale;
     Piece m_dragged;
+    Square m_dragStartSquare;
     QPoint m_dragStart;
     QPoint m_dragPoint;
     int m_button;

@@ -13,7 +13,6 @@
 #include "boardpainter.h"
 
 #include "boardtheme.h"
-#include "../database/sboard.h"
 
 #include <QDebug>
 #include <QGraphicsScene>
@@ -38,6 +37,48 @@ const int gBoard[64][2] = // graphics board x, y
 };
 
 
+class SquareItem : public QGraphicsPixmapItem
+{
+public:
+    SquareItem(Square square, const QPixmap& pixmap,
+              QGraphicsItem * parent = 0)
+        :   QGraphicsPixmapItem(pixmap, parent),
+            square (square),
+            selected (false)
+    { }
+
+protected:
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+    {
+        QGraphicsPixmapItem::paint(painter, option, widget);
+        if (selected)
+        {
+            painter->setPen(QPen(Qt::NoPen));
+            painter->setBrush(QBrush(QColor(100,255,100,100)));
+            painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
+        }
+    }
+
+public:
+
+    Square square;
+    bool selected;
+};
+
+class PieceItem : public QGraphicsPixmapItem
+{
+public:
+    PieceItem(Piece piece, Square square, const QPixmap& pixmap,
+              QGraphicsItem * parent = 0)
+        :   QGraphicsPixmapItem(pixmap, parent),
+            piece  (piece),
+            square (square)
+    { }
+
+    Piece piece;
+    Square square;
+};
 
 
 
@@ -46,13 +87,17 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     QGraphicsView   (parent),
     m_theme         (theme),
     m_scene         (new QGraphicsScene(this)),
+    m_selected_square(0),
+    m_drag_piece    (0),
     m_center        (4.5,7),
     m_size          (50),
     m_flipped       (false)
-{
+{    
     setScene(m_scene);
-    createBoard_();
 
+    m_theme->setSize(QSize(m_size, m_size));
+
+    setMouseTracking(true);
 #if (0) // XXX that basically works ;)
     QTransform t = transform();
     t.rotate(70, Qt::XAxis);
@@ -61,10 +106,22 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
 }
 
 
-
-void BoardPainter::createBoard_()
+void BoardPainter::setBoard(const Board& board, int from, int to)
 {
-    m_theme->setSize(QSize(m_size, m_size));
+    createBoard_(board);
+    createPieces_(board);
+}
+
+
+
+void BoardPainter::createBoard_(const Board& board)
+{
+    // delete previous
+    for (size_t i=0; i<m_squares.size(); ++i)
+        delete m_squares[i];
+    m_squares.clear();
+
+    m_selected_square = 0;
 
     // create board squares
     for (Square i=fsq; i<=lsq; ++i)
@@ -74,14 +131,41 @@ void BoardPainter::createBoard_()
 
         const QPixmap& pm = m_theme->square((x+y)&1);
 
-        QGraphicsRectItem * s = new QGraphicsRectItem;
-        s->setRect((x-m_center.x())*m_size,
-                   (y-m_center.y())*m_size,
-                   m_size, m_size);
-        s->setPen(QPen(Qt::NoPen));
-        s->setBrush(QBrush(pm));
+        SquareItem * s = new SquareItem(i, pm);
+        s->setPos(squarePos(i));
+        s->setZValue(-1);
 
         m_scene->addItem(s);
+        m_squares.push_back(s);
+    }
+}
+
+
+
+void BoardPainter::createPieces_(const Board& board)
+{
+    // delete previous
+    for (size_t i=0; i<m_pieces.size(); ++i)
+        delete m_pieces[i];
+    m_pieces.clear();
+
+    m_drag_piece = 0;
+
+    // create pieces
+    for (Square i=fsq; i<=lsq; ++i)
+    {
+        Piece p = board.pieceAt(i);
+        if (p == InvalidPiece) continue;
+
+        // pixmap for piece
+        const QPixmap& pm = m_theme->piece(p);
+
+        PieceItem * item = new PieceItem(p, i, pm);
+        item->setPos(squarePos(i));
+
+        // add to scene
+        m_scene->addItem(item);
+        m_pieces.push_back(item);
     }
 }
 
@@ -89,7 +173,19 @@ void BoardPainter::createBoard_()
 
 // -------------------- coords ---------------------------
 
-Square BoardPainter::squareAt(const QPoint& viewpos) const
+QRect BoardPainter::squareRect(Square sq) const
+{
+    const int x = gBoard[sq][0],
+              y = gBoard[sq][1];
+
+    return QRect(
+            (x-m_center.x())*m_size,
+            (y-m_center.y())*m_size,
+            m_size, m_size
+            );
+}
+
+QPoint BoardPainter::mapToBoard(const QPoint& viewpos) const
 {
     // transform mouse coords to scene
     QPointF p = mapToScene(viewpos);
@@ -98,16 +194,89 @@ Square BoardPainter::squareAt(const QPoint& viewpos) const
     // cancel board placement
     p += m_center;
 
-    int x = p.x(),
-        y = (int)(p.y()+1)-1; // avoid negative fraction round to zero
+    return QPoint(
+        p.x(),
+        (int)(p.y()+1)-1 // avoid negative fraction rounding to zero
+        );
+}
 
-    if (x <= 0 || y < 0 || x >= 8 || y >= 15)
+Square BoardPainter::squareAt(const QPoint& viewpos) const
+{
+    QPoint p = mapToBoard(viewpos);
+
+    if (p.x() <= 0 || p.y() < 0 || p.x() >= 8 || p.y() >= 15)
         return InvalidSquare;
 
     Square sq = isFlipped() ?
-                BN[((8 - x)<<4) + y + 1] :
-                BN[(x<<4) + 14 - y];
+                BN[((8 - p.x())<<4) + p.y() + 1] :
+                BN[(p.x()<<4) + 14 - p.y()];
 
+    // make illegal output always InvalidSquare,
+    // otherwise would be 0 from BN[]
     return (sq>=fsq && sq<=lsq)? sq : InvalidSquare;
 }
 
+SquareItem * BoardPainter::squareItemAt(Square sq) const
+{
+    if (!(sq>=fsq && sq<=lsq)) return 0;
+
+    // search the SquareItem that fits
+    for (size_t i=0; i<m_squares.size(); ++i)
+        if (m_squares[i]->square == sq)
+            return m_squares[i];
+
+    return 0;
+}
+
+
+// ---------------- highlights ---------------------
+
+void BoardPainter::selectSquare(Square sq)
+{
+    //if previously selected
+    if (m_selected_square)
+    {
+        // dont update what's not needed
+        if (m_selected_square->square == sq)
+            return;
+
+        // unslect
+        if (m_selected_square->selected)
+        {
+            m_selected_square->selected = false;
+            m_selected_square->update();
+        }
+    }
+
+    m_selected_square = squareItemAt(sq);
+
+    if (m_selected_square)
+    {
+        m_selected_square->selected = true;
+        m_selected_square->update();
+    }
+}
+
+void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
+{
+    bool remove = (sq == InvalidSquare || piece == InvalidPiece);
+
+    // delete previous
+    if (remove || (m_drag_piece && m_drag_piece->piece != piece))
+    {
+        delete m_drag_piece;
+        m_drag_piece = 0;
+    }
+
+    // simply undo selection
+    if (remove) return;
+
+    // create or refresh
+    if (!m_drag_piece)
+    {
+        m_drag_piece = new PieceItem(piece, sq, m_theme->piece(piece));
+        m_scene->addItem(m_drag_piece);
+    }
+
+    m_drag_piece->setPos(mapToScene(view));
+}

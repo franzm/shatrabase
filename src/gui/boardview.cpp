@@ -51,9 +51,9 @@ BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
     m_clickUsed(false),m_wheelCurrentDelta(0),
     m_minDeltaWheel(0),m_moveListCurrent(0),m_showMoveIndicator(true)
 {
-    QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	policy.setHeightForWidth(true);
-	setSizePolicy(policy);
+    //QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    //policy.setHeightForWidth(true);
+    //setSizePolicy(policy);
     setMouseTracking(true);
     //installEventFilter(this); XXX currently not used
 	m_board.setStandardPosition();
@@ -71,10 +71,10 @@ BoardView::~BoardView()
 
 }
 
-bool BoardView::eventFilter(QObject *obj, QEvent *ev)
+/*bool BoardView::eventFilter(QObject *obj, QEvent *ev)
 {
 	return QWidget::eventFilter(obj, ev);
-}
+}*/
 
 void BoardView::setFlags(int flags)
 {
@@ -83,11 +83,15 @@ void BoardView::setFlags(int flags)
 
 void BoardView::setBoard(const Board& value,int from, int to)
 {
-	m_clickUsed = true;
+    qDebug() << "setBoard(" << from << ", " << to << ")";
+
+    m_clickUsed = true;
 //	Board oldboard = m_board;
 	m_board = value;
     m_currentFrom = from;
     m_currentTo = to;
+    if (m_view)
+        m_view->setBoard(value,from,to);
 	update();
 }
 
@@ -106,6 +110,7 @@ void BoardView::showMoveIndicator(bool visible )
     m_showMoveIndicator = visible;
 }
 
+#if (0)
 void BoardView::drawSquares(QPaintEvent* event)
 {
     QPainter p(this); int x, y;
@@ -231,17 +236,21 @@ void BoardView::drawPieces(QPaintEvent* event)
 }
 void BoardView::paintEvent(QPaintEvent* event)
 {
-    QWidget::paintEvent(event);/*
+    QWidget::paintEvent(event);
+    /*
     drawSquares(event);
     drawSquareAnnotations(event);
     drawPieces(event);
     drawMoveIndicator(event);
     drawArrowAnnotations(event);
-    drawDraggedPieces(event);*/
+    drawDraggedPieces(event);
+    */
 }
+#endif
 
 void BoardView::resizeBoard()
 {
+    return; // XXX
     int xsize = width() / (1+7+1);
     int ysize = height() / 14;
     int size = xsize < ysize? xsize : ysize;
@@ -261,6 +270,8 @@ void BoardView::resizeEvent(QResizeEvent * event)
 
 Square BoardView::squareAt(const QPoint& p) const
 {
+    return m_view? m_view->squareAt(p) : InvalidSquare;
+    /*
 	int x = p.x(), y = p.y();
 	int width = m_theme.size().width();
 	int height = m_theme.size().height();
@@ -274,16 +285,19 @@ Square BoardView::squareAt(const QPoint& p) const
 	y /= height;
     return isFlipped() ? BN[((8 - x)<<4) + y + 1] :
                          BN[(x<<4) + 14 - y];
+    */
 }
 
 void BoardView::mousePressEvent(QMouseEvent* event)
 {
     m_dragStart = event->pos();
+    m_dragStartSquare = squareAt(event->pos());
 }
 
 void BoardView::mouseMoveEvent(QMouseEvent *event)
 {
     m_button = event->button() + event->modifiers();
+
 /*
     if (event->modifiers() & Qt::ControlModifier)
     {
@@ -303,6 +317,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 */
+    // on hover
 	if (!(event->buttons() & Qt::LeftButton))
 	{
         Square s = squareAt(event->pos());
@@ -319,31 +334,37 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         }
 		return;
 	}
-    if (m_dragged != Empty) {
+
+    // set drag endpoint
+    if (m_dragged != Empty)
+    {
         Square s = squareAt(event->pos());
         m_hoverSquare = s;
         if (m_board.canMoveTo(m_currentFrom, s))
         {
             selectSquare(s);
         }
-        else unselectSquare();
-        QRect old = QRect(m_dragPoint, m_theme.size());
+            else unselectSquare();
         m_dragPoint = event->pos() - m_theme.pieceCenter();
-        update(old);
-        update(QRect(m_dragPoint, m_theme.size()));
+        // update painter
+        if (m_view)
+            m_view->setDragPiece(m_dragStartSquare, m_dragged, m_dragPoint);
+
         return;
     }
+
+    // start dragging
     if ((event->pos() - m_dragStart).manhattanLength()
             < QApplication::startDragDistance())  // Click and move - start dragging
         return;
+    // can piece be moved
     Square s = squareAt(m_dragStart);
     if (!canDrag(s))
         return;
+    // doit
     m_dragged = m_board.pieceAt(s);
     m_dragPoint = event->pos() - m_theme.pieceCenter();
     m_board.removeFrom(s);
-    update(squareRect(s));
-    update(QRect(m_dragPoint, m_theme.size()));
     unselectSquare();
 }
 
@@ -382,12 +403,15 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
 
     if (m_dragged != Empty)
     {
+        if (m_view)
+            m_view->setDragPiece();
+
         Square from = squareAt(m_dragStart);
         m_board.setAt(from, m_dragged);
         QRect oldr = QRect(m_dragPoint, m_theme.size());
         m_dragged = Empty;
-        update(squareRect(from));
-        update(oldr);
+        //update(squareRect(from));
+        //update(oldr);
         if (s != InvalidSquare)
         {
             if ((m_flags & AllowCopyPiece) && (event->modifiers() & Qt::AltModifier))
@@ -479,19 +503,26 @@ void BoardView::configure()
 
 void BoardView::selectSquare(Square s)
 {
-    unselectSquare();
+    if (m_view)
+        m_view->selectSquare(s);
     m_selectedSquare = s;
+
+    /*
+    unselectSquare();
     update(squareRect(s));
+    */
 }
 
 void BoardView::unselectSquare()
 {
-    Square prev = m_selectedSquare;
+    if (m_view)
+        m_view->selectSquare(InvalidSquare);
+    //Square prev = m_selectedSquare;
     m_selectedSquare = InvalidSquare;
-    if (prev != InvalidSquare)
-        update(squareRect(prev));
+    //if (prev != InvalidSquare)
+    //    update(squareRect(prev));
 }
-
+/*
 QRect BoardView::squareRect(Square square)
 {
     int x = isFlipped() ? 8 - gBoard[square][0] : gBoard[square][0];
@@ -499,7 +530,7 @@ QRect BoardView::squareRect(Square square)
     return QRect(QPoint(x * m_theme.size().width(),
                         y * m_theme.size().height()), m_theme.size());
 }
-
+*/
 bool BoardView::canDrag(Square s)
 {
     if (m_dragged != Empty) // already dragging
@@ -550,7 +581,7 @@ void BoardView::dropEvent(QDropEvent *event)
         event->acceptProposedAction();
     }
 }
-
+#if (0)
 void BoardView::drawSquareAnnotations(QPaintEvent* event)
 {
     QString annotation = m_board.squareAnnotation();
@@ -738,4 +769,4 @@ void BoardView::drawArrowAnnotation(QPaintEvent* event, QString annotation)
     p.restore();
 
 }
-
+#endif

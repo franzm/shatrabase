@@ -14,12 +14,17 @@
 #define BOARDPAINTER_H
 
 #include <QGraphicsView>
+#include <QPoint>
+#include <QMouseEvent>
 
 #include "../database/common.h"
+#include "board.h"
 
 class QGraphicsScene;
 
 class BoardTheme;
+class PieceItem;
+class SquareItem;
 
 /** Basically a paint backend for BoardView which also
     translates between coordinates and squares/pieces. */
@@ -31,19 +36,56 @@ public:
 
     // ----------- coords -------------
 
+    /** Maps the view coordinates to board coords */
+    QPoint mapToBoard(const QPoint& view_coords) const;
+
     Square squareAt(const QPoint& view_coords) const;
 
     bool isFlipped() const { return m_flipped; }
     void setFlipped(bool flipped) { m_flipped = flipped; }
 
+    // --------- board/pieces --------
+
+    /** Updates/creates the board pieces, and performs the animation if
+     *  from and to != InvalidSquare */
+    void setBoard(const Board& board, int from = InvalidSquare, int to = InvalidSquare);
+
+    // --------- inidicators ---------
+
+    /** Shows selection frame for Square @p sq.
+        Turns off selection if sq == InvalidSquare.
+        Any previous selection will be cleared. */
+    void selectSquare(Square sq = InvalidSquare);
+
+    /** Starts drag/move animation.
+        @p view is the mouse coords for the piece.
+        Set @p sq to InvalidSquare to stop dragging. */
+    void setDragPiece(Square sq = InvalidSquare, Piece piece = InvalidPiece,
+                      const QPoint& view = QPoint());
 public slots:
 
     // ________ PROTECTED ____________
 protected:
+    /* XXX The view is eating all mouse events, why? */
+    virtual void mousePressEvent(QMouseEvent * e) { e->ignore(); };
+    virtual void mouseMoveEvent(QMouseEvent * e) { e->ignore(); };
+    virtual void mouseReleaseEvent(QMouseEvent * e) { e->ignore(); };
+    virtual void mouseDoubleClickEvent(QMouseEvent * e) { e->ignore(); }
+
+    // -------- coords ---------------
+
+    /** rect of a square in scene coords */
+    QRect squareRect(Square sq) const;
+    /** (corner) position of a square in scene coords */
+    QPoint squarePos(Square sq) const { return squareRect(sq).topLeft(); }
+
+    /** Returns the SquareItem for the position, or 0 */
+    SquareItem * squareItemAt(Square sq) const;
 
     // --------- internal ------------
 
-    void createBoard_();
+    void createBoard_(const Board& board);
+    void createPieces_(const Board& board);
 
     // ----------- member ------------
 
@@ -51,8 +93,15 @@ protected:
 
     QGraphicsScene * m_scene;
 
-    /** center position (squares) of board */
+    std::vector<SquareItem*> m_squares;
+    std::vector<PieceItem*> m_pieces;
+    SquareItem * m_selected_square;
+    PieceItem * m_drag_piece;
+
+    /** center position (in squares) of board */
     QPointF m_center;
+    /** size of a tile (somewhat arbitrary since QGraphicsView scales anyway,
+     *  but we ask BoardTheme for QPixMaps in this size). */
     int m_size;
 
     bool m_flipped;
