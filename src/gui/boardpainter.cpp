@@ -37,6 +37,8 @@ const int gBoard[64][2] = // graphics board x, y
 };
 
 
+// ------------------------- SquareItem -----------------------------
+
 class SquareItem : public QGraphicsPixmapItem
 {
 public:
@@ -44,12 +46,15 @@ public:
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
             square (square),
-            highlight (false)
+            highlight (false),
+            temdek    (false)
     { }
 
     Square square;
     bool highlight;
     QBrush highlightBrush;
+    bool temdek;
+    QPen temdekPen;
 
 protected:
 
@@ -62,9 +67,20 @@ protected:
             painter->setBrush(highlightBrush);
             painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
         }
+        if (temdek)
+        {
+            painter->setPen(temdekPen);
+            painter->setBrush(Qt::NoBrush);
+            int o = temdekPen.width()/2;
+            painter->drawLine(o, o, pixmap().width()-o, pixmap().height()-o);
+            painter->drawLine(o, pixmap().height()-o, pixmap().width()-o, o);
+        }
     }
 
 };
+
+
+// --------------------------- PieceItem ---------------------------
 
 class PieceItem : public QGraphicsPixmapItem
 {
@@ -80,6 +96,10 @@ public:
     Square square;
 };
 
+
+
+
+// ---------------------------- BoardPainter -----------------------
 
 
 BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
@@ -126,12 +146,26 @@ void BoardPainter::createBoard_(const Board& board)
         const int x = gBoard[i][0],
                   y = gBoard[i][1];
 
+        // select tile texture
         const QPixmap& pm = m_theme->square((x+y)&1);
 
+        // setup tile
         SquareItem * s = new SquareItem(i, pm);
         s->setPos(squarePos(i));
         s->setZValue(-1);
 
+        // set temdek flag
+        if ((i == temdekAt[Black] && board.temdekOn(Black)) ||
+            (i == temdekAt[White] && board.temdekOn(White)))
+        {
+            s->temdek = true;
+            s->temdekPen = QPen(i==temdekAt[White]? Qt::black : Qt::white );
+            s->temdekPen.setCapStyle(Qt::RoundCap);
+            s->temdekPen.setWidthF(s->pixmap().width()/10);
+        }
+
+
+        // add to scene
         m_scene->addItem(s);
         m_squares.push_back(s);
     }
@@ -278,5 +312,5 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
         m_scene->addItem(m_drag_piece);
     }
 
-    m_drag_piece->setPos(mapToScene(view));
+    m_drag_piece->setPos(mapToScene(view) - QPointF(m_size>>1,m_size>>1));
 }

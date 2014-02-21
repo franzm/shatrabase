@@ -330,6 +330,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         else
         {
         	m_currentFrom = InvalidSquare;
+            setHoverSquare(InvalidSquare);
         	setCursor(QCursor(Qt::ArrowCursor));
         }
 		return;
@@ -345,7 +346,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         }
             else unselectSquare();
 
-        m_dragPoint = event->pos() - m_theme.pieceCenter();
+        m_dragPoint = event->pos();
 
         // update painter
         if (m_view)
