@@ -12,7 +12,11 @@
 
 #include "boardpainter.h"
 
+#include "boardtheme.h"
+
+#include <QDebug>
 #include <QGraphicsScene>
+#include <QGraphicsRectItem>
 
 const int gBoard[64][2] = // graphics board x, y
 {
@@ -29,24 +33,93 @@ const int gBoard[64][2] = // graphics board x, y
                           {4,10},
                   {3,11}, {4,11}, {5,11},
                   {3,12}, {4,12}, {5,12},
-                  {3,13}, {4,13}, {5,13}
+                  {3,13}, {4,13}, {5,13},      {0,0},
 };
+
+
+/** Wrapper around QGraphicsRectItem to assign a Square number */
+class SquareItem : public QGraphicsRectItem
+{
+public:
+    explicit SquareItem(Square square, QGraphicsItem * parent = 0)
+    :   QGraphicsRectItem(parent),
+        m_square(square)
+    { }
+
+    Square square() const { return m_square; }
+protected:
+    Square m_square;
+};
+
+
+
+
+
+
+
 
 BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     :
-    QGraphicsView(parent),
-    m_theme(theme),
-    m_scene(new QGraphicsScene(this))
+    QGraphicsView   (parent),
+    m_theme         (theme),
+    m_scene         (new QGraphicsScene(this)),
+    m_size          (50)
 {
+    setScene(m_scene);
+    createBoard_();
+
+#if (0) // XXX that basically works ;)
+    QTransform t = transform();
+    t.rotate(70, Qt::XAxis);
+    setTransform(t);
+#endif
 }
 
 
 
 void BoardPainter::createBoard_()
 {
-    for (int i=1; i<64; ++i)
+    m_theme->setSize(QSize(m_size, m_size));
+
+    // create board squares
+    for (Square i=fsq; i<=lsq; ++i)
     {
-        m_scene->addRect(QRect(gBoard[i][0], gBoard[i][1],
-                gBoard[i][0]+1, gBoard[i][1]+1));
+        const int x = gBoard[i][0],
+                  y = gBoard[i][1];
+
+        const QPixmap& pm = m_theme->square((x+y)&1);
+
+        SquareItem * s = new SquareItem(i);
+        s->setRect(QRect((x-4.5)*m_size,(y-7)*m_size,m_size,m_size));
+        s->setPen(QPen(Qt::NoPen));
+        s->setBrush(QBrush(pm));
+
+        m_scene->addItem(s);
+    }
+}
+
+
+
+// ---------------------- events -------------------------
+
+void BoardPainter::mousePressEvent(QMouseEvent *event)
+{
+    // transform mouse coords to scene
+    QPointF p = mapToScene(event->pos());
+
+    // find clicked item
+    QGraphicsItem * item = m_scene->itemAt(p, transform());
+    if (!item) return;
+
+    if (event->button() == Qt::LeftButton)
+    {
+        // clicked on square?
+        SquareItem * sq = dynamic_cast<SquareItem*>(item);
+        if (sq)
+        {
+            signalSquareClicked(sq->square());
+            event->accept();
+        }
+
     }
 }

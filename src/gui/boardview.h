@@ -21,6 +21,7 @@
 
 class BoardTheme;
 class BoardPainter;
+class QLayout;
 
 /* the BoardView class represents a widget for displaying current
 position on the screen. */
@@ -120,6 +121,7 @@ private:
     Board m_board;
     BoardTheme m_theme;
     BoardPainter * m_view;
+    QLayout * m_layout;
     bool m_flipped;
     bool m_showFrame;
     bool m_showCurrentMove;

@@ -15,9 +15,11 @@
 
 #include <QGraphicsView>
 
-#include "boardtheme.h"
+#include "../database/common.h"
 
 class QGraphicsScene;
+
+class BoardTheme;
 
 /** Basically a paint backend for BoardView which also
     translates between coordinates and squares/pieces. */
@@ -28,11 +30,18 @@ public:
     explicit BoardPainter(BoardTheme * theme, QWidget *parent = 0);
 
 signals:
+    void signalSquareClicked(Square sq);
 
 public slots:
 
     // ________ PROTECTED ____________
 protected:
+
+    // --------- events --------------
+
+    void mousePressEvent(QMouseEvent *event);
+
+    // --------- internal ------------
 
     void createBoard_();
 
@@ -41,6 +50,8 @@ protected:
     BoardTheme * m_theme;
 
     QGraphicsScene * m_scene;
+
+    int m_size;
 };
 
 #endif // BOARDPAINTER_H

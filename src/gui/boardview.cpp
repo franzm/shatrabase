@@ -17,6 +17,7 @@
 
 #include <QApplication>
 #include <QSizePolicy>
+#include <QLayout>
 
 using namespace Qt;
 
@@ -57,9 +58,12 @@ BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
     //installEventFilter(this); XXX currently not used
 	m_board.setStandardPosition();
 
-    setBackgroundRole(QPalette::Link);
-    setAutoFillBackground(true);
+//    setBackgroundRole(QPalette::Link);
+//    setAutoFillBackground(true);
 
+    // to place the BoardPainter in
+    m_layout = new QVBoxLayout(this);
+    m_layout->setContentsMargins(0,0,0,0);
 }
 
 BoardView::~BoardView()
@@ -468,6 +472,7 @@ void BoardView::configure()
     // recreate BoardPainter
     if (m_view) delete m_view;
     m_view = new BoardPainter(&m_theme, this);
+    m_layout->addWidget(m_view);
 
 	update();
 }
