@@ -29,17 +29,17 @@ class BoardPainter : public QGraphicsView
 public:
     explicit BoardPainter(BoardTheme * theme, QWidget *parent = 0);
 
-signals:
-    void signalSquareClicked(Square sq);
+    // ----------- coords -------------
+
+    Square squareAt(const QPoint& view_coords) const;
+
+    bool isFlipped() const { return m_flipped; }
+    void setFlipped(bool flipped) { m_flipped = flipped; }
 
 public slots:
 
     // ________ PROTECTED ____________
 protected:
-
-    // --------- events --------------
-
-    void mousePressEvent(QMouseEvent *event);
 
     // --------- internal ------------
 
@@ -51,7 +51,12 @@ protected:
 
     QGraphicsScene * m_scene;
 
+    /** center position (squares) of board */
+    QPointF m_center;
     int m_size;
+
+    bool m_flipped;
+
 };
 
 #endif // BOARDPAINTER_H

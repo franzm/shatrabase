@@ -13,6 +13,7 @@
 #include "boardpainter.h"
 
 #include "boardtheme.h"
+#include "../database/sboard.h"
 
 #include <QDebug>
 #include <QGraphicsScene>
@@ -37,24 +38,6 @@ const int gBoard[64][2] = // graphics board x, y
 };
 
 
-/** Wrapper around QGraphicsRectItem to assign a Square number */
-class SquareItem : public QGraphicsRectItem
-{
-public:
-    explicit SquareItem(Square square, QGraphicsItem * parent = 0)
-    :   QGraphicsRectItem(parent),
-        m_square(square)
-    { }
-
-    Square square() const { return m_square; }
-protected:
-    Square m_square;
-};
-
-
-
-
-
 
 
 
@@ -63,7 +46,9 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     QGraphicsView   (parent),
     m_theme         (theme),
     m_scene         (new QGraphicsScene(this)),
-    m_size          (50)
+    m_center        (4.5,7),
+    m_size          (50),
+    m_flipped       (false)
 {
     setScene(m_scene);
     createBoard_();
@@ -89,8 +74,10 @@ void BoardPainter::createBoard_()
 
         const QPixmap& pm = m_theme->square((x+y)&1);
 
-        SquareItem * s = new SquareItem(i);
-        s->setRect(QRect((x-4.5)*m_size,(y-7)*m_size,m_size,m_size));
+        QGraphicsRectItem * s = new QGraphicsRectItem;
+        s->setRect((x-m_center.x())*m_size,
+                   (y-m_center.y())*m_size,
+                   m_size, m_size);
         s->setPen(QPen(Qt::NoPen));
         s->setBrush(QBrush(pm));
 
@@ -100,26 +87,27 @@ void BoardPainter::createBoard_()
 
 
 
-// ---------------------- events -------------------------
+// -------------------- coords ---------------------------
 
-void BoardPainter::mousePressEvent(QMouseEvent *event)
+Square BoardPainter::squareAt(const QPoint& viewpos) const
 {
     // transform mouse coords to scene
-    QPointF p = mapToScene(event->pos());
+    QPointF p = mapToScene(viewpos);
+    // cancel scale
+    p /= m_size;
+    // cancel board placement
+    p += m_center;
 
-    // find clicked item
-    QGraphicsItem * item = m_scene->itemAt(p, transform());
-    if (!item) return;
+    int x = p.x(),
+        y = (int)(p.y()+1)-1; // avoid negative fraction round to zero
 
-    if (event->button() == Qt::LeftButton)
-    {
-        // clicked on square?
-        SquareItem * sq = dynamic_cast<SquareItem*>(item);
-        if (sq)
-        {
-            signalSquareClicked(sq->square());
-            event->accept();
-        }
+    if (x <= 0 || y < 0 || x >= 8 || y >= 15)
+        return InvalidSquare;
 
-    }
+    Square sq = isFlipped() ?
+                BN[((8 - x)<<4) + y + 1] :
+                BN[(x<<4) + 14 - y];
+
+    return (sq>=fsq && sq<=lsq)? sq : InvalidSquare;
 }
+
