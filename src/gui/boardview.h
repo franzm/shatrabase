@@ -97,13 +97,21 @@ private:
     void resizeBoard();
     /* @return square at given position */
     Square squareAt(const QPoint& p) const;
+    /* Check if piece at square @p square can be dragged */
+    bool canDrag(Square s);
+    //bool eventFilter(QObject *obj, QEvent *ev);
+
+    // ------ highlighting ------
+
     /* Selects given square. Previously selected square is unselected automatically. */
     void selectSquare(Square s);
     /* Unselects given square. */
     void unselectSquare();
-    /* Check if piece at square @p square can be dragged */
-    bool canDrag(Square s);
-    //bool eventFilter(QObject *obj, QEvent *ev);
+    /* Sets the m_hoverSquare to @p s. Previously selected square is unselected.
+       Clear hightlight with s = InvalidSquare */
+    void setHoverSquare(Square s);
+
+//    void showPossibleMoves(Square s);
 
 #if(0)
     void drawSquares(QPaintEvent* event);

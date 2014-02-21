@@ -83,10 +83,9 @@ void BoardView::setFlags(int flags)
 
 void BoardView::setBoard(const Board& value,int from, int to)
 {
-    qDebug() << "setBoard(" << from << ", " << to << ")";
+    qDebug() << "setBoard(from=" << from << ", to=" << to << ")";
 
     m_clickUsed = true;
-//	Board oldboard = m_board;
 	m_board = value;
     m_currentFrom = from;
     m_currentTo = to;
@@ -321,11 +320,12 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 	if (!(event->buttons() & Qt::LeftButton))
 	{
         Square s = squareAt(event->pos());
-		m_hoverSquare = s;
         if (m_board.isMovable(s))
         {
         	m_currentFrom = s;
             setCursor(QCursor(Qt::OpenHandCursor));
+            setHoverSquare(s);
+            //showPossibleMoves(s);
         }
         else
         {
@@ -339,13 +339,14 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
     if (m_dragged != Empty)
     {
         Square s = squareAt(event->pos());
-        m_hoverSquare = s;
         if (m_board.canMoveTo(m_currentFrom, s))
         {
             selectSquare(s);
         }
             else unselectSquare();
+
         m_dragPoint = event->pos() - m_theme.pieceCenter();
+
         // update painter
         if (m_view)
             m_view->setDragPiece(m_dragStartSquare, m_dragged, m_dragPoint);
@@ -387,6 +388,8 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             emit invalidMove(from);
         }
         m_dragged = Empty;
+        if (m_view)
+            m_view->setDragPiece();
         return;
     }
     else
@@ -408,12 +411,11 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
 
         Square from = squareAt(m_dragStart);
         m_board.setAt(from, m_dragged);
-        QRect oldr = QRect(m_dragPoint, m_theme.size());
         m_dragged = Empty;
-        //update(squareRect(from));
-        //update(oldr);
+        // check if valid move
         if (s != InvalidSquare)
         {
+            // copy piece
             if ((m_flags & AllowCopyPiece) && (event->modifiers() & Qt::AltModifier))
             {
                 if (m_board.pieceAt(from) != Empty)
@@ -421,9 +423,11 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
                     emit copyPiece(from, s);
                 }
             }
+            // or move piece
             else emit moveMade(from, s, button);
         }
         else emit invalidMove(from);
+
         unselectSquare();
     }
     else if (m_selectedSquare != InvalidSquare)
@@ -441,7 +445,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         {
             emit moveMade(m_hiFrom, m_hiTo, button);
         }
-        m_hoverSquare = InvalidSquare;
+        setHoverSquare(InvalidSquare);
     }
     else
     {
@@ -520,6 +524,27 @@ void BoardView::unselectSquare()
 
     m_selectedSquare = InvalidSquare;
 }
+
+void BoardView::setHoverSquare(Square s)
+{
+    if (s == m_hoverSquare) return;
+
+    if (m_hoverSquare != InvalidSquare && m_view)
+        m_view->clearSquareColor(m_hoverSquare);
+
+    if (s == InvalidSquare) return;
+
+    if (m_view)
+        m_view->setSquareColor(s, m_theme.color(BoardTheme::Highlight));
+
+    m_hoverSquare = s;
+}
+/*
+void BoardView::showPossibleMoves(Square s)
+{
+    m_board.getMoves(s, m_board.pieceAt(s), );
+}
+*/
 /*
 QRect BoardView::squareRect(Square square)
 {
