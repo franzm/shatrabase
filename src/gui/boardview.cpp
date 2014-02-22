@@ -526,6 +526,7 @@ void BoardView::configure()
     if (m_view) delete m_view;
     m_view = new BoardPainter(&m_theme, this);
     m_view->setAnimationSpeed(animateMoves? animateMovesSpeed : 0);
+    m_view->setBoard(m_board);
     m_layout->addWidget(m_view);
 
 	update();
