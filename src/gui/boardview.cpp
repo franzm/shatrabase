@@ -44,6 +44,7 @@ const int gBoard[64][2] = // graphics board x, y
 BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
     m_view(0),
     m_showCurrentMove(true),
+    m_showAllMoves(true),
     m_selectedSquare(InvalidSquare),
     m_hoverSquare(InvalidSquare),
     m_currentFrom(InvalidSquare),
@@ -87,7 +88,7 @@ void BoardView::setFlags(int flags)
 
 void BoardView::setBoard(const Board& value,int from, int to)
 {
-    qDebug() << "setBoard(from=" << from << ", to=" << to << ")";
+    //qDebug() << "setBoard(from=" << from << ", to=" << to << ")";
 
     m_clickUsed = true;
 	m_board = value;
@@ -307,13 +308,14 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         	m_currentFrom = s;
             setCursor(QCursor(Qt::OpenHandCursor));
             setHoverSquare(s);
-            //showPossibleMoves(s);
+            if (m_showAllMoves) showPossibleMoves(s);
         }
         else
         {
         	m_currentFrom = InvalidSquare;
+            setCursor(QCursor(Qt::ArrowCursor));
             setHoverSquare(InvalidSquare);
-        	setCursor(QCursor(Qt::ArrowCursor));
+            if (m_showAllMoves && m_view) m_view->clearReachableSquares();
         }
 		return;
 	}
@@ -322,12 +324,13 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
     if (m_dragged != Empty)
     {
         Square s = squareAt(event->pos());
-        if (m_board.canMoveTo(m_currentFrom, s))
+        if (m_showCurrentMove)
         {
-            selectSquare(s);
+            if (m_board.canMoveTo(m_currentFrom, s))
+                selectSquare(s);
+            else
+                selectSquare();
         }
-            else selectSquare();
-
         m_dragPoint = event->pos();
 
         // update painter
@@ -359,6 +362,8 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
     int button = event->button() + event->modifiers();
     Square s = squareAt(event->pos());
     m_clickUsed = false;
+
+    if (m_showAllMoves && m_view) m_view->clearReachableSquares();
 
     if (!(event->button() & Qt::LeftButton))
     {
@@ -486,8 +491,7 @@ void BoardView::configure()
 {
     AppSettings->beginGroup("/Board/");
     m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
-    bool animateMoves = AppSettings->getValue("animateMoves").toBool();
-    double animateMovesSpeed = AppSettings->getValue("animateMovesSpeed").toDouble();
+    m_showAllMoves = AppSettings->getValue("showAllMoves").toBool();
     m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
     m_theme.setColor(BoardTheme::LightSquare, AppSettings->getValue("lightColor").value<QColor>());
     m_theme.setColor(BoardTheme::DarkSquare, AppSettings->getValue("darkColor").value<QColor>());
@@ -506,7 +510,6 @@ void BoardView::configure()
     // recreate BoardPainter
     if (m_view) delete m_view;
     m_view = new BoardPainter(&m_theme, this);
-    m_view->setAnimationSpeed(animateMoves? animateMovesSpeed : 0);
     m_view->setBoard(m_board);
     m_layout->addWidget(m_view);
 
@@ -552,12 +555,16 @@ void BoardView::setHoverSquare(Square s)
 
     m_hoverSquare = s;
 }
-/*
+
 void BoardView::showPossibleMoves(Square s)
 {
-    m_board.getMoves(s, m_board.pieceAt(s), );
+    if (!m_view) return;
+
+    std::vector<Square> squares;
+    m_board.getReachableSquares(s, squares);
+    m_view->setReachableSquares(squares);
 }
-*/
+
 /*
 QRect BoardView::squareRect(Square square)
 {

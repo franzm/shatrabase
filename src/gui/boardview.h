@@ -108,7 +108,7 @@ private:
        Clear hightlight with s = InvalidSquare */
     void setHoverSquare(Square s = InvalidSquare);
 
-//    void showPossibleMoves(Square s);
+    void showPossibleMoves(Square s);
 
 #if(0)
     void drawSquares(QPaintEvent* event);
@@ -125,7 +125,10 @@ private:
     BoardTheme m_theme;
     BoardPainter * m_view;
     QLayout * m_layout;
-    bool m_showCurrentMove;
+    /** highlight a plausible move (on drag) */
+    bool m_showCurrentMove,
+    /** highlight all plausible moves (on hover) */
+         m_showAllMoves;
     int m_selectedSquare;
     int m_hoverSquare;
     int m_currentFrom;

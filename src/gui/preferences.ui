@@ -199,7 +199,7 @@
        <item row="4" column="2">
         <widget class="QCheckBox" name="hilightCurrentMove">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>Highlight current move</string>
@@ -303,6 +303,13 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="5" column="2">
+        <widget class="QCheckBox" name="hilightAllMoves">
+         <property name="text">
+          <string>Highlight all possible moves</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

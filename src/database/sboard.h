@@ -15,6 +15,8 @@
 #ifndef __SBOARD_H__
 #define __SBOARD_H__
 
+#include <vector>
+
 #include "boardlist.h"
 #include "urstack.hpp"
 
@@ -112,124 +114,128 @@ public:
 
     // Play moves on board
     //
-    /* Play given move, updating board state appropriately */
+    /** Play given move, updating board state appropriately */
     bool doMove(const Move&);
-    /* Return board to state prior to given move */
+    /** Return board to state prior to given move */
     void undoMove(const Move&);
 
     // Setup board
     //
-    /* Initialize memory and board layout */
+    /** Initialize memory and board layout */
     void initState();
-    /* Remove all pieces and state from board */
+    /** Remove all pieces and state from board */
     void clear();
-    /* Set move number in game */
+    /** Set move number in game */
     void setMoveNumber(uint moveNumber);
-    /* Set initial shatra game position on the board */
+    /** Set initial shatra game position on the board */
     void setStandardPosition();
-    /* Set the given piece on the board at the given square */
+    /** Set the given piece on the board at the given square */
     bool setAt(const int at, const Piece p);
-    /* Remove any piece sitting on given square */
+    /** Remove any piece sitting on given square */
     void removeAt(const int at);
-    /* Toggle urgent bit, set m_urgent accordingly */
+    /** Toggle urgent bit, set m_urgent accordingly */
     void doUrgentAt(const int at);
-    /* Set the side to move to the given color */
+    /** Set the side to move to the given color */
     void setToMove(const Color& c);
-    /* Swap the side to move */
+    /** Swap the side to move */
     void swapToMove();
-    /* Setup board according to SPN string */
+    /** Setup board according to SPN string */
     bool SPNToBoard(const QString& qspn);
-    /* Check for valid SPN string, call the above */
+    /** Check for valid SPN string, call the above */
     bool fromSPN(const QString& SPN);
-    /* Return a SPN string based on current board position */
+    /** Return a SPN string based on current board position */
     QString toSPN() const;
-    /* Set En Passant Square */
+    /** Set En Passant Square */
     void setEnPassantSquare(const int at);
-    /* Remove En Passant privilege */
+    /** Remove En Passant privilege */
     void clearEnPassantSquare();
-    /* Fill offboard stash with full complement */
+    /** Fill offboard stash with full complement */
     void fillOffboard();
 
     // Move factories
     //
-    /* Parse LAN representation of move, and return full Move() object */
+    /** Parse LAN representation of move, and return full Move() object */
     Move parseMove(const QString& algebraic);
-    /* Return a full Move() object given only from-to (board notation) */
+    /** Return a full Move() object given only from-to (board notation) */
     Move prepareMove(const int from, const int to) const;
     Move prepareMove(const int from, const int to);
 
     // Query
     //
-    /* Is piece sitting on given square moveable? */
+    /** Is piece sitting on given square moveable? */
     bool isMovable(const int from) const;
-    /* Can a piece move from one square to another? */
+    /** Can a piece move from one square to another? */
     bool canMoveTo(const int from, const int to) const;
-    /* Is a promotion piece available? */
+    /** Is a promotion piece available? */
     bool canPromoteTo(const PieceType pt) const;
-    /* Is there a piece currently in transit? */
+    /** Is there a piece currently in transit? */
     bool inSequence() const;
-    /* Is the given square empty? */
+    /** Is the given square empty? */
     bool isVacant(const int at) const;
-    /* Is the given piece in its home fortress? */
+    /** Is the given piece in its home fortress? */
     bool isReserve(const Square s) const;
-    /* Is the given piece marked urgent? */
+    /** Is the given piece marked urgent? */
     bool isUrgent(const Square s) const;
-    /* Return true if the side to move has no moves */
+    /** Return true if the side to move has no moves */
     bool hasNoMoves() const;
-    /* Return piece at given square number */
+
+    /** Return piece at given square number */
     Piece pieceAt(const int at) const;
-    /* Return piece type at given square number */
+    /** Return piece type at given square number */
     PieceType pieceTypeAt(const int at) const;
-    /* Return piece moving plus any flags (call before or after moving) */
+    /** Return piece moving plus any flags (call before or after moving) */
     int pieceMoving(Move m) const;
-    /* Return the current move number in the game */
+    /** Return the current move number in the game */
     int moveNumber() const;
-    /* Return color of current side to move */
+    /** Return color of current side to move */
     Color toMove() const;
-    /* Return true if side to move = last side to move */
+    /** Return true if side to move = last side to move */
     bool sameSide() const;
-    /* Return true if position can follow target position */
+    /** Return true if position can follow target position */
     bool canBeReachedFrom(const SBoard& target) const;
-    /* Return true if position is same, no Move# in determination */
+    /** Return true if position is same, no Move# in determination */
     bool positionIsSame(const SBoard& target) const;
-    /* Return square where En passant capture may occur, or "NoSquare" */
+    /** Return square where En passant capture may occur, or "NoSquare" */
     Square enPassantSquare() const;
-    /* Return square where piece is in transit */
+    /** Return square where piece is in transit */
     Square transitAt() const;
-    /* Return square where piece *is* marked 'urgent' */
+    /** Return square where piece *is* marked 'urgent' */
     Square urgentAt() const;
-    /* Return square where piece *was* marked 'urgent' */
+    /** Return square where piece *was* marked 'urgent' */
     Square oldUrgent() const;
-    /* Return square where piece was in transit */
+    /** Return square where piece was in transit */
     Square oldTransit() const;
-    /* Return true if Biy on home square and Temdek on */
+    /** Return true if Biy on home square and Temdek on */
     bool isBiyOnTemdek(const Square s) const;
-    /* Return true if given Temdek is on */
+    /** Return true if given Temdek is on */
     bool temdekOn(int side) const;
-    /* Return true if given Temdek is off */
+    /** Return true if given Temdek is off */
     bool temdekOff(int side) const;
-    /* Return true if given Temdek set to one */
+    /** Return true if given Temdek set to one */
     bool temdekLast(int side) const;
-    /* Return number of moves in board movelist */
+    /** Return number of moves in board movelist */
     int numMoves() const;
+    /** Return all reachable squares for the given square.
+        The Squares will be push_back'd onto the vector. */
+    void getReachableSquares(Square from, std::vector<Square>& vec) const;
 
     // Long algebraic or numeric format
     //
-    /* Return a LANN string representation of given move */
+    /** Return a LANN string representation of given move */
     QString moveToLann(const Move& move) const;
-    /* Return a LANN string representing a given move with move number. */
+    /** Return a LANN string representing a given move with move number. */
     QString moveToFullLann(const Move& move) const;
-/* Return ASCII character for given piece to be used in SPN */
+    /** Return ASCII character for given piece to be used in SPN */
     QChar pieceToChar(const Piece piece) const;
 
     // Validation
     //
-    /* Check current position and return "Valid" or problem */
+    /** Check current position and return "Valid" or problem */
     BoardStatus validate() const;
-	/* Return true if given SPN can be parsed */
+    /** Return true if given SPN can be parsed */
 	bool isValidSPN(const QString& spn) const;
     
-    /* Generate all move types, third parameter optional */
+    /** Generate all move types, third parameter optional */
     int generate(bool cc, int first, int last = NoSquare);
 
   private:
@@ -243,9 +249,9 @@ public:
     inline void getEvasions();
     inline bool getCapture(int at, PieceType piece, D d, int r, bool f);
     inline void getMoves(int at, PieceType piece, D d, bool df);
-    /* Used to determine possible captures */
+    /** Used to determine possible captures */
     inline bool isOppositeColor(int at) const;
-    /* Biy can make evasion only if no other piece can capture */
+    /** Biy can make evasion only if no other piece can capture */
     inline bool onlyBiyCaptures() const;
 
     ubyte m_sb[144];           // shatra board, MUST be first data member

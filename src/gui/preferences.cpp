@@ -273,6 +273,7 @@ void PreferencesDialog::restoreSettings()
     AppSettings->beginGroup("/Board/");
     ui.boardFrameCheck->setChecked(AppSettings->getValue("showFrame").toBool());
     ui.hilightCurrentMove->setChecked(AppSettings->getValue("showCurrentMove").toBool());
+    ui.hilightAllMoves->setChecked(AppSettings->getValue("showAllMoves").toBool());
     ui.animateMovesCheck->setChecked(AppSettings->getValue("animateMoves").toBool());
     ui.animateMovesSpeed->setValue(AppSettings->getValue("animateMovesSpeed").toDouble());
     ui.minWheelCount->setValue(AppSettings->getValue("minWheelCount").toInt());
@@ -348,6 +349,7 @@ void PreferencesDialog::saveSettings()
     AppSettings->beginGroup("/Board/");
     AppSettings->setValue("showFrame", QVariant(ui.boardFrameCheck->isChecked()));
     AppSettings->setValue("showCurrentMove", QVariant(ui.hilightCurrentMove->isChecked()));
+    AppSettings->setValue("showAllMoves", QVariant(ui.hilightAllMoves->isChecked()));
     AppSettings->setValue("animateMoves", QVariant(ui.animateMovesCheck->isChecked()));
     AppSettings->setValue("animateMovesSpeed", QVariant(ui.animateMovesSpeed->value()));
     AppSettings->setValue("minWheelCount", ui.minWheelCount->value());

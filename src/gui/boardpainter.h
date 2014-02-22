@@ -37,13 +37,8 @@ public:
 
     // ---------- config --------------
 
-    /** Turns on animation of moves with given speed,
-        or turns off animations with <= 0.0 */
-    void setAnimationSpeed(double squares_per_second = 0.0);
-
-    /** Turns on or off the indication, who's turn it is.
-        (Will be updated by setBoard()) */
-    void setShowMoveIndicator(bool visible);
+    /** Loads system settings */
+    void configure();
 
     // ----------- coords -------------
 
@@ -73,6 +68,11 @@ public:
     void setSquareColor(Square sq, const QColor& color);
     void clearSquareColor(Square sq);
     void clearSquareColors();
+
+    /** Hilights all squares as reachable.
+        Previous hilights are removed. */
+    void setReachableSquares(const std::vector<Square>& squares);
+    void clearReachableSquares();
 
     /** Starts drag/move animation.
         @p view is the mouse coords for the piece.
@@ -159,6 +159,8 @@ protected:
         m_anim_length,
     /** current animation from 0 to 1 */
         m_anim_t;
+
+    QColor m_reachableColor;
 };
 
 #endif // BOARDPAINTER_H

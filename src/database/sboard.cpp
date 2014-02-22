@@ -1064,6 +1064,19 @@ bool SBoard::canBeReachedFrom(const SBoard& target) const
     return true;
 }
 
+void SBoard::getReachableSquares(Square sfrom, std::vector<Square>& vec) const
+{
+    if (!m_movesLoaded) return;
+
+    int from = NB[sfrom];
+    for (int i=0; i<m_ml.count(); ++i)
+    {
+        if (m_ml[i].from() == from)
+            vec.push_back(BN[m_ml[i].to()]);
+    }
+}
+
+
  // NB the following are not member functions
 /* Init board values before starting */
 void SBoardInit()

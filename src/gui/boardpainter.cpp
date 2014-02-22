@@ -12,6 +12,7 @@
 
 #include "boardpainter.h"
 
+#include "settings.h"
 #include "boardtheme.h"
 
 #include <QDebug>
@@ -47,7 +48,8 @@ public:
         :   QGraphicsPixmapItem(pixmap, parent),
             square (square),
             highlight (false),
-            temdek    (false)
+            temdek    (false),
+            reachable (false)
     { }
 
     Square square;
@@ -55,6 +57,8 @@ public:
     QBrush highlightBrush;
     bool temdek;
     QPen temdekPen;
+    bool reachable;
+    QBrush reachableBrush;
 
 protected:
 
@@ -66,6 +70,12 @@ protected:
             painter->setPen(QPen(Qt::NoPen));
             painter->setBrush(highlightBrush);
             painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
+        }
+        if (reachable)
+        {
+            painter->setPen(QPen(Qt::NoPen));
+            painter->setBrush(reachableBrush);
+            painter->drawRect(QRect(10,10,pixmap().width()-20, pixmap().height()-20));
         }
         if (temdek)
         {
@@ -135,6 +145,8 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_timer.setInterval(1000/30);
     connect(&m_timer, &QTimer::timeout, this, &BoardPainter::animationStep_);
 
+    configure();
+
 #if (0) // XXX that basically works ;)
     QTransform t = transform();
     t.rotate(70, Qt::XAxis);
@@ -150,17 +162,15 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
 
 // ----------------- config -------------------
 
-void BoardPainter::setAnimationSpeed(double squares_per_second)
+void BoardPainter::configure()
 {
-    if (squares_per_second <= 0.0)
-    {
-        m_do_animate = false;
-    }
-    else
-    {
-        m_do_animate = true;
-        m_anim_speed = squares_per_second;
-    }
+    AppSettings->beginGroup("/Board/");
+    //m_do_show_side = ...
+    m_do_animate = AppSettings->getValue("animateMoves").toBool();
+    m_anim_speed = AppSettings->getValue("animateMovesSpeed").toDouble();
+    m_reachableColor = QColor(255,255,255,100);
+    AppSettings->endGroup();
+
 }
 
 
@@ -180,11 +190,6 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
     setTransform(t);
     // center everything
     ensureVisible(sceneRect(), margin, margin);
-}
-
-void BoardPainter::setShowMoveIndicator(bool visible)
-{
-    m_do_show_side = visible;
 }
 
 
@@ -238,7 +243,8 @@ void BoardPainter::createBoard_(const Board& board)
         // setup tile
         SquareItem * s = new SquareItem(i, pm);
         s->setPos(squarePos(i));
-        s->setZValue(-1);
+        s->setZValue(-1); // always behind pieces
+        s->reachableBrush = QBrush(m_reachableColor);
 
         // set temdek flag
         if ((i == temdekAt[Black] && board.temdekOn(Black)) ||
@@ -457,6 +463,7 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
     {
         m_drag_piece = new PieceItem(piece, sq, m_theme->piece(piece));
         m_scene->addItem(m_drag_piece);
+        m_drag_piece->setZValue(1); // in front
     }
 
     QPointF pos = mapToScene(view) - QPointF(m_size>>1,m_size>>1);
@@ -468,6 +475,28 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
     m_drag_piece->setPos(pos);
 }
 
+void BoardPainter::setReachableSquares(const std::vector<Square>& squares)
+{
+    clearReachableSquares();
+
+    for (size_t i=0; i<squares.size(); ++i)
+    {
+        SquareItem * s = squareItemAt(squares[i]);
+        if (!s) continue;
+        s->reachable = true;
+        s->update();
+    }
+}
+
+void BoardPainter::clearReachableSquares()
+{
+    for (size_t i=0; i<m_squares.size(); ++i)
+    {
+        bool was = m_squares[i]->reachable;
+        m_squares[i]->reachable = false;
+        if (was) m_squares[i]->update();
+    }
+}
 
 
 
@@ -496,6 +525,7 @@ void BoardPainter::stopAnimation_()
         m_pieces[i]->square = m_pieces[i]->squareTo;
 
         m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
+        m_pieces[i]->setZValue(0);
     }
 
     emit moveFinished();
@@ -529,5 +559,6 @@ void BoardPainter::animationStep_()
         from += t * (to - from);
 
         m_pieces[i]->setPos(from);
+        m_pieces[i]->setZValue(10); // always on top
     }
 }
