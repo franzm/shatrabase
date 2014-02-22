@@ -344,7 +344,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         {
             selectSquare(s);
         }
-            else unselectSquare();
+            else selectSquare();
 
         m_dragPoint = event->pos();
 
@@ -366,8 +366,13 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
     // doit
     m_dragged = m_board.pieceAt(s);
     m_dragPoint = event->pos() - m_theme.pieceCenter();
-    m_board.removeFrom(s);
-    unselectSquare();
+
+    // XXX why should this be needed? sb
+    //m_board.removeFrom(s);
+
+    // change from hover to selected
+//    setHoverSquare();
+//    selectSquare(s);
 }
 
 void BoardView::mouseReleaseEvent(QMouseEvent* event)
@@ -429,12 +434,12 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         }
         else emit invalidMove(from);
 
-        unselectSquare();
+        selectSquare();
     }
     else if (m_selectedSquare != InvalidSquare)
     {
         Square from = m_selectedSquare;
-        unselectSquare();
+        selectSquare();
         if (s != InvalidSquare)
         {
             emit moveMade(from, s, button);
@@ -446,7 +451,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         {
             emit moveMade(m_hiFrom, m_hiTo, button);
         }
-        setHoverSquare(InvalidSquare);
+        setHoverSquare();
     }
     else
     {
@@ -501,7 +506,7 @@ void BoardView::configure()
      *  Might have to do with the runtime qt warnings: 'QPixmap::scaled: Pixmap is a null pixmap'
      */
     m_theme.setSize(QSize(50,50));
-	unselectSquare();
+    selectSquare();
 
     // recreate BoardPainter
     if (m_view) delete m_view;
@@ -513,34 +518,37 @@ void BoardView::configure()
 
 void BoardView::selectSquare(Square s)
 {
-    if (s == m_selectedSquare
-        || s == m_hoverSquare) return;
+    if (s == m_selectedSquare) return;
 
-    unselectSquare();
+    // unset view
+    if (m_selectedSquare != InvalidSquare && m_view)
+        m_view->clearSquareColor(m_selectedSquare);
 
+    // unselect
+    m_selectedSquare = InvalidSquare;
+    if (s == InvalidSquare) return;
+
+    // set view
     if (m_view)
         m_view->setSquareColor(s, m_theme.color(BoardTheme::Highlight));
 
     m_selectedSquare = s;
 }
 
-void BoardView::unselectSquare()
-{
-    if (m_selectedSquare != InvalidSquare && m_view)
-        m_view->clearSquareColor(m_selectedSquare);
-
-    m_selectedSquare = InvalidSquare;
-}
-
 void BoardView::setHoverSquare(Square s)
 {
-    if (s == m_hoverSquare ||
-        s == m_selectedSquare) return;
+    if (s == m_hoverSquare) return;
 
+    // reset previous hover view
     if (m_hoverSquare != InvalidSquare && m_view)
         m_view->clearSquareColor(m_hoverSquare);
 
-    if (s == InvalidSquare) return;
+    // clear flag
+    if (s == InvalidSquare)
+    {
+        m_hoverSquare = s;
+        return;
+    }
 
     if (m_view)
         m_view->setSquareColor(s, m_theme.color(BoardTheme::Highlight));

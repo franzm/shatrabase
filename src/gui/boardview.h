@@ -103,13 +103,14 @@ private:
 
     // ------ highlighting ------
 
-    /* Selects given square. Previously selected square is unselected automatically. */
-    void selectSquare(Square s);
+    /* Selects given square. Previously selected square is unselected automatically.
+       Clear hightlight with s = InvalidSquare. */
+    void selectSquare(Square s = InvalidSquare);
     /* Unselects given square. */
     void unselectSquare();
     /* Sets the m_hoverSquare to @p s. Previously selected square is unselected.
        Clear hightlight with s = InvalidSquare */
-    void setHoverSquare(Square s);
+    void setHoverSquare(Square s = InvalidSquare);
 
 //    void showPossibleMoves(Square s);
 
