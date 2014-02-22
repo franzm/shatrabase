@@ -43,7 +43,7 @@ const int gBoard[64][2] = // graphics board x, y
 
 BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
     m_view(0),
-    m_flipped(false), m_showFrame(false), m_showCurrentMove(true),
+    m_showFrame(false), m_showCurrentMove(true),
     m_selectedSquare(InvalidSquare), m_hoverSquare(InvalidSquare),
     m_hiFrom(InvalidSquare), m_hiTo(InvalidSquare),
     m_currentFrom(InvalidSquare), m_currentTo(InvalidSquare),
@@ -367,12 +367,9 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
     m_dragged = m_board.pieceAt(s);
     m_dragPoint = event->pos() - m_theme.pieceCenter();
 
-    // XXX why should this be needed? sb
-    //m_board.removeFrom(s);
+    // XXX why should this be needed? special flags?
+    m_board.removeFrom(s);
 
-    // change from hover to selected
-//    setHoverSquare();
-//    selectSquare(s);
 }
 
 void BoardView::mouseReleaseEvent(QMouseEvent* event)
@@ -390,14 +387,19 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         }
         else
         {
-            Square from = squareAt(m_dragStart);
+            // XXX what means this?
+            // dragging with wrong mouse button is invalid move? sb
+            Square from = m_dragStartSquare;
             emit invalidMove(from);
         }
+        // reset drag (if any)
         m_dragged = Empty;
         if (m_view)
             m_view->setDragPiece();
         return;
     }
+
+    // l-button
     else
     {
         if (event->modifiers() & Qt::ShiftModifier)
@@ -410,14 +412,17 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         }
     }
 
+    // end of drag action
     if (m_dragged != Empty)
     {
-        if (m_view)
-            m_view->setDragPiece();
-
-        Square from = squareAt(m_dragStart);
+        Square from = m_dragStartSquare;
         m_board.setAt(from, m_dragged);
+
+        // clear highlights
         m_dragged = Empty;
+        if (m_view)  m_view->setDragPiece();
+        selectSquare();
+
         // check if valid move
         if (s != InvalidSquare)
         {
@@ -434,8 +439,11 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         }
         else emit invalidMove(from);
 
-        selectSquare();
     }
+
+    // XXX not really sure what below functions do
+    // they might be broken since i changed the select logic a bit
+
     else if (m_selectedSquare != InvalidSquare)
     {
         Square from = m_selectedSquare;
@@ -479,13 +487,12 @@ void BoardView::wheelEvent(QWheelEvent* e)
 
 void BoardView::setFlipped(bool flipped)
 {
-    m_flipped = flipped;
-    update();
+    if (m_view) m_view->setFlipped(flipped);
 }
 
 bool BoardView::isFlipped() const
 {
-    return m_flipped;
+    return (m_view)? m_view->isFlipped() : false;
 }
 
 void BoardView::configure()

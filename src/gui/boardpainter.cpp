@@ -229,14 +229,20 @@ void BoardPainter::createPieces_(const Board& board)
     }
 }
 
-
+void BoardPainter::onFlip_()
+{
+    for (size_t i=0; i<m_pieces.size(); ++i)
+    {
+        m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
+    }
+}
 
 // -------------------- coords ---------------------------
 
 QRect BoardPainter::squareRect(Square sq) const
 {
-    const int x = gBoard[sq][0],
-              y = gBoard[sq][1];
+    const int x = isFlipped()? 8  - gBoard[sq][0] : gBoard[sq][0],
+              y = isFlipped()? 13 - gBoard[sq][1] : gBoard[sq][1];
 
     return QRect(
             (x-m_center.x())*m_size,
@@ -253,6 +259,10 @@ QPoint BoardPainter::mapToBoard(const QPoint& viewpos) const
     p /= m_size;
     // cancel board placement
     p += m_center;
+
+    if (isFlipped())
+    {
+    }
 
     return QPoint(
         p.x(),

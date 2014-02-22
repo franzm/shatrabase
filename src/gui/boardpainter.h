@@ -43,7 +43,7 @@ public:
     Square squareAt(const QPoint& view_coords) const;
 
     bool isFlipped() const { return m_flipped; }
-    void setFlipped(bool flipped) { m_flipped = flipped; }
+    void setFlipped(bool flipped) { m_flipped = flipped; onFlip_(); }
 
     // --------- board/pieces --------
 
@@ -101,6 +101,8 @@ protected:
 
     void createBoard_(const Board& board);
     void createPieces_(const Board& board);
+    /** Recalculates item positions after a board flip. */
+    void onFlip_();
 
     /** starts the animation thread and animates all
         flagged pieces. @p from and @p to are only
