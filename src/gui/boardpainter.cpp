@@ -116,7 +116,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_center        (4.5,7),
     m_size          (0),
     m_flipped       (false),
-    m_anim_speed    (6)
+    m_anim_speed    (10)
 {    
     setScene(m_scene);
 
@@ -140,6 +140,9 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
 
 void BoardPainter::setBoard(const Board& board, int from, int to)
 {
+    /** @todo Right now, the QGraphicsItems are recreated for each ply.
+        It would probably be more cpu friendly to update only what's needed.
+        */
     createBoard_(board);
     createPieces_(board);
     if (from != InvalidSquare && to != InvalidSquare)
@@ -349,7 +352,13 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
         m_scene->addItem(m_drag_piece);
     }
 
-    m_drag_piece->setPos(mapToScene(view) - QPointF(m_size>>1,m_size>>1));
+    QPointF pos = mapToScene(view) - QPointF(m_size>>1,m_size>>1);
+
+    // keep in range of board
+    pos.setX(std::max(-3.5 * m_size,std::min(2.5 * m_size, pos.x())));
+    pos.setY(std::max(-7.0 * m_size,std::min(6.0 * m_size, pos.y())));
+
+    m_drag_piece->setPos(pos);
 }
 
 
@@ -363,9 +372,7 @@ void BoardPainter::startAnimation_(Square from, Square to)
           dy = gBoard[from][1] - gBoard[to][1],
           dist = sqrt(dx*dx + dy*dy);
 
-    if (dist <= 0) return;
-
-    m_anim_length = m_anim_speed / dist;
+    m_anim_length = m_anim_speed / std::max(1.0, dist);
 
     m_anim_t = 0;
     m_timer.start();
@@ -389,15 +396,22 @@ void BoardPainter::stopAnimation_()
 
 void BoardPainter::animationStep()
 {
+    // update step
     const qreal step = m_anim_length * m_timer.interval() / 1000.0;
+
+    // [0,1]
     m_anim_t += step;
 
     if (m_anim_t >= 1)
         stopAnimation_();
 
-    // go through all pieces
+    // sigmoid fade [0,1]
+    qreal t = m_anim_t;
+    t = (3.0 - 2.0*t) * t*t;
+
+    // go through all pieces that need to be animated
     // XXX This is the generalized approach to move
-    // more than one piece at the same time (but why?)
+    // more than one piece at a time (but why?)
     for (size_t i=0; i<m_pieces.size(); ++i)
     if (m_pieces[i]->animate)
     {
@@ -405,7 +419,7 @@ void BoardPainter::animationStep()
             from = squarePos(m_pieces[i]->square),
             to = squarePos(m_pieces[i]->squareTo);
 
-        from += m_anim_t * (to - from);
+        from += t * (to - from);
 
         m_pieces[i]->setPos(from);
     }

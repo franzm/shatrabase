@@ -513,7 +513,8 @@ void BoardView::configure()
 
 void BoardView::selectSquare(Square s)
 {
-    if (s == m_selectedSquare) return;
+    if (s == m_selectedSquare
+        || s == m_hoverSquare) return;
 
     unselectSquare();
 
@@ -533,7 +534,8 @@ void BoardView::unselectSquare()
 
 void BoardView::setHoverSquare(Square s)
 {
-    if (s == m_hoverSquare) return;
+    if (s == m_hoverSquare ||
+        s == m_selectedSquare) return;
 
     if (m_hoverSquare != InvalidSquare && m_view)
         m_view->clearSquareColor(m_hoverSquare);
