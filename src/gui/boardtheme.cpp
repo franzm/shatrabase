@@ -85,20 +85,20 @@ bool BoardTheme::loadPieces(const QString& pieces, int effect)
     int rs2 = realsize + realsize;
 
 	/* Cut big theme bitmap into separate pieces */
-	m_originalPiece[WhiteTura] = big.copy(0 * realsize, 0, realsize, realsize);
+    m_originalPiece[WhiteTura] =   big.copy(0 * realsize, 0, realsize, realsize);
 	m_originalPiece[WhiteYalkyn] = big.copy(1 * realsize, 0, realsize, realsize);
-	m_originalPiece[WhiteBatyr] = big.copy(2 * realsize, 0, realsize, realsize);
-	m_originalPiece[WhiteBiy] = big.copy(3 * realsize, 0, realsize, realsize);
+    m_originalPiece[WhiteBatyr] =  big.copy(2 * realsize, 0, realsize, realsize);
+    m_originalPiece[WhiteBiy] =    big.copy(3 * realsize, 0, realsize, realsize);
 	m_originalPiece[WhiteShatra] = big.copy(4 * realsize, 0, realsize, realsize);
-	m_originalPiece[BlackTura] = big.copy(0 * realsize, realsize, realsize, realsize);
+    m_originalPiece[BlackTura] =   big.copy(0 * realsize, realsize, realsize, realsize);
 	m_originalPiece[BlackYalkyn] = big.copy(1 * realsize, realsize, realsize, realsize);
-	m_originalPiece[BlackBatyr] = big.copy(2 * realsize, realsize, realsize, realsize);
-	m_originalPiece[BlackBiy] = big.copy(3 * realsize, realsize, realsize, realsize);
+    m_originalPiece[BlackBatyr] =  big.copy(2 * realsize, realsize, realsize, realsize);
+    m_originalPiece[BlackBiy] =    big.copy(3 * realsize, realsize, realsize, realsize);
 	m_originalPiece[BlackShatra] = big.copy(4 * realsize, realsize, realsize, realsize);
-    m_originalPiece[WasTura] = big.copy(0 * realsize, rs2, realsize, realsize);
-    m_originalPiece[WasYalkyn] = big.copy(1 * realsize, rs2, realsize, realsize);
-    m_originalPiece[WasBatyr] = big.copy(2 * realsize, rs2, realsize, realsize);
-    m_originalPiece[WasShatra] = big.copy(4 * realsize, rs2, realsize, realsize);
+    m_originalPiece[WasTura] =     big.copy(0 * realsize, rs2, realsize, realsize);
+    m_originalPiece[WasYalkyn] =   big.copy(1 * realsize, rs2, realsize, realsize);
+    m_originalPiece[WasBatyr] =    big.copy(2 * realsize, rs2, realsize, realsize);
+    m_originalPiece[WasShatra] =   big.copy(4 * realsize, rs2, realsize, realsize);
     m_pieceFilename = themePath;
 
 	if (size().isEmpty())
@@ -167,10 +167,11 @@ void BoardTheme::setSize(const QSize& value)
 	if (!isValid())
 		return;
 	m_size = value;
-	for (int i = 1; i < ConstPieceTypes; i++)
-		m_piece[i] = m_originalPiece[i].scaled(m_size, 
-		    Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	updateSquares();
+    for (int i = 1; i < ConstPieceTypes; i++)
+        if (i != InvalidPiece)
+            m_piece[i] = m_originalPiece[i].scaled(m_size,
+                Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    updateSquares();
     m_urgent = m_originalUrgent.scaled(m_size,
         Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
