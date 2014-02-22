@@ -505,6 +505,8 @@ void BoardView::configure()
     AppSettings->beginGroup("/Board/");
     m_showFrame = AppSettings->getValue("showFrame").toBool();
     m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
+    bool animateMoves = AppSettings->getValue("animateMoves").toBool();
+    double animateMovesSpeed = AppSettings->getValue("animateMovesSpeed").toDouble();
     m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
     m_theme.setColor(BoardTheme::LightSquare, AppSettings->getValue("lightColor").value<QColor>());
     m_theme.setColor(BoardTheme::DarkSquare, AppSettings->getValue("darkColor").value<QColor>());
@@ -523,6 +525,7 @@ void BoardView::configure()
     // recreate BoardPainter
     if (m_view) delete m_view;
     m_view = new BoardPainter(&m_theme, this);
+    m_view->setAnimationSpeed(animateMoves? animateMovesSpeed : 0);
     m_layout->addWidget(m_view);
 
 	update();

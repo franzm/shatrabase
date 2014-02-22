@@ -273,6 +273,8 @@ void PreferencesDialog::restoreSettings()
     AppSettings->beginGroup("/Board/");
     ui.boardFrameCheck->setChecked(AppSettings->getValue("showFrame").toBool());
     ui.hilightCurrentMove->setChecked(AppSettings->getValue("showCurrentMove").toBool());
+    ui.animateMovesCheck->setChecked(AppSettings->getValue("animateMoves").toBool());
+    ui.animateMovesSpeed->setValue(AppSettings->getValue("animateMovesSpeed").toDouble());
     ui.minWheelCount->setValue(AppSettings->getValue("minWheelCount").toInt());
     ui.autoPlayInterval->setValue(AppSettings->getValue("AutoPlayerInterval").toInt());
     ui.cbSaveAndContinue->setChecked(AppSettings->getValue("AutoSaveAndContinue").toBool());
@@ -346,6 +348,8 @@ void PreferencesDialog::saveSettings()
     AppSettings->beginGroup("/Board/");
     AppSettings->setValue("showFrame", QVariant(ui.boardFrameCheck->isChecked()));
     AppSettings->setValue("showCurrentMove", QVariant(ui.hilightCurrentMove->isChecked()));
+    AppSettings->setValue("animateMoves", QVariant(ui.animateMovesCheck->isChecked()));
+    AppSettings->setValue("animateMovesSpeed", QVariant(ui.animateMovesSpeed->value()));
     AppSettings->setValue("minWheelCount", ui.minWheelCount->value());
     AppSettings->setValue("AutoPlayerInterval", ui.autoPlayInterval->value());
 	AppSettings->setValue("pieceTheme", ui.pieceThemeCombo->currentText());

@@ -35,6 +35,12 @@ class BoardPainter : public QGraphicsView
 public:
     explicit BoardPainter(BoardTheme * theme, QWidget *parent = 0);
 
+    // ---------- config --------------
+
+    /** Turns on animation of moves with given speed,
+        or turns off animations with <= 0.0 */
+    void setAnimationSpeed(double squares_per_second = 0.0);
+
     // ----------- coords -------------
 
     /** Maps the view coordinates to board coords */
@@ -132,7 +138,8 @@ protected:
      *  but we ask BoardTheme for QPixMaps in this size). */
     int m_size;
 
-    bool m_flipped;
+    bool m_flipped,
+        m_do_animate;
 
     qreal
     /** piece move animation speed in squares per second */

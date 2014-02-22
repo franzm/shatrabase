@@ -116,6 +116,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_center        (4.5,7),
     m_size          (0),
     m_flipped       (false),
+    m_do_animate    (true),
     m_anim_speed    (10)
 {    
     setScene(m_scene);
@@ -143,6 +144,25 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
 }
 
 
+// ----------------- config -------------------
+
+void BoardPainter::setAnimationSpeed(double squares_per_second)
+{
+    if (squares_per_second <= 0.0)
+    {
+        m_do_animate = false;
+    }
+    else
+    {
+        m_do_animate = true;
+        m_anim_speed = squares_per_second;
+    }
+}
+
+
+
+
+
 void BoardPainter::setBoard(const Board& board, int from, int to)
 {
     /** @todo Right now, the QGraphicsItems are recreated for each ply.
@@ -150,6 +170,8 @@ void BoardPainter::setBoard(const Board& board, int from, int to)
         */
     createBoard_(board);
     createPieces_(board);
+
+    if (m_do_animate && m_anim_speed > 0.0)
     if (from != InvalidSquare && to != InvalidSquare)
     {
         PieceItem * p = pieceItemAt(to);

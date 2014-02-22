@@ -23,79 +23,14 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
        <string>&amp;Board</string>
       </attribute>
       <layout class="QGridLayout">
-       <item row="1" column="2">
-        <widget class="QComboBox" name="boardThemeCombo">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>150</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="0" column="2">
-        <layout class="QHBoxLayout">
-         <item>
-          <widget class="QComboBox" name="pieceThemeCombo">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="pieceEffect">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <item>
-            <property name="text">
-             <string>plain</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>outline</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>outline+shadow</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="9" column="0" colspan="3">
+       <item row="10" column="0" colspan="3">
         <widget class="QGroupBox" name="groupBox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -193,15 +128,41 @@
          </layout>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="boardThemeLabel">
-         <property name="text">
-          <string>Board &amp;style:</string>
+       <item row="3" column="2">
+        <widget class="QCheckBox" name="boardFrameCheck">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
-         <property name="buddy">
-          <cstring>boardThemeCombo</cstring>
+         <property name="text">
+          <string>&amp;Draw frame between squares</string>
          </property>
         </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QComboBox" name="boardThemeCombo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>150</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item row="2" column="2">
         <widget class="ColorList" name="boardColorsList"/>
@@ -216,13 +177,6 @@
          </property>
          <property name="buddy">
           <cstring>boardColorsList</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QCheckBox" name="boardFrameCheck">
-         <property name="text">
-          <string>&amp;Draw frame between squares</string>
          </property>
         </widget>
        </item>
@@ -242,6 +196,104 @@
           <string>Highlight current move</string>
          </property>
         </widget>
+       </item>
+       <item row="0" column="2">
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QComboBox" name="pieceThemeCombo">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="pieceEffect">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <item>
+            <property name="text">
+             <string>plain</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>outline</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>outline+shadow</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="boardThemeLabel">
+         <property name="text">
+          <string>Board &amp;style:</string>
+         </property>
+         <property name="buddy">
+          <cstring>boardThemeCombo</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="2">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QCheckBox" name="animateMovesCheck">
+           <property name="toolTip">
+            <string>Show piece animations when replaying moves?</string>
+           </property>
+           <property name="text">
+            <string>&amp;Animate moves</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_11">
+           <property name="toolTip">
+            <string>Spped of movement is squares per second</string>
+           </property>
+           <property name="text">
+            <string>speed</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="animateMovesSpeed">
+           <property name="toolTip">
+            <string>Speed of piece movement in squares per second</string>
+           </property>
+           <property name="minimum">
+            <double>0.500000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.500000000000000</double>
+           </property>
+           <property name="value">
+            <double>10.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
@@ -863,7 +915,16 @@
    </item>
    <item row="1" column="0">
     <layout class="QHBoxLayout">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>4</number>
+     </property>
+     <property name="rightMargin">
+      <number>4</number>
+     </property>
+     <property name="bottomMargin">
       <number>4</number>
      </property>
      <item>

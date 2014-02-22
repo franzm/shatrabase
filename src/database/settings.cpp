@@ -147,6 +147,8 @@ QMap<QString, QVariant> Settings::initDefaultValues() const {
     map.insert("/History/MaxEntries", 4);
     map.insert("/Board/showFrame", false);
     map.insert("/Board/showCurrentMove", true);
+    map.insert("/Board/animateMoves", true);
+    map.insert("/Board/animateMovesSpeed", 10.0);
     map.insert("/Board/minWheelCount", MIN_WHEEL_COUNT);
     map.insert("/Board/pieceTheme", "motifshatra");
     map.insert("/Board/pieceEffect", BoardTheme::Plain);
