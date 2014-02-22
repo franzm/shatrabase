@@ -103,9 +103,9 @@ protected:
     // -------- coords ---------------
 
     /** rect of a square in scene coords */
-    QRect squareRect(Square sq) const;
+    QRectF squareRect(Square sq) const;
     /** (corner) position of a square in scene coords */
-    QPoint squarePos(Square sq) const { return squareRect(sq).topLeft(); }
+    QPointF squarePos(Square sq) const { return squareRect(sq).topLeft(); }
 
     /** Returns the SquareItem for the position, or 0 */
     SquareItem * squareItemAt(Square sq) const;

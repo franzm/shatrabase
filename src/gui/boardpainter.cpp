@@ -309,9 +309,19 @@ void BoardPainter::updateMoveIndicators_()
     m_move_black->setVisible(m_do_show_side && !m_is_white);
     if (!m_do_show_side) return;
 
-    // set positions on view (update from flipping)
-    m_move_white->setPos(-3.5 * m_size, isFlipped()? -7 * m_size : 6.5 * m_size);
-    m_move_black->setPos(-3.5 * m_size, isFlipped()? 6.5 * m_size : -7 * m_size);
+    // set positions on view (also update from boardflip)
+    if (!isFlipped())
+    {
+        m_move_white->setPos(squarePos(11).x(), squarePos(60).y()
+                             + m_size - m_move_white->rect().height());
+        m_move_black->setPos(squarePos(11).x(), squarePos(1).y());
+    }
+    else
+    {
+        m_move_white->setPos(squarePos(17).x(), squarePos(60).y());
+        m_move_black->setPos(squarePos(17).x(), squarePos(1).y()
+                             + m_size - m_move_white->rect().height());
+    }
 }
 
 void BoardPainter::onFlip_()
@@ -330,14 +340,14 @@ void BoardPainter::onFlip_()
 
 // -------------------- coords ---------------------------
 
-QRect BoardPainter::squareRect(Square sq) const
+QRectF BoardPainter::squareRect(Square sq) const
 {
     const int x = isFlipped()? 8  - gBoard[sq][0] : gBoard[sq][0],
               y = isFlipped()? 13 - gBoard[sq][1] : gBoard[sq][1];
 
-    return QRect(
+    return QRectF(
             (x-m_center.x())*m_size,
-            (y-m_center.y())*m_size,
+            (y-m_center.y())*m_size,// + ((sq>31)*2-1) * 0.01)*m_size,
             m_size, m_size
             );
 }
