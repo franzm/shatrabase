@@ -71,11 +71,13 @@ public:
                       const QPoint& view = QPoint());
 signals:
 
+    /** Emitted when a move animation has ended. */
     void moveFinished();
 
 protected slots:
 
-    void animationStep();
+    /** animation executer */
+    void animationStep_();
 
     // ________ PROTECTED ____________
 protected:

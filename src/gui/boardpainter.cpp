@@ -128,13 +128,18 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
 
     // timer for animations
     m_timer.setInterval(1000/30);
-    connect(&m_timer, &QTimer::timeout, this, &BoardPainter::animationStep);
+    connect(&m_timer, &QTimer::timeout, this, &BoardPainter::animationStep_);
 
 #if (0) // XXX that basically works ;)
     QTransform t = transform();
     t.rotate(70, Qt::XAxis);
     setTransform(t);
 #endif
+
+    setRenderHint(QPainter::Antialiasing, true);
+    setRenderHint(QPainter::HighQualityAntialiasing, true);
+    setRenderHint(QPainter::SmoothPixmapTransform, true);
+
 }
 
 
@@ -231,6 +236,10 @@ void BoardPainter::createPieces_(const Board& board)
 
 void BoardPainter::onFlip_()
 {
+    for (size_t i=0; i<m_squares.size(); ++i)
+    {
+        m_squares[i]->setPos(squarePos(m_squares[i]->square));
+    }
     for (size_t i=0; i<m_pieces.size(); ++i)
     {
         m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
@@ -259,10 +268,6 @@ QPoint BoardPainter::mapToBoard(const QPoint& viewpos) const
     p /= m_size;
     // cancel board placement
     p += m_center;
-
-    if (isFlipped())
-    {
-    }
 
     return QPoint(
         p.x(),
@@ -404,7 +409,7 @@ void BoardPainter::stopAnimation_()
     emit moveFinished();
 }
 
-void BoardPainter::animationStep()
+void BoardPainter::animationStep_()
 {
     // update step
     const qreal step = m_anim_length * m_timer.interval() / 1000.0;
