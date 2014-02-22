@@ -108,11 +108,6 @@ const BoardTheme& BoardView::theme() const
     return m_theme;
 }
 
-void BoardView::showMoveIndicator(bool visible )
-{
-    if (m_view) m_view->setShowMoveIndicator(visible);
-}
-
 
 #if (0)
 void BoardView::drawSquares(QPaintEvent* event)

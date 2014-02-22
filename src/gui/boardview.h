@@ -53,8 +53,6 @@ public:
     /** Make it almost 1.555 : 1 */
     virtual int heightForWidth(int width) const;
 
-    void showMoveIndicator(bool visible);
-
 public slots:
     /** Reconfigure current theme. */
     void configure();
