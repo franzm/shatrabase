@@ -113,10 +113,14 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_theme         (theme),
     m_scene         (new QGraphicsScene(this)),
     m_drag_piece    (0),
+    m_move_white    (0),
+    m_move_black    (0),
     m_center        (4.5,7),
     m_size          (0),
     m_flipped       (false),
+    m_is_white      (true),
     m_do_animate    (true),
+    m_do_show_side  (true),
     m_anim_speed    (10)
 {    
     setScene(m_scene);
@@ -178,14 +182,24 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
     ensureVisible(sceneRect(), margin, margin);
 }
 
+void BoardPainter::setShowMoveIndicator(bool visible)
+{
+    m_do_show_side = visible;
+}
+
+
 
 void BoardPainter::setBoard(const Board& board, int from, int to)
 {
+    // keep side to turn
+    m_is_white = board.toMove() == White;
+
     /** @todo Right now, the QGraphicsItems are recreated for each ply.
         It would probably be more cpu friendly to update only what's needed.
         */
     createBoard_(board);
     createPieces_(board);
+    updateMoveIndicators_();
 
     if (m_do_animate && m_anim_speed > 0.0)
     if (from != InvalidSquare && to != InvalidSquare)
@@ -272,6 +286,34 @@ void BoardPainter::createPieces_(const Board& board)
     }
 }
 
+void BoardPainter::updateMoveIndicators_()
+{
+    if (!m_move_white)
+    {
+        m_move_white = new QGraphicsRectItem;
+        m_move_white->setRect(0,0, m_size/2, m_size/2);
+        m_move_white->setPen(QPen(Qt::gray));
+        m_move_white->setBrush(QBrush(Qt::white));
+        m_scene->addItem(m_move_white);
+    }
+    if (!m_move_black)
+    {
+        m_move_black = new QGraphicsRectItem;
+        m_move_black->setRect(0,0, m_size/2, m_size/2);
+        m_move_black->setPen(QPen(Qt::gray));
+        m_move_black->setBrush(QBrush(Qt::black));
+        m_scene->addItem(m_move_black);
+    }
+
+    m_move_white->setVisible(m_do_show_side && m_is_white);
+    m_move_black->setVisible(m_do_show_side && !m_is_white);
+    if (!m_do_show_side) return;
+
+    // set positions on view (update from flipping)
+    m_move_white->setPos(-3.5 * m_size, isFlipped()? -7 * m_size : 6.5 * m_size);
+    m_move_black->setPos(-3.5 * m_size, isFlipped()? 6.5 * m_size : -7 * m_size);
+}
+
 void BoardPainter::onFlip_()
 {
     for (size_t i=0; i<m_squares.size(); ++i)
@@ -282,6 +324,8 @@ void BoardPainter::onFlip_()
     {
         m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
     }
+
+    updateMoveIndicators_();
 }
 
 // -------------------- coords ---------------------------

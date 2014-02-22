@@ -43,13 +43,17 @@ const int gBoard[64][2] = // graphics board x, y
 
 BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
     m_view(0),
-    m_showFrame(false), m_showCurrentMove(true),
-    m_selectedSquare(InvalidSquare), m_hoverSquare(InvalidSquare),
-    m_hiFrom(InvalidSquare), m_hiTo(InvalidSquare),
-    m_currentFrom(InvalidSquare), m_currentTo(InvalidSquare),
-    m_flags(flags), m_coordinates(false), m_dragged(Empty), 
-    m_clickUsed(false),m_wheelCurrentDelta(0),
-    m_minDeltaWheel(0),m_moveListCurrent(0),m_showMoveIndicator(true)
+    m_showCurrentMove(true),
+    m_selectedSquare(InvalidSquare),
+    m_hoverSquare(InvalidSquare),
+    m_currentFrom(InvalidSquare),
+    m_currentTo(InvalidSquare),
+    m_flags(flags),
+    m_dragged(Empty),
+    m_clickUsed(false),
+    m_wheelCurrentDelta(0),
+    m_minDeltaWheel(0),
+    m_moveListCurrent(0)
 {
     //QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     //policy.setHeightForWidth(true);
@@ -106,8 +110,9 @@ const BoardTheme& BoardView::theme() const
 
 void BoardView::showMoveIndicator(bool visible )
 {
-    m_showMoveIndicator = visible;
+    if (m_view) m_view->setShowMoveIndicator(visible);
 }
+
 
 #if (0)
 void BoardView::drawSquares(QPaintEvent* event)
@@ -247,25 +252,7 @@ void BoardView::paintEvent(QPaintEvent* event)
 }
 #endif
 
-void BoardView::resizeBoard()
-{
-    return; // XXX
-    int xsize = width() / (1+7+1);
-    int ysize = height() / 14;
-    int size = xsize < ysize? xsize : ysize;
-    m_theme.setSize(QSize(size, size));
-    size -= (size < 30? size : 30);
-    m_scale = ((size+12)>>3) + 1;
-}
 
-void BoardView::resizeEvent(QResizeEvent * event)
-{
-    QWidget::resizeEvent(event);
-    resizeBoard();
-
-//    parentWidget()->updateGeometry();
-//    parentWidget()->layout()->update();
-}
 
 Square BoardView::squareAt(const QPoint& p) const
 {
@@ -503,7 +490,6 @@ bool BoardView::isFlipped() const
 void BoardView::configure()
 {
     AppSettings->beginGroup("/Board/");
-    m_showFrame = AppSettings->getValue("showFrame").toBool();
     m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
     bool animateMoves = AppSettings->getValue("animateMoves").toBool();
     double animateMovesSpeed = AppSettings->getValue("animateMovesSpeed").toDouble();

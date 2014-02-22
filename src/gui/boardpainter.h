@@ -41,6 +41,10 @@ public:
         or turns off animations with <= 0.0 */
     void setAnimationSpeed(double squares_per_second = 0.0);
 
+    /** Turns on or off the indication, who's turn it is.
+        (Will be updated by setBoard()) */
+    void setShowMoveIndicator(bool visible);
+
     // ----------- coords -------------
 
     /** Maps the view coordinates to board coords */
@@ -112,6 +116,7 @@ protected:
 
     void createBoard_(const Board& board);
     void createPieces_(const Board& board);
+    void updateMoveIndicators_();
     /** Recalculates item positions after a board flip. */
     void onFlip_();
 
@@ -134,7 +139,8 @@ protected:
     std::vector<PieceItem*> m_pieces;
     /** currently dragged piece */
     PieceItem * m_drag_piece;
-
+    QGraphicsRectItem * m_move_white,
+                      * m_move_black;
     /** center position (in squares) of board */
     QPointF m_center;
     /** size of a tile (somewhat arbitrary since QGraphicsView scales anyway,
@@ -142,7 +148,9 @@ protected:
     int m_size;
 
     bool m_flipped,
-        m_do_animate;
+        m_is_white,
+        m_do_animate,
+        m_do_show_side;
 
     qreal
     /** piece move animation speed in squares per second */

@@ -23,7 +23,7 @@ class BoardTheme;
 class BoardPainter;
 class QLayout;
 
-/* the BoardView class represents a widget for displaying current
+/** the BoardView class represents a widget for displaying current
 position on the screen. */
 
 class BoardView : public QWidget
@@ -32,58 +32,58 @@ class BoardView : public QWidget
 public:
     enum {WheelUp = Qt::LeftButton, WheelDown = Qt::RightButton};
     enum {IgnoreSideToMove = 1, AllowCopyPiece = 4};
-    /* Create board widget. */
+    /** Create board widget. */
     BoardView(QWidget* parent, int flags = 0);
-    /* Destroy widget. */
+    /** Destroy widget. */
     ~BoardView();
-    /* Set flags for board. Flags include:
+    /** Set flags for board. Flags include:
     * @p IgnoreSideToMove - allow dragging all pieces (useful for setting up a position)
     */
     void setFlags(int flags);
-	/* Update and shows current position. */
+    /** Update and shows current position. */
     void setBoard(const Board& value, int from = InvalidSquare, int to = InvalidSquare);
-    /* @return displayed position. */
+    /** @return displayed position. */
     Board board() const;
-    /* @return current theme */
+    /** @return current theme */
     const BoardTheme& theme() const;
-    /* Flips/unflips board. */
+    /** Flips/unflips board. */
     void setFlipped(bool flipped);
-    /* @return @p true if board is displayed upside down. */
+    /** @return @p true if board is displayed upside down. */
     bool isFlipped() const;
-    /* Make it almost 1.555 : 1 */
+    /** Make it almost 1.555 : 1 */
     virtual int heightForWidth(int width) const;
 
-    void showMoveIndicator(bool visible );
+    void showMoveIndicator(bool visible);
 
 public slots:
-    /* Reconfigure current theme. */
+    /** Reconfigure current theme. */
     void configure();
 
 signals:
-    /* User clicked source and destination squares */
+    /** User clicked source and destination squares */
     void moveMade(Square from, Square to, int button);
-    /* User dragged and dropped a piece holding Control */
+    /** User dragged and dropped a piece holding Control */
     void copyPiece(Square from, Square to);
-    /* User dragged and dropped a piece holding Control */
+    /** User dragged and dropped a piece holding Control */
     void invalidMove(Square from);
-    /* User clicked square */
+    /** User clicked square */
     void clicked(Square square, int button, QPoint pos);
-    /* User moved mouse wheel. */
+    /** User moved mouse wheel. */
     void wheelScrolled(int dir);
-    /* Indicate that a piece was dropped to the board */
+    /** Indicate that a piece was dropped to the board */
     void pieceDropped(Square to, Piece p);
+
 protected:
-    /* Redraws whole board if necessary. */
-    //virtual void paintEvent(QPaintEvent*);
-    /* Automatically resizes pieces and redisplays board. */
-    virtual void resizeEvent(QResizeEvent*);
-    /* Handle mouse events */
+
+    // -------------- events ------------------
+
+    /** Handle mouse events */
     virtual void mousePressEvent(QMouseEvent* e);
-    /* Handle mouse events */
+    /** Handle mouse events */
     virtual void mouseMoveEvent(QMouseEvent* e);
-    /* Handle mouse events */
+    /** Handle mouse events */
     virtual void mouseReleaseEvent(QMouseEvent* e);
-    /* Handle mouse wheel events */
+    /** Handle mouse wheel events */
     virtual void wheelEvent(QWheelEvent* e);
 
 protected: //Drag'n'Drop Support
@@ -93,22 +93,20 @@ protected: //Drag'n'Drop Support
     void dropEvent(QDropEvent *event);
 
 private:
-    /* Resizes pieces for new board size. */
-    void resizeBoard();
-    /* @return square at given position */
+    /** @return square at given position */
     Square squareAt(const QPoint& p) const;
-    /* Check if piece at square @p square can be dragged */
+    /** Check if piece at square @p square can be dragged */
     bool canDrag(Square s);
     //bool eventFilter(QObject *obj, QEvent *ev);
 
     // ------ highlighting ------
 
-    /* Selects given square. Previously selected square is unselected automatically.
+    /** Selects given square. Previously selected square is unselected automatically.
        Clear hightlight with s = InvalidSquare. */
     void selectSquare(Square s = InvalidSquare);
-    /* Unselects given square. */
+    /** Unselects given square. */
     void unselectSquare();
-    /* Sets the m_hoverSquare to @p s. Previously selected square is unselected.
+    /** Sets the m_hoverSquare to @p s. Previously selected square is unselected.
        Clear hightlight with s = InvalidSquare */
     void setHoverSquare(Square s = InvalidSquare);
 
@@ -129,27 +127,25 @@ private:
     BoardTheme m_theme;
     BoardPainter * m_view;
     QLayout * m_layout;
-    bool m_showFrame;
     bool m_showCurrentMove;
     int m_selectedSquare;
     int m_hoverSquare;
-    int m_hiFrom;
-    int m_hiTo;
     int m_currentFrom;
     int m_currentTo;
     int m_flags;
-	bool m_coordinates;
-    int m_scale;
+    /** piece currently dragged */
     Piece m_dragged;
+    /** start of drag */
     Square m_dragStartSquare;
+    /** start of drag (window space) */
     QPoint m_dragStart;
+    /** current end of drag (window space) */
     QPoint m_dragPoint;
     int m_button;
     bool m_clickUsed;
     int m_wheelCurrentDelta;
     int m_minDeltaWheel;
     unsigned int m_moveListCurrent;
-    bool m_showMoveIndicator;
 };
 
 class BoardViewMimeData : public QMimeData

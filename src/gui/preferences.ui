@@ -50,6 +50,9 @@
           </property>
           <item>
            <widget class="QCheckBox" name="guessMoveCheck">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>&amp;Guess move on left-click</string>
             </property>
@@ -57,6 +60,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="guessNextMove">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Next guess on right click</string>
             </property>
@@ -192,6 +198,9 @@
        </item>
        <item row="4" column="2">
         <widget class="QCheckBox" name="hilightCurrentMove">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Highlight current move</string>
          </property>
