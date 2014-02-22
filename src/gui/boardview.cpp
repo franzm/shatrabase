@@ -368,8 +368,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
     m_dragPoint = event->pos() - m_theme.pieceCenter();
 
     // XXX why should this be needed? special flags?
-    m_board.removeFrom(s);
-
+    //m_board.removeFrom(s);
 }
 
 void BoardView::mouseReleaseEvent(QMouseEvent* event)
@@ -416,11 +415,12 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
     if (m_dragged != Empty)
     {
         Square from = m_dragStartSquare;
-        m_board.setAt(from, m_dragged);
+        // XXX probably irrelevant
+        //m_board.setAt(from, m_dragged);
 
         // clear highlights
         m_dragged = Empty;
-        if (m_view)  m_view->setDragPiece();
+        if (m_view) m_view->setDragPiece();
         selectSquare();
 
         // check if valid move
@@ -444,6 +444,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
     // XXX not really sure what below functions do
     // they might be broken since i changed the select logic a bit
 
+    // XXX probably single click execute move
     else if (m_selectedSquare != InvalidSquare)
     {
         Square from = m_selectedSquare;
@@ -453,6 +454,9 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             emit moveMade(from, s, button);
         }
     }
+
+    // XXX hiFrom seems not be used
+    /*
     else if (m_hiFrom != InvalidSquare)
     {
         if (s == m_hiFrom || s == m_hiTo)
@@ -461,6 +465,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         }
         setHoverSquare();
     }
+    // ???
     else
     {
         if (s != InvalidSquare)
@@ -471,7 +476,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
                 selectSquare(s);
             }
         }
-    }
+    }*/
 }
 
 void BoardView::wheelEvent(QWheelEvent* e)
