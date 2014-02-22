@@ -519,7 +519,7 @@ void BoardView::configure()
      *  when this is first time called by BoardPainter().
      *  Might have to do with the runtime qt warnings: 'QPixmap::scaled: Pixmap is a null pixmap'
      */
-    m_theme.setSize(QSize(50,50));
+    m_theme.setSize(QSize(100,100));
     selectSquare();
 
     // recreate BoardPainter

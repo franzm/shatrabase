@@ -87,6 +87,9 @@ protected slots:
 
     // ________ PROTECTED ____________
 protected:
+
+    virtual void resizeEvent(QResizeEvent *event);
+
     /* XXX The view is eating all mouse events, why? */
     virtual void mousePressEvent(QMouseEvent * e) { e->ignore(); };
     virtual void mouseMoveEvent(QMouseEvent * e) { e->ignore(); };

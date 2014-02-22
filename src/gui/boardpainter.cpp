@@ -160,7 +160,23 @@ void BoardPainter::setAnimationSpeed(double squares_per_second)
 }
 
 
+void BoardPainter::resizeEvent(QResizeEvent *event)
+{
+    QGraphicsView::resizeEvent(event);
 
+    const int margin = 10;
+
+    // adjust transform scale
+    QRectF r = sceneRect();
+    qreal sy = (r.height() + 2.0*margin) / height(),
+          sx = (r.width()  + 2.0*margin) / width(),
+          sm = 1.0 / std::max(sx,sy);
+    QTransform t;
+    t.scale(sm,sm);
+    setTransform(t);
+    // center everything
+    ensureVisible(sceneRect(), margin, margin);
+}
 
 
 void BoardPainter::setBoard(const Board& board, int from, int to)
