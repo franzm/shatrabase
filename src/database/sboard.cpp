@@ -40,7 +40,7 @@ bool SBoard::hasNoMoves() const
 Result SBoard::gameResult() const
 {
     return !m_biyAt[Black]? WhiteWin :
-           !m_biyAt[White]? BlackWin : Unknown; // or could return Draw? TODO make option
+           !m_biyAt[White]? BlackWin : Draw;
 }
 
 QString SBoard::moveToLann(const Move& move) const

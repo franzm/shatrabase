@@ -20,7 +20,7 @@
 
 DatabaseInfo::DatabaseInfo()
 {
-	m_database = new MemoryDatabase;
+    m_database = new MemoryDatabase;
     m_filter = new Filter(m_database);
     m_bLoaded = true;
     m_utf8 = false;
