@@ -1000,6 +1000,8 @@ void MainWindow::setupActions()
 bool MainWindow::confirmQuit()
 {
     QString modified;
+    int d_size = m_databases.size();
+    urstack<int,64> mods;
     if (m_currentDatabase)
     {
         if (!QuerySaveGame())
@@ -1007,22 +1009,30 @@ bool MainWindow::confirmQuit()
             return false;
         }
     }
-    for (int i = 1; i < m_databases.size(); i++)
-        if (m_databases[i]->database()->isModified())
+    for (int i = 1; i < d_size; i++)
+        if (m_databases[i]->database()->isModified()) {
             modified += m_databases[i]->database()->name() + '\n';
-    if (!modified.isEmpty()) {
-        int response = MessageDialog::yesNoCancel(tr("Following databases are modified:")
-                    + '\n' + modified + tr("Save them?"));
+            mods.push(i);
+	}
+    if (!mods.empty()) {
+      int response = mods.count() > 1?
+            MessageDialog::yesNoCancel(tr("Following databases are modified:")
+				       + '\n' + modified + tr("Save them?")) :
+            MessageDialog::yesNoCancel(tr("Following database is modified:")
+
+                                       + '\n' + modified + tr("Save it?"));
         if (response == MessageDialog::Cancel)
         {
             return false;
         }
         if (response == MessageDialog::Yes) {
             Output output(Output::Sgn);
-            for (int i = 1; i < m_databases.size(); i++)
-                if (m_databases[i]->database()->isModified())
-                    output.output(m_databases[i]->database()->filename(),
+             while (!mods.empty()) {
+                int i = mods.remove();
+                connect(&output, SIGNAL(progress(int)), SLOT(slotOperationProgress(int)));
+                output.output(m_databases[i]->database()->filename(),
                             *(m_databases[i]->database()));
+             }
         }
     }
     return true;

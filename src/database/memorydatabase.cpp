@@ -99,13 +99,12 @@ void MemoryDatabase::parseGame()
 {
     Game* game = new Game;
     IndexBaseType n = m_count - 1;
-    g_resModified = false;
     QString spn = m_index.tagValue(TagNameSPN, n);
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
     m_index.setValidFlag(n, parseMoves(game));
     m_index.setTag("Length", QString::number((game->plyCount()+1) / 2), n);
-    if (g_autoResult0nLoad && m_index.tagValue("Result", n).isEmpty()) {
+    if (g_autoResult0nLoad && game->result() == Unknown) {
         m_index.setTag("Result", resultString(game->board().gameResult()), n);
         g_resModified = true;
     }
@@ -116,6 +115,7 @@ void MemoryDatabase::parseGame()
 bool MemoryDatabase::parseFile()
 {
     g_totalNodes = 0;
+    g_resModified = false;
     parseFileIntern();
 	m_isModified = false;
     g_aveNodes = g_totalNodes / m_count;
