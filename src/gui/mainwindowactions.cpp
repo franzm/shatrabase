@@ -509,10 +509,10 @@ void MainWindow::slotMoveChanged()
 
 void MainWindow::slotNotationChanged()
 {
-    if (g_nchanged)
+    if (g_nChanged)
     {
         slotGameChanged();
-        g_nchanged = false;
+        g_nChanged = false;
     }
 }
 

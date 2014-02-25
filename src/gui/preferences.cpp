@@ -220,13 +220,13 @@ void PreferencesDialog::slotShowOptionDialog()
 
 void PreferencesDialog::slotNumericNotation()
 {
-    g_notation = false; g_nchanged = true;
+    g_notation = false; g_nChanged = true;
     ui.notationNumeric->setChecked(true);
 }
 
 void PreferencesDialog::slotAlgebraicNotation()
 {
-    g_notation = true; g_nchanged = true;
+    g_notation = true; g_nChanged = true;
     ui.notationAlgebraic->setChecked(true);
 }
 

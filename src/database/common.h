@@ -56,10 +56,11 @@ enum BoardLimits { fsq = 1, lsq = 62 };
 extern bool g_loading;
 extern bool g_searching;
 extern bool g_notation;
-extern bool g_nchanged;
-extern int  g_nerrors;
-extern int  g_avenodes;
-extern int  g_totalnodes;
+extern bool g_nChanged;
+extern bool g_autoResult0nLoad;
+extern int  g_nErrors;
+extern int  g_aveNodes;
+extern int  g_totalNodes;
 
 
 const int ConstPieceTypes = WasShatra + 1;

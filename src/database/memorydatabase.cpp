@@ -98,21 +98,24 @@ bool MemoryDatabase::loadGame(int index, Game& game)
 void MemoryDatabase::parseGame()
 {
     Game* game = new Game;
-    QString spn = m_index.tagValue(TagNameSPN, m_count - 1);
+    IndexBaseType n = m_count - 1;
+    QString spn = m_index.tagValue(TagNameSPN, n);
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
-    m_index.setValidFlag(m_count-1,parseMoves(game));
-    m_index.setTag("Length", QString::number((game->plyCount() + 1) / 2), m_count - 1);
-    g_totalnodes += game->currentMove();
+    m_index.setValidFlag(n, parseMoves(game));
+    m_index.setTag("Length", QString::number((game->plyCount()+1) / 2), n);
+    if (g_autoResult0nLoad)
+        m_index.setTag("Result", resultString(game->board().gameResult()), n);
+    g_totalNodes += game->currentMove();
     m_games.append(game);
 }
 
 bool MemoryDatabase::parseFile()
 {
-    g_totalnodes = 0;
+    g_totalNodes = 0;
     parseFileIntern();
 	m_isModified = false;
-    g_avenodes = g_totalnodes / m_count;
+    g_aveNodes = g_totalNodes / m_count;
 	return true;
 }
 

@@ -23,15 +23,16 @@ void MainWindow::slotHelpAbout()
                         "<p>Free Shatra database Version %1</p>"
                         "<p>Derived from Chessx Version %1</p>"
                         COPYRIGHT
-                        "<p>License: GNU Public License 2 - GPLv2</p>"
-                        "<p>Developer: <a href=\"mailto:francis@afkm.com\">Francis Monkman</a></p>"
+                        "<p>License: GNU Public License 3 - GPLv3</p>"
+                        "<p>Developers: <a href=\"mailto:francis@afkm.com\">Francis Monkman</a>"
+                        " and <a href=\"mailto:stefan.berke@cymatrix.org\">Stefan Berke</a></p>"
+                        "<p>Homepage: <a href=\"https://github.com/franzm/shatrabase\">https://github.com/franzm/shatrabase</a>"
                         "<p>Chessx maintainer: <a href=\"mailto:jens-chessx@gmx.net\">Jens Nissen</a></p>"
                         "<p>Testing, usability and website: Bruno Rizzuti</p>"
                         "<p>Further maintainers: Michal Rudolf, Ejner Borgbjerg</p>"
                         "<p>Additional coding: James Coons, Marius Roets, Sean Estabrooks, Rico Zenklusen, "
                         "Heinz Hopfgartner, William Hoggarth.</p>"
-                        "<p>Homepage: <a href=\"http://chessx.sourceforge.net\">http://chessx.sourceforge.net</a><br>"
-                        "Mailing list: <a href=\"mailto:chessx-users@lists.sourceforge.net\">chessx-users@lists.sourceforge.net</a></p>")
+                        "<p>Chessx homepage: <a href=\"http://chessx.sourceforge.net\">http://chessx.sourceforge.net</a><br>")
                         .arg(version),
                 QMessageBox::Ok);
     dialog.setIconPixmap((QPixmap(":/images/shatrabase.png")));

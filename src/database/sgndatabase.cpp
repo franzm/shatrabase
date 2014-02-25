@@ -360,7 +360,7 @@ void SgnDatabase::initialise()
 	m_filename = QString();
 	m_count = 0;
 	m_allocated = 0;
-    g_nerrors = 0;
+    g_nErrors = 0;
 }
 
 
@@ -470,7 +470,7 @@ bool SgnDatabase::parseMoves(Game* game)
 		} else {
 			parseLine(game);
             if (m_variation == -1) {
-                ++g_nerrors;
+                ++g_nErrors;
                 return false;
 			}
 		}
@@ -486,6 +486,7 @@ bool SgnDatabase::parseMoves(Game* game)
                 m_precomment.clear();
             }
         }
+//        if(true) game->setResult(game->board().gameResult());
     }
     return true;
 }

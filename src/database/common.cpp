@@ -31,21 +31,23 @@ Piece operator++(Piece& w, int)
 bool g_loading    = false;
 bool g_searching  = false;
 bool g_notation   = NUM; // default is numeric
-bool g_nchanged   = false;
-int  g_nerrors    = 0;
-int  g_avenodes   = 0;
-int  g_totalnodes = 0;
+bool g_nChanged   = false;
+bool g_autoResult0nLoad = false;
+int  g_nErrors    = 0;
+int  g_aveNodes   = 0;
+int  g_totalNodes = 0;
 
 QString resultString(Result result)
 {
 	switch (result) {
+	case Unknown:
+		return "*";
 	case WhiteWin:
 		return "1-0";
 	case Draw:
 		return "1/2-1/2";
 	case BlackWin:
 		return "0-1";
-	case Unknown:
 	default:
 		return "*";
 	}
