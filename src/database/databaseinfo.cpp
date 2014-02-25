@@ -53,8 +53,8 @@ void DatabaseInfo::doLoadFile(QString filename)
     }
     g_loading = true;
     m_database->parseFile();
-    if (g_autoResult0nLoad)
-        m_database->setModified(true);
+    if (g_resModified)
+        m_database->setModified(true); // NB temporary fix
     delete m_filter;
     m_filter = new Filter(m_database);
     m_bLoaded = true;

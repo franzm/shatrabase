@@ -32,7 +32,8 @@ bool g_loading    = false;
 bool g_searching  = false;
 bool g_notation   = NUM; // default is numeric
 bool g_nChanged   = false;
-bool g_autoResult0nLoad = false;
+bool g_autoResult0nLoad = true;
+bool g_resModified;
 int  g_nErrors    = 0;
 int  g_aveNodes   = 0;
 int  g_totalNodes = 0;

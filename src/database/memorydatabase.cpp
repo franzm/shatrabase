@@ -99,13 +99,16 @@ void MemoryDatabase::parseGame()
 {
     Game* game = new Game;
     IndexBaseType n = m_count - 1;
+    g_resModified = false;
     QString spn = m_index.tagValue(TagNameSPN, n);
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
     m_index.setValidFlag(n, parseMoves(game));
     m_index.setTag("Length", QString::number((game->plyCount()+1) / 2), n);
-    if (g_autoResult0nLoad)
+    if (g_autoResult0nLoad && m_index.tagValue("Result", n).isEmpty()) {
         m_index.setTag("Result", resultString(game->board().gameResult()), n);
+        g_resModified = true;
+    }
     g_totalNodes += game->currentMove();
     m_games.append(game);
 }
