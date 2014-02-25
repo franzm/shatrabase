@@ -8,7 +8,7 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -40,7 +40,7 @@ bool SBoard::hasNoMoves() const
 Result SBoard::gameResult() const
 {
     return !m_biyAt[Black]? WhiteWin :
-           !m_biyAt[White]? BlackWin : Unknown;
+           !m_biyAt[White]? BlackWin : Unknown; // or could return Draw? TODO make option
 }
 
 QString SBoard::moveToLann(const Move& move) const
