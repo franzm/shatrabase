@@ -8,7 +8,7 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -35,6 +35,12 @@ SBoard::SBoard()
 bool SBoard::hasNoMoves() const
 {
     return m_ml.count() == 0; // NB must have tried to generate moves! :)
+}
+
+Result SBoard::gameResult() const
+{
+    return !m_biyAt[Black]? WhiteWin :
+           !m_biyAt[White]? BlackWin : Draw;
 }
 
 QString SBoard::moveToLann(const Move& move) const
@@ -75,7 +81,8 @@ QString SBoard::moveToLann(const Move& move) const
         lann += pieceToChar((Piece)move.promoted());
     }
 
-    if (move.capturesBiy()) lann += 'x'; // game over
+    if (move.capturesBiy())
+        lann += 'x'; // game over
 
     return lann;
 }
@@ -158,7 +165,7 @@ bool SBoard::setAt(const int at, const Piece p) // board coords
     Color _color = pieceColor(p);
     ++m_pieceCount[_color];
     
-    if(pt == Biy) m_ksq[_color] = at;
+    if(pt == Biy) m_biyAt[_color] = at;
     --m_offBoard[p];
     return true; // NB remember temdek count in position setup
 }
@@ -176,7 +183,7 @@ void SBoard::removeAt(const int at) // also board coords
     Color _color = pieceColor(p);
     --m_pieceCount[_color];
     
-    if(pt == Biy) m_ksq[_color] = NoSquare;
+    if(pt == Biy) m_biyAt[_color] = NoSquare;
     ++m_offBoard[p];
 
 }
@@ -597,7 +604,7 @@ inline void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
 inline void SBoard::getEvasions()
 {
     bool doneFort = false;
-    int at = m_ksq[m_stm];
+    int at = m_biyAt[m_stm];
     int s = BN[at];
 
     if (isBiyOnTemdek(s) || isInFortress(s))
@@ -687,7 +694,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
     m_caps[0] = m_caps[1] = false;
     m_urgent = m_epVictim = NoSquare;
     m_ml.clear();
-    if (m_ksq[m_stm] == NoSquare) return 0; // biy was captured
+    if (m_biyAt[m_stm] == NoSquare) return 0; // biy was captured
 
     do
     {           
@@ -814,7 +821,7 @@ Move SBoard::parseMove(const QString& algebraic)
  // pass option
         case 'p':
             if (algebraic != "pass") return move;
-            to = m_ksq[m_stm]; // NB woz *m_transit* ???
+            to = m_biyAt[m_stm]; // NB woz *m_transit* ???
             return prepareMove(to, to);
 
         default: 
@@ -903,7 +910,7 @@ bool SBoard::doMove(const Move& m)
         PieceType v = pieceType(victim);
         int victim_at = m.capturedAt();
         m_sb[victim_at] = Empty; --m_pieceCount[m_sntm];
-        if (v == Biy) m_ksq[m_sntm] = Empty;
+        if (v == Biy) m_biyAt[m_sntm] = Empty;
 
         if (m.isPromoSntm())
         {
@@ -932,7 +939,7 @@ bool SBoard::doMove(const Move& m)
 
     if (pieceType(piece) == Biy)
     {       
-        m_ksq[m_stm] = m_to;
+        m_biyAt[m_stm] = m_to;
         if (temdekOn(m_stm))
             if ((m_to == temdekAtB[m_stm]) && (m_to != m_from))
                 ++m_temdek[m_stm];
@@ -980,7 +987,7 @@ void SBoard::undoMove(const Move& m)
         Piece victim = m.capturedPiece();
         int victim_at = m.capturedAt();
         m_sb[victim_at] = victim; ++m_pieceCount[m_sntm];
-        if (pieceType(victim) == Biy) m_ksq[m_sntm] = victim_at;
+        if (pieceType(victim) == Biy) m_biyAt[m_sntm] = victim_at;
         
         if (m.isPromoSntm())
         {
@@ -993,7 +1000,7 @@ void SBoard::undoMove(const Move& m)
     }
     if (pieceType(piece) == Biy)
     {       
-        m_ksq[m_stm] = m_from;
+        m_biyAt[m_stm] = m_from;
         if (temdekOn(m_stm))
             if ((m_to == temdekAtB[m_stm]) && (m_to != m_from))
                 --m_temdek[m_stm];
@@ -1057,9 +1064,9 @@ Move SBoard::prepareMove(const int from, const int to) const // board coords
 bool SBoard::canBeReachedFrom(const SBoard& target) const
 {
     if (m_pieceCount[White] > target.m_pieceCount[White] ||
-            m_pieceCount[Black] > target.m_pieceCount[Black] ||
-            m_offBoard[WhiteShatra] < target.m_offBoard[WhiteShatra] ||
-            m_offBoard[BlackShatra] < target.m_offBoard[BlackShatra])
+        m_pieceCount[Black] > target.m_pieceCount[Black] ||
+        m_offBoard[WhiteShatra] < target.m_offBoard[WhiteShatra] ||
+        m_offBoard[BlackShatra] < target.m_offBoard[BlackShatra])
         return false;
     return true;
 }

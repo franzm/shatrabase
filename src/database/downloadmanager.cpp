@@ -79,8 +79,8 @@ QString DownloadManager::saveFileName(const QUrl &url)
     QString dataPath = QStandardPaths::writableLocation(
                 QStandardPaths::DocumentsLocation) + "/shatradata";
 #else
-    QString dataPath = QDesktopServices::writeableLocation(
-                QDesktopServices::DocumentsLocation) + "/shatradata";
+    QString dataPath;// = QDesktopServices::writeableLocation(
+//                QDesktopServices::DocumentsLocation) + "/shatradata";
 #endif
     QString dir = AppSettings->value("/General/DefaultDataPath", dataPath).toString();
     QDir().mkpath(dir);

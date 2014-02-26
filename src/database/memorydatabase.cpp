@@ -7,7 +7,7 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -98,21 +98,27 @@ bool MemoryDatabase::loadGame(int index, Game& game)
 void MemoryDatabase::parseGame()
 {
     Game* game = new Game;
-    QString spn = m_index.tagValue(TagNameSPN, m_count - 1);
+    IndexBaseType n = m_count - 1;
+    QString spn = m_index.tagValue(TagNameSPN, n);
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
-    m_index.setValidFlag(m_count-1,parseMoves(game));
-    m_index.setTag("Length", QString::number((game->plyCount() + 1) / 2), m_count - 1);
-    g_totalnodes += game->currentMove();
+    m_index.setValidFlag(n, parseMoves(game));
+    m_index.setTag("Length", QString::number((game->plyCount()+1) / 2), n);
+    if (g_autoResult0nLoad && game->result() == Unknown) {
+        m_index.setTag("Result", resultString(game->board().gameResult()), n);
+        g_resModified = true;
+    }
+    g_totalNodes += game->currentMove();
     m_games.append(game);
 }
 
 bool MemoryDatabase::parseFile()
 {
-    g_totalnodes = 0;
+    g_totalNodes = 0;
+    g_resModified = false;
     parseFileIntern();
 	m_isModified = false;
-    g_avenodes = g_totalnodes / m_count;
+    g_aveNodes = g_totalNodes / m_count;
 	return true;
 }
 

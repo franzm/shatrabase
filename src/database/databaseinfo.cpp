@@ -6,7 +6,7 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -20,7 +20,7 @@
 
 DatabaseInfo::DatabaseInfo()
 {
-	m_database = new MemoryDatabase;
+    m_database = new MemoryDatabase;
     m_filter = new Filter(m_database);
     m_bLoaded = true;
     m_utf8 = false;
@@ -53,6 +53,8 @@ void DatabaseInfo::doLoadFile(QString filename)
     }
     g_loading = true;
     m_database->parseFile();
+    if (g_resModified)
+        m_database->setModified(true); // NB temporary fix
     delete m_filter;
     m_filter = new Filter(m_database);
     m_bLoaded = true;

@@ -6,7 +6,7 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -23,4 +23,4 @@
 #define STR_VERSION     GLUE2(VERSION_MAJOR,VERSION_MINOR)
 #define STR_REVISION    GLUE4(VERSION_MAJOR,VERSION_MINOR,REVISION,0)
 
-#define COPYRIGHT "Copyright (C) 2013"
+#define COPYRIGHT "Copyright (C) 2014"

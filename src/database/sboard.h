@@ -8,7 +8,7 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -178,6 +178,8 @@ public:
     bool isUrgent(const Square s) const;
     /** Return true if the side to move has no moves */
     bool hasNoMoves() const;
+    /** Return result based on contents of m_biyAt[] */
+    Result gameResult() const;
 
     /** Return piece at given square number */
     Piece pieceAt(const int at) const;
@@ -268,7 +270,7 @@ public:
     int m_lstm;                // last side not to move :) (okay, not not)
     int m_from;
     int m_to;
-    int m_ksq[2];              // locations of the biys
+    int m_biyAt[2];            // locations of the biys
     int m_temdek[2];           // temdek counters
     int m_epSquare;            // pre-calculated for hash routine
     int m_epVictim;            // ep victim square

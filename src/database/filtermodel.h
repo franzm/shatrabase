@@ -7,7 +7,7 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -62,7 +62,7 @@ private:
 	Filter* m_filter;
     /* The column names of the model */
 	QStringList m_columnNames;
-    /* Map of coulmuns and database tags */
+    /* Map of columns and database tags */
 	QStringList m_columnTags;
     /* A pointer to a game object, to hold the retrieved information
 	 * about the game */

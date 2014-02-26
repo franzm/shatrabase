@@ -7,7 +7,7 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -56,10 +56,12 @@ enum BoardLimits { fsq = 1, lsq = 62 };
 extern bool g_loading;
 extern bool g_searching;
 extern bool g_notation;
-extern bool g_nchanged;
-extern int  g_nerrors;
-extern int  g_avenodes;
-extern int  g_totalnodes;
+extern bool g_nChanged;
+extern bool g_autoResult0nLoad;
+extern bool g_resModified;
+extern int  g_nErrors;
+extern int  g_aveNodes;
+extern int  g_totalNodes;
 
 
 const int ConstPieceTypes = WasShatra + 1;
