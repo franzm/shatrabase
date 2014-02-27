@@ -74,8 +74,8 @@ public:
     void setReachableSquares(const std::vector<Square>& squares);
     void clearReachableSquares();
 
-    /** Starts drag/move animation.
-        @p view is the mouse coords for the piece.
+    /** Sets the drag/move display.
+        @p view is the current mouse coords for the piece.
         Set @p sq to InvalidSquare to stop dragging. */
     void setDragPiece(Square sq = InvalidSquare, Piece piece = InvalidPiece,
                       const QPoint& view = QPoint());
@@ -136,8 +136,13 @@ protected:
 
     std::vector<SquareItem*> m_squares;
     std::vector<PieceItem*> m_pieces;
-    /** currently dragged piece */
-    PieceItem * m_drag_piece;
+    PieceItem
+    /** The piece on the board that is currently dragged.
+        The dragged piece is in m_drag_piece. This one
+        will remain where it is. */
+        * m_org_drag_piece,
+    /** currently dragged piece (copy of original) */
+        * m_drag_piece;
     QGraphicsRectItem * m_move_white,
                       * m_move_black;
     /** center position (in squares) of board */

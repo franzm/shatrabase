@@ -110,6 +110,7 @@ public:
             piece  (piece),
             square (square)
     { }
+
     /** associated Piece */
     Piece piece;
     /** assoiciated Square */
@@ -118,6 +119,7 @@ public:
         squareTo;
     /** should this piece be animated (square > squareTo) */
     bool animate;
+
 };
 
 
@@ -131,6 +133,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     QGraphicsView   (parent),
     m_theme         (theme),
     m_scene         (new QGraphicsScene(this)),
+    m_org_drag_piece(0),
     m_drag_piece    (0),
     m_move_white    (0),
     m_move_black    (0),
@@ -186,7 +189,8 @@ void BoardPainter::configure()
     m_anim_speed = AppSettings->getValue("animateMovesSpeed").toDouble();
     m_fixed_anim_length = AppSettings->getValue("animateMovesLength").toDouble();
     m_use_fixed_anim_length = AppSettings->getValue("animateMovesSpeedVsLength").toDouble();
-    m_reachableColor = QColor(255,255,255,100);
+    m_reachableColor = AppSettings->getValue("highlightColor").value<QColor>();
+    m_reachableColor.setAlpha(50);
     AppSettings->endGroup();
 
 }
@@ -297,6 +301,7 @@ void BoardPainter::createPieces_(const Board& board)
         delete m_pieces[i];
     m_pieces.clear();
 
+    m_org_drag_piece = 0;
     m_drag_piece = 0;
 
     // create pieces
@@ -473,15 +478,29 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
 {
     bool remove = (sq == InvalidSquare || piece == InvalidPiece);
 
-    // delete previous
+    // delete previous m_drag_piece
     if (remove || (m_drag_piece && m_drag_piece->piece != piece))
     {
         delete m_drag_piece;
         m_drag_piece = 0;
     }
 
-    // simply undo selection
-    if (remove) return;
+    // simply undo drag action
+    if (remove)
+    {
+        if (m_org_drag_piece)
+            m_org_drag_piece->setVisible(true);
+        m_org_drag_piece = 0;
+        return;
+    }
+
+    // find PieceItem to drag
+    PieceItem * it = pieceItemAt(sq);
+    if (!it) return;
+
+    // remove original piece to be dragged
+    it->setVisible(false);
+    m_org_drag_piece = it;
 
     // create or refresh
     if (!m_drag_piece)

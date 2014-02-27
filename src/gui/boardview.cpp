@@ -330,6 +330,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
     // doit
     m_dragged = m_board.pieceAt(s);
     m_dragPoint = event->pos() - m_theme.pieceCenter();
+    //if (m_view) m_view->setPieceAlpha(s, 50);
 
     // XXX why should this be needed? special flags?
     //m_board.removeFrom(s);
