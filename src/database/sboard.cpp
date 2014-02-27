@@ -528,14 +528,19 @@ inline void SBoard::doCFlags(int from, int to, int cp)
         if (Rank(cp) < 5  && temdekOn(White)) m_b |= DECTDK_sntm;
     }
 }
- // if dropping from home fort, add decTemdek flag
+ // if dropping from home fort, add decTemdek flag if T on
 inline bool SBoard::getDrops(int s, PieceType piece)
 {
     bool t = s <= temdekAt[Black];
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
     t ^= (m_sntm != White); // our own fortress?
-   if (t & temdekOn(m_stm)) m_b |= DECTDK; // and Temdek on?
+    if (t)
+    {
+        if (temdekOn(m_stm)) m_b |= DECTDK; // and Temdek on?
+    }
+    else if (piece == Shatra)
+        return false; // shatras can't drop from enemy fort
 
     for (int i = 0; i < 21; i++)
     {    

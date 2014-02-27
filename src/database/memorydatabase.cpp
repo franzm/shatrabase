@@ -118,7 +118,8 @@ bool MemoryDatabase::parseFile()
     g_resModified = false;
     parseFileIntern();
 	m_isModified = false;
-    g_aveNodes = g_totalNodes / m_count;
+    if (m_count)
+        g_aveNodes = g_totalNodes / m_count;
 	return true;
 }
 

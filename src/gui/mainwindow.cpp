@@ -1029,7 +1029,7 @@ bool MainWindow::confirmQuit()
             Output output(Output::Sgn);
              while (!mods.empty()) {
                 int i = mods.remove();
-                connect(&output, SIGNAL(progress(int)), SLOT(slotOperationProgress(int)));
+//                connect(&output, SIGNAL(progress(int)), SLOT(slotOperationProgress(int)));
                 output.output(m_databases[i]->database()->filename(),
                             *(m_databases[i]->database()));
              }
