@@ -91,7 +91,6 @@ protected slots:
 
     // ________ PROTECTED ____________
 protected:
-
     virtual void resizeEvent(QResizeEvent *event);
 
     /* XXX The view is eating all mouse events, why? */
@@ -153,9 +152,13 @@ protected:
         m_do_show_side;
 
     qreal
-    /** piece move animation speed in squares per second */
+    /** set piece move animation speed in squares per second */
         m_anim_speed,
-    /** length of animations in seconds (calculated from speed) */
+    /** set piece move animation length */
+        m_fixed_anim_length,
+    /** set ratio between speed and fixed length [0,1] */
+        m_use_fixed_anim_length,
+    /** length of animations in seconds (calculated from above settings) */
         m_anim_length,
     /** current animation from 0 to 1 */
         m_anim_t;

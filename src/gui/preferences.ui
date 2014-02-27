@@ -298,7 +298,58 @@
             <double>0.500000000000000</double>
            </property>
            <property name="value">
-            <double>10.000000000000000</double>
+            <double>0.500000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="animateMovesSpeedVsLength">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>This determines the length of a move animation in terms of speed (left) or a fixed length (right)</string>
+           </property>
+           <property name="maximum">
+            <number>20</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_12">
+           <property name="toolTip">
+            <string>The length of a move animation in seconds</string>
+           </property>
+           <property name="text">
+            <string>length</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="animateMovesLength">
+           <property name="toolTip">
+            <string>The length of a move animation in seconds</string>
+           </property>
+           <property name="minimum">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.500000000000000</double>
            </property>
           </widget>
          </item>
@@ -306,6 +357,9 @@
        </item>
        <item row="5" column="2">
         <widget class="QCheckBox" name="hilightAllMoves">
+         <property name="toolTip">
+          <string>When selected, all possible moves will be hilighted for a piece when the mouse is moved over it</string>
+         </property>
          <property name="text">
           <string>Highlight all possible moves</string>
          </property>

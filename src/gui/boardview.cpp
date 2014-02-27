@@ -484,13 +484,14 @@ void BoardView::configure()
      *  Might have to do with the runtime qt warnings: 'QPixmap::scaled: Pixmap is a null pixmap'
      */
     m_theme.setSize(QSize(100,100));
-    selectSquare();
 
     // recreate BoardPainter
     if (m_view) delete m_view;
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
     m_layout->addWidget(m_view);
+
+    selectSquare();
 
 	update();
 }

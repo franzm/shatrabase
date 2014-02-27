@@ -19,6 +19,7 @@
 #include <QWidget>
 #include <QMainWindow>
 #include <QDebug>
+
 Settings::Settings() : QSettings(IniFormat, UserScope, "shatrabase", "shatrabase")
 {}
 
@@ -133,7 +134,8 @@ void Settings::getMap(const QString& key, OptionValueList& map)
     delete stream;
 }
 
-QMap<QString, QVariant> Settings::initDefaultValues() const {
+QMap<QString, QVariant> Settings::initDefaultValues() const
+{
     QMap<QString, QVariant> map;
     map.insert("/General/EditLimit", 10);
     map.insert("/General/Notation", NUM);
@@ -149,7 +151,9 @@ QMap<QString, QVariant> Settings::initDefaultValues() const {
     map.insert("/Board/showCurrentMove", true);
     map.insert("/Board/showAllMoves", true);
     map.insert("/Board/animateMoves", true);
-    map.insert("/Board/animateMovesSpeed", 10.0);
+    map.insert("/Board/animateMovesSpeed", 20.0);
+    map.insert("/Board/animateMovesLength", 0.2);
+    map.insert("/Board/animateMovesSpeedVsLength", 0.5);
     map.insert("/Board/minWheelCount", MIN_WHEEL_COUNT);
     map.insert("/Board/pieceTheme", "motifshatra");
     map.insert("/Board/pieceEffect", BoardTheme::Plain);

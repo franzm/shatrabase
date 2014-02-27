@@ -259,7 +259,7 @@ void PreferencesDialog::slotApply()
 
 void PreferencesDialog::restoreSettings()
 {
-	// Restore size
+    // Restore size
 	AppSettings->layout(this);
 
 	// Read Board settings
@@ -276,6 +276,10 @@ void PreferencesDialog::restoreSettings()
     ui.hilightAllMoves->setChecked(AppSettings->getValue("showAllMoves").toBool());
     ui.animateMovesCheck->setChecked(AppSettings->getValue("animateMoves").toBool());
     ui.animateMovesSpeed->setValue(AppSettings->getValue("animateMovesSpeed").toDouble());
+    ui.animateMovesLength->setValue(AppSettings->getValue("animateMovesLength").toDouble());
+    ui.animateMovesSpeedVsLength->setValue(
+        AppSettings->getValue("animateMovesSpeedVsLength").toDouble()
+        * ui.animateMovesSpeedVsLength->maximum());
     ui.minWheelCount->setValue(AppSettings->getValue("minWheelCount").toInt());
     ui.autoPlayInterval->setValue(AppSettings->getValue("AutoPlayerInterval").toInt());
     ui.cbSaveAndContinue->setChecked(AppSettings->getValue("AutoSaveAndContinue").toBool());
@@ -352,6 +356,9 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("showAllMoves", QVariant(ui.hilightAllMoves->isChecked()));
     AppSettings->setValue("animateMoves", QVariant(ui.animateMovesCheck->isChecked()));
     AppSettings->setValue("animateMovesSpeed", QVariant(ui.animateMovesSpeed->value()));
+    AppSettings->setValue("animateMovesLength", QVariant(ui.animateMovesLength->value()));
+    AppSettings->setValue("animateMovesSpeedVsLength", QVariant(
+        (double)ui.animateMovesSpeedVsLength->value() / ui.animateMovesSpeedVsLength->maximum()));
     AppSettings->setValue("minWheelCount", ui.minWheelCount->value());
     AppSettings->setValue("AutoPlayerInterval", ui.autoPlayInterval->value());
 	AppSettings->setValue("pieceTheme", ui.pieceThemeCombo->currentText());

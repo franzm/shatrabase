@@ -131,7 +131,11 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_is_white      (true),
     m_do_animate    (true),
     m_do_show_side  (true),
-    m_anim_speed    (10)
+    m_anim_speed    (10),
+    m_fixed_anim_length(1),
+    m_use_fixed_anim_length(0),
+    m_anim_length   (1),
+    m_anim_t        (0)
 {    
     setScene(m_scene);
 
@@ -168,6 +172,8 @@ void BoardPainter::configure()
     //m_do_show_side = ...
     m_do_animate = AppSettings->getValue("animateMoves").toBool();
     m_anim_speed = AppSettings->getValue("animateMovesSpeed").toDouble();
+    m_fixed_anim_length = AppSettings->getValue("animateMovesLength").toDouble();
+    m_use_fixed_anim_length = AppSettings->getValue("animateMovesSpeedVsLength").toDouble();
     m_reachableColor = QColor(255,255,255,100);
     AppSettings->endGroup();
 
@@ -504,11 +510,16 @@ void BoardPainter::clearReachableSquares()
 
 void BoardPainter::startAnimation_(Square from, Square to)
 {
+    // distance of move
     qreal dx = gBoard[from][0] - gBoard[to][0],
           dy = gBoard[from][1] - gBoard[to][1],
-          dist = sqrt(dx*dx + dy*dy);
-
-    m_anim_length = m_anim_speed / std::max(1.0, dist);
+          dist = sqrt(dx*dx + dy*dy),
+    // animation length in terms of speed
+          length_from_speed = dist / std::max(0.1, m_anim_speed),
+    // crossfade between speed & fixed length
+          t = std::max(0.0,std::min(1.0, m_use_fixed_anim_length ));
+    // resulting animation length
+    m_anim_length = length_from_speed * (1.0-t) + t * (m_fixed_anim_length);
 
     m_anim_t = 0;
     m_timer.start();
@@ -534,10 +545,10 @@ void BoardPainter::stopAnimation_()
 void BoardPainter::animationStep_()
 {
     // update step
-    const qreal step = m_anim_length * m_timer.interval() / 1000.0;
+    const qreal step = (qreal)m_timer.interval() / 1000.0 / m_anim_length;
 
     // [0,1]
-    m_anim_t += step;
+    m_anim_t = std::max(0.0,std::min(1.0, m_anim_t + step ));
 
     if (m_anim_t >= 1)
         stopAnimation_();
