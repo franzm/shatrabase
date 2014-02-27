@@ -472,17 +472,9 @@ void BoardView::configure()
     m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
     m_showAllMoves = AppSettings->getValue("showAllMoves").toBool();
     m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
-    m_theme.setColor(BoardTheme::LightSquare, AppSettings->getValue("lightColor").value<QColor>());
-    m_theme.setColor(BoardTheme::DarkSquare, AppSettings->getValue("darkColor").value<QColor>());
-    m_theme.setColor(BoardTheme::Highlight, AppSettings->getValue("highlightColor").value<QColor>());
-    m_theme.setColor(BoardTheme::Frame, AppSettings->getValue("frameColor").value<QColor>());
-    m_theme.setColor(BoardTheme::CurrentMove, AppSettings->getValue("currentMoveColor").value<QColor>());
     AppSettings->endGroup();
+
     m_theme.configure();
-    /** @bug There is a segfault at a QPixmap::~QPixmap() in BoardTheme::updateSquares()
-     *  when this is first time called by BoardPainter().
-     *  Might have to do with the runtime qt warnings: 'QPixmap::scaled: Pixmap is a null pixmap'
-     */
     m_theme.setSize(QSize(100,100));
 
     selectSquare();

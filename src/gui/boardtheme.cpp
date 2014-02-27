@@ -133,6 +133,11 @@ bool BoardTheme::loadBoard(const QString& board)
 void BoardTheme::configure()
 {
     AppSettings->beginGroup("/Board/");
+    setColor(BoardTheme::LightSquare, AppSettings->getValue("lightColor").value<QColor>());
+    setColor(BoardTheme::DarkSquare, AppSettings->getValue("darkColor").value<QColor>());
+    setColor(BoardTheme::Highlight, AppSettings->getValue("highlightColor").value<QColor>());
+    setColor(BoardTheme::Frame, AppSettings->getValue("frameColor").value<QColor>());
+    setColor(BoardTheme::CurrentMove, AppSettings->getValue("currentMoveColor").value<QColor>());
     QString pieceTheme = AppSettings->getValue("pieceTheme").toString();
     int pieceEffect = AppSettings->getValue("pieceEffect").toInt();
     QString boardTheme = AppSettings->getValue("boardTheme").toString();
