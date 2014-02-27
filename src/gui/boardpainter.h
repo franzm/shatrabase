@@ -142,14 +142,15 @@ protected:
                       * m_move_black;
     /** center position (in squares) of board */
     QPointF m_center;
-    /** size of a tile (somewhat arbitrary since QGraphicsView scales anyway,
-     *  but we ask BoardTheme for QPixMaps in this size). */
-    int m_size;
+    /** size of a tile (BoardTheme's size of Pixmaps). */
+    int m_size,
+        m_frame_width;
 
     bool m_flipped,
         m_is_white,
         m_do_animate,
-        m_do_show_side;
+        m_do_show_side,
+        m_do_show_frame;
 
     qreal
     /** set piece move animation speed in squares per second */

@@ -480,7 +480,7 @@ void BoardView::configure()
     selectSquare();
 
     // recreate BoardPainter
-    if (m_view) delete m_view;
+    if (m_view) m_view->deleteLater();
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
     m_layout->addWidget(m_view);

@@ -47,12 +47,15 @@ public:
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
             square (square),
+            frame     (false),
             highlight (false),
             temdek    (false),
             reachable (false)
     { }
 
     Square square;
+    bool frame;
+    QPen framePen;
     bool highlight;
     QBrush highlightBrush;
     bool temdek;
@@ -84,6 +87,12 @@ protected:
             int o = temdekPen.width()/2;
             painter->drawLine(o, o, pixmap().width()-o, pixmap().height()-o);
             painter->drawLine(o, pixmap().height()-o, pixmap().width()-o, o);
+        }
+        if (frame)
+        {
+            painter->setPen(framePen);
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
         }
     }
 
@@ -127,6 +136,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_move_black    (0),
     m_center        (4.5,7),
     m_size          (0),
+    m_frame_width   (1),
     m_flipped       (false),
     m_is_white      (true),
     m_do_animate    (true),
@@ -170,6 +180,8 @@ void BoardPainter::configure()
 {
     AppSettings->beginGroup("/Board/");
     //m_do_show_side = ...
+    m_do_show_frame = AppSettings->getValue("showFrame").toBool();
+    m_frame_width = AppSettings->getValue("frameWidth").toInt();
     m_do_animate = AppSettings->getValue("animateMoves").toBool();
     m_anim_speed = AppSettings->getValue("animateMovesSpeed").toDouble();
     m_fixed_anim_length = AppSettings->getValue("animateMovesLength").toDouble();
@@ -252,6 +264,14 @@ void BoardPainter::createBoard_(const Board& board)
         s->setZValue(-1); // always behind pieces
         s->reachableBrush = QBrush(m_reachableColor);
 
+        // set frame
+        if (m_do_show_frame)
+        {
+            s->frame = true;
+            s->framePen.setColor( m_theme->color(BoardTheme::Frame) );
+            s->framePen.setWidth( m_frame_width * m_theme->size().width() / 100);
+        }
+
         // set temdek flag
         if ((i == temdekAt[Black] && board.temdekOn(Black)) ||
             (i == temdekAt[White] && board.temdekOn(White)))
@@ -261,7 +281,6 @@ void BoardPainter::createBoard_(const Board& board)
             s->temdekPen.setCapStyle(Qt::RoundCap);
             s->temdekPen.setWidthF(s->pixmap().width()/10);
         }
-
 
         // add to scene
         m_scene->addItem(s);
