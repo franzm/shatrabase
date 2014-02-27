@@ -485,13 +485,13 @@ void BoardView::configure()
      */
     m_theme.setSize(QSize(100,100));
 
+    selectSquare();
+
     // recreate BoardPainter
     if (m_view) delete m_view;
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
     m_layout->addWidget(m_view);
-
-    selectSquare();
 
 	update();
 }
