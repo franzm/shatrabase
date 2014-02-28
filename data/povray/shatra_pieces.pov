@@ -12,6 +12,8 @@
 
 #version 3.7;
 
+#include "functions.inc"
+
 camera 
 {
 	orthographic
@@ -32,34 +34,50 @@ light_source
 //plane { z, 0 pigment { checker rgb 0.2, rgb 0.4 } }
 
 #declare pieceHeight = 0.2;
+#declare ColorDepth = 0.05;
 
-#declare PieceFinish = finish
+
+#declare WhiteT = texture
 {
-	ambient 0.1 diffuse 0.9
-	phong 0.7 phong_size 10
+	pigment { color rgb 1 }
+	finish
+	{
+		ambient 0.1 diffuse 0.9
+		phong 0.7 phong_size 10
+	}
+	normal { granite 0.3 scale 0.1 }
+};
+
+#declare BlackT = texture
+{
+	finish
+	{
+		ambient 0.1 diffuse 0.4
+		phong 0.7 phong_size 100
+	}
+	normal { bumps 1 scale 0.02 }
 };
 
 #declare White = texture
 {
-	pigment 
+	gradient z
+	texture_map
 	{
-		gradient z
-		color_map { [0.0 color rgb 1] [0.1 color rgb 0] }
-		translate z*-pieceHeight
+		[0.0 WhiteT] [ColorDepth WhiteT] [ColorDepth+0.01 BlackT]
 	}
-	finish { PieceFinish }
+	translate z*-pieceHeight
 };
 
 #declare Black = texture
 {
-	pigment 
+	gradient z
+	texture_map
 	{
-		gradient z
-		color_map { [0.0 color rgb 0.2] [0.1 color rgb 1] }
-		translate z*-pieceHeight
+		[0.0 BlackT] [ColorDepth BlackT] [ColorDepth+0.01 WhiteT] 
 	}
-	finish { PieceFinish }
+	translate z*-pieceHeight
 };
+
 
 #declare Gone = texture
 {
@@ -76,7 +94,9 @@ light_source
 #macro Piece(which)
 isosurface
 {
-	function { -z - PieceMapFunc((x+which-2)/5-0.5,y+0.5,z).x * pieceHeight }
+	function { -z - PieceMapFunc((x+which-2)/5-0.5,y+0.5,z).x * pieceHeight 
+				//+ f_granite(x*10+which,y*10,z) * 0.005 
+				}
 	contained_by { box { -0.4,<0.4,0.4,-0.01> } }
 	threshold 0
 	accuracy 1/1000000
