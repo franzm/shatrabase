@@ -47,12 +47,15 @@ public:
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
             square (square),
+            frame     (false),
             highlight (false),
             temdek    (false),
             reachable (false)
     { }
 
     Square square;
+    bool frame;
+    QPen framePen;
     bool highlight;
     QBrush highlightBrush;
     bool temdek;
@@ -85,6 +88,12 @@ protected:
             painter->drawLine(o, o, pixmap().width()-o, pixmap().height()-o);
             painter->drawLine(o, pixmap().height()-o, pixmap().width()-o, o);
         }
+        if (frame)
+        {
+            painter->setPen(framePen);
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
+        }
     }
 
 };
@@ -101,6 +110,7 @@ public:
             piece  (piece),
             square (square)
     { }
+
     /** associated Piece */
     Piece piece;
     /** assoiciated Square */
@@ -109,6 +119,7 @@ public:
         squareTo;
     /** should this piece be animated (square > squareTo) */
     bool animate;
+
 };
 
 
@@ -122,16 +133,23 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     QGraphicsView   (parent),
     m_theme         (theme),
     m_scene         (new QGraphicsScene(this)),
+    m_org_drag_piece(0),
     m_drag_piece    (0),
     m_move_white    (0),
     m_move_black    (0),
     m_center        (4.5,7),
     m_size          (0),
+    m_frame_width   (1),
     m_flipped       (false),
     m_is_white      (true),
+    m_do_moat       (true),
     m_do_animate    (true),
     m_do_show_side  (true),
-    m_anim_speed    (10)
+    m_anim_speed    (10),
+    m_fixed_anim_length(1),
+    m_use_fixed_anim_length(0),
+    m_anim_length   (1),
+    m_anim_t        (0)
 {    
     setScene(m_scene);
 
@@ -166,9 +184,15 @@ void BoardPainter::configure()
 {
     AppSettings->beginGroup("/Board/");
     //m_do_show_side = ...
+    m_do_moat = AppSettings->getValue("showMoat").toBool();
+    m_do_show_frame = AppSettings->getValue("showFrame").toBool();
+    m_frame_width = AppSettings->getValue("frameWidth").toInt();
     m_do_animate = AppSettings->getValue("animateMoves").toBool();
     m_anim_speed = AppSettings->getValue("animateMovesSpeed").toDouble();
-    m_reachableColor = QColor(255,255,255,100);
+    m_fixed_anim_length = AppSettings->getValue("animateMovesLength").toDouble();
+    m_use_fixed_anim_length = AppSettings->getValue("animateMovesSpeedVsLength").toDouble();
+    m_reachableColor = AppSettings->getValue("highlightColor").value<QColor>();
+    m_reachableColor.setAlpha(50);
     AppSettings->endGroup();
 
 }
@@ -246,6 +270,14 @@ void BoardPainter::createBoard_(const Board& board)
         s->setZValue(-1); // always behind pieces
         s->reachableBrush = QBrush(m_reachableColor);
 
+        // set frame
+        if (m_do_show_frame)
+        {
+            s->frame = true;
+            s->framePen.setColor( m_theme->color(BoardTheme::Frame) );
+            s->framePen.setWidth( m_frame_width * m_theme->size().width() / 100);
+        }
+
         // set temdek flag
         if ((i == temdekAt[Black] && board.temdekOn(Black)) ||
             (i == temdekAt[White] && board.temdekOn(White)))
@@ -255,7 +287,6 @@ void BoardPainter::createBoard_(const Board& board)
             s->temdekPen.setCapStyle(Qt::RoundCap);
             s->temdekPen.setWidthF(s->pixmap().width()/10);
         }
-
 
         // add to scene
         m_scene->addItem(s);
@@ -272,6 +303,7 @@ void BoardPainter::createPieces_(const Board& board)
         delete m_pieces[i];
     m_pieces.clear();
 
+    m_org_drag_piece = 0;
     m_drag_piece = 0;
 
     // create pieces
@@ -353,7 +385,7 @@ QRectF BoardPainter::squareRect(Square sq) const
 
     return QRectF(
             (x-m_center.x())*m_size,
-            (y-m_center.y())*m_size,// + ((sq>31)*2-1) * 0.01)*m_size,
+            (y-m_center.y())*m_size + m_do_moat * ((sq>31)*2-1) * 0.05*m_size,
             m_size, m_size
             );
 }
@@ -448,15 +480,29 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
 {
     bool remove = (sq == InvalidSquare || piece == InvalidPiece);
 
-    // delete previous
+    // delete previous m_drag_piece
     if (remove || (m_drag_piece && m_drag_piece->piece != piece))
     {
         delete m_drag_piece;
         m_drag_piece = 0;
     }
 
-    // simply undo selection
-    if (remove) return;
+    // simply undo drag action
+    if (remove)
+    {
+        if (m_org_drag_piece)
+            m_org_drag_piece->setVisible(true);
+        m_org_drag_piece = 0;
+        return;
+    }
+
+    // find PieceItem to drag
+    PieceItem * it = pieceItemAt(sq);
+    if (!it) return;
+
+    // remove original piece to be dragged
+    it->setVisible(false);
+    m_org_drag_piece = it;
 
     // create or refresh
     if (!m_drag_piece)
@@ -504,11 +550,16 @@ void BoardPainter::clearReachableSquares()
 
 void BoardPainter::startAnimation_(Square from, Square to)
 {
+    // distance of move
     qreal dx = gBoard[from][0] - gBoard[to][0],
           dy = gBoard[from][1] - gBoard[to][1],
-          dist = sqrt(dx*dx + dy*dy);
-
-    m_anim_length = m_anim_speed / std::max(1.0, dist);
+          dist = sqrt(dx*dx + dy*dy),
+    // animation length in terms of speed
+          length_from_speed = dist / std::max(0.1, m_anim_speed),
+    // crossfade between speed & fixed length
+          t = std::max(0.0,std::min(1.0, m_use_fixed_anim_length ));
+    // resulting animation length
+    m_anim_length = length_from_speed * (1.0-t) + t * (m_fixed_anim_length);
 
     m_anim_t = 0;
     m_timer.start();
@@ -534,10 +585,10 @@ void BoardPainter::stopAnimation_()
 void BoardPainter::animationStep_()
 {
     // update step
-    const qreal step = m_anim_length * m_timer.interval() / 1000.0;
+    const qreal step = (qreal)m_timer.interval() / 1000.0 / m_anim_length;
 
     // [0,1]
-    m_anim_t += step;
+    m_anim_t = std::max(0.0,std::min(1.0, m_anim_t + step ));
 
     if (m_anim_t >= 1)
         stopAnimation_();
