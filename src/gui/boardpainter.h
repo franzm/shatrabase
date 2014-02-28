@@ -74,8 +74,8 @@ public:
     void setReachableSquares(const std::vector<Square>& squares);
     void clearReachableSquares();
 
-    /** Starts drag/move animation.
-        @p view is the mouse coords for the piece.
+    /** Sets the drag/move display.
+        @p view is the current mouse coords for the piece.
         Set @p sq to InvalidSquare to stop dragging. */
     void setDragPiece(Square sq = InvalidSquare, Piece piece = InvalidPiece,
                       const QPoint& view = QPoint());
@@ -91,7 +91,6 @@ protected slots:
 
     // ________ PROTECTED ____________
 protected:
-
     virtual void resizeEvent(QResizeEvent *event);
 
     /* XXX The view is eating all mouse events, why? */
@@ -137,25 +136,36 @@ protected:
 
     std::vector<SquareItem*> m_squares;
     std::vector<PieceItem*> m_pieces;
-    /** currently dragged piece */
-    PieceItem * m_drag_piece;
+    PieceItem
+    /** The piece on the board that is currently dragged.
+        The dragged piece is in m_drag_piece. This one
+        will remain where it is. */
+        * m_org_drag_piece,
+    /** currently dragged piece (copy of original) */
+        * m_drag_piece;
     QGraphicsRectItem * m_move_white,
                       * m_move_black;
     /** center position (in squares) of board */
     QPointF m_center;
-    /** size of a tile (somewhat arbitrary since QGraphicsView scales anyway,
-     *  but we ask BoardTheme for QPixMaps in this size). */
-    int m_size;
+    /** size of a tile (BoardTheme's size of Pixmaps). */
+    int m_size,
+        m_frame_width;
 
     bool m_flipped,
         m_is_white,
+        m_do_moat,
         m_do_animate,
-        m_do_show_side;
+        m_do_show_side,
+        m_do_show_frame;
 
     qreal
-    /** piece move animation speed in squares per second */
+    /** set piece move animation speed in squares per second */
         m_anim_speed,
-    /** length of animations in seconds (calculated from speed) */
+    /** set piece move animation length */
+        m_fixed_anim_length,
+    /** set ratio between speed and fixed length [0,1] */
+        m_use_fixed_anim_length,
+    /** length of animations in seconds (calculated from above settings) */
         m_anim_length,
     /** current animation from 0 to 1 */
         m_anim_t;

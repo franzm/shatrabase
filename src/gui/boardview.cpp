@@ -330,6 +330,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
     // doit
     m_dragged = m_board.pieceAt(s);
     m_dragPoint = event->pos() - m_theme.pieceCenter();
+    //if (m_view) m_view->setPieceAlpha(s, 50);
 
     // XXX why should this be needed? special flags?
     //m_board.removeFrom(s);
@@ -472,22 +473,15 @@ void BoardView::configure()
     m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
     m_showAllMoves = AppSettings->getValue("showAllMoves").toBool();
     m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
-    m_theme.setColor(BoardTheme::LightSquare, AppSettings->getValue("lightColor").value<QColor>());
-    m_theme.setColor(BoardTheme::DarkSquare, AppSettings->getValue("darkColor").value<QColor>());
-    m_theme.setColor(BoardTheme::Highlight, AppSettings->getValue("highlightColor").value<QColor>());
-    m_theme.setColor(BoardTheme::Frame, AppSettings->getValue("frameColor").value<QColor>());
-    m_theme.setColor(BoardTheme::CurrentMove, AppSettings->getValue("currentMoveColor").value<QColor>());
     AppSettings->endGroup();
+
     m_theme.configure();
-    /** @bug There is a segfault at a QPixmap::~QPixmap() in BoardTheme::updateSquares()
-     *  when this is first time called by BoardPainter().
-     *  Might have to do with the runtime qt warnings: 'QPixmap::scaled: Pixmap is a null pixmap'
-     */
     m_theme.setSize(QSize(100,100));
+
     selectSquare();
 
     // recreate BoardPainter
-    if (m_view) delete m_view;
+    if (m_view) m_view->deleteLater();
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
     m_layout->addWidget(m_view);
