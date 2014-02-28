@@ -128,6 +128,9 @@ protected:
 
     // ----------- member ------------
 
+    /** margin of board in view */
+    static const int m_margin = 10;
+
     BoardTheme * m_theme;
 
     QGraphicsScene * m_scene;

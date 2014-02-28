@@ -202,18 +202,16 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
 
-    const int margin = 10;
-
     // adjust transform scale
     QRectF r = sceneRect();
-    qreal sy = (r.height() + 2.0*margin) / height(),
-          sx = (r.width()  + 2.0*margin) / width(),
+    qreal sy = (r.height() + 2.0*m_margin) / height(),
+          sx = (r.width()  + 2.0*m_margin) / width(),
           sm = 1.0 / std::max(sx,sy);
     QTransform t;
     t.scale(sm,sm);
     setTransform(t);
     // center everything
-    ensureVisible(sceneRect(), margin, margin);
+    ensureVisible(sceneRect(), m_margin, m_margin);
 }
 
 
@@ -578,6 +576,10 @@ void BoardPainter::stopAnimation_()
         m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
         m_pieces[i]->setZValue(0);
     }
+
+    // center everything
+    // XXX Sometimes animated pieces move off-board or something
+    ensureVisible(sceneRect(), m_margin, m_margin);
 
     emit moveFinished();
 }
