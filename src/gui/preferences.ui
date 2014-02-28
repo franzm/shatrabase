@@ -392,6 +392,13 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="2">
+        <widget class="QCheckBox" name="boardMoatCheck">
+         <property name="text">
+          <string>Ditch in board</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tabAutoplay">

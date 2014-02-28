@@ -142,6 +142,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_frame_width   (1),
     m_flipped       (false),
     m_is_white      (true),
+    m_do_moat       (true),
     m_do_animate    (true),
     m_do_show_side  (true),
     m_anim_speed    (10),
@@ -183,6 +184,7 @@ void BoardPainter::configure()
 {
     AppSettings->beginGroup("/Board/");
     //m_do_show_side = ...
+    m_do_moat = AppSettings->getValue("showMoat").toBool();
     m_do_show_frame = AppSettings->getValue("showFrame").toBool();
     m_frame_width = AppSettings->getValue("frameWidth").toInt();
     m_do_animate = AppSettings->getValue("animateMoves").toBool();
@@ -383,7 +385,7 @@ QRectF BoardPainter::squareRect(Square sq) const
 
     return QRectF(
             (x-m_center.x())*m_size,
-            (y-m_center.y())*m_size,// + ((sq>31)*2-1) * 0.01)*m_size,
+            (y-m_center.y())*m_size + m_do_moat * ((sq>31)*2-1) * 0.05*m_size,
             m_size, m_size
             );
 }

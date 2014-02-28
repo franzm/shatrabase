@@ -271,6 +271,7 @@ void PreferencesDialog::restoreSettings()
     ui.cbAutoCommitDB->setChecked(AppSettings->getValue("autoCommitDB").toBool());
     AppSettings->endGroup();
     AppSettings->beginGroup("/Board/");
+    ui.boardMoatCheck->setChecked(AppSettings->getValue("showMoat").toBool());
     ui.boardFrameCheck->setChecked(AppSettings->getValue("showFrame").toBool());
     ui.boardFrameSize->setValue(AppSettings->getValue("frameWidth").toInt());
     ui.hilightCurrentMove->setChecked(AppSettings->getValue("showCurrentMove").toBool());
@@ -352,6 +353,7 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("autoCommitDB",QVariant(ui.cbAutoCommitDB->isChecked()));
     AppSettings->endGroup();
     AppSettings->beginGroup("/Board/");
+    AppSettings->setValue("showMoat", QVariant(ui.boardMoatCheck->isChecked()));
     AppSettings->setValue("showFrame", QVariant(ui.boardFrameCheck->isChecked()));
     AppSettings->setValue("frameWidth", QVariant(ui.boardFrameSize->value()));
     AppSettings->setValue("showCurrentMove", QVariant(ui.hilightCurrentMove->isChecked()));

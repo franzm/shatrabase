@@ -147,7 +147,8 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/VerticalTabs", false);
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
-    map.insert("/Board/showFrame", false);
+    map.insert("/Board/showMoat", true);
+    map.insert("/Board/showFrame", true);
     map.insert("/Board/frameWidth", 4);
     map.insert("/Board/showCurrentMove", true);
     map.insert("/Board/showAllMoves", true);
