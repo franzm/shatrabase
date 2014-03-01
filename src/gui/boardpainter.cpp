@@ -148,7 +148,8 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_center        (4.5,7),
     m_size          (0),
     m_frame_width   (1),
-    m_flipped       (false),
+    m_flipped       (true), /* XXX This probably has to match the init value in AppSettings
+                                   to be correct on first installation */
     m_is_white      (true),
     m_do_moat       (true),
     m_do_animate    (true),

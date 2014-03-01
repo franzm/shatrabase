@@ -95,6 +95,7 @@ MainWindow::MainWindow() : QMainWindow(),
     m_boardSplitter = new QSplitter(Qt::Vertical);
 	m_boardSplitter->setChildrenCollapsible(false);
     m_boardView = new BoardView(m_boardSplitter);
+//    m_boardView->setFlipped(AppSettings->getValue("/Board/flipped").toBool());
 //    m_boardLayout = new QVBoxLayout();
 //    m_boardView->setLayout(m_boardLayout);
 	m_boardView->setObjectName("BoardView");
@@ -929,6 +930,7 @@ void MainWindow::setupActions()
 
     QAction* flip = createAction(tr("&Flip board"), SLOT(slotConfigureFlip()), Qt::CTRL + Qt::Key_B);
     flip->setCheckable(true);
+    flip->setChecked(AppSettings->getValue("/Board/flipped").toBool());
     gameMenu->addAction(flip);
 
 	/* Game->Go to submenu */

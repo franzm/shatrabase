@@ -473,6 +473,7 @@ void BoardView::configure()
     m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
     m_showAllMoves = AppSettings->getValue("showAllMoves").toBool();
     m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
+    bool flipped = AppSettings->getValue("flipped").toBool();
     AppSettings->endGroup();
 
     m_theme.configure();
@@ -484,6 +485,7 @@ void BoardView::configure()
     if (m_view) m_view->deleteLater();
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
+    setFlipped(flipped);
     m_layout->addWidget(m_view);
 
 	update();

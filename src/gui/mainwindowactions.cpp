@@ -275,7 +275,8 @@ void MainWindow::slotReconfigure()
 
 void MainWindow::slotConfigureFlip()
 {
-	m_boardView->setFlipped(!m_boardView->isFlipped());
+    m_boardView->setFlipped(!m_boardView->isFlipped());
+    AppSettings->setValue("/Board/flipped", QVariant(m_boardView->isFlipped()));
 }
 
 void MainWindow::slotEditCopySPN()
