@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>538</height>
+    <height>547</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -396,6 +396,13 @@
         <widget class="QCheckBox" name="boardMoatCheck">
          <property name="text">
           <string>Ditch in board</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="2">
+        <widget class="QCheckBox" name="boardTowerCheck">
+         <property name="text">
+          <string>Accentuate tower squares</string>
          </property>
         </widget>
        </item>

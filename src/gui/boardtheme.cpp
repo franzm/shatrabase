@@ -21,6 +21,8 @@ BoardTheme::BoardTheme()
 {
     m_pieceFilename = "new QString()";
     m_originalUrgent.load(":/images/urgent.png");
+    m_originalTowerEmboss.load(":/images/square_emboss.png");
+
 }
 
 BoardTheme::~BoardTheme()
@@ -39,6 +41,11 @@ const QPixmap& BoardTheme::square(bool dark) const
 const QPixmap& BoardTheme::urgent() const
 {
     return m_urgent;
+}
+
+const QPixmap& BoardTheme::towerEmboss() const
+{
+    return m_towerEmboss;
 }
 
 const QPixmap& BoardTheme::originalPiece(Piece p) const
@@ -178,6 +185,8 @@ void BoardTheme::setSize(const QSize& value)
                 Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     updateSquares();
     m_urgent = m_originalUrgent.scaled(m_size,
+        Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    m_towerEmboss = m_originalTowerEmboss.scaled(m_size,
         Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 

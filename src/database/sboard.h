@@ -176,6 +176,8 @@ public:
     bool isReserve(const Square s) const;
     /** Is the given piece marked urgent? */
     bool isUrgent(const Square s) const;
+    /** Is the given Square a tower square? */
+    bool isTower(const Square s) const;
     /** Return true if the side to move has no moves */
     bool hasNoMoves() const;
     /** Return result based on contents of m_biyAt[] */
@@ -378,6 +380,11 @@ inline bool SBoard::isReserve(const Square s) const
 inline bool SBoard::isUrgent(const Square s) const
 {
     return (m_sb[NB[s]] & URGENT) != 0;
+}
+
+inline bool SBoard::isTower(const Square s) const
+{
+    return (s == 11 || s == 17 || s == 46 || s == 52);
 }
 
 inline void SBoard::swapToMove()

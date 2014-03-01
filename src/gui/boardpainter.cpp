@@ -46,7 +46,8 @@ public:
     SquareItem(Square square, const QPixmap& pixmap,
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
-            square (square),
+            square    (square),
+            overlay   (0),
             frame     (false),
             highlight (false),
             temdek    (false),
@@ -54,6 +55,9 @@ public:
     { }
 
     Square square;
+
+    const QPixmap * overlay;
+
     bool frame;
     QPen framePen;
     bool highlight;
@@ -68,6 +72,10 @@ protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
     {
         QGraphicsPixmapItem::paint(painter, option, widget);
+
+        if (overlay && !overlay->isNull())
+            painter->drawPixmap(0,0,*overlay);
+
         if (highlight)
         {
             painter->setPen(QPen(Qt::NoPen));
@@ -185,6 +193,7 @@ void BoardPainter::configure()
     AppSettings->beginGroup("/Board/");
     //m_do_show_side = ...
     m_do_moat = AppSettings->getValue("showMoat").toBool();
+    m_do_tower = AppSettings->getValue("showTower").toBool();
     m_do_show_frame = AppSettings->getValue("showFrame").toBool();
     m_frame_width = AppSettings->getValue("frameWidth").toInt();
     m_do_animate = AppSettings->getValue("animateMoves").toBool();
@@ -284,6 +293,11 @@ void BoardPainter::createBoard_(const Board& board)
             s->temdekPen = QPen(i==temdekAt[White]? Qt::black : Qt::white );
             s->temdekPen.setCapStyle(Qt::RoundCap);
             s->temdekPen.setWidthF(s->pixmap().width()/10);
+        }
+
+        if (m_do_tower && board.isTower(i))
+        {
+            s->overlay = &m_theme->towerEmboss();
         }
 
         // add to scene
