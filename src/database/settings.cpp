@@ -147,6 +147,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/VerticalTabs", false);
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
+    map.insert("/Board/flipped", true);
     map.insert("/Board/showMoat", true);
     map.insert("/Board/showTower", true);
     map.insert("/Board/showFrame", true);
@@ -161,7 +162,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/pieceTheme", "motifshatra");
     map.insert("/Board/pieceEffect", BoardTheme::Plain);
     map.insert("/Board/boardTheme", "shatra1");
-    map.insert("/Board/lightColor", QColor(Qt::yellow));
+    map.insert("/Board/lightColor", QColor(Qt::lightGray));
     map.insert("/Board/darkColor", QColor(Qt::darkGray));
     map.insert("/Board/highlightColor", QColor(Qt::yellow));
     map.insert("/Board/frameColor", QColor(Qt::black));

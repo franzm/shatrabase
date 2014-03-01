@@ -397,7 +397,8 @@ QRectF BoardPainter::squareRect(Square sq) const
 
     return QRectF(
             (x-m_center.x())*m_size,
-            (y-m_center.y())*m_size + m_do_moat * ((sq>31)*2-1) * 0.05*m_size,
+            (y-m_center.y())*m_size + m_do_moat *
+                ((isFlipped()?(sq<32):(sq>31))*2-1) * 0.05*m_size,
             m_size, m_size
             );
 }
