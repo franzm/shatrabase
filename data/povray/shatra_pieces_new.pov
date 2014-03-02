@@ -60,7 +60,7 @@ light_source { < 1,0.3,-3> * 50 rgb -0.1 }
 
 #declare Transparent = texture
 { 
-    pigment { color rgbf <0.8,0.9,1.0, 0.9> }
+    pigment { color rgbf <0.3,0.5,1.0, 0.8> }
     finish { Glossy(1) }
 };
     
@@ -77,6 +77,14 @@ light_source { < 1,0.3,-3> * 50 rgb -0.1 }
         rotate x * 90 
         scale <1,1,0.7>
     }
+};                    
+
+/* defunkt piece */
+#declare WasPiece = torus
+{ 
+	pieceRadius - edgeRadius, edgeRadius 
+	rotate x * 90 
+	scale <1,1,0.7>
 };                    
 
 
@@ -186,4 +194,15 @@ union
 
 object { PieceRow(White, Black) }
 object { PieceRow(Black, WhiteInlay) translate y * -1 }
-object { PieceRow(Transparent, Transparent) translate y * -2 }
+
+// wasPiece
+union 
+{
+	object { WasPiece translate x * 0 }
+	object { WasPiece translate x * 1 }
+	object { WasPiece translate x * 2 }
+	object { WasPiece translate x * 4 }
+	object { WasPiece translate x * 5 }
+	texture { Transparent }
+	translate y * -2 
+}
