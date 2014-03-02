@@ -174,6 +174,8 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/highlightColor", QColor(Qt::yellow));
     map.insert("/Board/frameColor", QColor(Qt::black));
     map.insert("/Board/currentMoveColor", QColor(Qt::blue));
+    map.insert("/Board/backgroundColor", QColor(50,70,100));
+    map.insert("/Board/backgroundColor2", QColor(90,70,50));
     map.insert("/Board/AutoPlayerInterval", 3000);
     map.insert("/Board/AutoSaveAndContinue", false);
     return map;

@@ -30,7 +30,9 @@ class BoardTheme : public QObject
 {
     Q_OBJECT
 public:
-    enum ColorRole {LightSquare, DarkSquare, Highlight, Frame, CurrentMove, ColorRoleEndEntry};
+    enum ColorRole {
+        LightSquare, DarkSquare, Highlight, Frame, CurrentMove,
+        Background1, Background2, ColorRoleEndEntry };
     enum LoadTheme {LoadBoard = 1, LoadPieces = 2, LoadAll = LoadBoard | LoadPieces};
     enum Effects {Plain, Outline = 1, Shadow = 2};
     BoardTheme();

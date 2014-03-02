@@ -217,7 +217,16 @@ void BoardPainter::configure()
     m_use_fixed_anim_length = AppSettings->getValue("animateMovesSpeedVsLength").toDouble();
     m_reachableColor = AppSettings->getValue("highlightColor").value<QColor>();
     m_reachableColor.setAlpha(50);
+    QColor back1 = AppSettings->getValue("backgroundColor").value<QColor>();
+    QColor back2 = AppSettings->getValue("backgroundColor2").value<QColor>();
     AppSettings->endGroup();
+
+    // setup background
+    QLinearGradient grad(QPointF(0,-1), QPointF(0,1));
+    grad.setColorAt(0, back1);
+    grad.setColorAt(1, back2);
+    QBrush b(grad);
+    setBackgroundBrush(b);
 
 }
 
@@ -231,11 +240,20 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
     qreal sy = (r.height() + 2.0*m_margin) / height(),
           sx = (r.width()  + 2.0*m_margin) / width(),
           sm = 1.0 / std::max(sx,sy);
-    QTransform t;
-    t.scale(sm,sm);
-    setTransform(t);
+
+    {   QTransform t;
+        t.scale(sm,sm);
+        setTransform(t);
+    }
     // center everything
     ensureVisible(sceneRect(), m_margin, m_margin);
+
+    // scale background brush
+    QTransform t;
+    t.scale(1, sceneRect().height()/2);
+    QBrush b = backgroundBrush();
+    b.setTransform(t);
+    setBackgroundBrush(b);
 }
 
 

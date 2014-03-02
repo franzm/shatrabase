@@ -35,15 +35,9 @@ BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
     m_minDeltaWheel(0),
     m_moveListCurrent(0)
 {
-    //QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    //policy.setHeightForWidth(true);
-    //setSizePolicy(policy);
     setMouseTracking(true);
     //installEventFilter(this); XXX currently not used
 	m_board.setStandardPosition();
-
-//    setBackgroundRole(QPalette::Link);
-//    setAutoFillBackground(true);
 
     // to place the BoardPainter in
     m_layout = new QVBoxLayout(this);
@@ -477,7 +471,7 @@ void BoardView::configure()
     AppSettings->endGroup();
 
     m_theme.configure();
-    m_theme.setSize(QSize(100,100));
+    m_theme.setSize(QSize(256,256));
 
     selectSquare();
 
