@@ -70,10 +70,10 @@ QString SBoard::moveToLann(const Move& move) const
     default:
         if (!move.wasInSequence())
         {
-            lann += QString::number(BN[from]); //(63-BN[from]);
+            lann += QString::number(63-BN[from]); //(BN[from]);
         }
         lann += move.isCapture()? ':' : '-';
-        lann += QString::number(BN[to]); //(63-BN[to]);
+        lann += QString::number(63-BN[to]); //(BN[to]);
     }
     
     if (move.isPromotion())
@@ -483,7 +483,7 @@ inline bool SBoard::prohibited(int to, PieceType p)
     bool fortB = Rank(to) > (10 + (p == Biy));
 
     if (m_stm) { if (fortB && temdekOn(Black)) return true; }
-    else if (fortW && temdekOn(White)) return true;
+    else         if (fortW && temdekOn(White)) return true;
 
     return false;
 }

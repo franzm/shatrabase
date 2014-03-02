@@ -58,5 +58,8 @@
         <file alias="themes/originalshatra.png">data/themes/originalshatra.png</file>
         <file alias="themes/shadow/originalshatra.png">data/themes/shadow/originalshatra.png</file>
         <file alias="themes/outline/originalshatra.png">data/themes/outline/originalshatra.png</file>
+        <file alias="themes/ftest1a6a.png">data/themes/ftest1a6a.png</file>
+        <file alias="themes/shadow/ftest1a6a.png">data/themes/shadow/ftest1a6a.png</file>
+        <file alias="themes/outline/ftest1a6a.png">data/themes/outline/ftest1a6a.png</file>
     </qresource>
 </RCC>
