@@ -64,8 +64,10 @@ protected:
 	void closeEvent(QCloseEvent* e);
     /* Filter key events. */
 	void keyPressEvent(QKeyEvent *e);
-    /* */
-//    void resizeEvent();
+
+    void moveEvent(QMoveEvent *);
+    void resizeEvent(QResizeEvent *);
+
     /* @return active database */
 	Database* database();
     /* @return active database structure */
@@ -384,6 +386,10 @@ private:
     Square m_annotationSquare;
     QAction* m_autoPlay;
     QAction* m_autoAnalysis;
+
+    // stuff for storing non-maximized state
+    QPoint m_oldPos;
+    QSize m_oldSize;
 };
 
 

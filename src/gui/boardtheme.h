@@ -59,6 +59,8 @@ public:
     const QPixmap& towerEmboss() const;
     /* Checks if themes is valid (pixmaps loaded). */
     bool isValid() const;
+    /** Returns true when the Batyr piece needs to be rotated */
+    bool isOriginalBatyr() const { return m_org_batyr; }
     /* Returns name of board theme. It is just file without a path and extension. */
     QString boardThemeName() const;
     /* Returns name of piece theme. It is just file without a path and extension. */
@@ -92,6 +94,7 @@ private:
     QColor m_colors[ColorRoleEndEntry];
     QString m_pieceFilename;
     QString m_boardFilename;
+    bool m_org_batyr;
 };
 
 #endif

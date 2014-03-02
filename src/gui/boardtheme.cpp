@@ -18,6 +18,7 @@
 #include <QPixmap>
 
 BoardTheme::BoardTheme()
+    :   m_org_batyr (false)
 {
     m_pieceFilename = "new QString()";
     m_originalUrgent.load(":/images/urgent.png");
@@ -77,6 +78,10 @@ bool BoardTheme::isValid() const
 
 bool BoardTheme::loadPieces(const QString& pieces, int effect)
 {
+    m_org_batyr = (
+                pieces == "originalshatra"
+                );
+
     QString effectPath;
     if (effect == Outline) effectPath = "outline";
     else if (effect == Shadow) effectPath = "shadow";
@@ -116,7 +121,8 @@ bool BoardTheme::loadPieces(const QString& pieces, int effect)
 
 bool BoardTheme::loadBoard(const QString& board)
 {
-	if (board.isEmpty()) {
+    if (board.isEmpty())
+    {
 		m_boardFilename = board;
 		updateSquares();
 		return true;

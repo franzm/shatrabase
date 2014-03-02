@@ -311,6 +311,8 @@ MainWindow::MainWindow() : QMainWindow(),
     m_gameList->m_FilterActive = AppSettings->getValue("FilterFollowsGame").toBool();
 	AppSettings->endGroup();
     m_toggleFilter->setChecked(m_gameList->m_FilterActive);
+    m_oldSize = size();
+    m_oldPos = pos();
 
 	/* Status */
     m_statusFilter = new QLabel();
@@ -388,6 +390,31 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     }
 }
 
+void MainWindow::resizeEvent(QResizeEvent * e)
+{
+    QWidget::resizeEvent(e);
+
+    // try to keep track of non-maximized window size
+    // XXX note on X11, isMaximized() comes to late here
+    // This is the X11 version, need to be tested on windows!
+    if (!isMaximized())
+    {
+        m_oldSize = e->oldSize();
+    }
+    //qDebug() << isMaximized() << " " << e->size() << " (" << e->oldSize() << ")";
+}
+
+void MainWindow::moveEvent(QMoveEvent * e)
+{
+    QWidget::moveEvent(e);
+
+    // XXX same prob as in above resizeEvent()
+    if (!isMaximized())
+    {
+        m_oldPos = e->oldPos();
+    }
+}
+
 void MainWindow::closeEvent(QCloseEvent* e)
 {
     if (confirmQuit())
@@ -401,7 +428,11 @@ void MainWindow::closeEvent(QCloseEvent* e)
         m_gameWindow->saveConfig();
         m_gameView->saveConfig();
 
-		AppSettings->setLayout(this);
+        if (isMaximized())
+            AppSettings->setLayout(this, m_oldPos.x(), m_oldPos.y(),
+                                         m_oldSize.width(), m_oldSize.height());
+        else
+            AppSettings->setLayout(this);
         AppSettings->beginGroup("/MainWindow/");
 		AppSettings->setValue("BoardSplit", m_boardSplitter->saveState());
         AppSettings->setValue("FilterFollowsGame", m_gameList->m_FilterActive);

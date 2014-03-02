@@ -330,6 +330,16 @@ void BoardPainter::createPieces_(const Board& board)
 
         PieceItem * item = new PieceItem(p, i, pm);
         item->setPos(squarePos(i));
+        // rotate batyr piece
+        //if (m_theme->isOriginalBatyr())
+        {
+            //if (   (!isFlipped() && p == BlackBatyr)
+            //    || (isFlipped() && p == WhiteBatyr))
+            {
+                item->matrix().scale(2,2);//rotate(180);
+            }
+        }
+
 
         // add to scene
         m_scene->addItem(item);
@@ -518,21 +528,23 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
     it->setVisible(false);
     m_org_drag_piece = it;
 
-    // create or refresh
-    if (!m_drag_piece)
-    {
-        m_drag_piece = new PieceItem(piece, sq, m_theme->piece(piece));
-        m_scene->addItem(m_drag_piece);
-        m_drag_piece->setZValue(1); // in front
-    }
-
+    // get position
     QPointF pos = mapToScene(view) - QPointF(m_size>>1,m_size>>1);
 
     // keep in range of board
     pos.setX(std::max(-3.5 * m_size,std::min(2.5 * m_size, pos.x())));
     pos.setY(std::max(-7.0 * m_size,std::min(6.0 * m_size, pos.y())));
 
-    m_drag_piece->setPos(pos);
+    // create or refresh
+    if (!m_drag_piece)
+    {
+        m_drag_piece = new PieceItem(piece, sq, m_theme->piece(piece));
+        m_drag_piece->setPos(pos);
+        m_scene->addItem(m_drag_piece);
+        m_drag_piece->setZValue(1); // in front
+    }
+    else
+        m_drag_piece->setPos(pos);
 }
 
 void BoardPainter::setReachableSquares(const std::vector<Square>& squares)

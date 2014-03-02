@@ -33,27 +33,34 @@ bool Settings::layout(QWidget* w)
 	beginGroup("Geometry");
 	QList<int> values;
 	bool valid = list(w->objectName(), values, 5);
-	if (valid) { // Enough values
+    if (valid) // Enough values
+    {
 		w->resize(QSize(values[2], values[3]));
 		w->move(QPoint(values[0], values[1]));
-		if (qobject_cast<QMainWindow*>(w)) {
+        if (qobject_cast<QMainWindow*>(w))
+        {
 			QByteArray docks = value("Docks", QByteArray()).toByteArray();
 			if (docks.count())
 				qobject_cast<QMainWindow*>(w)->restoreState(docks, 0);
-		} else if (values[4]) // restore non-main windows
-			w->show();
+        }
+        else
+            if (values[4]) // restore non-main windows
+                w->show();
 	}
 	endGroup();
 	return valid;
 }
 
-void Settings::setLayout(const QWidget* w)
+void Settings::setLayout(const QWidget* w, int x, int y, int wi, int he)
 {
 	if (!w || w->objectName().isEmpty())
 		return;
 	beginGroup("Geometry");
 	QList<int> values;
-	values << w->x() << w->y() << w->width() << w->height() << w->isVisible();
+    if (x != -1 || y != -1 || wi != -1 || he != -1)
+        values << x << y << wi << he << w->isVisible();
+    else
+        values << w->x() << w->y() << w->width() << w->height() << w->isVisible();
 	setList(w->objectName(), values);
 	if (qobject_cast<const QMainWindow*>(w))
 		setValue("Docks", qobject_cast<const QMainWindow*>(w)->saveState(0));
