@@ -17,15 +17,15 @@
 
 #include "common.h"
 
-/*
+
+
+/**
     The BoardTheme class contains set of pixmaps and options to
     define current board theme. Themes are read from INI files pointing
     to set of external pixmaps.
 
     Pixmaps are automatically scaled to given size.
 */
-
-
 class BoardTheme : public QObject
 {
     Q_OBJECT
@@ -46,9 +46,9 @@ public:
     /* @return one of the board colors. */
     QColor color(ColorRole role) const;
     /* @return pixmap for given piece scaled to current size(). */
-    const QPixmap& piece(Piece p) const;
+    const QPixmap& piece(Piece p, bool flipped = false) const;
     /* @return unscaled pixmap for given piece. */
-    const QPixmap& originalPiece(Piece p) const;
+    const QPixmap& originalPiece(Piece p, bool flipped = false) const;
     /* @return pixmap for square. */
     const QPixmap& square(bool dark) const;
     /* @return unscaled pixmap for square. */
@@ -59,8 +59,6 @@ public:
     const QPixmap& towerEmboss() const;
     /* Checks if themes is valid (pixmaps loaded). */
     bool isValid() const;
-    /** Returns true when the Batyr piece needs to be rotated */
-    bool isOriginalBatyr() const { return m_org_batyr; }
     /* Returns name of board theme. It is just file without a path and extension. */
     QString boardThemeName() const;
     /* Returns name of piece theme. It is just file without a path and extension. */
@@ -82,8 +80,8 @@ public:
 
 private:
     bool isBoardPlain() const;
-    QPixmap m_originalPiece[ConstPieceTypes];
-    QPixmap m_piece[ConstPieceTypes];
+    QPixmap m_originalPiece[ConstPieceTypes+2];
+    QPixmap m_piece[ConstPieceTypes+2];
     QPixmap m_originalSquare[2];
     QPixmap m_square[2];
     QPixmap m_originalUrgent;

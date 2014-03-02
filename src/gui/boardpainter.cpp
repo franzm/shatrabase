@@ -128,6 +128,20 @@ public:
     /** should this piece be animated (square > squareTo) */
     bool animate;
 
+    /** Sets 180 rotation on/off */
+    void setRotate(bool doit)
+    {
+        QTransform t = transform();
+        if (!doit)
+            t.reset();
+        else
+        {
+            t.translate(pixmap().width(), pixmap().height());
+            t.rotate(180);
+        }
+        setTransform(t);
+    }
+
 };
 
 
@@ -326,20 +340,12 @@ void BoardPainter::createPieces_(const Board& board)
         if (p == InvalidPiece) continue;
 
         // pixmap for piece
-        const QPixmap& pm = m_theme->piece(p);
+        const QPixmap& pm = m_theme->piece(p,
+                   (!isFlipped() && p == BlackBatyr)
+                || (isFlipped() && p == WhiteBatyr) );
 
         PieceItem * item = new PieceItem(p, i, pm);
         item->setPos(squarePos(i));
-        // rotate batyr piece
-        //if (m_theme->isOriginalBatyr())
-        {
-            //if (   (!isFlipped() && p == BlackBatyr)
-            //    || (isFlipped() && p == WhiteBatyr))
-            {
-                item->matrix().scale(2,2);//rotate(180);
-            }
-        }
-
 
         // add to scene
         m_scene->addItem(item);
@@ -394,6 +400,11 @@ void BoardPainter::onFlip_()
     for (size_t i=0; i<m_pieces.size(); ++i)
     {
         m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
+        // update batyr graphic
+        if (m_pieces[i]->piece == WhiteBatyr)
+            m_pieces[i]->setPixmap(m_theme->piece(WhiteBatyr, isFlipped()));
+        if (m_pieces[i]->piece == BlackBatyr)
+            m_pieces[i]->setPixmap(m_theme->piece(BlackBatyr, !isFlipped()));
     }
 
     updateMoveIndicators_();

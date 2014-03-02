@@ -29,9 +29,28 @@ BoardTheme::BoardTheme()
 BoardTheme::~BoardTheme()
 {}
 
-const QPixmap& BoardTheme::piece(Piece p) const
+const QPixmap& BoardTheme::piece(Piece p, bool flipped) const
 {
-	return m_piece[p];
+    if (flipped)
+    {
+        if (p == WhiteBatyr)
+            return m_piece[ConstPieceTypes];
+        if (p == BlackBatyr)
+            return m_piece[ConstPieceTypes+1];
+    }
+    return m_piece[p];
+}
+
+const QPixmap& BoardTheme::originalPiece(Piece p, bool flipped) const
+{
+    if (flipped)
+    {
+        if (p == WhiteBatyr)
+            return m_originalPiece[ConstPieceTypes];
+        if (p == BlackBatyr)
+            return m_originalPiece[ConstPieceTypes+1];
+    }
+    return m_originalPiece[p];
 }
 
 const QPixmap& BoardTheme::square(bool dark) const
@@ -49,10 +68,6 @@ const QPixmap& BoardTheme::towerEmboss() const
     return m_towerEmboss;
 }
 
-const QPixmap& BoardTheme::originalPiece(Piece p) const
-{
-	return m_originalPiece[p];
-}
 
 const QPixmap& BoardTheme::originalSquare(bool dark) const
 {
@@ -92,7 +107,8 @@ bool BoardTheme::loadPieces(const QString& pieces, int effect)
 		return false;
 
     int realsize = big.height() / 3;
-    if (realsize != big.width() / 5)
+    bool hasFlippedBatyr = (realsize == big.width() / 6);
+    if (realsize != big.width() / 5 && !hasFlippedBatyr)
 		return false;
     int rs2 = realsize + realsize;
 
@@ -111,6 +127,19 @@ bool BoardTheme::loadPieces(const QString& pieces, int effect)
     m_originalPiece[WasYalkyn] =   big.copy(1 * realsize, rs2, realsize, realsize);
     m_originalPiece[WasBatyr] =    big.copy(2 * realsize, rs2, realsize, realsize);
     m_originalPiece[WasShatra] =   big.copy(4 * realsize, rs2, realsize, realsize);
+    if (hasFlippedBatyr)
+    {
+        m_originalPiece[ConstPieceTypes] =
+                                   big.copy(5 * realsize, 0, realsize, realsize);
+        m_originalPiece[ConstPieceTypes+1] =
+                                   big.copy(5 * realsize, realsize, realsize, realsize);
+    }
+    else
+    {
+        m_originalPiece[ConstPieceTypes] = m_originalPiece[WhiteBatyr];
+        m_originalPiece[ConstPieceTypes+1] = m_originalPiece[BlackBatyr];
+    }
+
     m_pieceFilename = themePath;
 
 	if (size().isEmpty())
@@ -185,7 +214,7 @@ void BoardTheme::setSize(const QSize& value)
 	if (!isValid())
 		return;
 	m_size = value;
-    for (int i = 1; i < ConstPieceTypes; i++)
+    for (int i = 1; i < ConstPieceTypes+2; i++)
         if (i != InvalidPiece)
             m_piece[i] = m_originalPiece[i].scaled(m_size,
                 Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
