@@ -17,20 +17,22 @@
 
 #include "common.h"
 
-/*
+
+
+/**
     The BoardTheme class contains set of pixmaps and options to
     define current board theme. Themes are read from INI files pointing
     to set of external pixmaps.
 
     Pixmaps are automatically scaled to given size.
 */
-
-
 class BoardTheme : public QObject
 {
     Q_OBJECT
 public:
-    enum ColorRole {LightSquare, DarkSquare, Highlight, Frame, CurrentMove, ColorRoleEndEntry};
+    enum ColorRole {
+        LightSquare, DarkSquare, Highlight, Frame, CurrentMove,
+        Background1, Background2, ColorRoleEndEntry };
     enum LoadTheme {LoadBoard = 1, LoadPieces = 2, LoadAll = LoadBoard | LoadPieces};
     enum Effects {Plain, Outline = 1, Shadow = 2};
     BoardTheme();
@@ -46,15 +48,17 @@ public:
     /* @return one of the board colors. */
     QColor color(ColorRole role) const;
     /* @return pixmap for given piece scaled to current size(). */
-    const QPixmap& piece(Piece p) const;
+    const QPixmap& piece(Piece p, bool flipped = false) const;
     /* @return unscaled pixmap for given piece. */
-    const QPixmap& originalPiece(Piece p) const;
+    const QPixmap& originalPiece(Piece p, bool flipped = false) const;
     /* @return pixmap for square. */
     const QPixmap& square(bool dark) const;
     /* @return unscaled pixmap for square. */
     const QPixmap& originalSquare(bool dark) const;
     /* @return pixmap for urgent square. */
     const QPixmap& urgent() const;
+    /** @return pixmap for embossing tower squares. */
+    const QPixmap& towerEmboss() const;
     /* Checks if themes is valid (pixmaps loaded). */
     bool isValid() const;
     /* Returns name of board theme. It is just file without a path and extension. */
@@ -78,16 +82,19 @@ public:
 
 private:
     bool isBoardPlain() const;
-    QPixmap m_originalPiece[ConstPieceTypes];
-    QPixmap m_piece[ConstPieceTypes];
+    QPixmap m_originalPiece[ConstPieceTypes+2];
+    QPixmap m_piece[ConstPieceTypes+2];
     QPixmap m_originalSquare[2];
     QPixmap m_square[2];
     QPixmap m_originalUrgent;
     QPixmap m_urgent;
+    QPixmap m_originalTowerEmboss;
+    QPixmap m_towerEmboss;
     QSize m_size;
     QColor m_colors[ColorRoleEndEntry];
     QString m_pieceFilename;
     QString m_boardFilename;
+    bool m_org_batyr;
 };
 
 #endif

@@ -35,15 +35,9 @@ BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
     m_minDeltaWheel(0),
     m_moveListCurrent(0)
 {
-    //QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    //policy.setHeightForWidth(true);
-    //setSizePolicy(policy);
     setMouseTracking(true);
     //installEventFilter(this); XXX currently not used
 	m_board.setStandardPosition();
-
-//    setBackgroundRole(QPalette::Link);
-//    setAutoFillBackground(true);
 
     // to place the BoardPainter in
     m_layout = new QVBoxLayout(this);
@@ -473,10 +467,11 @@ void BoardView::configure()
     m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
     m_showAllMoves = AppSettings->getValue("showAllMoves").toBool();
     m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
+    bool flipped = AppSettings->getValue("flipped").toBool();
     AppSettings->endGroup();
 
     m_theme.configure();
-    m_theme.setSize(QSize(100,100));
+    m_theme.setSize(QSize(256,256));
 
     selectSquare();
 
@@ -484,6 +479,7 @@ void BoardView::configure()
     if (m_view) m_view->deleteLater();
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
+    setFlipped(flipped);
     m_layout->addWidget(m_view);
 
 	update();

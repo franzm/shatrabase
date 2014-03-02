@@ -46,7 +46,8 @@ public:
     SquareItem(Square square, const QPixmap& pixmap,
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
-            square (square),
+            square    (square),
+            overlay   (0),
             frame     (false),
             highlight (false),
             temdek    (false),
@@ -54,6 +55,9 @@ public:
     { }
 
     Square square;
+
+    const QPixmap * overlay;
+
     bool frame;
     QPen framePen;
     bool highlight;
@@ -68,6 +72,10 @@ protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
     {
         QGraphicsPixmapItem::paint(painter, option, widget);
+
+        if (overlay && !overlay->isNull())
+            painter->drawPixmap(0,0,*overlay);
+
         if (highlight)
         {
             painter->setPen(QPen(Qt::NoPen));
@@ -120,6 +128,20 @@ public:
     /** should this piece be animated (square > squareTo) */
     bool animate;
 
+    /** Sets 180 rotation on/off */
+    void setRotate(bool doit)
+    {
+        QTransform t = transform();
+        if (!doit)
+            t.reset();
+        else
+        {
+            t.translate(pixmap().width(), pixmap().height());
+            t.rotate(180);
+        }
+        setTransform(t);
+    }
+
 };
 
 
@@ -140,7 +162,8 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_center        (4.5,7),
     m_size          (0),
     m_frame_width   (1),
-    m_flipped       (false),
+    m_flipped       (true), /* XXX This probably has to match the init value in AppSettings
+                                   to be correct on first installation */
     m_is_white      (true),
     m_do_moat       (true),
     m_do_animate    (true),
@@ -185,6 +208,7 @@ void BoardPainter::configure()
     AppSettings->beginGroup("/Board/");
     //m_do_show_side = ...
     m_do_moat = AppSettings->getValue("showMoat").toBool();
+    m_do_tower = AppSettings->getValue("showTower").toBool();
     m_do_show_frame = AppSettings->getValue("showFrame").toBool();
     m_frame_width = AppSettings->getValue("frameWidth").toInt();
     m_do_animate = AppSettings->getValue("animateMoves").toBool();
@@ -193,7 +217,16 @@ void BoardPainter::configure()
     m_use_fixed_anim_length = AppSettings->getValue("animateMovesSpeedVsLength").toDouble();
     m_reachableColor = AppSettings->getValue("highlightColor").value<QColor>();
     m_reachableColor.setAlpha(50);
+    QColor back1 = AppSettings->getValue("backgroundColor").value<QColor>();
+    QColor back2 = AppSettings->getValue("backgroundColor2").value<QColor>();
     AppSettings->endGroup();
+
+    // setup background
+    QLinearGradient grad(QPointF(0,-1), QPointF(0,1));
+    grad.setColorAt(0, back1);
+    grad.setColorAt(1, back2);
+    QBrush b(grad);
+    setBackgroundBrush(b);
 
 }
 
@@ -207,11 +240,20 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
     qreal sy = (r.height() + 2.0*m_margin) / height(),
           sx = (r.width()  + 2.0*m_margin) / width(),
           sm = 1.0 / std::max(sx,sy);
-    QTransform t;
-    t.scale(sm,sm);
-    setTransform(t);
+
+    {   QTransform t;
+        t.scale(sm,sm);
+        setTransform(t);
+    }
     // center everything
     ensureVisible(sceneRect(), m_margin, m_margin);
+
+    // scale background brush
+    QTransform t;
+    t.scale(1, sceneRect().height()/2);
+    QBrush b = backgroundBrush();
+    b.setTransform(t);
+    setBackgroundBrush(b);
 }
 
 
@@ -286,6 +328,11 @@ void BoardPainter::createBoard_(const Board& board)
             s->temdekPen.setWidthF(s->pixmap().width()/10);
         }
 
+        if (m_do_tower && board.isTower(i))
+        {
+            s->overlay = &m_theme->towerEmboss();
+        }
+
         // add to scene
         m_scene->addItem(s);
         m_squares.push_back(s);
@@ -311,7 +358,9 @@ void BoardPainter::createPieces_(const Board& board)
         if (p == InvalidPiece) continue;
 
         // pixmap for piece
-        const QPixmap& pm = m_theme->piece(p);
+        const QPixmap& pm = m_theme->piece(p,
+                   (!isFlipped() && p == BlackBatyr)
+                || (isFlipped() && p == WhiteBatyr) );
 
         PieceItem * item = new PieceItem(p, i, pm);
         item->setPos(squarePos(i));
@@ -369,6 +418,11 @@ void BoardPainter::onFlip_()
     for (size_t i=0; i<m_pieces.size(); ++i)
     {
         m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
+        // update batyr graphic
+        if (m_pieces[i]->piece == WhiteBatyr)
+            m_pieces[i]->setPixmap(m_theme->piece(WhiteBatyr, isFlipped()));
+        if (m_pieces[i]->piece == BlackBatyr)
+            m_pieces[i]->setPixmap(m_theme->piece(BlackBatyr, !isFlipped()));
     }
 
     updateMoveIndicators_();
@@ -383,7 +437,8 @@ QRectF BoardPainter::squareRect(Square sq) const
 
     return QRectF(
             (x-m_center.x())*m_size,
-            (y-m_center.y())*m_size + m_do_moat * ((sq>31)*2-1) * 0.05*m_size,
+            (y-m_center.y())*m_size + m_do_moat *
+                ((isFlipped()?(sq<32):(sq>31))*2-1) * 0.05*m_size,
             m_size, m_size
             );
 }
@@ -502,21 +557,23 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
     it->setVisible(false);
     m_org_drag_piece = it;
 
-    // create or refresh
-    if (!m_drag_piece)
-    {
-        m_drag_piece = new PieceItem(piece, sq, m_theme->piece(piece));
-        m_scene->addItem(m_drag_piece);
-        m_drag_piece->setZValue(1); // in front
-    }
-
+    // get position
     QPointF pos = mapToScene(view) - QPointF(m_size>>1,m_size>>1);
 
     // keep in range of board
     pos.setX(std::max(-3.5 * m_size,std::min(2.5 * m_size, pos.x())));
     pos.setY(std::max(-7.0 * m_size,std::min(6.0 * m_size, pos.y())));
 
-    m_drag_piece->setPos(pos);
+    // create or refresh
+    if (!m_drag_piece)
+    {
+        m_drag_piece = new PieceItem(piece, sq, m_theme->piece(piece));
+        m_drag_piece->setPos(pos);
+        m_scene->addItem(m_drag_piece);
+        m_drag_piece->setZValue(1); // in front
+    }
+    else
+        m_drag_piece->setPos(pos);
 }
 
 void BoardPainter::setReachableSquares(const std::vector<Square>& squares)

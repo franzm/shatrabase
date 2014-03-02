@@ -18,17 +18,39 @@
 #include <QPixmap>
 
 BoardTheme::BoardTheme()
+    :   m_org_batyr (false)
 {
     m_pieceFilename = "new QString()";
     m_originalUrgent.load(":/images/urgent.png");
+    m_originalTowerEmboss.load(":/images/square_emboss.png");
+
 }
 
 BoardTheme::~BoardTheme()
 {}
 
-const QPixmap& BoardTheme::piece(Piece p) const
+const QPixmap& BoardTheme::piece(Piece p, bool flipped) const
 {
-	return m_piece[p];
+    if (flipped)
+    {
+        if (p == WhiteBatyr)
+            return m_piece[ConstPieceTypes];
+        if (p == BlackBatyr)
+            return m_piece[ConstPieceTypes+1];
+    }
+    return m_piece[p];
+}
+
+const QPixmap& BoardTheme::originalPiece(Piece p, bool flipped) const
+{
+    if (flipped)
+    {
+        if (p == WhiteBatyr)
+            return m_originalPiece[ConstPieceTypes];
+        if (p == BlackBatyr)
+            return m_originalPiece[ConstPieceTypes+1];
+    }
+    return m_originalPiece[p];
 }
 
 const QPixmap& BoardTheme::square(bool dark) const
@@ -41,10 +63,11 @@ const QPixmap& BoardTheme::urgent() const
     return m_urgent;
 }
 
-const QPixmap& BoardTheme::originalPiece(Piece p) const
+const QPixmap& BoardTheme::towerEmboss() const
 {
-	return m_originalPiece[p];
+    return m_towerEmboss;
 }
+
 
 const QPixmap& BoardTheme::originalSquare(bool dark) const
 {
@@ -70,6 +93,10 @@ bool BoardTheme::isValid() const
 
 bool BoardTheme::loadPieces(const QString& pieces, int effect)
 {
+    m_org_batyr = (
+                pieces == "originalshatra"
+                );
+
     QString effectPath;
     if (effect == Outline) effectPath = "outline";
     else if (effect == Shadow) effectPath = "shadow";
@@ -80,7 +107,8 @@ bool BoardTheme::loadPieces(const QString& pieces, int effect)
 		return false;
 
     int realsize = big.height() / 3;
-    if (realsize != big.width() / 5)
+    bool hasFlippedBatyr = (realsize == big.width() / 6);
+    if (realsize != big.width() / 5 && !hasFlippedBatyr)
 		return false;
     int rs2 = realsize + realsize;
 
@@ -99,6 +127,19 @@ bool BoardTheme::loadPieces(const QString& pieces, int effect)
     m_originalPiece[WasYalkyn] =   big.copy(1 * realsize, rs2, realsize, realsize);
     m_originalPiece[WasBatyr] =    big.copy(2 * realsize, rs2, realsize, realsize);
     m_originalPiece[WasShatra] =   big.copy(4 * realsize, rs2, realsize, realsize);
+    if (hasFlippedBatyr)
+    {
+        m_originalPiece[ConstPieceTypes] =
+                                   big.copy(5 * realsize, 0, realsize, realsize);
+        m_originalPiece[ConstPieceTypes+1] =
+                                   big.copy(5 * realsize, realsize, realsize, realsize);
+    }
+    else
+    {
+        m_originalPiece[ConstPieceTypes] = m_originalPiece[WhiteBatyr];
+        m_originalPiece[ConstPieceTypes+1] = m_originalPiece[BlackBatyr];
+    }
+
     m_pieceFilename = themePath;
 
 	if (size().isEmpty())
@@ -109,7 +150,8 @@ bool BoardTheme::loadPieces(const QString& pieces, int effect)
 
 bool BoardTheme::loadBoard(const QString& board)
 {
-	if (board.isEmpty()) {
+    if (board.isEmpty())
+    {
 		m_boardFilename = board;
 		updateSquares();
 		return true;
@@ -138,6 +180,8 @@ void BoardTheme::configure()
     setColor(BoardTheme::Highlight, AppSettings->getValue("highlightColor").value<QColor>());
     setColor(BoardTheme::Frame, AppSettings->getValue("frameColor").value<QColor>());
     setColor(BoardTheme::CurrentMove, AppSettings->getValue("currentMoveColor").value<QColor>());
+    setColor(BoardTheme::Background1, AppSettings->getValue("backgroundColor").value<QColor>());
+    setColor(BoardTheme::Background2, AppSettings->getValue("backgroundColor2").value<QColor>());
     QString pieceTheme = AppSettings->getValue("pieceTheme").toString();
     int pieceEffect = AppSettings->getValue("pieceEffect").toInt();
     QString boardTheme = AppSettings->getValue("boardTheme").toString();
@@ -172,12 +216,14 @@ void BoardTheme::setSize(const QSize& value)
 	if (!isValid())
 		return;
 	m_size = value;
-    for (int i = 1; i < ConstPieceTypes; i++)
+    for (int i = 1; i < ConstPieceTypes+2; i++)
         if (i != InvalidPiece)
             m_piece[i] = m_originalPiece[i].scaled(m_size,
                 Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     updateSquares();
     m_urgent = m_originalUrgent.scaled(m_size,
+        Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    m_towerEmboss = m_originalTowerEmboss.scaled(m_size,
         Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 

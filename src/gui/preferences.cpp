@@ -272,6 +272,7 @@ void PreferencesDialog::restoreSettings()
     AppSettings->endGroup();
     AppSettings->beginGroup("/Board/");
     ui.boardMoatCheck->setChecked(AppSettings->getValue("showMoat").toBool());
+    ui.boardTowerCheck->setChecked(AppSettings->getValue("showTower").toBool());
     ui.boardFrameCheck->setChecked(AppSettings->getValue("showFrame").toBool());
     ui.boardFrameSize->setValue(AppSettings->getValue("frameWidth").toInt());
     ui.hilightCurrentMove->setChecked(AppSettings->getValue("showCurrentMove").toBool());
@@ -294,6 +295,8 @@ void PreferencesDialog::restoreSettings()
     restoreColorItem(ui.boardColorsList, tr("Highlighted squares"), "highlightColor");
     restoreColorItem(ui.boardColorsList, tr("Frame"), "frameColor");
     restoreColorItem(ui.boardColorsList, tr("Current move"), "currentMoveColor");
+    restoreColorItem(ui.boardColorsList, tr("Background1"), "backgroundColor");
+    restoreColorItem(ui.boardColorsList, tr("Background2"), "backgroundColor2");
     AppSettings->endGroup();
 
 	QString themeDir(AppSettings->dataPath() + "/themes");
@@ -354,6 +357,7 @@ void PreferencesDialog::saveSettings()
     AppSettings->endGroup();
     AppSettings->beginGroup("/Board/");
     AppSettings->setValue("showMoat", QVariant(ui.boardMoatCheck->isChecked()));
+    AppSettings->setValue("showTower", QVariant(ui.boardTowerCheck->isChecked()));
     AppSettings->setValue("showFrame", QVariant(ui.boardFrameCheck->isChecked()));
     AppSettings->setValue("frameWidth", QVariant(ui.boardFrameSize->value()));
     AppSettings->setValue("showCurrentMove", QVariant(ui.hilightCurrentMove->isChecked()));
@@ -372,7 +376,8 @@ void PreferencesDialog::saveSettings()
 		AppSettings->setValue("boardTheme", ui.boardThemeCombo->currentText());
 	else	AppSettings->setValue("boardTheme", QString());
 	QStringList colorNames;
-    colorNames << "lightColor" << "darkColor" << "highlightColor" << "frameColor" << "currentMoveColor";
+    colorNames << "lightColor" << "darkColor" << "highlightColor" << "frameColor" << "currentMoveColor"
+               << "backgroundColor" << "backgroundColor2";
 	saveColorList(ui.boardColorsList, colorNames);
 	AppSettings->endGroup();
 

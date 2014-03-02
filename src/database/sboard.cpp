@@ -70,10 +70,10 @@ QString SBoard::moveToLann(const Move& move) const
     default:
         if (!move.wasInSequence())
         {
-            lann += QString::number(63-BN[from]); //(BN[from]);
+            lann += QString::number(BN[from]); //(63-BN[from]);
         }
         lann += move.isCapture()? ':' : '-';
-        lann += QString::number(63-BN[to]); //(BN[to]);
+        lann += QString::number(BN[to]); //(63-BN[to]);
     }
     
     if (move.isPromotion())

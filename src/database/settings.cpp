@@ -33,27 +33,34 @@ bool Settings::layout(QWidget* w)
 	beginGroup("Geometry");
 	QList<int> values;
 	bool valid = list(w->objectName(), values, 5);
-	if (valid) { // Enough values
+    if (valid) // Enough values
+    {
 		w->resize(QSize(values[2], values[3]));
 		w->move(QPoint(values[0], values[1]));
-		if (qobject_cast<QMainWindow*>(w)) {
+        if (qobject_cast<QMainWindow*>(w))
+        {
 			QByteArray docks = value("Docks", QByteArray()).toByteArray();
 			if (docks.count())
 				qobject_cast<QMainWindow*>(w)->restoreState(docks, 0);
-		} else if (values[4]) // restore non-main windows
-			w->show();
+        }
+        else
+            if (values[4]) // restore non-main windows
+                w->show();
 	}
 	endGroup();
 	return valid;
 }
 
-void Settings::setLayout(const QWidget* w)
+void Settings::setLayout(const QWidget* w, int x, int y, int wi, int he)
 {
 	if (!w || w->objectName().isEmpty())
 		return;
 	beginGroup("Geometry");
 	QList<int> values;
-	values << w->x() << w->y() << w->width() << w->height() << w->isVisible();
+    if (x != -1 || y != -1 || wi != -1 || he != -1)
+        values << x << y << wi << he << w->isVisible();
+    else
+        values << w->x() << w->y() << w->width() << w->height() << w->isVisible();
 	setList(w->objectName(), values);
 	if (qobject_cast<const QMainWindow*>(w))
 		setValue("Docks", qobject_cast<const QMainWindow*>(w)->saveState(0));
@@ -147,7 +154,9 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/VerticalTabs", false);
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
+    map.insert("/Board/flipped", true);
     map.insert("/Board/showMoat", true);
+    map.insert("/Board/showTower", true);
     map.insert("/Board/showFrame", true);
     map.insert("/Board/frameWidth", 4);
     map.insert("/Board/showCurrentMove", true);
@@ -160,11 +169,13 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/pieceTheme", "motifshatra");
     map.insert("/Board/pieceEffect", BoardTheme::Plain);
     map.insert("/Board/boardTheme", "shatra1");
-    map.insert("/Board/lightColor", QColor(Qt::yellow));
+    map.insert("/Board/lightColor", QColor(Qt::lightGray));
     map.insert("/Board/darkColor", QColor(Qt::darkGray));
     map.insert("/Board/highlightColor", QColor(Qt::yellow));
     map.insert("/Board/frameColor", QColor(Qt::black));
     map.insert("/Board/currentMoveColor", QColor(Qt::blue));
+    map.insert("/Board/backgroundColor", QColor(50,70,100));
+    map.insert("/Board/backgroundColor2", QColor(90,70,50));
     map.insert("/Board/AutoPlayerInterval", 3000);
     map.insert("/Board/AutoSaveAndContinue", false);
     return map;

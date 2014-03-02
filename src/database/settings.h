@@ -43,8 +43,9 @@ public:
 	/* Restore widget's layout based on its name. Optionally show window if it is visible.
 	@return @p true if the state was restored. */
     bool layout(QWidget* w);
-	/* Write widget's layout with its name. */
-    void setLayout(const QWidget* w);
+    /* Write widget's layout with its name.
+       If x, y, w or h != -1 they will be used instead of the widgets pos and size. */
+    void setLayout(const QWidget* widget, int x = -1, int y = -1, int w = -1, int h = -1);
 	/* @return directory where data are stored. */
     QString dataPath();
 

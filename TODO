@@ -1,0 +1,12 @@
+-- graphics --
+
+* piece graphics
+  * shadow and outline versions
+* OK tower squares
+
+-- gui --
+
+* OK save board flipped status
+* OK fix window max'd save/restore (common Qt prob) 
+  * save maximized state but keep default pos/size
+* fix board sometimes off (animation/autoplay)

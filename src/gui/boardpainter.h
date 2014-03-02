@@ -157,6 +157,7 @@ protected:
     bool m_flipped,
         m_is_white,
         m_do_moat,
+        m_do_tower,
         m_do_animate,
         m_do_show_side,
         m_do_show_frame;
