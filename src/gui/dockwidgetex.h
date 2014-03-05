@@ -9,6 +9,7 @@
 #define DOCKWIDGETEX_H
 
 #include <QDockWidget>
+#include <QDebug>
 
 class DockWidgetEx : public QDockWidget
 {
