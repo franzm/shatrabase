@@ -485,7 +485,7 @@ void BoardView::keyPressEvent(QKeyEvent * e)
     if (e->key()==Qt::Key_F2 && m_isExternal)
     {
         e->accept();
-        setExternal(false);
+        close(); // close event will signal mainwindow and update menu-check
         return;
     }
     QWidget::keyPressEvent(e);

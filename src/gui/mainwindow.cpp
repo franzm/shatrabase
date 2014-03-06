@@ -94,6 +94,8 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Board */
     m_boardSplitter = new QSplitter(Qt::Vertical);
     m_boardSplitter->setChildrenCollapsible(false);
+    setCentralWidget(m_boardSplitter);
+
     m_boardView = new BoardView(m_boardSplitter);
 	m_boardView->setObjectName("BoardView");
     m_boardView->setMinimumSize(200, 320);
@@ -103,10 +105,13 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotBoardClick(Square, int, QPoint)));
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));
     connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
+//    DockWidgetEx* boardDock = new DockWidgetEx(tr("Board"), this);
+//    boardDock->setObjectName("BoardDock");
+//    boardDock->setWidget(m_boardView);
 	/* Board layout */
 //    m_boardLayout->hasHeightForWidth();
-	m_boardSplitter->addWidget(m_boardView);
-    setCentralWidget(m_boardSplitter);
+    //m_boardSplitter->addWidget(m_boardView);
+
 //    m_boardSplitter->setStretchFactor(m_boardSplitter->indexOf(m_boardView), 1);
 
 	/* Game view */

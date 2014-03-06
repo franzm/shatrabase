@@ -542,6 +542,7 @@ void MainWindow::slotBoardFlipExternal()
 void MainWindow::slotBoardExternalClosed()
 {
     m_ExternalBoardAction->setChecked(false);
+    AppSettings->setValue("/Board/external", false);
 }
 
 void MainWindow::slotGameVarEnter()
