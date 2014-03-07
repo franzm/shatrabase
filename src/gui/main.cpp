@@ -19,8 +19,12 @@
 #include "logstream.h"
 
 #include "boardview.h"
+
+#include "ushiengine.h"
 int main(int argc, char** argv)
 {
+    return test_engine_();
+
 	AppSettings = new Settings;
     QApplication a(argc, argv);
 

@@ -100,6 +100,10 @@ signals:
 
 
 protected:
+    /** Waits the given milliseconds until an output of the engine.
+        Returns false if timed-out. */
+    virtual bool waitForResponse(int wait_ms = 1000);
+
 	/* Performs any shutdown procedure required by the engine protocol */
 	virtual void protocolEnd() = 0;
 
@@ -124,7 +128,7 @@ protected:
 
 private slots:
 	/* Receives notification that there is process output to read */
-	void pollProcess();
+    void pollProcess();
 
 	/* Receives notification that the process has terminated */
 	void processExited();
@@ -139,7 +143,7 @@ public:
     QList<EngineOptionData> m_options;
     OptionValueList m_mapOptionValues;
 
-private:
+protected://rivate:
 	QString m_name;
 	QString	m_command;
 	QString	m_directory;
@@ -149,5 +153,9 @@ private:
 	bool m_active;
 	bool m_analyzing;
 };
+
+
+int test_engine_();
+
 
 #endif // __ENGINE_H__

@@ -145,7 +145,7 @@ enum MoveType
     PromotionYalkyn = Yalkyn, EnPassant, DoubleAdvance
 };
 
-enum Result { Unknown, WhiteWin, Draw, BlackWin };
+enum Result { ResultUnknown, WhiteWin, Draw, BlackWin };
 
 //#define MIN(a,b) b^((a^b) & -(a<b))
 //#define MAX(a,b) a^((a^b) & -(a<b))

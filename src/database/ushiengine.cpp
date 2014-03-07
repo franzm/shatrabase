@@ -18,10 +18,12 @@ USHIEngine::USHIEngine(const QString& name,
 			  const QString& command,
               bool bTestMode,
 			  const QString& directory,
-              QTextStream* logStream) : Engine(name, command, bTestMode, directory, logStream)
+              QTextStream* logStream)
+    : Engine(name, command, bTestMode, directory, logStream)
 {
 	m_quitAfterAnalysis = false;
 	m_invertBlack = true;
+
 }
 
 bool USHIEngine::startAnalysis(const Board& board, int nv)
@@ -38,8 +40,9 @@ bool USHIEngine::startAnalysis(const Board& board, int nv)
 	m_position = board.toSPN();
 	m_waitingOn = "ushinewgame";
 	send("stop");
-	send("ushinewgame");
-	send("isready");
+    send("ushinewgame");
+    send("isready");
+    //waitForResponse(1000*5);
 	setAnalyzing(true);
 
 	return true;
@@ -77,7 +80,9 @@ void USHIEngine::protocolEnd()
 
 void USHIEngine::processMessage(const QString& message)
 {
-	if (message == "ushiok") {
+    //qDebug() << "process " << message;
+
+    if (message == "ushiok") {
 		//once the engine is running wait for it to initialise
 		m_waitingOn = "ushiok";
 		send("isready");
@@ -124,13 +129,13 @@ void USHIEngine::processMessage(const QString& message)
 			send("setoption name USHI_AnalyseMode value true");
 		}
 
-		if (m_waitingOn == "ushinewgame") {
-			//engine is now ready to analyse a new position
+        if (m_waitingOn == "ushinewgame") {
+            //engine is now ready to analyse a new position
 			m_waitingOn = "";
 			send(QString("setoption name MultiPV value %1").arg(m_mpv));
 			send("position spn " + m_position);
-			send("go infinite");
-		}
+            send("go infinite");
+        }
 	}
 
     QString command = message.section(' ', 0, 0);
@@ -147,6 +152,7 @@ void USHIEngine::processMessage(const QString& message)
 
 void USHIEngine::parseAnalysis(const QString& message)
 {
+    qDebug() << "parse " << message;
 	// Sample: info score cp 20  depth 3 nodes 423 time 15 pv f1c4 g8f6 b1c3
 	Analysis analysis;
 		  bool multiPVFound, timeFound, nodesFound, depthFound, scoreFound, variationFound;

@@ -42,6 +42,12 @@ public:
 	virtual void setMpv(int mpv);
 
     virtual bool providesMvp() { return true; }
+
+    void test()
+    {
+        send("position spn sqssrsbrb/k/sssssss/7/7/7/7/SSSSSSS/K/BRBSRSSQS w Tt - - - 1");
+        send("go");
+    }
 protected:
 	/** Performs any initialisation required by the engine protocol */
 	void protocolStart();

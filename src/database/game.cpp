@@ -391,7 +391,7 @@ Result Game::result() const
     } else if (m_tags["Result"] == "0-1") {
         return BlackWin;
     } else {
-        return Unknown;
+        return ResultUnknown;
     }
 }
 

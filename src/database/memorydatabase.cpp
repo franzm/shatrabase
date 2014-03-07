@@ -104,7 +104,7 @@ void MemoryDatabase::parseGame()
         game->setStartingBoard(spn);
     m_index.setValidFlag(n, parseMoves(game));
     m_index.setTag("Length", QString::number((game->plyCount()+1) / 2), n);
-    if (g_autoResult0nLoad && game->result() == Unknown) {
+    if (g_autoResult0nLoad && game->result() == ResultUnknown) {
         m_index.setTag("Result", resultString(game->board().gameResult()), n);
         g_resModified = true;
     }
