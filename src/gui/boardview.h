@@ -32,7 +32,9 @@ class BoardView : public QWidget
 public:
     enum {WheelUp = Qt::LeftButton, WheelDown = Qt::RightButton};
     enum {IgnoreSideToMove = 1, AllowCopyPiece = 4};
-    /** Create board widget. */
+    /** Create board widget.
+        The parent is expected to exist. BoardView can be externalized, and
+        will reconnect to parent on close. */
     BoardView(QWidget* parent, int flags = 0);
     /** Destroy widget. */
     ~BoardView();
@@ -53,6 +55,9 @@ public:
     /** Make it almost 1.555 : 1 */
     virtual int heightForWidth(int width) const;
 
+    bool isExternal() const { return m_isExternal; }
+    void setExternal(bool);
+
 public slots:
     /** Reconfigure current theme. */
     void configure();
@@ -71,6 +76,7 @@ signals:
     /** Indicate that a piece was dropped to the board */
     void pieceDropped(Square to, Piece p);
 
+    void externalClosed();
 protected:
 
     // -------------- events ------------------
@@ -84,11 +90,15 @@ protected:
     /** Handle mouse wheel events */
     virtual void wheelEvent(QWheelEvent* e);
 
-protected: //Drag'n'Drop Support
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event);
-    void dropEvent(QDropEvent *event);
+    virtual void keyPressEvent(QKeyEvent *);
+
+    virtual void closeEvent(QCloseEvent *);
+
+    //Drag'n'Drop Support
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+    virtual void dragMoveEvent(QDragMoveEvent *event);
+    virtual void dragLeaveEvent(QDragLeaveEvent *event);
+    virtual void dropEvent(QDropEvent *event);
 
 private:
     /** @return square at given position */
@@ -121,10 +131,12 @@ private:
     void drawArrowAnnotations(QPaintEvent* event);
     void drawArrowAnnotation(QPaintEvent* event, QString annotation);
 #endif
+    QWidget * m_parent;
     Board m_board;
     BoardTheme m_theme;
     BoardPainter * m_view;
     QLayout * m_layout;
+    bool m_isExternal;
     /** highlight a plausible move (on drag) */
     bool m_showCurrentMove,
     /** highlight all plausible moves (on hover) */

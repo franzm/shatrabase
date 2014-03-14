@@ -235,7 +235,7 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
 
-    // adjust transform scale
+    // adjust scale to fit board in view
     QRectF r = sceneRect();
     qreal sy = (r.height() + 2.0*m_margin) / height(),
           sx = (r.width()  + 2.0*m_margin) / width(),

@@ -117,6 +117,7 @@ void Engine::activate()
         connect(m_process, SIGNAL(error(QProcess::ProcessError)), SLOT(processError(QProcess::ProcessError)));
         connect(m_process, SIGNAL(readyReadStandardOutput()), SLOT(pollProcess()));
         connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(processExited()));
+        qDebug() << "exec: " << m_command;
         m_process->start(m_command);
     }
 }
@@ -145,7 +146,7 @@ bool Engine::isAnalyzing()
 
 void Engine::send(const QString& message)
 {
-    // qDebug() << "<-- " << message << endl;
+    qDebug() << "<-- " << message << endl;
 
 	QString out(message);
 	out.append('\n');
@@ -190,15 +191,35 @@ void Engine::setMpv(int mpv)
 	m_mpv = mpv;
 }
 
+bool Engine::waitForResponse(int wait_ms)
+{
+    if (!m_process) return false;
+
+    QTime time;
+    time.start();
+    while (!m_process->canReadLine())
+    {
+        QThread::msleep(10);
+        if (time.elapsed() > wait_ms)
+        {
+            qDebug() << "engine timeout after " << wait_ms << "ms";
+            return false;
+        }
+    }
+    return true;
+}
+
+
 void Engine::pollProcess()
 {
 	QString message;
 
-    while (m_process && m_process->canReadLine()) {
+    while (m_process && m_process->canReadLine())
+    {
         message = m_process->readLine().simplified();
-        // qDebug() << "--> " << message << endl;
+        qDebug() << "--> " << message << endl;
         processMessage(message);
-	}
+    }
 }
 
 void Engine::processError(QProcess::ProcessError errMsg)
@@ -213,4 +234,31 @@ void Engine::processExited()
 	setActive(false);
 	m_process = 0;
     emit deactivated();
+}
+
+
+
+
+
+
+// ------------------------------------ test -------------------------------
+
+int test_engine_()
+{
+
+    /*
+    Board board;
+    USHIEngine e("ushi","c:\\_\\prog\\shatra\\software\\sdev5.5.b.exe",false);
+
+    e.activate();
+
+    e.startAnalysis(board, 1);
+
+
+    QThread::sleep(5);
+
+    e.deactivate();
+
+    return 0;
+    */
 }

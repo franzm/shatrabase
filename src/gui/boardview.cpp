@@ -20,8 +20,11 @@
 #include <QLayout>
 
 
-BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
+BoardView::BoardView(QWidget* parent, int flags)
+  : QWidget(parent),
+    m_parent(parent),
     m_view(0),
+    m_isExternal(false),
     m_showCurrentMove(true),
     m_showAllMoves(true),
     m_selectedSquare(InvalidSquare),
@@ -47,6 +50,32 @@ BoardView::BoardView(QWidget* parent, int flags) : QWidget(parent),
 BoardView::~BoardView()
 {
 
+}
+
+void BoardView::closeEvent(QCloseEvent * e)
+{
+    if (m_isExternal)
+    {
+        e->ignore();
+        setExternal(false);
+        emit externalClosed();
+    }
+    else
+        QWidget::closeEvent(e);
+}
+
+void BoardView::setExternal(bool e)
+{
+    if (m_isExternal)
+    {
+        setParent(m_parent);
+    }
+    else
+    {
+        setParent(0);
+        show();
+    }
+    m_isExternal = e;
 }
 
 /*bool BoardView::eventFilter(QObject *obj, QEvent *ev)
@@ -450,6 +479,18 @@ void BoardView::wheelEvent(QWheelEvent* e)
         m_wheelCurrentDelta = 0;
     }
 }
+
+void BoardView::keyPressEvent(QKeyEvent * e)
+{
+    if (e->key()==Qt::Key_F2 && m_isExternal)
+    {
+        e->accept();
+        close(); // close event will signal mainwindow and update menu-check
+        return;
+    }
+    QWidget::keyPressEvent(e);
+}
+
 
 void BoardView::setFlipped(bool flipped)
 {

@@ -626,7 +626,7 @@ void SgnDatabase::parseToken(Game* game, const QString& token)
 		}
 		break;
 	case '*':
-		game->setResult(Unknown);
+		game->setResult(ResultUnknown);
 		m_gameOver = true;
         break;
     // From here, cases may fall through into default!!

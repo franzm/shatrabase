@@ -443,17 +443,20 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
     // Use an existing move with the correct promotion type if possible
     if (game().findNextMove(from, to, promotionPiece))
     {
-        if (button & Qt::AltModifier) game().backward();
+        if (button & Qt::AltModifier)
+            game().backward();
         else
         {
             slotGameChanged(); return;
         }
     }
 
-    if (game().atLineEnd()) game().addMove(m);
+    if (game().atLineEnd())
+        game().addMove(m);
     else
     {
-        if (button & Qt::ControlModifier) game().replaceMove(m);
+        if (button & Qt::ControlModifier)
+            game().replaceMove(m);
         else game().addVariation(m);
 
         game().forward();
@@ -528,6 +531,18 @@ void MainWindow::slotBoardMoveWheel(int wheel)
 	else
 		if (wheel & BoardView::WheelDown) slotGameMoveNext();
 		else slotGameMovePrevious();
+}
+
+void MainWindow::slotBoardFlipExternal()
+{
+    m_boardView->setExternal(!m_boardView->isExternal());
+    AppSettings->setValue("/Board/external", QVariant(m_boardView->isExternal()));
+}
+
+void MainWindow::slotBoardExternalClosed()
+{
+    m_ExternalBoardAction->setChecked(false);
+    AppSettings->setValue("/Board/external", false);
 }
 
 void MainWindow::slotGameVarEnter()
@@ -738,7 +753,7 @@ void MainWindow::slotGameChanged()
 	QString header = "<i>";
 	if (!event.isEmpty()) {
 		header.append(site);
-		if (game().result() != Unknown)
+		if (game().result() != ResultUnknown)
 			header.append(QString(" (%1)").arg(game().tag("Round")));
 		if (!site.isEmpty())
 			header.append(", ");
@@ -755,7 +770,7 @@ void MainWindow::slotGameChanged()
 	if (!white.isEmpty() || !black.isEmpty())
 		title.append(players);
 	else title.append(tr("<b>New game</b>"));
-	if (game().result() != Unknown || !eco.isEmpty())
+	if (game().result() != ResultUnknown || !eco.isEmpty())
 		title.append(QString(", ") + result);
 	if (header.length() > 8)
 		title.append(QString("<br>") + header);

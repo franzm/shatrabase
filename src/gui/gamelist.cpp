@@ -26,7 +26,8 @@
 #include <QPixmap>
 
 
-GameList::GameList(Filter* filter, QWidget* parent) : TableView(parent)
+GameList::GameList(Filter* filter, QWidget* parent)
+    : TableView(parent)
 {
 	setObjectName("GameList");
 	setWindowTitle(tr("Game list"));

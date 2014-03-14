@@ -93,11 +93,10 @@ MainWindow::MainWindow() : QMainWindow(),
 
 	/* Board */
     m_boardSplitter = new QSplitter(Qt::Vertical);
-	m_boardSplitter->setChildrenCollapsible(false);
+    m_boardSplitter->setChildrenCollapsible(false);
+    setCentralWidget(m_boardSplitter);
+
     m_boardView = new BoardView(m_boardSplitter);
-//    m_boardView->setFlipped(AppSettings->getValue("/Board/flipped").toBool());
-//    m_boardLayout = new QVBoxLayout();
-//    m_boardView->setLayout(m_boardLayout);
 	m_boardView->setObjectName("BoardView");
     m_boardView->setMinimumSize(200, 320);
     m_boardView->resize(400, 640);
@@ -105,11 +104,13 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_boardView, SIGNAL(moveMade(Square, Square, int)), SLOT(slotBoardMove(Square, Square, int)));
     connect(m_boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotBoardClick(Square, int, QPoint)));
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));
-
+    connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
+//    DockWidgetEx* boardDock = new DockWidgetEx(tr("Board"), this);
+//    boardDock->setObjectName("BoardDock");
+//    boardDock->setWidget(m_boardView);
 	/* Board layout */
 //    m_boardLayout->hasHeightForWidth();
-	m_boardSplitter->addWidget(m_boardView);
-    setCentralWidget(m_boardSplitter);
+    //m_boardSplitter->addWidget(m_boardView);
 
 //    m_boardSplitter->setStretchFactor(m_boardSplitter->indexOf(m_boardView), 1);
 
@@ -351,6 +352,11 @@ MainWindow::MainWindow() : QMainWindow(),
 
     QString dir = AppSettings->value("/General/DefaultDataPath", dataPath).toString();
     QDir().mkpath(dir+"/index");
+
+
+    if (AppSettings->getValue("/Board/external").toBool())
+        m_boardView->setExternal(true);
+
 }
 
 MainWindow::~MainWindow()
@@ -363,6 +369,9 @@ MainWindow::~MainWindow()
 	qDeleteAll(m_databases.begin(), m_databases.end());
 	delete m_saveDialog;
 	delete m_output;
+
+    // always take external window with us
+    delete m_boardView;
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -549,6 +558,33 @@ bool MainWindow::gameMoveBy(int change)
 	}
     return false;
 }
+/*
+void MainWindow::setViewsVisible(bool v)
+{
+    m_viewsVisible = v;
+    m_openingTreeView->setVisible(v);
+//    m_progressBar->setVisible(v);
+    m_gameWindow->setVisible(v);
+    m_gameList->setVisible(v);
+    m_gameView->setVisible(v);
+    m_mainAnalysis->setVisible(v);
+
+    m_playerList->setVisible(v);
+    //m_gameToolBar;
+}*/
+
+    /*
+    if (!m_isExternalBoard)
+    {
+        m_boardView->setParent(0);
+        m_boardView->show();
+    }
+    else
+    {
+        m_boardView->setParent(m_boardSplitter);
+    }
+    m_isExternalBoard = e;
+    */
 
 void MainWindow::updateMenuRecent()
 {
@@ -933,6 +969,17 @@ void MainWindow::setupActions()
 	/* View menu */
 	m_menuView = menuBar()->addMenu(tr("&View"));
 
+    QAction * a;
+    m_menuView->addAction( a = createAction(tr("&External board window"), SLOT(slotBoardFlipExternal()), Qt::Key_F2) );
+    a->setCheckable(true);
+    a->setChecked(AppSettings->getValue("/Board/external").toBool());
+    m_ExternalBoardAction = a;
+    m_menuView->addAction( a = createAction(tr("&Flip board"), SLOT(slotConfigureFlip()), Qt::CTRL + Qt::Key_B) );
+    a->setCheckable(true);
+    a->setChecked(AppSettings->getValue("/Board/flipped").toBool());
+
+    m_menuView->addSeparator();
+
 	/* Game menu */
 	QMenu *gameMenu = menuBar()->addMenu(tr("&Game"));
 
@@ -958,11 +1005,6 @@ void MainWindow::setupActions()
     gameMenu->addAction(m_autoAnalysis);
 
     gameMenu->addSeparator();
-
-    QAction* flip = createAction(tr("&Flip board"), SLOT(slotConfigureFlip()), Qt::CTRL + Qt::Key_B);
-    flip->setCheckable(true);
-    flip->setChecked(AppSettings->getValue("/Board/flipped").toBool());
-    gameMenu->addAction(flip);
 
 	/* Game->Go to submenu */
 	QMenu* goMenu = gameMenu->addMenu(tr("&Go to"));

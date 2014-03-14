@@ -154,6 +154,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/VerticalTabs", false);
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
+    map.insert("/Board/external", false);
     map.insert("/Board/flipped", true);
     map.insert("/Board/showMoat", true);
     map.insert("/Board/showTower", true);

@@ -96,6 +96,7 @@ protected:
 	void updateMenuDatabases();
     /* Save Game dialog (created when used first) */
 	SaveDialog* saveDialog();
+
 public slots:
     /* Open database */
     void openDatabase(QString fname);
@@ -255,6 +256,10 @@ public slots:
     void slotBoardClick(Square square, int button, QPoint pos);
     /* Browse current game by mouse wheel */
 	void slotBoardMoveWheel(int wheel);
+    /** Externalizes or takes back the board view. */
+    void slotBoardFlipExternal();
+    /** Updates menu checked state */
+    void slotBoardExternalClosed();
     /* Update GUI after current move was changed. Update BoardView to current board,
 	updates GameInfo and highlight current move in GameView. */
 	void slotMoveChanged();
@@ -302,7 +307,7 @@ protected:
 
 signals:
     /* Re-read configuration. */
-	void reconfigure();
+    void reconfigure();
     /* Main game has been updated. */
 	void boardChange(const Board& board);
     /* Current database changed. */
@@ -348,7 +353,6 @@ private:
 	/* Main gui parts */
 	BoardView* m_boardView;
 	QSplitter* m_boardSplitter;
-//    QVBoxLayout* m_boardLayout;
 	ChessBrowser* m_gameView;
     TableView* m_openingTreeView;
 	QProgressBar* m_progressBar;
@@ -377,7 +381,8 @@ private:
 	OpeningTree* m_openingTree;
 	QString m_nagText;
     QTimer* m_autoPlayTimer;
-    QAction* m_toggleFilter;
+    QAction * m_toggleFilter,
+            * m_ExternalBoardAction;
     bool m_bGameChange;
     int m_currentFrom;
     int m_currentTo;
