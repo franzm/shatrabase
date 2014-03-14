@@ -143,6 +143,6 @@ void PlayerListWidget::setDatabase(Database* db)
     m_filterModel->sort(0);
 }
 
-void PlayerListWidget::slotLinkClicked(const QUrl& url)
+void PlayerListWidget::slotLinkClicked(const QUrl& /*url*/)
 {
 }

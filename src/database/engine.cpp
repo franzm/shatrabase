@@ -237,28 +237,3 @@ void Engine::processExited()
 }
 
 
-
-
-
-
-// ------------------------------------ test -------------------------------
-
-int test_engine_()
-{
-
-    /*
-    Board board;
-    USHIEngine e("ushi","c:\\_\\prog\\shatra\\software\\sdev5.5.b.exe",false);
-
-    e.activate();
-
-    e.startAnalysis(board, 1);
-
-
-    QThread::sleep(5);
-
-    e.deactivate();
-
-    return 0;
-    */
-}

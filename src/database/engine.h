@@ -155,7 +155,5 @@ protected://rivate:
 };
 
 
-int test_engine_();
-
 
 #endif // __ENGINE_H__
