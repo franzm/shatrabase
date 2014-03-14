@@ -94,6 +94,7 @@ quint64 Analysis::nodes() const
 
 void Analysis::setNodes(quint64 nodes)
 {
+    qDebug()<<"setnodes " << nodes;
 	m_nodes = nodes;
 }
 
