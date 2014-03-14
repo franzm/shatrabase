@@ -38,6 +38,7 @@ bool USHIEngine::startAnalysis(const Board& board, int nv)
 	m_board = board;
 
 	m_position = board.toSPN();
+    //m_position = "SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - 1";
 	m_waitingOn = "ushinewgame";
 	send("stop");
     send("ushinewgame");

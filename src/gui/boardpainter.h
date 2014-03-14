@@ -88,6 +88,8 @@ protected slots:
 
     /** animation executer */
     void animationStep_();
+    /** stops animation and sets pieces to final position. */
+    void stopAnimation_();
 
     // ________ PROTECTED ____________
 protected:
@@ -123,13 +125,11 @@ protected:
         flagged pieces. @p from and @p to are only
         used to derive the animation length */
     void startAnimation_(Square from, Square to);
-    /** stops animation and sets pieces to final position. */
-    void stopAnimation_();
 
     // ----------- member ------------
 
     /** margin of board in view */
-    static const int m_margin = 10;
+    static const int m_margin = 50;
 
     BoardTheme * m_theme;
 

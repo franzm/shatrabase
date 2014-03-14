@@ -10,6 +10,8 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+// QWinFontEngine: unable to query transformed glyph metrics (GetGlyphOutline() failed, error 1003)... (Die Funktion kann nicht abgeschlossen werden.)
+
 #include "boardpainter.h"
 
 #include "settings.h"
@@ -131,7 +133,8 @@ public:
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
             piece  (piece),
-            square (square)
+            square (square),
+            animate(false)
     { }
 
     /** associated Piece */
@@ -200,7 +203,8 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
 
     // timer for animations
     m_timer.setInterval(1000/30);
-    connect(&m_timer, &QTimer::timeout, this, &BoardPainter::animationStep_);
+    //connect(&m_timer, &QTimer::timeout, this, &BoardPainter::animationStep_);
+    connect(&m_timer, SIGNAL(timeout()), SLOT(animationStep_()));
 
     configure();
 
@@ -662,8 +666,7 @@ void BoardPainter::stopAnimation_()
     }
 
     // center everything
-    // XXX Sometimes animated pieces move off-board or something
-    ensureVisible(sceneRect(), m_margin, m_margin);
+    //ensureVisible(sceneRect(), m_margin, m_margin);
 
     emit moveFinished();
 }
