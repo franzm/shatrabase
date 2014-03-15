@@ -34,7 +34,7 @@ const int gBoard[64][2] = // graphics board x, y
                           {4,10},
                   {3,11}, {4,11}, {5,11},
                   {3,12}, {4,12}, {5,12},
-                  {3,13}, {4,13}, {5,13},      {0,0},
+                  {3,13}, {4,13}, {5,13},      {0,0}
 };
 
 
@@ -60,12 +60,19 @@ public:
 
     bool frame;
     QPen framePen;
+
     bool highlight;
     QBrush highlightBrush;
+
     bool temdek;
     QPen temdekPen;
+
     bool reachable;
     QBrush reachableBrush;
+
+    QString numberStr;
+    QFont font;
+    QPen fontPen;
 
 protected:
 
@@ -101,6 +108,14 @@ protected:
             painter->setPen(framePen);
             painter->setBrush(Qt::NoBrush);
             painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
+        }
+
+        if (!numberStr.isNull())
+        {
+            painter->setFont(font);
+            painter->setPen(fontPen);
+            painter->drawText(pixmap().rect(),
+                              Qt::AlignCenter | Qt::AlignHCenter, numberStr);
         }
     }
 
@@ -166,6 +181,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
                                    to be correct on first installation */
     m_is_white      (true),
     m_do_moat       (true),
+    m_do_square_numbers(false),
     m_do_animate    (true),
     m_do_show_side  (true),
     m_anim_speed    (10),
@@ -210,6 +226,7 @@ void BoardPainter::configure()
     m_do_moat = AppSettings->getValue("showMoat").toBool();
     m_do_tower = AppSettings->getValue("showTower").toBool();
     m_do_show_frame = AppSettings->getValue("showFrame").toBool();
+    m_do_square_numbers = AppSettings->getValue("showSquareNumbers").toBool();
     m_frame_width = AppSettings->getValue("frameWidth").toInt();
     m_do_animate = AppSettings->getValue("animateMoves").toBool();
     m_anim_speed = AppSettings->getValue("animateMovesSpeed").toDouble();
@@ -328,9 +345,19 @@ void BoardPainter::createBoard_(const Board& board)
             s->temdekPen.setWidthF(s->pixmap().width()/10);
         }
 
+        // set tower square overlay
         if (m_do_tower && board.isTower(i))
         {
             s->overlay = &m_theme->towerEmboss();
+        }
+
+        // number display
+        if (m_do_square_numbers)
+        {
+            s->fontPen = QPen(QColor(255,255,255,150));
+            s->font.setPixelSize(s->pixmap().width()/2);
+            // XXX s->font.setFamily(?);
+            s->numberStr = QString::number(BN[NB[i]]);
         }
 
         // add to scene

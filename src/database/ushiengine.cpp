@@ -152,11 +152,12 @@ void USHIEngine::processMessage(const QString& message)
 
 void USHIEngine::parseAnalysis(const QString& message)
 {
-    qDebug() << "parse " << message;
+    qDebug() << "parsee " << message;
+
 	// Sample: info score cp 20  depth 3 nodes 423 time 15 pv f1c4 g8f6 b1c3
 	Analysis analysis;
-		  bool multiPVFound, timeFound, nodesFound, depthFound, scoreFound, variationFound;
-		  multiPVFound = timeFound = nodesFound = depthFound = scoreFound = variationFound = false;
+    bool multiPVFound, timeFound, nodesFound, depthFound, scoreFound, variationFound;
+    multiPVFound = timeFound = nodesFound = depthFound = scoreFound = variationFound = false;
 
 	QString info = message.section(' ', 1, -1, QString::SectionSkipEmpty);
 	int section = 0;
@@ -164,9 +165,10 @@ void USHIEngine::parseAnalysis(const QString& message)
 	bool ok;
 
 	//loop around the name value tuples
-	while (!info.section(' ', section, section + 1, QString::SectionSkipEmpty).isEmpty()) {
+    while (!info.section(' ', section, section + 1, QString::SectionSkipEmpty).isEmpty())
+    {
 		name = info.section(' ', section, section, QString::SectionSkipEmpty);
-
+        qDebug() << "name " << name;
 		if (name == "multipv") {
 			analysis.setNumpv(info.section(' ', section + 1, section + 1, QString::SectionSkipEmpty).toInt(&ok));
 			section += 2;
@@ -186,7 +188,7 @@ void USHIEngine::parseAnalysis(const QString& message)
 		}
 
 		if (name == "nodes") {
-			analysis.setNodes(info.section(' ', section + 1, section + 1, QString::SectionSkipEmpty).toLongLong(&ok));
+            analysis.setNodes(info.section(' ', section + 1, section + 1, QString::SectionSkipEmpty).toLongLong(&ok));
 			section += 2;
 			if (ok) {
 				nodesFound = true;
@@ -194,7 +196,8 @@ void USHIEngine::parseAnalysis(const QString& message)
 			}
 		}
 
-		if (name == "depth") {
+        if (name == "depth")
+        {
 			analysis.setDepth(info.section(' ', section + 1, section + 1, QString::SectionSkipEmpty).toInt(&ok));
 			section += 2;
 			if (ok) {
@@ -203,10 +206,23 @@ void USHIEngine::parseAnalysis(const QString& message)
 			}
 		}
 
-		if (name == "score") {
+        if (name == "score")
+        {
 			QString type = info.section(' ', section + 1, section + 1, QString::SectionSkipEmpty);
+
+            // check if pure number
+            int score = type.toDouble(&ok);
+            if (ok)
+            {
+                if (m_invertBlack && m_board.toMove() == Black)
+                    analysis.setScore(-score);
+                else
+                    analysis.setScore(score);
+                scoreFound = true;
+            }
+            else
             if (type == "cp") {
-				int score = info.section(' ', section + 2, section + 2).toInt(&ok);
+                score = info.section(' ', section + 2, section + 2).toInt(&ok);
                 if (m_invertBlack && m_board.toMove() == Black)
 					analysis.setScore(-score);
 				else analysis.setScore(score);
@@ -219,15 +235,21 @@ void USHIEngine::parseAnalysis(const QString& message)
 			else section += 3;
 		}
 
-		if (name == "pv") {
+        if (name == "pv")
+        {
 			Board board = m_board;
 			MoveList moves;
 			QString moveText;
 			section++;
-			while ((moveText = info.section(' ', section, section, QString::SectionSkipEmpty)) != "") {
-				Move move = board.parseMove(moveText);
+            while ((moveText = info.section(' ', section, section, QString::SectionSkipEmpty)) != "")
+            {
+                qDebug() << "pv " << moveText;
+                Move move = board.parseMove(moveText);
 				if (!move.isLegal())
+                {
+                    qDebug() << "illegal move '" << moveText << "' from engine.";
 					break;
+                }
 				board.doMove(move);
 				moves.append(move);
 				section++;

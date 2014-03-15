@@ -1,5 +1,5 @@
 # Main application
-DEFINES +=
+#DEFINES +=
 CONFIG += uic warn_on
 QT += xml network svg
 
@@ -75,7 +75,6 @@ HEADERS += src/database/board.h \
     src/database/urvct.hpp \
     src/database/downloadmanager.h \
     src/gui/mainwindow.h \
-    src/gui/toolmainwindow.h \
     src/gui/preferences.h \
     src/gui/boardview.h \
     src/gui/boardtheme.h \
@@ -87,7 +86,6 @@ HEADERS += src/database/board.h \
     src/gui/quicksearch.h \
     src/gui/analysiswidget.h \
     src/gui/eventlistwidget.h \
-    src/gui/playerlistwidget.h \
     src/gui/tableview.h \
     src/gui/copydialog.h \
     src/gui/messagedialog.h \
@@ -103,11 +101,9 @@ HEADERS += src/database/board.h \
     src/gui/engineoptiondialog.h \
     src/gui/engineoptionlist.h \
     src/gui/helpbrowser.h \
-    src/gui/qled.h \
     src/gui/toolmainwindow.h \
     src/gui/playerlistwidget.h \
     src/gui/qled.h \
-    src/gui/eventlistwidget.h \
     src/gui/boardpainter.h
 
 SOURCES += src/database/board.cpp \

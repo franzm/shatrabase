@@ -274,6 +274,7 @@ void PreferencesDialog::restoreSettings()
     ui.boardMoatCheck->setChecked(AppSettings->getValue("showMoat").toBool());
     ui.boardTowerCheck->setChecked(AppSettings->getValue("showTower").toBool());
     ui.boardFrameCheck->setChecked(AppSettings->getValue("showFrame").toBool());
+    ui.boardSNumbersCheck->setChecked(AppSettings->getValue("showSquareNumbers").toBool());
     ui.boardFrameSize->setValue(AppSettings->getValue("frameWidth").toInt());
     ui.hilightCurrentMove->setChecked(AppSettings->getValue("showCurrentMove").toBool());
     ui.hilightAllMoves->setChecked(AppSettings->getValue("showAllMoves").toBool());
@@ -359,6 +360,7 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("showMoat", QVariant(ui.boardMoatCheck->isChecked()));
     AppSettings->setValue("showTower", QVariant(ui.boardTowerCheck->isChecked()));
     AppSettings->setValue("showFrame", QVariant(ui.boardFrameCheck->isChecked()));
+    AppSettings->setValue("showSquareNumbers", QVariant(ui.boardSNumbersCheck->isChecked()));
     AppSettings->setValue("frameWidth", QVariant(ui.boardFrameSize->value()));
     AppSettings->setValue("showCurrentMove", QVariant(ui.hilightCurrentMove->isChecked()));
     AppSettings->setValue("showAllMoves", QVariant(ui.hilightAllMoves->isChecked()));
