@@ -20,6 +20,7 @@
 class QMenu;
 class QAction;
 class QActionGroup;
+class BoardView;
 
 /**  @ingroup GUI
   The BoardSetupDialog class represents a dialog for setting up a position.  */
@@ -93,6 +94,7 @@ protected:
     int m_wheelCurrentDelta;
     int m_minDeltaWheel;
     Piece m_selectedPiece;
+    BoardView * m_boardView;
 };
 
 

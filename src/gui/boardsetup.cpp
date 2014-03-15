@@ -19,12 +19,15 @@
 #include <QtGui>
 #include <QPixmap>
 
-BoardSetupDialog::BoardSetupDialog(QWidget* parent) : QDialog(parent), m_wheelCurrentDelta(0), m_selectedPiece(Empty)
+BoardSetupDialog::BoardSetupDialog(QWidget* parent)
+    : QDialog(parent), m_wheelCurrentDelta(0), m_selectedPiece(Empty)
 {
 	ui.setupUi(this);
-	ui.boardView->configure();
-    ui.boardView->setFlags(BoardView::F_IgnoreSideToMove | BoardView::F_AllowCopyPiece);
-//    ui.boardView->showMoveIndicator(false);
+    m_boardView = new BoardView(ui.boardFrame);
+    m_boardView->resize(375,375);
+    m_boardView->configure();
+    m_boardView->setFlags(BoardView::F_IgnoreSideToMove | BoardView::F_AllowCopyPiece);
+//    m_boardView->showMoveIndicator(false);
 
     m_minDeltaWheel = AppSettings->getValue("/Board/minWheelCount").toInt();
 
@@ -41,7 +44,7 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent) : QDialog(parent), m_wheelCu
         }
 		else
         {
-            button->m_pixmap = ui.boardView->theme().piece(Piece(piece));
+            button->m_pixmap = m_boardView->theme().piece(Piece(piece));
             ui.buttonLayout->addWidget(button, (piece - 1) % 5, piece >= BlackBatyr);
         }
         connect(button, SIGNAL(signalDragStarted(QWidget*,QMouseEvent*)), this, SLOT(startDrag(QWidget*,QMouseEvent*)));
@@ -55,12 +58,12 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent) : QDialog(parent), m_wheelCu
 	connect(ui.cancelButton, SIGNAL(clicked()), SLOT(reject()));
 	connect(ui.clearButton, SIGNAL(clicked()), SLOT(slotClear()));
 	connect(ui.resetButton, SIGNAL(clicked()), SLOT(slotReset()));
-    connect(ui.boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotSelected(Square, int)));
-    connect(ui.boardView, SIGNAL(moveMade(Square, Square, int)), SLOT(slotMovePiece(Square, Square)));
-    connect(ui.boardView, SIGNAL(copyPiece(Square, Square)), SLOT(slotCopyPiece(Square, Square)));
-    connect(ui.boardView, SIGNAL(invalidMove(Square)), SLOT(slotInvalidMove(Square)));
-	connect(ui.boardView, SIGNAL(wheelScrolled(int)), SLOT(slotChangePiece(int)));
-    connect(ui.boardView, SIGNAL(pieceDropped(Square,Piece)), SLOT(slotDroppedPiece(Square, Piece)));
+    connect(m_boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotSelected(Square, int)));
+    connect(m_boardView, SIGNAL(moveMade(Square, Square, int)), SLOT(slotMovePiece(Square, Square)));
+    connect(m_boardView, SIGNAL(copyPiece(Square, Square)), SLOT(slotCopyPiece(Square, Square)));
+    connect(m_boardView, SIGNAL(invalidMove(Square)), SLOT(slotInvalidMove(Square)));
+    connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotChangePiece(int)));
+    connect(m_boardView, SIGNAL(pieceDropped(Square,Piece)), SLOT(slotDroppedPiece(Square, Piece)));
 	connect(ui.toMoveButton, SIGNAL(clicked()), SLOT(slotToggleSide()));
 	connect(ui.epCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotEnPassantSquare()));
 	connect(ui.moveSpin, SIGNAL(valueChanged(int)), SLOT(slotMoveNumber()));
@@ -73,18 +76,18 @@ BoardSetupDialog::~BoardSetupDialog()
 
 Board BoardSetupDialog::board() const
 {
-	Board b = ui.boardView->board();
+    Board b = m_boardView->board();
 	return b;
 }
 
 void BoardSetupDialog::setFlipped(bool flipped)
 {
-	ui.boardView->setFlipped(flipped);
+    m_boardView->setFlipped(flipped);
 }
 
 void BoardSetupDialog::setBoard(const Board& b)
 {
-	ui.boardView->setBoard(b);
+    m_boardView->setBoard(b);
 	ui.moveSpin->setValue(b.moveNumber());
     if (b.enPassantSquare() == NoSquare)
 		ui.epCombo->setCurrentIndex(0);
@@ -102,7 +105,7 @@ void BoardSetupDialog::setBoard(const Board& b)
 
 int BoardSetupDialog::exec()
 {
-	ui.boardView->configure();
+    m_boardView->configure();
 	return QDialog::exec();
 }
 
@@ -116,9 +119,9 @@ void BoardSetupDialog::slotReset()
 void BoardSetupDialog::slotAccept()
 {
 	// Need to make sure the board is updated with move number set by user
-	Board b(ui.boardView->board());
+    Board b(m_boardView->board());
 	b.setMoveNumber(ui.moveSpin->value());
-	ui.boardView->setBoard(b);
+    m_boardView->setBoard(b);
 
 	QString reason = boardStatusMessage();
 	if (reason.isEmpty())
@@ -143,7 +146,7 @@ void BoardSetupDialog::slotSelected(Square square, int button)
         else if (piece != Empty)
             piece = (Piece)(piece + (BlackBiy - WhiteBiy));
     }
-    Board board = ui.boardView->board();
+    Board board = m_boardView->board();
     if (board.pieceAt(square) == piece)
         piece = Empty;
     board.setAt(square, piece);
@@ -163,7 +166,7 @@ void BoardSetupDialog::showSideToMove()
 void BoardSetupDialog::slotToggleSide()
 {
 	m_toMove = oppositeColor(m_toMove);
-	Board b = ui.boardView->board();
+    Board b = m_boardView->board();
 	b.setToMove(m_toMove);
 	setBoard(b);
 }
@@ -180,14 +183,14 @@ void BoardSetupDialog::slotChangePiece(int dir)
 
 void BoardSetupDialog::slotDroppedPiece(Square s, Piece p)
 {
-    Board b = ui.boardView->board();
+    Board b = m_boardView->board();
     b.setAt(s, p);
     setBoard(b);
 }
 
 void BoardSetupDialog::slotMovePiece(Square from, Square to)
 {
-	Board b = ui.boardView->board();
+    Board b = m_boardView->board();
 	Piece p = b.pieceAt(from);
 	b.removeFrom(from);
 	b.setAt(to, p);
@@ -196,7 +199,7 @@ void BoardSetupDialog::slotMovePiece(Square from, Square to)
 
 void BoardSetupDialog::slotCopyPiece(Square from, Square to)
 {
-	Board b = ui.boardView->board();
+    Board b = m_boardView->board();
 	Piece p = b.pieceAt(from);
 	b.setAt(to, p);
 	setBoard(b);
@@ -204,7 +207,7 @@ void BoardSetupDialog::slotCopyPiece(Square from, Square to)
 
 void BoardSetupDialog::slotInvalidMove(Square from)
 {
-    Board b = ui.boardView->board();
+    Board b = m_boardView->board();
     Piece p = b.pieceAt(from);
     if (pieceType(p) != Biy)
     {
@@ -226,7 +229,7 @@ void BoardSetupDialog::wheelEvent(QWheelEvent* e)
 
 QString BoardSetupDialog::boardStatusMessage() const
 {
-	switch (ui.boardView->board().validate()) {
+    switch (m_boardView->board().validate()) {
 	case Valid:
 		return QString();
 	case NoWhiteBiy:
@@ -248,14 +251,14 @@ void BoardSetupDialog::setStatusMessage()
 	ui.okButton->setEnabled(reason.isEmpty());
     ui.copyButton->setEnabled(reason.isEmpty());
     if (reason.isEmpty())
-		ui.spnLabel->setText(tr("SPN: %1").arg(ui.boardView->board().toSPN()));
+        ui.spnLabel->setText(tr("SPN: %1").arg(m_boardView->board().toSPN()));
 	else
 		ui.spnLabel->setText(tr("Illegal position: %1").arg(reason));
 }
 
 void BoardSetupDialog::slotCopySPN()
 {
-	QApplication::clipboard()->setText(ui.boardView->board().toSPN());
+    QApplication::clipboard()->setText(m_boardView->board().toSPN());
 }
 
 void BoardSetupDialog::slotPasteSPN()

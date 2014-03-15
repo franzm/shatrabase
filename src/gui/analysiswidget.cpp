@@ -222,7 +222,7 @@ void AnalysisWidget::showTablebaseMove(Move move, int score)
 */
 void AnalysisWidget::updateAnalysis()
 {
-    qDebug() << "analysisupdate";
+    //qDebug() << "analysisupdate";
     QString text;
     foreach (Analysis a, m_analyses)
         text.append(a.toString(m_board) + "<br>");

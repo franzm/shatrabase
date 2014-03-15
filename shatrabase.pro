@@ -104,7 +104,8 @@ HEADERS += src/database/board.h \
     src/gui/toolmainwindow.h \
     src/gui/playerlistwidget.h \
     src/gui/qled.h \
-    src/gui/boardpainter.h
+    src/gui/boardpainter.h \
+    src/gui/boardstyle.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -175,7 +176,8 @@ SOURCES += src/database/board.cpp \
     src/gui/playerlistwidget.cpp \
     src/gui/qled.cpp \
     src/gui/eventlistwidget.cpp \
-    src/gui/boardpainter.cpp
+    src/gui/boardpainter.cpp \
+    src/gui/boardstyle.cpp
 
 TEMPLATE = app
 INCLUDEPATH += src/database

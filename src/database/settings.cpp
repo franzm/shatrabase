@@ -154,7 +154,14 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/VerticalTabs", false);
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
+
+    // board config
     map.insert("/Board/external", false);
+    map.insert("/Board/minWheelCount", MIN_WHEEL_COUNT);
+    map.insert("/Board/AutoPlayerInterval", 3000);
+    map.insert("/Board/AutoSaveAndContinue", false);
+
+    // board style
     map.insert("/Board/flipped", true);
     map.insert("/Board/showMoat", true);
     map.insert("/Board/showTower", true);
@@ -167,7 +174,6 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/animateMovesSpeed", 20.0);
     map.insert("/Board/animateMovesLength", 0.2);
     map.insert("/Board/animateMovesSpeedVsLength", 0.5);
-    map.insert("/Board/minWheelCount", MIN_WHEEL_COUNT);
     map.insert("/Board/pieceTheme", "motifshatra");
     map.insert("/Board/pieceEffect", BoardTheme::Plain);
     map.insert("/Board/boardTheme", "shatra1");
@@ -178,8 +184,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/currentMoveColor", QColor(Qt::blue));
     map.insert("/Board/backgroundColor", QColor(50,70,100));
     map.insert("/Board/backgroundColor2", QColor(90,70,50));
-    map.insert("/Board/AutoPlayerInterval", 3000);
-    map.insert("/Board/AutoSaveAndContinue", false);
+
     return map;
 }
 

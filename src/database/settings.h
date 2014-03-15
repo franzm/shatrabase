@@ -18,10 +18,6 @@
 
 class QWidget;
 
-/*  
-    The Settings class provides a wrapper for the Qt QSettings class. It allows 
-    easier save/restore of application settings and gets paths for various resources.
-*/
 
 #ifdef Q_OS_MAC
     #define MIN_WHEEL_COUNT 120
@@ -33,6 +29,11 @@ class QWidget;
     #define DEFAULT_LISTFONTSIZE 11
 #endif
 
+/**
+    The Settings class provides a wrapper for the Qt QSettings class. It allows
+    easier save/restore of application settings and gets paths for various resources.
+*/
+
 class Settings : public QSettings
 {
 	Q_OBJECT
@@ -40,19 +41,27 @@ public:
 	enum {Show = 1} LayoutFlags;
 	Settings();
 	~Settings();
-	/* Restore widget's layout based on its name. Optionally show window if it is visible.
-	@return @p true if the state was restored. */
-    bool layout(QWidget* w);
-    /* Write widget's layout with its name.
-       If x, y, w or h != -1 they will be used instead of the widgets pos and size. */
-    void setLayout(const QWidget* widget, int x = -1, int y = -1, int w = -1, int h = -1);
-	/* @return directory where data are stored. */
+
+    /** @return directory where data is stored. */
     QString dataPath();
 
-    /* Write integer list to configuration file. Does it by converting it to QString */
+    /** Returns current board style name. */
+    //const QString& boardStyle() const { return m_boardStyle; }
+    /** Returns @p index'th style name */
+    //const QString& boardStyle(unsigned int index) const { return m_boardStyles[index]; }
+
+    /** Restore widget's layout based on its name. Optionally show window if it is visible.
+	@return @p true if the state was restored. */
+    bool layout(QWidget* w);
+
+    /** Write widget's layout with its name.
+       If x, y, w or h != -1 they will be used instead of the widget's actual pos and size. */
+    void setLayout(const QWidget* widget, int x = -1, int y = -1, int w = -1, int h = -1);
+
+    /** Write integer list to configuration file. Does it by converting it to QString */
     void setList(const QString& key, QList<int> list);
 
-    /* Appends values to the list. @return @p true if the list contains exact number of items.
+    /** Appends values to the list. @return @p true if the list contains exact number of items.
 	If @p items is @p -1 , always return @p true. */
     bool list(const QString& key, QList<int>& list, int items = -1);
 
@@ -69,7 +78,11 @@ public:
 private:
 
     QMap<QString, QVariant> initDefaultValues() const;
-	QString m_dataPath;
+    QString m_dataPath,
+    /** Current board style */
+            m_boardStyle;
+    /** All created styles */
+    std::vector<QString> m_boardStyles;
 };
 
 extern Settings* AppSettings;
