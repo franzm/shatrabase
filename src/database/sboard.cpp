@@ -1088,6 +1088,15 @@ void SBoard::getReachableSquares(Square sfrom, std::vector<Square>& vec) const
     }
 }
 
+void SBoard::getMoveSquares(std::vector<SquareMove>& vec) const
+{
+    if (!m_movesLoaded) return;
+
+    for (int i=0; i<m_ml.count(); ++i)
+    {
+        vec.push_back(SquareMove(BN[m_ml[i].from()], BN[m_ml[i].to()]));
+    }
+}
 
  // NB the following are not member functions
 /* Init board values before starting */

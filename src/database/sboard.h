@@ -219,6 +219,9 @@ public:
     bool temdekLast(int side) const;
     /** Return number of moves in board movelist */
     int numMoves() const;
+    /** Returns all moves in tuples of SquareFrom and SquareTo.
+        The moves will be push_back'd onto the vector */
+    void getMoveSquares(std::vector<SquareMove>& vec) const;
     /** Return all reachable squares for the given square.
         The Squares will be push_back'd onto the vector. */
     void getReachableSquares(Square from, std::vector<Square>& vec) const;

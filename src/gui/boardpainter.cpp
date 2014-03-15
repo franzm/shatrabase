@@ -51,9 +51,8 @@ public:
             square    (square),
             overlay   (0),
             frame     (false),
-            highlight (false),
-            temdek    (false),
-            reachable (false)
+            highlights(0),
+            temdek    (false)
     { }
 
     Square square;
@@ -63,14 +62,13 @@ public:
     bool frame;
     QPen framePen;
 
-    bool highlight;
-    QBrush highlightBrush;
+    int highlights;
+    /** 0=H_HOVER, 1=H_GOAL */
+    QBrush highlightBrush[2];
+    QPen selectPen;
 
     bool temdek;
     QPen temdekPen;
-
-    bool reachable;
-    QBrush reachableBrush;
 
     QString numberStr;
     QFont font;
@@ -82,21 +80,29 @@ protected:
     {
         QGraphicsPixmapItem::paint(painter, option, widget);
 
+        // graphic
         if (overlay && !overlay->isNull())
             painter->drawPixmap(0,0,*overlay);
 
-        if (highlight)
+        // hover
+        if (highlights & BoardPainter::H_HOVER)
         {
             painter->setPen(QPen(Qt::NoPen));
-            painter->setBrush(highlightBrush);
+            painter->setBrush(highlightBrush[0]);
             painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
         }
-        if (reachable)
+        // goal/target highlight
+        if ((highlights & BoardPainter::H_GOAL) ||
+            (highlights & BoardPainter::H_TARGET))
         {
             painter->setPen(QPen(Qt::NoPen));
-            painter->setBrush(reachableBrush);
-            painter->drawRect(QRect(10,10,pixmap().width()-20, pixmap().height()-20));
+            painter->setBrush(highlightBrush[1]);
+            int r = pixmap().width() / 2;
+            if (highlights & BoardPainter::H_TARGET)
+                r /= 2;
+            painter->drawRect(QRect(r/2,r/2,pixmap().width()-r, pixmap().height()-r));
         }
+        // temdek cross
         if (temdek)
         {
             painter->setPen(temdekPen);
@@ -105,13 +111,14 @@ protected:
             painter->drawLine(o, o, pixmap().width()-o, pixmap().height()-o);
             painter->drawLine(o, pixmap().height()-o, pixmap().width()-o, o);
         }
+        // frame
         if (frame)
         {
             painter->setPen(framePen);
             painter->setBrush(Qt::NoBrush);
             painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
         }
-
+        // number display
         if (!numberStr.isNull())
         {
             painter->setFont(font);
@@ -119,6 +126,15 @@ protected:
             painter->drawText(pixmap().rect(),
                               Qt::AlignCenter | Qt::AlignHCenter, numberStr);
         }
+        // select highlight
+        if (highlights & BoardPainter::H_SELECT)
+        {
+            painter->setPen(selectPen);
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRect(QRect(selectPen.width()/2,selectPen.width()/2,
+                                    pixmap().width()-selectPen.width(), pixmap().height()-selectPen.width()));
+        }
+
     }
 
 };
@@ -329,7 +345,13 @@ void BoardPainter::createBoard_(const Board& board)
         SquareItem * s = new SquareItem(i, pm);
         s->setPos(squarePos(i));
         s->setZValue(-1); // always behind pieces
-        s->reachableBrush = QBrush(m_reachableColor);
+
+        // standard brushes/pens
+        s->highlightBrush[0] = QBrush(m_reachableColor);
+        s->highlightBrush[1] = QBrush(m_reachableColor);
+        s->selectPen = QPen(QColor(0,128,0,150));
+        s->selectPen.setWidth(m_size / 10);
+        s->selectPen.setCapStyle(Qt::RoundCap);
 
         // set frame
         if (m_do_show_frame)
@@ -531,6 +553,44 @@ PieceItem * BoardPainter::pieceItemAt(Square sq) const
 
 // ---------------- highlights ---------------------
 
+void BoardPainter::addHighlight(Square sq, int highlights)
+{
+    SquareItem * s = squareItemAt(sq);
+    if (!s) return;
+
+    if ((s->highlights & highlights) == highlights) return;
+
+    s->highlights |= highlights;
+    s->update();
+}
+
+void BoardPainter::clearHighlight(Square sq, int highlights)
+{
+    SquareItem * s = squareItemAt(sq);
+    if (!s) return;
+
+    if (!(s->highlights & highlights)) return;
+
+    s->highlights &= ~highlights;
+    s->update();
+}
+
+void BoardPainter::clearHighlights(int highlights)
+{
+    int inv = ~highlights;
+    for (size_t i=0; i<m_squares.size(); ++i)
+    {
+        SquareItem * s = m_squares[i];
+
+        if (s->highlights & highlights)
+        {
+            s->highlights &= inv;
+            s->update();
+        }
+    }
+}
+
+/*
 void BoardPainter::setSquareColor(Square sq, const QColor& color)
 {
     SquareItem * s = squareItemAt(sq);
@@ -558,7 +618,7 @@ void BoardPainter::clearSquareColors()
         m_squares[i]->update();
     }
 }
-
+*/
 
 void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
 {
@@ -606,7 +666,7 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
     else
         m_drag_piece->setPos(pos);
 }
-
+/*
 void BoardPainter::setReachableSquares(const std::vector<Square>& squares)
 {
     clearReachableSquares();
@@ -629,7 +689,7 @@ void BoardPainter::clearReachableSquares()
         if (was) m_squares[i]->update();
     }
 }
-
+*/
 
 
 // --------------------- animation -------------------------

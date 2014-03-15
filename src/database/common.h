@@ -21,6 +21,12 @@
 typedef unsigned char ubyte;
 typedef unsigned char Square;
 
+struct SquareMove
+{
+    Square from, to;
+    SquareMove(Square from, Square to) : from(from), to(to) { }
+};
+
 // masks for board pieces
 //#define DEFUNKT         0x40        // doing this a new way
 #define URGENT          0x80

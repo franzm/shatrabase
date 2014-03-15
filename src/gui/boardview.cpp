@@ -24,20 +24,26 @@ BoardView::BoardView(QWidget* parent, int flags)
   : QWidget(parent),
     m_parent(parent),
     m_view(0),
+    m_flags(flags),
     m_isExternal(false),
     m_showCurrentMove(true),
     m_showAllMoves(true),
-    m_selectedSquare(InvalidSquare),
-    m_hoverSquare(InvalidSquare),
-    m_currentFrom(InvalidSquare),
-    m_currentTo(InvalidSquare),
-    m_flags(flags),
-    m_dragged(Empty),
-    m_clickUsed(false),
-    m_wheelCurrentDelta(0),
-    m_minDeltaWheel(0),
-    m_moveListCurrent(0)
+
+    m_selectedSquare (InvalidSquare),
+    m_hoverSquare (InvalidSquare),
+    m_goal_index    (0),
+    //m_currentFrom(InvalidSquare),
+    //m_currentTo(InvalidSquare),
+    m_dragged (InvalidPiece),
+    m_dragStartSquare(InvalidSquare)
+    //m_clickUsed(false),
+    // m_wheelCurrentDelta(0),
+    //m_minDeltaWheel(0),
+    //m_moveListCurrent(0)
 {
+    // that's how it's meant
+    Q_ASSERT(m_parent);
+
     setMouseTracking(true);
     //installEventFilter(this); XXX currently not used
 	m_board.setStandardPosition();
@@ -54,6 +60,8 @@ BoardView::~BoardView()
 
 void BoardView::closeEvent(QCloseEvent * e)
 {
+    // a close on external board will
+    // just get it back into parent
     if (m_isExternal)
     {
         e->ignore();
@@ -92,12 +100,26 @@ void BoardView::setBoard(const Board& value,int from, int to)
 {
     //qDebug() << "setBoard(from=" << from << ", to=" << to << ")";
 
-    m_clickUsed = true;
+    // reset gui flags
+    m_selectedSquare
+    = m_dragStartSquare
+        = InvalidSquare;
+    m_dragged = InvalidPiece;
+
+    // assign
+    //m_clickUsed = true;
 	m_board = value;
-    m_currentFrom = from;
-    m_currentTo = to;
+    //m_currentFrom = from;
+    //m_currentTo = to;
+
+    // get all possible moves
+    m_moves.clear();
+    m_board.getMoveSquares(m_moves);
+
+    // update painter
     if (m_view)
         m_view->setBoard(value,from,to);
+
 	update();
 }
 
@@ -255,32 +277,41 @@ void BoardView::paintEvent(QPaintEvent* event)
 Square BoardView::squareAt(const QPoint& p) const
 {
     return m_view? m_view->squareAt(p) : InvalidSquare;
-    /*
-	int x = p.x(), y = p.y();
-	int width = m_theme.size().width();
-	int height = m_theme.size().height();
-	if (m_coordinates) {
-		x -= CoordinateSize;
-		y -= CoordinateSize;
-	}
-    if (x <= 0 || y <= 0 || x >= width*8 || y >= height*15)
-		return InvalidSquare;
-	x /= width;
-	y /= height;
-    return isFlipped() ? BN[((8 - x)<<4) + y + 1] :
-                         BN[(x<<4) + 14 - y];
-    */
 }
 
 void BoardView::mousePressEvent(QMouseEvent* event)
 {
-    m_dragStart = event->pos();
-    m_dragStartSquare = squareAt(event->pos());
+    // leftclick
+    if (event->buttons() & Qt::LeftButton)
+    {
+        // select / potentially start dragging
+        if (m_hoverSquare != InvalidSquare)
+        {
+            // init for drag start
+            m_dragStart = event->pos();
+            m_dragStartSquare = m_hoverSquare;
+
+            // generally select
+            selectSquare_(m_dragStartSquare);
+
+            event->accept();
+            return;
+        }
+    }
+    // right-click
+    else if ((event->button() & Qt::RightButton)
+             && (m_hoverSquare != InvalidSquare))
+    {
+        if (m_board.isMovable(m_hoverSquare))
+        {
+            showGoals_(m_hoverSquare, 1);
+        }
+    }
 }
 
 void BoardView::mouseMoveEvent(QMouseEvent *event)
 {
-    m_button = event->button() + event->modifiers();
+    //m_button = event->button() + event->modifiers();
 
 /*
     if (event->modifiers() & Qt::ControlModifier)
@@ -301,59 +332,69 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 */
-    // on hover
-	if (!(event->buttons() & Qt::LeftButton))
+    // -- on hover --
+
+    if (!event->buttons())
 	{
         Square s = squareAt(event->pos());
+
+
         if (m_board.isMovable(s))
         {
-        	m_currentFrom = s;
             setCursor(QCursor(Qt::OpenHandCursor));
-            setHoverSquare(s);
-            if (m_showAllMoves) showPossibleMoves(s);
+            setHoverSquare_(s);
+            // highligh goal squares
+            showGoals_(s);
         }
         else
         {
-        	m_currentFrom = InvalidSquare;
             setCursor(QCursor(Qt::ArrowCursor));
-            setHoverSquare(InvalidSquare);
-            if (m_showAllMoves && m_view) m_view->clearReachableSquares();
+            setHoverSquare_();
+            showGoals_();
         }
+        event->accept();
 		return;
 	}
 
-    // set drag endpoint
-    if (m_dragged != Empty)
+    // -- change drag endpoint --
+
+    if (m_dragged != InvalidPiece)
     {
-        Square s = squareAt(event->pos());
-        if (m_showCurrentMove)
-        {
-            if (m_board.canMoveTo(m_currentFrom, s))
-                selectSquare(s);
-            else
-                selectSquare();
-        }
         m_dragPoint = event->pos();
+
+        Square s = squareAt(m_dragPoint);
+
+        if (m_board.canMoveTo(m_dragStartSquare, s))
+            setHoverSquare_(s);
+        else
+            setHoverSquare_();
 
         // update painter
         if (m_view)
             m_view->setDragPiece(m_dragStartSquare, m_dragged, m_dragPoint);
 
+        event->accept();
         return;
     }
 
-    // start dragging
-    if ((event->pos() - m_dragStart).manhattanLength()
-            < QApplication::startDragDistance())  // Click and move - start dragging
-        return;
-    // can piece be moved
-    Square s = squareAt(m_dragStart);
-    if (!canDrag(s))
-        return;
-    // doit
-    m_dragged = m_board.pieceAt(s);
-    m_dragPoint = event->pos() - m_theme.pieceCenter();
-    //if (m_view) m_view->setPieceAlpha(s, 50);
+    // -- start dragging --
+
+    if (m_dragStartSquare != InvalidSquare)
+    {
+        // drag enabeling distance
+        if ((event->pos() - m_dragStart).manhattanLength()
+                < QApplication::startDragDistance())
+            return;
+
+        // can piece be moved (also according to boardview flags)?
+        if (!canDrag(m_dragStartSquare))
+            return;
+
+        // doit
+        m_dragged = m_board.pieceAt(m_dragStartSquare);
+        m_dragPoint = event->pos() - m_theme.pieceCenter();
+        //if (m_view) m_view->setPieceAlpha(s, 50);
+    }
 
     // XXX why should this be needed? special flags?
     //m_board.removeFrom(s);
@@ -361,13 +402,17 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 
 void BoardView::mouseReleaseEvent(QMouseEvent* event)
 {
-    setCursor(QCursor(Qt::ArrowCursor));
-    int button = event->button() + event->modifiers();
     Square s = squareAt(event->pos());
-    m_clickUsed = false;
 
-    if (m_showAllMoves && m_view) m_view->clearReachableSquares();
+    // always reset (could be smarter ;)
+    setCursor(QCursor(Qt::ArrowCursor));
 
+    //int button = event->button() + event->modifiers();
+    //m_clickUsed = false;
+
+    //if (m_showAllMoves && m_view)
+    //    m_view->clearReachableSquares();
+    /*
     if (!(event->button() & Qt::LeftButton))
     {
         if (s != InvalidSquare)
@@ -400,22 +445,26 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             return;
         }
     }
+    */
 
-    // end of drag action
-    if (m_dragged != Empty)
+    // ---- piece drop ----
+
+    if (m_dragged != InvalidPiece)
     {
         Square from = m_dragStartSquare;
         // XXX probably irrelevant
         //m_board.setAt(from, m_dragged);
 
-        // clear highlights
-        m_dragged = Empty;
+        // reset drag data
+        m_dragged = InvalidPiece;
+        m_dragStartSquare = InvalidSquare;
+        // reset painter
         if (m_view) m_view->setDragPiece();
-        selectSquare();
+        selectSquare_();
 
-        // check if valid move
-        if (s != InvalidSquare)
-        {
+        // dropped on a new square on board?
+        if (s != InvalidSquare && s != m_dragStartSquare)
+        {   /*
             // copy piece
             if ((m_flags & AllowCopyPiece) && (event->modifiers() & Qt::AltModifier))
             {
@@ -423,17 +472,47 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
                 {
                     emit copyPiece(from, s);
                 }
-            }
+            }*/
             // or move piece
-            else emit moveMade(from, s, button);
+            //else
+                emit moveMade(from, s, event->button() + event->modifiers());
         }
-        else emit invalidMove(from);
+        //else emit invalidMove(from);
 
+    }
+
+    // any valid square action?
+    else if (m_selectedSquare != InvalidSquare)
+    {
+        Square from = m_selectedSquare;
+
+        // left-click/release on square
+        if (event->button() & Qt::LeftButton)
+        {
+            std::vector<Square> v;
+            m_board.getReachableSquares(from,v);
+
+            // auto execute move?
+            if (v.size())
+            {
+                emit moveMade(from, v[m_goal_index%v.size()],
+                                event->button() + event->modifiers());
+            }
+        }
+
+        /*
+        Square from = m_selectedSquare;
+        selectSquare();
+
+        if (s != InvalidSquare)
+        {
+            emit moveMade(from, s, button);
+        }*/
     }
 
     // XXX not really sure what below functions do
     // they might be broken since i changed the select logic a bit
-
+    /*
     // XXX probably single click execute move
     else if (m_selectedSquare != InvalidSquare)
     {
@@ -446,7 +525,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
     }
 
     // XXX hiFrom seems not be used
-    /*
+
     else if (m_hiFrom != InvalidSquare)
     {
         if (s == m_hiFrom || s == m_hiTo)
@@ -471,13 +550,14 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
 
 void BoardView::wheelEvent(QWheelEvent* e)
 {
+    /*
     m_wheelCurrentDelta += e->delta();
     if (abs(m_wheelCurrentDelta) > m_minDeltaWheel)
     {
         int change = m_wheelCurrentDelta < 0 ? WheelDown : WheelUp;
         emit wheelScrolled(change + e->modifiers());
         m_wheelCurrentDelta = 0;
-    }
+    }*/
 }
 
 void BoardView::keyPressEvent(QKeyEvent * e)
@@ -485,7 +565,7 @@ void BoardView::keyPressEvent(QKeyEvent * e)
     if (e->key()==Qt::Key_F2 && m_isExternal)
     {
         e->accept();
-        close(); // close event will signal mainwindow and update menu-check
+        close(); // close event will signal mainwindow and update menu-checkbox
         return;
     }
     QWidget::keyPressEvent(e);
@@ -507,72 +587,84 @@ void BoardView::configure()
     AppSettings->beginGroup("/Board/");
     m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
     m_showAllMoves = AppSettings->getValue("showAllMoves").toBool();
-    m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
+    //m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
     bool flipped = AppSettings->getValue("flipped").toBool();
     AppSettings->endGroup();
 
     m_theme.configure();
     m_theme.setSize(QSize(256,256));
 
-    selectSquare();
+    //selectSquare();
 
     // recreate BoardPainter
     if (m_view) m_view->deleteLater();
+
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
     setFlipped(flipped);
+
     m_layout->addWidget(m_view);
 
 	update();
 }
 
-void BoardView::selectSquare(Square s)
+void BoardView::selectSquare_(Square s)
 {
     if (s == m_selectedSquare) return;
 
-    // unset view
-    if (m_selectedSquare != InvalidSquare && m_view)
-        m_view->clearSquareColor(m_selectedSquare);
+    // clear previous hightlights
+    if (m_view) m_view->clearHighlights(BoardPainter::H_SELECT);
 
-    // unselect
-    m_selectedSquare = InvalidSquare;
+    // assign
+    m_selectedSquare = s;
     if (s == InvalidSquare) return;
 
-    // set view
-    if (m_view)
-        m_view->setSquareColor(s, m_theme.color(BoardTheme::Highlight));
-
-    m_selectedSquare = s;
+    // set highlight
+    if (m_showCurrentMove && m_view)
+        m_view->addHighlight(m_selectedSquare, BoardPainter::H_SELECT);
 }
 
-void BoardView::setHoverSquare(Square s)
+void BoardView::setHoverSquare_(Square s)
 {
     if (s == m_hoverSquare) return;
 
-    // reset previous hover view
-    if (m_hoverSquare != InvalidSquare && m_view)
-        m_view->clearSquareColor(m_hoverSquare);
+    // reset previous hover highlight
+    if (m_view) m_view->clearHighlights(BoardPainter::H_HOVER);
 
-    // clear flag
-    if (s == InvalidSquare)
-    {
-        m_hoverSquare = s;
-        return;
-    }
-
-    if (m_view)
-        m_view->setSquareColor(s, m_theme.color(BoardTheme::Highlight));
-
+    // assign
     m_hoverSquare = s;
+    if (s == InvalidSquare) return;
+
+    // set highlight
+    if (m_view) m_view->addHighlight(s, BoardPainter::H_HOVER);
 }
 
-void BoardView::showPossibleMoves(Square s)
+void BoardView::showGoals_(Square s, int gidx)
 {
-    if (!m_view) return;
+    // clear all previous
+    if (m_view)
+        m_view->clearHighlights(BoardPainter::H_GOAL | BoardPainter::H_TARGET);
 
+    if (s == InvalidSquare) return;
+
+    // get all move goals
     std::vector<Square> squares;
     m_board.getReachableSquares(s, squares);
-    m_view->setReachableSquares(squares);
+
+    if (gidx < 0)
+        m_goal_index = 0;
+    else if (gidx > 0 && squares.size())
+    {
+        m_goal_index = (m_goal_index + gidx) % squares.size();
+    }
+
+    // highlight goal squares
+    if (m_view && m_showAllMoves)
+    for (size_t i=0; i<squares.size(); ++i)
+    {
+        m_view->addHighlight(squares[i], BoardPainter::H_GOAL
+                             | (BoardPainter::H_TARGET * (i == m_goal_index)));
+    }
 }
 
 /*
@@ -586,18 +678,18 @@ QRect BoardView::squareRect(Square square)
 */
 bool BoardView::canDrag(Square s)
 {
-    if (m_dragged != Empty) // already dragging
-        return false;
+    //if (m_dragged != InvalidPiece) // already dragging
+    //    return false;
     if (s == InvalidSquare)
         return false;
-    else if (m_flags & IgnoreSideToMove)
+    if (m_flags & F_IgnoreSideToMove)
         return m_board.pieceAt(s) != Empty;
-    else if (m_board.isMovable(s))
+    if (m_board.isMovable(s))
     {
-        setCursor(QCursor(Qt::OpenHandCursor));
+        //setCursor(QCursor(Qt::OpenHandCursor));
         return true;
     }
-    else return false;
+    return false;
 }
 
 int BoardView::heightForWidth(int width) const

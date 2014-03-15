@@ -33,6 +33,20 @@ class BoardPainter : public QGraphicsView
 {
     Q_OBJECT
 public:
+
+    enum Highlight
+    {
+        H_HOVER =  0x01,
+        H_SELECT = 0x02,
+        H_GOAL  =  0x04,
+        H_TARGET = 0x08
+    };
+    static const int maxHighlights = 2;
+    static const int AllHighlights = H_HOVER | H_SELECT | H_GOAL | H_TARGET;
+
+
+    // --- ctor ---
+
     explicit BoardPainter(BoardTheme * theme, QWidget *parent = 0);
 
     // ---------- config --------------
@@ -61,18 +75,25 @@ public:
         */
     void setBoard(const Board& board, int from = InvalidSquare, int to = InvalidSquare);
 
-    // --------- inidicators ---------
+    // --------- indicators ---------
 
-    /** Shows a half-transparent rect on Square @p sq.
-        Any previous color will be overwritten. */
+    /** Adds a OR combination of highlights to the particular square */
+    void addHighlight(Square sq, int highlights);
+    /** Clears all given OR-combined highlights for the particular square */
+    void clearHighlight(Square sq, int highlights = AllHighlights);
+    /** Clears all given OR-combined highlights for all squares. */
+    void clearHighlights(int highlights = AllHighlights);
+
+    /* Shows a half-transparent rect on Square @p sq.
+        Any previous color will be overwritten.
     void setSquareColor(Square sq, const QColor& color);
     void clearSquareColor(Square sq);
     void clearSquareColors();
 
-    /** Hilights all squares as reachable.
-        Previous hilights are removed. */
+    * Hilights all squares as reachable.
+        Previous hilights are removed.
     void setReachableSquares(const std::vector<Square>& squares);
-    void clearReachableSquares();
+    void clearReachableSquares(); */
 
     /** Sets the drag/move display.
         @p view is the current mouse coords for the piece.

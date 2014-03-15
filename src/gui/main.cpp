@@ -23,7 +23,6 @@
 // #include "ushiengine.h"
 int main(int argc, char** argv)
 {
-
 	AppSettings = new Settings;
     QApplication a(argc, argv);
 
