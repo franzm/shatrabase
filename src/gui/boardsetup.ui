@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>510</width>
-    <height>560</height>
+    <height>562</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,27 +53,18 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
+        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0">
          <item>
-          <widget class="QFrame" name="boardFrame">
-           <property name="minimumSize">
-            <size>
-             <width>375</width>
-             <height>375</height>
-            </size>
+          <layout class="QVBoxLayout" name="boardLayout">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMaximumSize</enum>
            </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-          </widget>
+          </layout>
          </item>
          <item>
-          <layout class="QGridLayout" name="buttonLayout">
+          <layout class="QGridLayout" name="buttonLayout" columnstretch="0" columnminimumwidth="0">
            <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
+            <enum>QLayout::SetMaximumSize</enum>
            </property>
           </layout>
          </item>

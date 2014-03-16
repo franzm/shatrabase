@@ -245,6 +245,8 @@ public:
     /** Generate all move types, third parameter optional */
     int generate(bool cc, int first, int last = NoSquare);
 
+    /** print the board in ascii */
+    void debugDump();
   private:
     inline int sPhi(int s); // s is numeric square, others are board coords
     inline int promoWaiting();

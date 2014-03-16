@@ -196,7 +196,8 @@ protected:
     /** current animation from 0 to 1 */
         m_anim_t;
 
-    QColor m_reachableColor;
+    QColor m_hoverColor,
+           m_selectColor;
 
     int m_own_from, m_own_to;
 };

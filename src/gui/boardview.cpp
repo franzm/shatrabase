@@ -78,7 +78,11 @@ void BoardView::configure()
     //selectSquare();
 
     // recreate BoardPainter
-    if (m_view) m_view->deleteLater();
+    if (m_view)
+    {
+        m_layout->removeWidget(m_view);
+        m_view->deleteLater();
+    }
 
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
@@ -129,7 +133,8 @@ void BoardView::setFlags(int flags)
 
 void BoardView::setBoard(const Board& value,int from, int to)
 {
-    //qDebug() << "setBoard(from=" << from << ", to=" << to << ")";
+    //qDebug() << "setBoard(from=" << from << ", to=" << to << ")"
+    //            << "\n" << value.toSPN();
 
     // reset gui flags
     m_selectedSquare
@@ -139,6 +144,8 @@ void BoardView::setBoard(const Board& value,int from, int to)
 
     // copy position
 	m_board = value;
+
+    m_board.debugDump();
 
     // get all possible moves
     m_moves.clear();
@@ -379,11 +386,11 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         Square s = squareAt(event->pos());
 
 
-        if (m_board.isMovable(s))
+        if (canDrag(s))
         {
             setCursor(QCursor(Qt::OpenHandCursor));
             setHoverSquare_(s);
-            // highligh goal squares
+            // highlight goal squares
             showGoals_(s);
         }
         else
@@ -404,7 +411,8 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 
         Square s = squareAt(m_dragPoint);
 
-        if (m_board.canMoveTo(m_dragStartSquare, s))
+        if ((m_flags & F_AllowAllMoves)
+            || m_board.canMoveTo(m_dragStartSquare, s))
             setHoverSquare_(s);
         else
             setHoverSquare_();
@@ -593,7 +601,7 @@ void BoardView::selectSquare_(Square s)
     if (s == InvalidSquare) return;
 
     // set highlight
-    if (m_showCurrentMove && m_view)
+    if (m_view && m_showCurrentMove && !(m_flags & F_HideMoveHelp))
         m_view->addHighlight(m_selectedSquare, BoardPainter::H_SELECT);
 }
 
@@ -606,7 +614,7 @@ void BoardView::setHoverSquare_(Square s)
 
     // assign
     m_hoverSquare = s;
-    if (s == InvalidSquare) return;
+    if (s == InvalidSquare /*|| (m_flags & F_HideMoveHelp)*/) return;
 
     // set highlight
     if (m_view) m_view->addHighlight(s, BoardPainter::H_HOVER);
@@ -618,12 +626,14 @@ void BoardView::showGoals_(Square s, int gidx)
     if (m_view)
         m_view->clearHighlights(BoardPainter::H_GOAL | BoardPainter::H_TARGET);
 
-    if (s == InvalidSquare) return;
+    if (s == InvalidSquare || (m_flags & F_HideMoveHelp))
+        return;
 
     // get all move goals
     std::vector<Square> squares;
     m_board.getReachableSquares(s, squares);
 
+    // set goal-index
     if (gidx < 0)
         m_goal_index = 0;
     else if (gidx > 0 && squares.size())
@@ -657,7 +667,7 @@ bool BoardView::canDrag(Square s)
     //    return false;
     if (s == InvalidSquare)
         return false;
-    if (m_flags & F_IgnoreSideToMove)
+    if (m_flags & F_AllowAllMoves)
         return m_board.pieceAt(s) != Empty;
     if (m_board.isMovable(s))
     {

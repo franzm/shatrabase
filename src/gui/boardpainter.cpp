@@ -209,6 +209,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_anim_length   (1),
     m_anim_t        (0)
 {    
+    qDebug() << "BoardPainter" << this;
     setScene(m_scene);
 
     // get size of the bitmaps
@@ -252,8 +253,10 @@ void BoardPainter::configure()
     m_anim_speed = AppSettings->getValue("animateMovesSpeed").toDouble();
     m_fixed_anim_length = AppSettings->getValue("animateMovesLength").toDouble();
     m_use_fixed_anim_length = AppSettings->getValue("animateMovesSpeedVsLength").toDouble();
-    m_reachableColor = AppSettings->getValue("highlightColor").value<QColor>();
-    m_reachableColor.setAlpha(50);
+    m_hoverColor = AppSettings->getValue("highlightColor").value<QColor>();
+    m_hoverColor.setAlpha(70);
+    m_selectColor = AppSettings->getValue("currentMoveColor").value<QColor>();
+    m_selectColor.setAlpha(150);
     QColor back1 = AppSettings->getValue("backgroundColor").value<QColor>();
     QColor back2 = AppSettings->getValue("backgroundColor2").value<QColor>();
     AppSettings->endGroup();
@@ -297,6 +300,7 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
 
 void BoardPainter::setBoard(const Board& board, int from, int to)
 {
+
     // keep side to turn
     m_is_white = board.toMove() == White;
 
@@ -329,7 +333,10 @@ void BoardPainter::createBoard_(const Board& board)
 {
     // delete previous
     for (size_t i=0; i<m_squares.size(); ++i)
+    {
+        m_scene->removeItem(m_squares[i]);
         delete m_squares[i];
+    }
     m_squares.clear();
 
     // create board squares
@@ -347,9 +354,9 @@ void BoardPainter::createBoard_(const Board& board)
         s->setZValue(-1); // always behind pieces
 
         // standard brushes/pens
-        s->highlightBrush[0] = QBrush(m_reachableColor);
-        s->highlightBrush[1] = QBrush(m_reachableColor);
-        s->selectPen = QPen(QColor(0,128,0,150));
+        s->highlightBrush[0] = QBrush(m_hoverColor);
+        s->highlightBrush[1] = QBrush(m_hoverColor);
+        s->selectPen = QPen(m_selectColor);
         s->selectPen.setWidth(m_size / 10);
         s->selectPen.setCapStyle(Qt::RoundCap);
 
@@ -380,7 +387,7 @@ void BoardPainter::createBoard_(const Board& board)
         // number display
         if (m_do_square_numbers)
         {
-            s->fontPen = QPen(QColor(255,255,255,150));
+            s->fontPen = QPen(QColor(178,178,178,150));
             s->font.setPixelSize(s->pixmap().width()/2);
             // XXX s->font.setFamily(?);
             s->numberStr = QString::number(BN[NB[i]]);
@@ -398,7 +405,10 @@ void BoardPainter::createPieces_(const Board& board)
 {
     // delete previous
     for (size_t i=0; i<m_pieces.size(); ++i)
+    {
+        m_scene->removeItem(m_pieces[i]);
         delete m_pieces[i];
+    }
     m_pieces.clear();
 
     m_org_drag_piece = 0;
@@ -485,7 +495,7 @@ void BoardPainter::onFlip_()
 
 QRectF BoardPainter::squareRect(Square sq) const
 {
-    const int x = isFlipped()? 8  - gBoard[sq][0] : gBoard[sq][0],
+    const int x = isFlipped()?  8 - gBoard[sq][0] : gBoard[sq][0],
               y = isFlipped()? 13 - gBoard[sq][1] : gBoard[sq][1];
 
     return QRectF(
@@ -494,6 +504,7 @@ QRectF BoardPainter::squareRect(Square sq) const
                 ((isFlipped()?(sq<32):(sq>31))*2-1) * 0.05*m_size,
             m_size, m_size
             );
+
 }
 
 QPoint BoardPainter::mapToBoard(const QPoint& viewpos) const
@@ -504,6 +515,8 @@ QPoint BoardPainter::mapToBoard(const QPoint& viewpos) const
     p /= m_size;
     // cancel board placement
     p += m_center;
+
+    // XXX this should account for the ditch as well!
 
     return QPoint(
         p.x(),

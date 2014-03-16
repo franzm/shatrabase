@@ -13,6 +13,7 @@
  ***************************************************************************/
 
 #include "sboard.h"
+#include <iostream>
 #include <QDebug>
 
 SBoard getStandardPosition();
@@ -1115,3 +1116,35 @@ SBoard getStandardPosition()
     return b;
 }
 
+
+
+void SBoard::debugDump()
+{
+    for (int j=0; j<16; ++j)
+    {
+        for (int i=0; i<9; ++i)
+        {
+            int k = (9-i)*16+j;
+            if (SB[k])
+                std::cerr << " ";
+            else
+            {
+                switch(m_sb[k] & 0xf)
+                {
+                    default: std::cerr << "."; break;
+                    case WhiteBatyr: std::cerr << "Q"; break;
+                    case WhiteTura: std::cerr << "T"; break;
+                    case WhiteYalkyn: std::cerr << "Y"; break;
+                    case WhiteBiy: std::cerr << "B"; break;
+                    case WhiteShatra: std::cerr << "S"; break;
+                    case BlackBatyr: std::cerr << "q"; break;
+                    case BlackTura: std::cerr << "t"; break;
+                    case BlackYalkyn: std::cerr << "y"; break;
+                    case BlackBiy: std::cerr << "b"; break;
+                    case BlackShatra: std::cerr << "s"; break;
+                }
+            }
+        }
+        std::cerr << std::endl;
+    }
+}

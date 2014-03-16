@@ -23,11 +23,10 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     : QDialog(parent), m_wheelCurrentDelta(0), m_selectedPiece(Empty)
 {
 	ui.setupUi(this);
-    m_boardView = new BoardView(ui.boardFrame);
-    m_boardView->resize(375,375);
-    m_boardView->configure();
-    m_boardView->setFlags(BoardView::F_IgnoreSideToMove | BoardView::F_AllowCopyPiece);
-//    m_boardView->showMoveIndicator(false);
+    m_boardView = new BoardView(ui.boardTab);//boardFrame);
+    ui.boardLayout->addWidget(m_boardView);
+    m_boardView->setFlags(BoardView::F_AllowAllMoves | BoardView::F_AllowCopyPiece |
+                          BoardView::F_HideMoveHelp | BoardView::F_ExecuteMoves);
 
     m_minDeltaWheel = AppSettings->getValue("/Board/minWheelCount").toInt();
 
@@ -35,7 +34,7 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
         BoardSetupToolButton* button = new BoardSetupToolButton(this);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         //button->setAlignment(Qt::AlignJustify|Qt::AlignVCenter);
-        button->setMinimumSize(QSize(10,10));
+        button->setMinimumSize(QSize(50,50));
         button->m_piece = (Piece)piece;
         if (piece == Empty)
         {
