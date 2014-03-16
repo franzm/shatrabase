@@ -41,7 +41,7 @@ int  g_totalNodes = 0;
 QString resultString(Result result)
 {
 	switch (result) {
-	case ResultUnknown:
+    case ResultUnknown:
 		return "*";
 	case WhiteWin:
 		return "1-0";

@@ -145,7 +145,7 @@ void BoardView::setBoard(const Board& value,int from, int to)
     // copy position
 	m_board = value;
 
-    m_board.debugDump();
+    // m_board.debugDump();
 
     // get all possible moves
     m_moves.clear();
@@ -165,6 +165,7 @@ void BoardView::setBoard(const Board& value,int from, int to)
         m_view->setBoard(value,from,to);
 
     // XXX need more than that to show all current moves
+    // e.g. on mouse-click into game-list and such
     selectSquare_(from);
 
 	update();

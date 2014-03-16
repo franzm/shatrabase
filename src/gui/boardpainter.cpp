@@ -422,8 +422,8 @@ void BoardPainter::createPieces_(const Board& board)
 
         // pixmap for piece
         const QPixmap& pm = m_theme->piece(p,
-                   (!isFlipped() && p == BlackBatyr)
-                || (isFlipped() && p == WhiteBatyr) );
+                   (isFlipped() && p == BlackBatyr)
+                || (!isFlipped() && p == WhiteBatyr) );
 
         PieceItem * item = new PieceItem(p, i, pm);
         item->setPos(squarePos(i));
@@ -436,6 +436,7 @@ void BoardPainter::createPieces_(const Board& board)
 
 void BoardPainter::updateMoveIndicators_()
 {
+    // create the GraphicItems
     if (!m_move_white)
     {
         m_move_white = new QGraphicsRectItem;
@@ -460,14 +461,14 @@ void BoardPainter::updateMoveIndicators_()
     // set positions on view (also update from boardflip)
     if (!isFlipped())
     {
-        m_move_white->setPos(squarePos(11).x(), squarePos(60).y()
+        m_move_black->setPos(squarePos(11).x(), squarePos(60).y()
                              + m_size - m_move_white->rect().height());
-        m_move_black->setPos(squarePos(11).x(), squarePos(1).y());
+        m_move_white->setPos(squarePos(11).x(), squarePos(1).y());
     }
     else
     {
-        m_move_white->setPos(squarePos(17).x(), squarePos(60).y());
-        m_move_black->setPos(squarePos(17).x(), squarePos(1).y()
+        m_move_black->setPos(squarePos(17).x(), squarePos(60).y());
+        m_move_white->setPos(squarePos(17).x(), squarePos(1).y()
                              + m_size - m_move_white->rect().height());
     }
 }
@@ -483,9 +484,9 @@ void BoardPainter::onFlip_()
         m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
         // update batyr graphic
         if (m_pieces[i]->piece == WhiteBatyr)
-            m_pieces[i]->setPixmap(m_theme->piece(WhiteBatyr, isFlipped()));
+            m_pieces[i]->setPixmap(m_theme->piece(WhiteBatyr, !isFlipped()));
         if (m_pieces[i]->piece == BlackBatyr)
-            m_pieces[i]->setPixmap(m_theme->piece(BlackBatyr, !isFlipped()));
+            m_pieces[i]->setPixmap(m_theme->piece(BlackBatyr, isFlipped()));
     }
 
     updateMoveIndicators_();
@@ -531,7 +532,7 @@ Square BoardPainter::squareAt(const QPoint& viewpos) const
     if (p.x() <= 0 || p.y() < 0 || p.x() >= 8 || p.y() >= 15)
         return InvalidSquare;
 
-    Square sq = isFlipped() ?
+    Square sq = !isFlipped() ?
                 BN[((8 - p.x())<<4) + p.y() + 1] :
                 BN[(p.x()<<4) + 14 - p.y()];
 

@@ -13,7 +13,6 @@
  ***************************************************************************/
 
 #include "sboard.h"
-#include <iostream>
 #include <QDebug>
 
 SBoard getStandardPosition();
@@ -71,10 +70,10 @@ QString SBoard::moveToLann(const Move& move) const
     default:
         if (!move.wasInSequence())
         {
-            lann += QString::number(BN[from]); //(63-BN[from]);
+            lann += QString::number(63-BN[from]);//(BN[from]);
         }
         lann += move.isCapture()? ':' : '-';
-        lann += QString::number(BN[to]); //(63-BN[to]);
+        lann += QString::number(63-BN[to]);//(BN[to]);
     }
     
     if (move.isPromotion())
@@ -484,7 +483,7 @@ inline bool SBoard::prohibited(int to, PieceType p)
     bool fortB = Rank(to) > (10 + (p == Biy));
 
     if (m_stm) { if (fortB && temdekOn(Black)) return true; }
-    else if (fortW && temdekOn(White)) return true;
+    else         if (fortW && temdekOn(White)) return true;
 
     return false;
 }
@@ -532,10 +531,10 @@ inline void SBoard::doCFlags(int from, int to, int cp)
  // if dropping from home fort, add decTemdek flag if T on
 inline bool SBoard::getDrops(int s, PieceType piece)
 {
-    bool t = s <= temdekAt[Black];
+    bool t = s <= temdekAt[White];
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
-    t ^= (m_sntm != White); // our own fortress?
+    t ^= (m_stm != White); // our own fortress?
     if (t)
     {
         if (temdekOn(m_stm)) m_b |= DECTDK; // and Temdek on?
@@ -1082,7 +1081,7 @@ void SBoard::getReachableSquares(Square sfrom, std::vector<Square>& vec) const
     if (!m_movesLoaded) return;
 
     int from = NB[sfrom];
-    for (int i=0; i<m_ml.count(); ++i)
+    for (int i = 0; i < m_ml.count(); ++i)
     {
         if (m_ml[i].from() == from)
             vec.push_back(BN[m_ml[i].to()]);
@@ -1099,52 +1098,21 @@ void SBoard::getMoveSquares(std::vector<SquareMove>& vec) const
     }
 }
 
+
  // NB the following are not member functions
 /* Init board values before starting */
 void SBoardInit()
 { 
     SBoardInitRun = true;
     standardPosition.fromSPN
-        ("sqssrsbrb/k/sssssss/7/7/7/7/SSSSSSS/K/BRBSRSSQS w Tt - - - 1");
+        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
 }
 
 SBoard getStandardPosition()
 {
     SBoard b;
     b.fromSPN
-        ("sqssrsbrb/k/sssssss/7/7/7/7/SSSSSSS/K/BRBSRSSQS w Tt - - - 1");
+        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
     return b;
 }
 
-
-
-void SBoard::debugDump()
-{
-    for (int j=0; j<16; ++j)
-    {
-        for (int i=0; i<9; ++i)
-        {
-            int k = (9-i)*16+j;
-            if (SB[k])
-                std::cerr << " ";
-            else
-            {
-                switch(m_sb[k] & 0xf)
-                {
-                    default: std::cerr << "."; break;
-                    case WhiteBatyr: std::cerr << "Q"; break;
-                    case WhiteTura: std::cerr << "T"; break;
-                    case WhiteYalkyn: std::cerr << "Y"; break;
-                    case WhiteBiy: std::cerr << "B"; break;
-                    case WhiteShatra: std::cerr << "S"; break;
-                    case BlackBatyr: std::cerr << "q"; break;
-                    case BlackTura: std::cerr << "t"; break;
-                    case BlackYalkyn: std::cerr << "y"; break;
-                    case BlackBiy: std::cerr << "b"; break;
-                    case BlackShatra: std::cerr << "s"; break;
-                }
-            }
-        }
-        std::cerr << std::endl;
-    }
-}

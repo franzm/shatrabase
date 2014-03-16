@@ -75,12 +75,12 @@ const int Was = WasBatyr - Batyr;
 const int PC[2] = { Empty, WhiteShatra }; // piece 'color constant'
 const Square InvalidSquare = 255;
 const Square NoSquare = 0; // also used for board coord..
-const Square temdekAt[2] = { 53, 10 };
+const Square temdekAt[2] = { 10, 53 };
 const int temdekAtB[2] = { 0x44, 0x4b }; // ..otherwise int
 const Square sFirst[2] = { 5, 10 };
 const Square sFinal[2] = { 14, 1 };
-const Square lTower[2] = { 46, 17 };
-const Square rTower[2] = { 52, 11 };
+const Square lTower[2] = { 17, 46 };
+const Square rTower[2] = { 11, 52 };
 
 /* Return opposite color */
 inline Color oppositeColor(const Color c)
@@ -134,14 +134,14 @@ inline bool isNum(const char c) { return c >= '0' && c <= '9'; }
 //Piece operator++(Piece& w, int);
 
 const char strSquareNames[62][4] = {
-    "c14", "d14", "e14", "c13", "d13", "e13", "c12",
-    "d12", "e12", "d11", "a10", "b10", "c10", "d10",
-    "e10", "f10", "g10", "a9", "b9", "c9", "d9", "e9",
-    "f9", "g9", "a8", "b8", "c8", "d8", "e8", "f8",
-    "g8", "a7", "b7", "c7", "d7", "e7", "f7", "g7",
-    "a6", "b6", "c6", "d6", "e6", "f6", "g6", "a5",
-    "b5", "c5", "d5", "e5", "f5", "g5", "d4", "c3",
-    "d3", "e3", "c2", "d2", "e2", "c1", "d1", "e1"
+    "e1", "d1", "c1", "e2", "d2", "c2", "e3", "d3",
+    "c3", "d4", "g5", "f5", "e5", "d5", "c5", "b5",
+    "a5", "g6", "f6", "e6", "d6", "c6", "b6", "a6",
+    "g7", "f7", "e7", "d7", "c7", "b7", "a7", "g8",
+    "f8", "e8", "d8", "c8", "b8", "a9", "g9", "f9",
+    "e9", "d9", "c9", "b9", "a9", "g10", "f10", "e10",
+    "d10", "c10", "b10", "a10", "d11", "e12", "d12",
+    "c12", "e13", "d13", "c13", "e14", "d14", "c14"
 };
 
 enum MoveType
