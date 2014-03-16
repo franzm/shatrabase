@@ -659,6 +659,7 @@ void SgnDatabase::parseToken(Game* game, const QString& token)
         }
 
 	default:
+        qDebug() << token;
         parseDefaultToken(game,token);
         break;
 	}

@@ -70,10 +70,10 @@ QString SBoard::moveToLann(const Move& move) const
     default:
         if (!move.wasInSequence())
         {
-            lann += QString::number(63-BN[from]);//(BN[from]);
+            lann += QString::number(BN[from]);
         }
         lann += move.isCapture()? ':' : '-';
-        lann += QString::number(63-BN[to]);//(BN[to]);
+        lann += QString::number(BN[to]);
     }
     
     if (move.isPromotion())
@@ -251,7 +251,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
             if (j != spn_slash[sl++] + 1) return false;
             c = spn[++i];
         }
-        bt = j <= temdekAt[Black]; wt = j >= temdekAt[White];
+        bt = j >= temdekAt[Black]; wt = j <= temdekAt[White];
         if (isNum(c)) { sp = c - '0'; continue; }
 
         switch (c) // will return false if one too many of any

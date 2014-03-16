@@ -112,11 +112,11 @@ inline bool isValidPiece(const Piece p)
 
 /* Return true if given piece is in either fortress */
 inline bool isInFortress(const int s)
-    { return s < temdekAt[Black] || s > temdekAt[White]; }
+    { return s > temdekAt[Black] || s < temdekAt[White]; }
 
 /* Return true if given piece is in its home fortress */
 inline bool isInHomeFort(const int s, const int stm)
-    { return stm == White? s > temdekAt[White] : s < temdekAt[Black]; }
+    { return stm == White? s < temdekAt[White] : s > temdekAt[Black]; }
 
 /* Rank and File :) */
 inline int Rank(int s) { return s & 0x0f; }
