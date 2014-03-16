@@ -197,6 +197,8 @@ protected:
         m_anim_t;
 
     QColor m_reachableColor;
+
+    int m_own_from, m_own_to;
 };
 
 #endif // BOARDPAINTER_H

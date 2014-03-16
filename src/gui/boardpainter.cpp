@@ -97,7 +97,7 @@ protected:
         {
             painter->setPen(QPen(Qt::NoPen));
             painter->setBrush(highlightBrush[1]);
-            int r = pixmap().width() / 2;
+            int r = pixmap().width() / 1.5;
             if (highlights & BoardPainter::H_TARGET)
                 r /= 2;
             painter->drawRect(QRect(r/2,r/2,pixmap().width()-r, pixmap().height()-r));

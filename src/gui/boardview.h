@@ -165,7 +165,11 @@ private:
     /** highlight a plausible move (on drag) */
         m_showCurrentMove,
     /** highlight all plausible moves (on hover) */
-        m_showAllMoves;
+        m_showAllMoves,
+    /** execute move on single click/release */
+        m_guessMove,
+    /** skip guessed move on right-click */
+        m_guessNextMove;
 
     // --------- interaction ---------
 
@@ -175,6 +179,8 @@ private:
     int m_hoverSquare;
     /** index into m_goals[] */
     unsigned int m_goal_index;
+    /** trigger for animation from own action */
+    int m_own_from, m_own_to;
     //int m_currentFrom;
     //int m_currentTo;
     /** piece currently dragged, or InvalidPiece */

@@ -271,6 +271,8 @@ void PreferencesDialog::restoreSettings()
     ui.cbAutoCommitDB->setChecked(AppSettings->getValue("autoCommitDB").toBool());
     AppSettings->endGroup();
     AppSettings->beginGroup("/Board/");
+    ui.guessMoveCheck->setChecked(AppSettings->getValue("guessMove").toBool());
+    ui.guessNextMoveCheck->setChecked(AppSettings->getValue("guessNextMove").toBool());
     ui.boardMoatCheck->setChecked(AppSettings->getValue("showMoat").toBool());
     ui.boardTowerCheck->setChecked(AppSettings->getValue("showTower").toBool());
     ui.boardFrameCheck->setChecked(AppSettings->getValue("showFrame").toBool());
@@ -357,6 +359,8 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("autoCommitDB",QVariant(ui.cbAutoCommitDB->isChecked()));
     AppSettings->endGroup();
     AppSettings->beginGroup("/Board/");
+    AppSettings->setValue("guessMove", QVariant(ui.guessMoveCheck->isChecked()));
+    AppSettings->setValue("guessNextMove", QVariant(ui.guessNextMoveCheck->isChecked()));
     AppSettings->setValue("showMoat", QVariant(ui.boardMoatCheck->isChecked()));
     AppSettings->setValue("showTower", QVariant(ui.boardTowerCheck->isChecked()));
     AppSettings->setValue("showFrame", QVariant(ui.boardFrameCheck->isChecked()));

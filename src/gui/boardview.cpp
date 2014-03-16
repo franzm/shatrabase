@@ -28,10 +28,13 @@ BoardView::BoardView(QWidget* parent, int flags)
     m_isExternal(false),
     m_showCurrentMove(true),
     m_showAllMoves(true),
-
+    m_guessMove (true),
+    m_guessNextMove (true),
     m_selectedSquare (InvalidSquare),
     m_hoverSquare (InvalidSquare),
     m_goal_index    (0),
+    m_own_from      (0),
+    m_own_to        (0),
     //m_currentFrom(InvalidSquare),
     //m_currentTo(InvalidSquare),
     m_dragged (InvalidPiece),
@@ -56,6 +59,34 @@ BoardView::BoardView(QWidget* parent, int flags)
 BoardView::~BoardView()
 {
 
+}
+
+void BoardView::configure()
+{
+    AppSettings->beginGroup("/Board/");
+    m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
+    m_showAllMoves = AppSettings->getValue("showAllMoves").toBool();
+    m_guessMove = AppSettings->getValue("guessMove").toBool();
+    m_guessNextMove = AppSettings->getValue("guessNextMove").toBool();
+    //m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
+    bool flipped = AppSettings->getValue("flipped").toBool();
+    AppSettings->endGroup();
+
+    m_theme.configure();
+    m_theme.setSize(QSize(256,256));
+
+    //selectSquare();
+
+    // recreate BoardPainter
+    if (m_view) m_view->deleteLater();
+
+    m_view = new BoardPainter(&m_theme, this);
+    m_view->setBoard(m_board);
+    setFlipped(flipped);
+
+    m_layout->addWidget(m_view);
+
+    update();
 }
 
 void BoardView::closeEvent(QCloseEvent * e)
@@ -106,19 +137,28 @@ void BoardView::setBoard(const Board& value,int from, int to)
         = InvalidSquare;
     m_dragged = InvalidPiece;
 
-    // assign
-    //m_clickUsed = true;
+    // copy position
 	m_board = value;
-    //m_currentFrom = from;
-    //m_currentTo = to;
 
     // get all possible moves
     m_moves.clear();
     m_board.getMoveSquares(m_moves);
 
+    // trigger own animation from last user action
+    if (from == InvalidSquare &&
+        m_own_from != InvalidSquare && m_own_to != InvalidSquare)
+    {
+        from = m_own_from;
+        to = m_own_to;
+        m_own_from = m_own_to = InvalidSquare;
+    }
+
     // update painter
     if (m_view)
         m_view->setBoard(value,from,to);
+
+    // XXX need more than that to show all current moves
+    selectSquare_(from);
 
 	update();
 }
@@ -302,7 +342,7 @@ void BoardView::mousePressEvent(QMouseEvent* event)
     else if ((event->button() & Qt::RightButton)
              && (m_hoverSquare != InvalidSquare))
     {
-        if (m_board.isMovable(m_hoverSquare))
+        if (m_guessNextMove && m_board.isMovable(m_hoverSquare))
         {
             showGoals_(m_hoverSquare, 1);
         }
@@ -393,7 +433,6 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         // doit
         m_dragged = m_board.pieceAt(m_dragStartSquare);
         m_dragPoint = event->pos() - m_theme.pieceCenter();
-        //if (m_view) m_view->setPieceAlpha(s, 50);
     }
 
     // XXX why should this be needed? special flags?
@@ -404,8 +443,8 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
 {
     Square s = squareAt(event->pos());
 
-    // always reset (could be smarter ;)
-    setCursor(QCursor(Qt::ArrowCursor));
+    // always reset (could be smarter XXX)
+    //setCursor(QCursor(Qt::ArrowCursor));
 
     //int button = event->button() + event->modifiers();
     //m_clickUsed = false;
@@ -461,6 +500,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         // reset painter
         if (m_view) m_view->setDragPiece();
         selectSquare_();
+        setCursor(QCursor(Qt::ArrowCursor));
 
         // dropped on a new square on board?
         if (s != InvalidSquare && s != m_dragStartSquare)
@@ -493,59 +533,17 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             m_board.getReachableSquares(from,v);
 
             // auto execute move?
-            if (v.size())
+            if (m_guessMove && v.size())
             {
-                emit moveMade(from, v[m_goal_index%v.size()],
+                m_own_from = from;
+                m_own_to = v[m_goal_index%v.size()];
+                emit moveMade(from, m_own_to,
                                 event->button() + event->modifiers());
             }
         }
 
-        /*
-        Square from = m_selectedSquare;
-        selectSquare();
-
-        if (s != InvalidSquare)
-        {
-            emit moveMade(from, s, button);
-        }*/
     }
 
-    // XXX not really sure what below functions do
-    // they might be broken since i changed the select logic a bit
-    /*
-    // XXX probably single click execute move
-    else if (m_selectedSquare != InvalidSquare)
-    {
-        Square from = m_selectedSquare;
-        selectSquare();
-        if (s != InvalidSquare)
-        {
-            emit moveMade(from, s, button);
-        }
-    }
-
-    // XXX hiFrom seems not be used
-
-    else if (m_hiFrom != InvalidSquare)
-    {
-        if (s == m_hiFrom || s == m_hiTo)
-        {
-            emit moveMade(m_hiFrom, m_hiTo, button);
-        }
-        setHoverSquare();
-    }
-    // ???
-    else
-    {
-        if (s != InvalidSquare)
-        {
-            emit clicked(s, button, mapToGlobal(event->pos()));
-            if (!m_clickUsed && m_board.isMovable(s))
-            {
-                selectSquare(s);
-            }
-        }
-    }*/
 }
 
 void BoardView::wheelEvent(QWheelEvent* e)
@@ -582,31 +580,6 @@ bool BoardView::isFlipped() const
     return (m_view)? m_view->isFlipped() : false;
 }
 
-void BoardView::configure()
-{
-    AppSettings->beginGroup("/Board/");
-    m_showCurrentMove = AppSettings->getValue("showCurrentMove").toBool();
-    m_showAllMoves = AppSettings->getValue("showAllMoves").toBool();
-    //m_minDeltaWheel = AppSettings->getValue("minWheelCount").toInt();
-    bool flipped = AppSettings->getValue("flipped").toBool();
-    AppSettings->endGroup();
-
-    m_theme.configure();
-    m_theme.setSize(QSize(256,256));
-
-    //selectSquare();
-
-    // recreate BoardPainter
-    if (m_view) m_view->deleteLater();
-
-    m_view = new BoardPainter(&m_theme, this);
-    m_view->setBoard(m_board);
-    setFlipped(flipped);
-
-    m_layout->addWidget(m_view);
-
-	update();
-}
 
 void BoardView::selectSquare_(Square s)
 {
@@ -663,7 +636,9 @@ void BoardView::showGoals_(Square s, int gidx)
     for (size_t i=0; i<squares.size(); ++i)
     {
         m_view->addHighlight(squares[i], BoardPainter::H_GOAL
-                             | (BoardPainter::H_TARGET * (i == m_goal_index)));
+                             | (BoardPainter::H_TARGET
+                                * (i == m_goal_index))
+                                * m_guessMove);
     }
 }
 

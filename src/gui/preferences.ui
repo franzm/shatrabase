@@ -51,7 +51,7 @@
           <item>
            <widget class="QCheckBox" name="guessMoveCheck">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>&amp;Guess move on left-click</string>
@@ -59,9 +59,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="guessNextMove">
+           <widget class="QCheckBox" name="guessNextMoveCheck">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Next guess on right click</string>
