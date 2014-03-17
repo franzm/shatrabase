@@ -153,7 +153,7 @@ void USHIEngine::processMessage(const QString& message)
 
 void USHIEngine::parseAnalysis(const QString& message)
 {
-    qDebug() << "parsee " << message;
+//    qDebug() << "parsee " << message;
 
 	// Sample: info score cp 20  depth 3 nodes 423 time 15 pv f1c4 g8f6 b1c3
 	Analysis analysis;
@@ -169,7 +169,7 @@ void USHIEngine::parseAnalysis(const QString& message)
     while (!info.section(' ', section, section + 1, QString::SectionSkipEmpty).isEmpty())
     {
 		name = info.section(' ', section, section, QString::SectionSkipEmpty);
-        qDebug() << "name " << name;
+//        qDebug() << "name " << name;
 		if (name == "multipv") {
 			analysis.setNumpv(info.section(' ', section + 1, section + 1, QString::SectionSkipEmpty).toInt(&ok));
 			section += 2;
@@ -244,7 +244,7 @@ void USHIEngine::parseAnalysis(const QString& message)
 			section++;
             while ((moveText = info.section(' ', section, section, QString::SectionSkipEmpty)) != "")
             {
-                qDebug() << "pv " << moveText;
+//                qDebug() << "pv " << moveText;
                 Move move = board.parseMove(moveText);
 				if (!move.isLegal())
                 {

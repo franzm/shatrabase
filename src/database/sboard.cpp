@@ -363,7 +363,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
     }
     if (!found) return false; found = false;
  // square of piece marked urgent
-    while(!found)
+/*    while(!found)
     {
         c = spn[++i];
         switch(c)
@@ -378,7 +378,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
         }
     }
     if (!found) return false; found = false;
-    
+*/
  // move number specification optional
     while (!isNum(c) && c != 0) c = spn[++i];
     if (c == 0) return true; // m_movenumber preset to 1
@@ -432,8 +432,8 @@ QString SBoard::toSPN() const
     if (m_epSquare) spn += QString::number(enPassantSquare());
     else spn += '-'; spn += ' ';
  // urgent square
-    if (urg) spn += QString::number(urg);
-    else spn += '-'; spn += ' ';
+ //   if (urg) spn += QString::number(urg);
+ //   else spn += '-'; spn += ' ';
  // move number
     spn += QString::number(m_moveNumber);
 
