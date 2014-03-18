@@ -50,6 +50,7 @@ public:
         :   QGraphicsPixmapItem(pixmap, parent),
             square    (square),
             overlay   (0),
+            overlay2  (0),
             frame     (false),
             highlights(0),
             temdek    (false)
@@ -57,7 +58,11 @@ public:
 
     Square square;
 
-    const QPixmap * overlay, * overlay2;
+    const QPixmap
+    /** use for specific square decoration */
+        * overlay,
+    /** use for specific flags */
+        * overlay2;
 
     bool frame;
     QPen framePen;

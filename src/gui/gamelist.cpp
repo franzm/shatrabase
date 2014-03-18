@@ -59,7 +59,7 @@ GameList::~GameList()
 void GameList::itemSelected(const QModelIndex& index)
 {
 	emit selected(m_model->filter()->indexToGame(index.row()));
-    startToDrag(index);
+    // XXX startToDrag(index);
 }
 
 void GameList::setFilter(Filter* filter)
