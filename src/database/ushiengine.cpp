@@ -38,12 +38,10 @@ bool USHIEngine::startAnalysis(const Board& board, int nv)
 	m_board = board;
 
 	m_position = board.toSPN();
-    //m_position = "SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - 1";
 	m_waitingOn = "ushinewgame";
 	send("stop");
     send("ushinewgame");
     send("isready");
-    //waitForResponse(1000*5);
 	setAnalyzing(true);
 
 	return true;
@@ -153,9 +151,6 @@ void USHIEngine::processMessage(const QString& message)
 
 void USHIEngine::parseAnalysis(const QString& message)
 {
-//    qDebug() << "parsee " << message;
-
-	// Sample: info score cp 20  depth 3 nodes 423 time 15 pv f1c4 g8f6 b1c3
 	Analysis analysis;
     bool multiPVFound, timeFound, nodesFound, depthFound, scoreFound, variationFound;
     multiPVFound = timeFound = nodesFound = depthFound = scoreFound = variationFound = false;

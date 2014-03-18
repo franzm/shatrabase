@@ -10,6 +10,7 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "analysiswidget.h"
 #include "boardsetup.h"
 #include "boardview.h"
 #include "copydialog.h"
@@ -33,7 +34,7 @@
 #include "settings.h"
 #include "tablebase.h"
 #include "tableview.h"
-#include "analysiswidget.h"
+#include "ushiengine.h"
 #include "version.h"
 
 #include <time.h>
@@ -493,7 +494,8 @@ void MainWindow::slotBoardClick(Square s, int button, QPoint pos)
 void MainWindow::slotMoveChanged()
 {
     const Game& g = game();
-
+    bool a = m_mainAnalysis->isEngineRunning();
+    if (a) m_mainAnalysis->stopEngine();
 	// Set board first
     m_boardView->setBoard(g.board(), m_currentFrom, m_currentTo);
     m_currentFrom = InvalidSquare;
@@ -506,6 +508,7 @@ void MainWindow::slotMoveChanged()
 
 	slotSearchTree();
 	emit boardChange(g.board());
+    if (a) m_mainAnalysis->startEngine();
 
 	// Clear  entries
 	m_nagText.clear();

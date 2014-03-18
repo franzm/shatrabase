@@ -50,6 +50,7 @@ public:
         :   QGraphicsPixmapItem(pixmap, parent),
             square    (square),
             overlay   (0),
+            overlay2  (0),
             frame     (false),
             highlights(0),
             temdek    (false)
@@ -57,7 +58,11 @@ public:
 
     Square square;
 
-    const QPixmap * overlay;
+    const QPixmap
+    /** use for specific square decoration */
+        * overlay,
+    /** use for specific flags */
+        * overlay2;
 
     bool frame;
     QPen framePen;
@@ -80,9 +85,11 @@ protected:
     {
         QGraphicsPixmapItem::paint(painter, option, widget);
 
-        // graphic
+        // overlay graphic
         if (overlay && !overlay->isNull())
             painter->drawPixmap(0,0,*overlay);
+        if (overlay2 && !overlay2->isNull())
+            painter->drawPixmap(0,0,*overlay2);
 
         // hover
         if (highlights & BoardPainter::H_HOVER)
@@ -382,6 +389,12 @@ void BoardPainter::createBoard_(const Board& board)
         if (m_do_tower && board.isTower(i))
         {
             s->overlay = &m_theme->towerEmboss();
+        }
+
+        // set urgent
+        if (board.isUrgent(i))
+        {
+            s->overlay2 = &m_theme->urgent();
         }
 
         // number display
