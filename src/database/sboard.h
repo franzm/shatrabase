@@ -105,6 +105,34 @@ pRules[1] = 85;            // 01010101 rook
 pRules[2] = 170;           // 10101010 bishop
 pRules[3] = 255;           // 11111111 king
 */
+// de Bruijn
+const quint64 magic = 0x0218a4da3b967abf; // the 7777
+const quint64 h1    = 0x5555555555555555;
+const quint64 h2    = 0x3333333333333333;
+const quint64 h4    = 0x0F0F0F0F0F0F0F0F;
+const quint64 v1    = 0x00FF00FF00FF00FF;
+const quint64 v2    = 0x0000FFFF0000FFFF;
+
+const Square magictable[64] =
+{
+    0,  1,  2,  7,  3, 13,  8, 31,
+    4, 19, 14, 41,  9, 22, 32, 47,
+    5, 29, 17, 20, 15, 53, 42, 55,
+   10, 44, 26, 23, 37, 33, 48, 57,
+   63,  6, 12, 30, 18, 40, 21, 46,
+   28, 16, 52, 54, 43, 25, 36, 56,
+   62, 11, 39, 45, 27, 51, 24, 35,
+   61, 38, 50, 34, 60, 49, 59, 58,
+};
+
+#ifdef QT_OS_WIN
+#   pragma warning(disable: 4146)
+#endif
+inline Square bitScanForward(quint64 b) {
+    return magictable[((b & -b) * magic) >> 58];
+}
+
+const bb bFort[2] = { 0x00000000000003fe,0x7fc0000000000000 };
 
 class SBoard
 {
@@ -129,11 +157,15 @@ public:
     /** Set initial shatra game position on the board */
     void setStandardPosition();
     /** Set the given piece on the board at the given square */
-    bool setAt(const int at, const Piece p);
+    bool setAt(const int at, const Piece p, bool urg);
     /** Remove any piece sitting on given square */
     void removeAt(const int at);
-    /** Toggle urgent bit, set m_urgent accordingly */
-    void doUrgentAt(const int at);
+    /** Toggle urgent bit, set m_urgent data accordingly */
+    void doUrgentAt(const Move& m);
+    /** set urgent bit, set m_urgent data accordingly */
+    void setUrgentAt(const int at);
+    /** clear m_urgent and data */
+    void clearUrgentAt(const int at);
     /** Set the side to move to the given color */
     void setToMove(const Color& c);
     /** Swap the side to move */
@@ -187,7 +219,7 @@ public:
     /** Return piece type at given square number */
     PieceType pieceTypeAt(const int at) const;
     /** Return piece moving plus any flags (call before or after moving) */
-    int pieceMoving(Move m) const;
+    int pieceMoving(const Move m) const;
     /** Return the current move number in the game */
     int moveNumber() const;
     /** Return color of current side to move */
@@ -204,8 +236,8 @@ public:
     Square transitAt() const;
     /** Return square where piece *is* marked 'urgent' */
     Square urgentAt() const;
-    /** Return square where piece *was* marked 'urgent' */
-    Square oldUrgent() const;
+//    /** Return square where piece *was* marked 'urgent' */
+//    Square oldUrgent() const;
     /** Return square where piece was in transit */
     Square oldTransit() const;
     /** Return true if Biy on home square and Temdek on */
@@ -269,6 +301,7 @@ public:
  // NB this will always be the same as m_to when going forwards, but also
  //  1) acts as a flag, and 2) allows us to shorten notation, eg :g10 but
  // TODO rethink undo data uint, could be ushort?
+    bb  m_allurgent;           // bitboard of all pieces marked urgent
   private:
     int m_sntm;                // side not to move
     int m_lstm;                // last side not to move :) (okay, not not)
@@ -282,9 +315,9 @@ public:
     int m_moveNumber;          // move number in game (inc after black moves)
     int m_offBoard[12];        // pieces are either on or off the board
     int m_pieceCount[2];       // simple counter for onboard pieces
-    int m_urgent;              // location of a piece marked urgent
     int m_promoWait[2];        // could need 3 for each side??? :)
     int m_b;                   // flags, better than passing it round
+    int m_urgent[2];           // location of moving piece marked urgent
     bool m_caps[2];            // used for "if no other piece can capture"
     bool m_temdekPending[2];   // delay temdek removal during capture sequence
     urstack<int,16> m_dfs;     // stack for defunkt pieces - NB no real undo
@@ -316,7 +349,7 @@ inline Square SBoard::transitAt() const
 
 inline Square SBoard::urgentAt() const
 {
-    return BN[m_urgent];
+    return BN[m_urgent[m_stm]];
 }
 
 inline bool SBoard::inSequence() const
@@ -425,22 +458,37 @@ inline PieceType SBoard::pieceTypeAt(const int at) const
     return (PieceType)(p - (p > WhiteShatra?  5 : 0));
 }
 
-inline int SBoard::pieceMoving(Move m) const
+inline int SBoard::pieceMoving(const Move m) const
 {
     return m_sb[m.from()] != Empty? m_sb[m.from()] : m_sb[m.to()];
 }
 
-inline void SBoard::doUrgentAt(const int at)
+inline void SBoard::doUrgentAt(const Move& m)
 {
-    m_sb[at] ^= URGENT;
-    m_urgent = m_sb[at] & URGENT? at : NoSquare;
+    Square t = m.to(), f = m.from();
+    m_sb[t] ^= URGENT;
+    m_urgent[m_stm] = m_sb[t] & URGENT? t : NoSquare;
+    m_allurgent ^= m_sb[t] & URGENT?
+        bSq(BN[t]) : bSq(BN[f]);
+}
+
+inline void SBoard::setUrgentAt(const int at)
+{
+    m_sb[at] |= URGENT;
+    m_allurgent |= bSq(BN[at]);
+    m_urgent[m_stm] = at;
+}
+
+inline void SBoard::clearUrgentAt(const int at)
+{
+    m_allurgent ^= bSq(BN[at]);
+    m_urgent[m_stm] = NoSquare;
 }
 
 inline bool SBoard::canPromoteTo(PieceType pt) const
 {
     int p = pt + PC[m_stm];
-    if (m_offBoard[p] > 0) return true;
-    return false;
+    return (m_offBoard[p] > 0);
 }
 
 inline QChar SBoard::pieceToChar(const Piece piece) const

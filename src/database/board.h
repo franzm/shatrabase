@@ -48,7 +48,7 @@ public:
  // the next six methods convert numeric and board coords
  // the first two also update the hash value
     /* Set a piece on the given square */
-    void setAt(Square s, Piece p);
+    void setAt(Square s, Piece p, bool urg=false);
     /* Remove a piece from a given square */
     void removeFrom(Square s);
 
@@ -113,23 +113,25 @@ private:
     QString m_squareAnnotation;
     QString m_arrowAnnotation;
 
-    /* Make or undo move on board and calculate hash value for new position */
+    /* Make or undo move on board, calculate hash value for new position */
     bool doIt(const Move& m, bool undo);
     /* Recalculate hash completely */
     void createHash();
-    /* Adjust hash value for piece sitting on given square */
+    /* Update hash value for piece sitting on given square */
     void hashPiece(Square s, Piece p);
-    /* Adjust hash value for side to move */
+    /* Update hash value for side to move */
     void hashToMove();
-    /* Adjust hash value for possible en passant square */
-    void hashEpSquare();
-    /* Adjust hash value for piece in transit */
-    void hashTransitSquare();
-    /* Adjust hash value for a current urgent square */
-    void hashUrgentSquare();
-    /* Adjust hash value for a moving urgent piece (rare, capture only) */
+    /* Update hash value for possible en passant square */
+    bool hashEpSquare();
+    /* Update hash value for a current urgent square */
+    bool hashUrgentSquare(Square s);
+    /* Update hash value for all current urgent squares (for createHash()) */
+    void hashUrgentSquares();
+    /* Update hash value for a moving urgent piece (rare, capture only) */
     void hashUrgentMoving(const Move& m);
-    /* Adjust hash value for a Temdek removed (for either side) */
+    /* Update hash value for piece in transit */
+    void hashTransitSquare();
+    /* Update hash value for a Temdek removed (for either side) */
     void hashTemdek(const Move& m, bool undo);
     void hashTemdek(int side);
 };

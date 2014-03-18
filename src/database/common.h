@@ -20,6 +20,7 @@
 
 typedef unsigned char ubyte;
 typedef unsigned char Square;
+typedef quint64 bb;
 
 struct SquareMove
 {
@@ -121,6 +122,10 @@ inline bool isInHomeFort(const int s, const int stm)
 /* Rank and File :) */
 inline int Rank(int s) { return s & 0x0f; }
 inline int File(int s) { return s>>4; }
+
+/* Return bitboard representing (notation) square number */
+inline bb bSq( const Square sq)
+    { return (bb)1<<sq; }
 
 /* character parsing */
 inline bool isUpper(const char c) { return c >= 'A' && c <= 'Z'; }

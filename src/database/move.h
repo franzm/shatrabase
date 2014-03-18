@@ -211,7 +211,7 @@ inline bool Move::isPassMove() const
 
 inline bool Move::isLegal() const
 {
-    return m != 0;
+    return m != 0; // ahem
 }
 
 inline Square Move::from() const
