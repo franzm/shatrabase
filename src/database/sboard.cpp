@@ -149,8 +149,8 @@ bool SBoard::canMoveTo(const int from, const int to) const
     return false;
 }
 
-bool SBoard::setAt(const int at, const Piece p) // board coords
-{
+bool SBoard::setAt(const int at, const Piece p, bool urg=false)
+{ // NB board coords
     Q_ASSERT(isValidPiece(p));
 
     if (isDefunkt(p))
@@ -161,6 +161,7 @@ bool SBoard::setAt(const int at, const Piece p) // board coords
     if (pt == None || m_offBoard[p] == 0) return false;
     
     m_sb[at] = p;
+    if (urg) setUrgentAt(at);
 
     Color _color = pieceColor(p);
     ++m_pieceCount[_color];
@@ -234,7 +235,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
     int k_on[2] = { 0, 0 };
     int tw = 0, tb = 0, sp = 0, sl = 0;
     char c = spn[0];
-    bool found, wt, bt;
+    bool found, wt, bt, urg = false;
     initState();
     m_moveNumber = 1;
     fillOffboard();
@@ -254,37 +255,38 @@ bool SBoard::SPNToBoard(const QString& qspn)
         bt = j >= temdekAt[Black]; wt = j <= temdekAt[White];
         if (isNum(c)) { sp = c - '0'; continue; }
 
+        if (c == '!') urg = true;
         switch (c) // will return false if one too many of any
         {          // piece type is specified by the SPN string
         case 'Q':  // nb style borrowed from chessx
-            if (!setAt(NB[j++], WhiteBatyr)) return false;
+            if (!setAt(NB[j++], WhiteBatyr, urg)) return false;
             if (wt) ++tw; break;
         case 'R':  // maybe faster than a loop check (?)
-            if (!setAt(NB[j++], WhiteTura))  return false;
+            if (!setAt(NB[j++], WhiteTura, urg))  return false;
             if (wt) ++tw; break;
         case 'B': // but a real pain if needing translation at some point
-            if (!setAt(NB[j++], WhiteYalkyn)) return false;
+            if (!setAt(NB[j++], WhiteYalkyn, urg)) return false;
             if (wt) ++tw; break;
         case 'K':
-            if (!setAt(NB[j++], WhiteBiy))  return false;
+            if (!setAt(NB[j++], WhiteBiy, urg))  return false;
             if (wt) ++tw; ++k_on[White]; break;
         case 'S':
-            if (!setAt(NB[j++], WhiteShatra)) return false;
+            if (!setAt(NB[j++], WhiteShatra, urg)) return false;
             if (wt) ++tw; break;
         case 'q':
-            if (!setAt(NB[j++], BlackBatyr)) return false;
+            if (!setAt(NB[j++], BlackBatyr, urg)) return false;
             if (bt) ++tb; break;
         case 'r':
-            if (!setAt(NB[j++], BlackTura))  return false;
+            if (!setAt(NB[j++], BlackTura, urg))  return false;
             if (bt) ++tb; break;
         case 'b':
-            if (!setAt(NB[j++], BlackYalkyn)) return false;
+            if (!setAt(NB[j++], BlackYalkyn, urg)) return false;
             if (bt) ++tb; break;
         case 'k':
-            if (!setAt(NB[j++], BlackBiy))  return false;
+            if (!setAt(NB[j++], BlackBiy, urg))  return false;
             if (bt) ++tb; ++k_on[Black]; break;
         case 's':
-            if (!setAt(NB[j++], BlackShatra)) return false;
+            if (!setAt(NB[j++], BlackShatra, urg)) return false;
             if (bt) ++tb; break;
             // NB must add defunkt to dfstack...
         case 'y':
@@ -362,23 +364,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
         }
     }
     if (!found) return false; found = false;
- // square of piece marked urgent
-/*    while(!found)
-    {
-        c = spn[++i];
-        switch(c)
-        {
-        case ' ': break;
-        case '-': found = true; break;
-        default:
-            j = i;
-            while (isNum(c)) c = spn[++i];
-            m_sb[NB[spn.mid(j, i - j).toInt()]] |= URGENT;
-            found = true;
-        }
-    }
-    if (!found) return false; found = false;
-*/
+    
  // move number specification optional
     while (!isNum(c) && c != 0) c = spn[++i];
     if (c == 0) return true; // m_movenumber preset to 1
@@ -393,7 +379,7 @@ QString nums = "0123456789";
 
 QString SBoard::toSPN() const
 {
-    int piece, i, j = 0, urg = 0, sp = 0;
+    int piece, i, j = 0, sp = 0;
     QString spn;
     for (i = fsq; i <= lsq; i++)
     {
@@ -404,8 +390,8 @@ QString SBoard::toSPN() const
             {
                 spn += nums[sp]; sp = 0;
             }
+            if (piece & URGENT) spn += '!';
             spn += pieceToChar(Piece(piece & 0xf));
-            if (piece & URGENT) urg = i;
         }
         else ++sp;
         if (i == spn_slash[j])
@@ -431,9 +417,6 @@ QString SBoard::toSPN() const
  // ep square
     if (m_epSquare) spn += QString::number(enPassantSquare());
     else spn += '-'; spn += ' ';
- // urgent square
- //   if (urg) spn += QString::number(urg);
- //   else spn += '-'; spn += ' ';
  // move number
     spn += QString::number(m_moveNumber);
 
@@ -507,7 +490,7 @@ inline void SBoard::doCFlags(int from, int to, int cp)
         {
             if (temdekOn(White)) { if (Rank(from) <= 4)  m_b |= FLIP_URGENT; }
         }
-        else if (from == m_urgent) m_b |= FLIP_URGENT;
+        else if (from == m_urgent[White]) m_b |= FLIP_URGENT;
 
         if (temdekOn(White))
             if (Rank(from) < 5 && Rank(to) > 4) m_b |= DECTDK;
@@ -520,7 +503,7 @@ inline void SBoard::doCFlags(int from, int to, int cp)
         {
             if (temdekOn(Black)) { if (Rank(from) >= 11)  m_b |= FLIP_URGENT; }
         }
-        else if (from == m_urgent) m_b |= FLIP_URGENT;
+        else if (from == m_urgent[Black]) m_b |= FLIP_URGENT;
 
         if (temdekOn(Black))
             if (Rank(from) > 10 && Rank(to) < 11) m_b |= DECTDK;
@@ -693,11 +676,10 @@ inline bool SBoard::getCapture
 int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 {
     int s, at, r, pr, bstm( m_stm<<2 );
-    PieceType upt;
     bool c( !cc ), inFort, doneFort;
     m_promoWait[m_sntm] = promoWaiting();
     m_caps[0] = m_caps[1] = false;
-    m_urgent = m_epVictim = NoSquare;
+    m_epVictim = NoSquare;
     m_ml.clear();
     if (m_biyAt[m_stm] == NoSquare) return 0; // biy was captured
 
@@ -713,7 +695,6 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
             PieceType pt = pieceType(p);
             inFort = isInHomeFort(s, m_stm);
 
-            if (m_sb[at] & URGENT) m_urgent = at, upt = pt; // save piece type
  // see top of sboard.h for piece rules
             pr = r = pt != Shatra? pRules[pt - Batyr] : c || cc?
                         255 : sRules[m_stm][sPhi(at)];
@@ -782,9 +763,16 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                     m_sb[m_epVictim] = m_stm? WhiteShatra : BlackShatra;
                 return m_ml.count();
             }
-            else if (m_urgent) // no captures, check for urgent piece
+            else if (m_allurgent & bFort[m_stm]) // no captures, check for urgent pieces
             {
-                m_b |= FLIP_URGENT; getDrops(urgentAt(), upt);
+                bb au = m_allurgent;
+                Square usq;
+                m_b |= FLIP_URGENT;
+                do {
+                    at = NB[usq = bitScanForward(au)];
+                    getDrops(usq, PieceType(m_sb[at]));
+                    
+                } while (au &= (au - 1));                
                 return m_ml.count();
             }
         }
@@ -887,9 +875,14 @@ bool SBoard::doMove(const Move& m)
     m_sb[m_from] = Empty; m_sb[m_to] = p; // NB pass (from == to)
     m_epSquare = m_transit = m_latePromo = NoSquare;
 
-    if (m.flipsUrgent()) doUrgentAt(m_to);
-    else m_urgent = piece & URGENT? m_from : NoSquare;
-
+    if (m.flipsUrgent())
+        doUrgentAt(m);
+    else if (p & URGENT)
+    {
+        doUrgentAt(m);
+        setUrgentAt(m_to);
+    }
+    
     if (m.decsTemdek())
     {
         --m_temdek[m_stm]; // boardview may delay this
@@ -898,9 +891,11 @@ bool SBoard::doMove(const Move& m)
     else if (pieceType(piece) == Shatra)
     {
         if (abs(m_to - m_from) == 2
-            && (Rank(m_from) == 5 || Rank(m_from) == 10)
-            && File(m_to) > 1 && File(m_to) < 7)
-                if (!m.isCapture()) m_epSquare = m_stm? m_to + 1 : m_to - 1;
+        && (Rank(m_from) == 5 || Rank(m_from) == 10)
+        && File(m_to) > 1 && File(m_to) < 7
+        && !m.isCapture())
+            m_epSquare = m_stm? m_to + 1 : m_to - 1;
+            
         if (m.isPromotion())
         {
             ++m_offBoard[piece];
@@ -914,6 +909,8 @@ bool SBoard::doMove(const Move& m)
         Piece victim = m.capturedPiece();
         PieceType v = pieceType(victim);
         int victim_at = m.capturedAt();
+        if (m_sb[victim_at] & URGENT)
+            clearUrgentAt(victim_at);
         m_sb[victim_at] = Empty; --m_pieceCount[m_sntm];
         if (v == Biy) m_biyAt[m_sntm] = Empty;
 
@@ -996,8 +993,8 @@ void SBoard::undoMove(const Move& m)
         
         if (m.isPromoSntm())
         {
-                --m_offBoard[Shatra + PC[m_stm]];
-                m_sb[m.o] = Shatra + PC[m_stm];
+            --m_offBoard[Shatra + PC[m_stm]];
+            m_sb[m.o] = Shatra + PC[m_stm];
         }
         else --m_offBoard[victim];
 
@@ -1012,7 +1009,9 @@ void SBoard::undoMove(const Move& m)
     }
     m_epSquare = m.oldEPAvail();
     m_transit = m.oldTransit();
-    m_urgent = m.oldUrgent();
+    m_urgent[m_stm] = m.oldUrgent();
+    if (m_urgent[m_stm])
+        m_allurgent |= bSq(urgentAt());
     if (m_dfs.count()) m_dfs.pop();
 
     m_to = inSequence()? m_from : NoSquare;
@@ -1038,7 +1037,7 @@ Move SBoard::prepareMove(const int from, const int to)
     {
         move.e |= m_epSquare;
         move.x |= m_transit;
-        move.g |= m_urgent;
+        move.g |= m_urgent[m_stm];
         move.o |= m_latePromo;
     }
     return move;
@@ -1060,7 +1059,7 @@ Move SBoard::prepareMove(const int from, const int to) const // board coords
     {
         move.e |= m_epSquare;
         move.x |= m_transit;
-        move.g |= m_urgent;
+        move.g |= m_urgent[m_stm];
         move.o |= m_latePromo;
     }
     return move;

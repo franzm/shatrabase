@@ -63,12 +63,13 @@ bool Board::fromSPN(const QString& SPN)
     }
     return false;
 }
-
-void Board::setAt(Square s, Piece p) // need to gen movelist?
+ // NB TODO setAt() is a great place to check for setting positions' legality
+void Board::setAt(Square s, Piece p, bool urg) // need to gen movelist?
 {
     hashPiece(s, pieceAt(s));
-    SBoard::setAt(NB[s], p);
+    SBoard::setAt(NB[s], p, urg);
     hashPiece(s, p);
+    if (urg) hashUrgentSquare(s);
 }
 
 void Board::removeFrom(Square s) // need to gen movelist?
@@ -130,9 +131,11 @@ bool Board::doIt(const Move& m, bool undo)
     else SBoard::doMove(m);
 
     if (!sameSide()) hashToMove();
+    
     hashEpSquare();
     hashTransitSquare();
-    if (m.flipsUrgent()) hashUrgentSquare();
+    
+    if (m.flipsUrgent()) hashUrgentSquare(BN[m.to()]); // TODO 'findUrgent' :)
     else if (pieceMoving(m) & URGENT) hashUrgentMoving(m);
     hashTemdek(m, undo);
 
@@ -151,32 +154,39 @@ inline void Board::hashPiece(Square s, Piece p)
         m_hashValue ^= RAND_VALUES[p - 1][BN[s]];
 }
 
-inline void Board::hashEpSquare()
+inline bool Board::hashEpSquare()
 {
     Square s = enPassantSquare();
-    if (s == NoSquare) return;
+    if (s == NoSquare) return false;
 
     s = (s >= 19 && s <= 23)? s - 19 :
-          (s >= 40 && s <= 44)? s - 35 : InvalidSquare;
+        (s >= 40 && s <= 44)? s - 35 : InvalidSquare;
 
-    if (s != InvalidSquare)
-        m_hashValue ^= RAND_EN_PASSANT[s];
+    if (s == InvalidSquare) return false;
+    m_hashValue ^= RAND_EN_PASSANT[s];
+    return true;
 }
 
-inline void Board::hashTransitSquare()
+inline bool Board::hashUrgentSquare(Square s)
 {
-    Square s = transitAt();
-    if (s != NoSquare) m_hashValue ^= RAND_TRANSIT[s];
-}
-
-inline void Board::hashUrgentSquare()
-{
-    Square s = urgentAt();
-    if (s == NoSquare) return;
+    if (s == NoSquare) return false;
 
     s = (s < 10)? s : (s > 53)? s - 44 : InvalidSquare;
 
-    if (s != InvalidSquare) m_hashValue ^= RAND_URGENT[s];
+    if (s == InvalidSquare) return false;
+    m_hashValue ^= RAND_URGENT[s];
+    return true;
+}
+
+inline void Board::hashUrgentSquares()
+{
+    if (!m_allurgent) return;
+    bb au = m_allurgent;
+    do {
+        Square s = bitScanForward(au);
+        hashUrgentSquare(s);
+
+    } while (au &= (au - 1));
 }
 
 inline void Board::hashUrgentMoving(const Move& m)
@@ -192,6 +202,12 @@ inline void Board::hashUrgentMoving(const Move& m)
     s = (s < 10)? s : (s > 53)? s - 44 : InvalidSquare;
     
     if (s != InvalidSquare) m_hashValue ^= RAND_URGENT[s];
+}
+
+inline void Board::hashTransitSquare()
+{
+    Square s = transitAt();
+    if (s != NoSquare) m_hashValue ^= RAND_TRANSIT[s];
 }
 
 inline void Board::hashTemdek(const Move& m, bool undo)
@@ -227,8 +243,9 @@ void Board::createHash()
     if (toMove() == Black) hashToMove();
 
     hashEpSquare();
+    hashUrgentSquares();
     hashTransitSquare();
-    hashUrgentSquare();
+    
     if (temdekOff(White)) hashTemdek(White);
     if (temdekOff(Black)) hashTemdek(Black);
 }
