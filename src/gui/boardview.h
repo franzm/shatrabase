@@ -65,6 +65,9 @@ public slots:
     /** Apply the settings for the board. */
     void configure();
 
+    /** Tell the BoardView the best current move, e.g. from analysis. */
+    void setBestMove(int from = InvalidSquare, int to = InvalidSquare);
+
 signals:
     /** User clicked source and destination squares */
     void moveMade(Square from, Square to, int button);

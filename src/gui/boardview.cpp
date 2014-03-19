@@ -182,6 +182,20 @@ const BoardTheme& BoardView::theme() const
 }
 
 
+void BoardView::setBestMove(int from, int to)
+{
+    if (from == InvalidSquare || to == InvalidSquare)
+        return;
+
+    // find index of the supplied move in own movelist
+    for (size_t i=0; i<m_moves.size(); ++i)
+        if (m_moves[i].from == from &&
+                m_moves[i].to == to)
+                    { m_goal_index = i; break; }
+}
+
+
+
 #if (0)
 void BoardView::drawSquares(QPaintEvent* event)
 {
