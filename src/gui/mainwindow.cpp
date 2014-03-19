@@ -376,11 +376,30 @@ MainWindow::~MainWindow()
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
+    //qDebug() << " filter " << obj << " " << event;
     if (event->type() == QEvent::FileOpen)
     {
         openDatabaseUrl(static_cast<QFileOpenEvent*>(event)->file(),false);
         return true;
     }
+
+    /*
+    if (event->type() == QEvent::ShortcutOverride)
+    {
+        if (QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event))
+        {
+            if (keyEvent->key() == Qt::Key_Space)
+            {
+                m_boardView->execBestMove();
+                return true;
+            }
+        }
+    }*/
+
+    // standard event processing
+    return QObject::eventFilter(obj, event);
+
+#ifdef WHAT_IS_THIS_FOR_QESTIONMARK
     else
     {
         if(event->type() == QEvent::KeyPress)
@@ -411,6 +430,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         // uncatched keys?
         if (!r && event->type() == QEvent::KeyPress)
         {
+            //keyPressEvent(e);
             if (QKeyEvent * keyEvent = dynamic_cast<QKeyEvent*>(event))
             {
                 // delegate spacebar
@@ -424,6 +444,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         }
         return r;
     }
+#endif
 }
 
 void MainWindow::resizeEvent(QResizeEvent * e)
@@ -483,32 +504,42 @@ void MainWindow::closeEvent(QCloseEvent* e)
 
 void MainWindow::keyPressEvent(QKeyEvent *e)
 {
+    //qDebug() << "key " << e;
+
     if ((e->key() == Qt::Key_Escape) || (e->key() == Qt::Key_Backspace))
     {
 		m_nagText.clear();
+        e->accept();
         return;
     }
 
-    /*
+    // XXX this is actually never reached,
+    // seems like ChessBrowser is eating the spacebar
     if (e->key() == Qt::Key_Space)
     {
-        qDebug() << "SPAcE";
-        e->ignore();
-        QWidget::keyPressEvent(e);
-    }*/
+        e->accept();
+        // delegate spacebar
+        m_boardView->execBestMove();
+        return;
+    }
 
     if (game().atGameStart())
+    {
+        e->accept();
         return;
+    }
 
     if (e->key() == Qt::Key_Delete)
     {
         game().clearNags();
         slotGameChanged();
+        e->accept();
         return;
     }
 
     if (e->text().isEmpty())
     {
+        e->accept();
         return;
     }
 
@@ -523,6 +554,8 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
         game().addNag(NagSet::fromString(m_nagText));
         slotGameChanged();
     }
+
+    QWidget::keyPressEvent(e);
 }
 /*
 void MainWindow::resizeEvent()

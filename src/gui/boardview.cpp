@@ -146,8 +146,8 @@ void BoardView::setBoard(const Board& value,int from, int to)
             = InvalidSquare;
     m_dragged = InvalidPiece;
 
-    m_bestMoveFrom = 14; // debug test
-    m_bestMoveTo = 28;
+    //m_bestMoveFrom = 14; // debug test
+    //m_bestMoveTo = 28;
 
     // copy position
 	m_board = value;
