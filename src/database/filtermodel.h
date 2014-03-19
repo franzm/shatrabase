@@ -30,45 +30,52 @@ class FilterModel: public QAbstractItemModel
 	Q_OBJECT
 
 public:
-    /* Constructs a FilterModel object using a pointer to a Filter */
+    /** Constructs a FilterModel object using a pointer to a Filter */
 	FilterModel(Filter* filter, QObject *parent = 0);
 	~FilterModel();
 
-    /* Returns the number of rows in the model */
+    /** Returns the number of rows in the model */
 	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    /* Returns the number of columns in the model */
+    /** Returns the number of columns in the model */
 	virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    /* Returns an item of data given the item 'index' */
+    /** Returns an item of data given the item 'index' */
 	virtual QVariant data(const QModelIndex &index, int role) const;
-    /* Returns the header information for header 'section' */
+    /** Returns the header information for header 'section' */
 	virtual QVariant headerData(int section, Qt::Orientation orientation,
 				    int role = Qt::DisplayRole) const;
-    /* No tree - always return invalid parent */
+    /** No tree - always return invalid parent */
 	virtual QModelIndex parent(const QModelIndex&) const  {return QModelIndex();}
-    /* No tree - always return self */
+    /** No tree - always return self */
 	virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-    /* No children */
+    /** No children */
 	virtual bool hasChildren(const QModelIndex& parent = QModelIndex()) const {return !parent.isValid();}
-    /* Associated filter */
+    /** Associated filter */
 	virtual Filter* filter();
-    /* Changes current database. Resets any views. */
+    /** Changes current database. Resets any views. */
 	virtual void setFilter(Filter* filter);
-    /* Get the column tags. */
+
+    virtual void sort(int column, Qt::SortOrder order);
+
+    /** Get the column tags. */
     const QStringList GetColumnTags()  { return m_columnTags; }
-    /* Get the column names. */
+    /** Get the column names. */
     const QStringList GetColumnNames() { return m_columnNames; }
+
 private:
-    /* A pointer to filter on which the model operates */
+    /** A pointer to filter on which the model operates */
 	Filter* m_filter;
-    /* The column names of the model */
+    /** The column names of the model */
 	QStringList m_columnNames;
-    /* Map of columns and database tags */
+    /** Map of columns and database tags */
 	QStringList m_columnTags;
-    /* A pointer to a game object, to hold the retrieved information
+    /** A pointer to a game object, to hold the retrieved information
 	 * about the game */
 	Game* m_game;
-    /* Current game index - used for caching */
-	mutable int m_gameIndex;
+    /** Current game index - used for caching */
+    mutable int m_gameIndex;
+    /** sorted indices */
+    QVector<int> m_sorted;
+    QVector<bool> m_isnumber;
 };
 
 #endif	// __FilterModelBase_H__
