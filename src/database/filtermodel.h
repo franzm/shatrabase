@@ -17,6 +17,8 @@
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 #include <QStringList>
+#include <QHash>
+#include <QVariant>
 
 #include "filter.h"
 #include "game.h"
@@ -29,6 +31,10 @@
 class FilterModel: public QAbstractItemModel
 {
 	Q_OBJECT
+
+    /** bitshift for cache value.
+     *  Implicitly defines max number of columns!! */
+    static const int MAX_COLUMNS_SHIFT = 8;
 
 public:
     /** Constructs a FilterModel object using a pointer to a Filter */
@@ -72,11 +78,12 @@ private:
     /** A pointer to a game object, to hold the retrieved information
 	 * about the game */
 	Game* m_game;
-    /** Current game index - used for caching */
-    mutable int m_gameIndex;
-    /* sorted indices */
-    //QVector<int> m_sorted;
-    //QVector<bool> m_isnumber;
+    /* Current game index - used for caching */
+    //mutable int m_gameIndex;
+    /** cache for game values */
+    typedef quint64 Hash;
+    mutable QHash<Hash, QVariant> m_cache;
+    typedef QHash<Hash, QVariant>::const_iterator CacheIter;
 };
 
 #endif	// __FilterModelBase_H__

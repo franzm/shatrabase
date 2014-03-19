@@ -19,7 +19,7 @@
 #include <QSortFilterProxyModel>
 
 FilterModel::FilterModel(Filter* filter, QObject* parent)
-        : QAbstractItemModel(parent), m_filter(filter), m_gameIndex(-1)
+        : QAbstractItemModel(parent), m_filter(filter)
 {
     m_columnNames
     << tr("Nr")
@@ -90,29 +90,51 @@ QVariant FilterModel::data(const QModelIndex &index, int role) const
     {
         // index to game
         int i = m_filter->indexToGame(index.row());
-        if (i != -1) {
-            if (i != m_gameIndex) {
-// rico: it would perhaps be better to read here only header information that is
-// currently used and not the whole header information.
-                m_filter->database()->loadGameHeaders(i, *m_game);
-                m_gameIndex = i;
-            }
+        if (i != -1)
+        {
+
+
             if (role == Qt::DisplayRole)
             {
-                // return index number
+                // return row index number
                 if (index.column() == 0)
                     return i + 1;
+
+                // return a game value
                 else
                 {
+                    // lookup cache
+                    Hash cachepos = ((Hash)i<<MAX_COLUMNS_SHIFT) | (Hash)index.column();
+                    CacheIter c = m_cache.find(cachepos);
+                    if (c != m_cache.end())
+                    {
+                        qDebug() <<  m_cache.size();
+                        return c.value();
+                    }
+
                     // read game-header-info
+                    m_filter->database()->loadGameHeaders(i, *m_game);
                     QString tag = m_game->tag(m_columnTags.at(index.column()));
-                    if (tag == "?") return QString("");
-                    bool ok;
-                    // return as specific type?
-                    { float num = tag.toFloat(&ok); if (ok) return num; }
-                    { int num = tag.toInt(&ok); if (ok) return num; }
-                    // return as string
-                    return tag;
+
+                    // construct a variant
+                    QVariant ret;
+                    if (tag == "?")
+                        // unknown
+                        ret.setValue( QString("") );
+                    else
+                    {
+                        bool ok;
+                        // return as specific type?
+                        { float num = tag.toFloat(&ok); if (ok) ret.setValue( num ); }
+                        if (!ok) { int num = tag.toInt(&ok); if (ok) ret.setValue( num ); }
+                        // return as string
+                        if (!ok) ret.setValue( tag );
+                    }
+
+                    // store in cache
+                    m_cache.insert(cachepos, ret);
+
+                    return ret;
                 }
             }
             else if (role == Qt::FontRole)
@@ -155,13 +177,6 @@ QModelIndex FilterModel::index(int row, int column, const QModelIndex& parent) c
 	if (parent.isValid())
 		return QModelIndex();
 
-    // sorted index
-/*  if (m_sorted.size() == m_filter->database()->count())
-    {
-        qDebug() << "sorted " << row << "->" << m_sorted[row];
-        row = m_sorted[row];
-    }
-*/
     return createIndex(row, column);
 }
 
@@ -169,7 +184,6 @@ void FilterModel::setFilter(Filter* filter)
 {
     beginResetModel();
 	m_filter = filter;
-	m_gameIndex = -1;
     endResetModel();
 }
 
@@ -177,87 +191,4 @@ Filter* FilterModel::filter()
 {
 	return m_filter;
 }
-
-#ifdef DONE_DIFFERENTLY_NOW__
-void FilterModel::sort(int column, Qt::SortOrder order)
-{
-    Q_ASSERT(column < m_isnumber.size());
-    if (column >= m_isnumber.size())
-        return;
-
-    emit layoutAboutToBeChanged();
-
-    // recreate this array
-    m_sorted.resize(m_filter->database()->count());
-
-    // number columns are handled separately
-    if (m_isnumber[column])
-    {
-        // preload all game's tags
-        std::multimap<float,int> map;
-        for (int i=0; i<m_sorted.size(); ++i)
-        {
-            //const QModelIndex oldi = index(i,column);
-            int ig = m_filter->indexToGame(i);//oldi.row());
-            if (ig != -1)
-            {
-                // XXX inefficient
-                m_filter->database()->loadGameHeaders(ig, *m_game); m_gameIndex = ig;
-
-                QString tag = m_game->tag(m_columnTags.at(column));
-                map.insert(std::make_pair(tag.toFloat(), i));
-            }
-            else map.insert(std::make_pair(0.f,i));
-        }
-
-        std::multimap<float,int>::iterator m = map.begin();
-        for (int i=0; i<m_sorted.size(); ++i, ++m)
-            m_sorted[i] = m->second;
-    }
-    // compare by string
-    else
-    {
-        // preload all game's tags
-        std::multimap<QString,int> map;
-        for (int i=0; i<m_sorted.size(); ++i)
-        {
-            int ig = m_filter->indexToGame(i);
-            if (ig != -1)
-            {
-                m_filter->database()->loadGameHeaders(ig, *m_game); m_gameIndex = ig;
-
-                QString tag = m_game->tag(m_columnTags.at(column));
-                map.insert(std::make_pair(tag, i));
-            }
-            else map.insert(std::make_pair("",i));
-        }
-
-        std::multimap<QString,int>::iterator m = map.begin();
-        for (int i=0; i<m_sorted.size(); ++i, ++m)
-            m_sorted[i] = m->second;
-    }
-
-    // reverse array
-    if (order != Qt::AscendingOrder)
-    {
-        for (int i=0; i<m_sorted.size()/2; ++i)
-            std::swap(m_sorted[i], m_sorted[m_sorted.size()-1-i]);
-    }
-
-    emit layoutChanged();
-
-    /*
-    QModelIndexList from, to;
-    for (int i=0; i<m_sorted.size(); ++i)
-    {
-        from.push_back(index(i, column));
-        to.push_back(index(m_sorted[i],column));
-    }
-    changePersistentIndexList(from, to);
-    */
-/*
-    qSort(m_sorted.begin(), m_sorted.end(), [&](){ * XXX should use c++11 * });
-*/
-}
-#endif
 
