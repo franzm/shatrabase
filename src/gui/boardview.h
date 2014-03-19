@@ -180,6 +180,9 @@ private:
     int m_selectedSquare;
     /** square currently under mouse, or InvalidSquare */
     int m_hoverSquare;
+    /** from-Square of best move (setBestMove()), or InvalidSquare. */
+    int m_bestMoveFrom,
+        m_bestMoveTo;
     /** index into m_goals[] */
     unsigned int m_goal_index;
     /** trigger for animation from own action */

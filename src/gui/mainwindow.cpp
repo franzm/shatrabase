@@ -383,15 +383,26 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     }
     else
     {
-        if((obj == this) && (event->type() == QEvent::KeyPress))
+        if(event->type() == QEvent::KeyPress)
         {
-            QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-            if (keyEvent && (keyEvent->key() == Qt::Key_Escape ||
-                    keyEvent->key() == Qt::Key_Return ||
-                    keyEvent->key() == Qt::Key_Enter))
+            if (QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event))
             {
-                keyPressEvent(keyEvent);
-                return true;
+                /* XXX hard to trap
+                if (keyEvent->key() == Qt::Key_Space)
+                {
+                    qDebug() << " space";
+                }*/
+
+                if (obj == this)
+                {
+                    if (keyEvent->key() == Qt::Key_Escape ||
+                        keyEvent->key() == Qt::Key_Return ||
+                        keyEvent->key() == Qt::Key_Enter)
+                    {
+                        keyPressEvent(keyEvent);
+                        return true;
+                    }
+                }
             }
         }
         // standard event processing
@@ -460,6 +471,11 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
     {
 		m_nagText.clear();
         return;
+    }
+
+    if (e->key() == Qt::Key_Space)
+    {
+        qDebug() << "SPAcE";
     }
 
     if (game().atGameStart())
