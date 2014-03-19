@@ -21,6 +21,7 @@
 #include "filter.h"
 #include "game.h"
 
+
 /*
   The FilterModel class is an interface to Database used with Qt
   Model/View architecture
@@ -54,7 +55,7 @@ public:
     /** Changes current database. Resets any views. */
 	virtual void setFilter(Filter* filter);
 
-    virtual void sort(int column, Qt::SortOrder order);
+    //virtual void sort(int column, Qt::SortOrder order);
 
     /** Get the column tags. */
     const QStringList GetColumnTags()  { return m_columnTags; }
@@ -73,9 +74,9 @@ private:
 	Game* m_game;
     /** Current game index - used for caching */
     mutable int m_gameIndex;
-    /** sorted indices */
-    QVector<int> m_sorted;
-    QVector<bool> m_isnumber;
+    /* sorted indices */
+    //QVector<int> m_sorted;
+    //QVector<bool> m_isnumber;
 };
 
 #endif	// __FilterModelBase_H__

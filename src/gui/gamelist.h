@@ -19,6 +19,7 @@
 
 class Filter;
 class FilterModel;
+class SortFilterModel;
 
 /** @ingroup GUI
 The GameList class displays list of the games in current filter. It allows
@@ -71,7 +72,7 @@ protected: //Drag'n'Drop Support
     void startToDrag(const QModelIndex&);
 
 private:
-	FilterModel* m_model;
+    SortFilterModel* m_model;
 };
 
 #endif

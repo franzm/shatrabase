@@ -16,6 +16,8 @@
 
 #include <QtGui>
 
+#include <QSortFilterProxyModel>
+
 FilterModel::FilterModel(Filter* filter, QObject* parent)
         : QAbstractItemModel(parent), m_filter(filter), m_gameIndex(-1)
 {
@@ -47,6 +49,8 @@ FilterModel::FilterModel(Filter* filter, QObject* parent)
 	<< "ECO"
     << "Length";
 
+    /*
+    // for better sorting
     m_isnumber.push_back(1); // nr
     m_isnumber.push_back(0); // white
     m_isnumber.push_back(1); // w elo
@@ -59,7 +63,7 @@ FilterModel::FilterModel(Filter* filter, QObject* parent)
     m_isnumber.push_back(1); // result
     m_isnumber.push_back(1); // eco
     m_isnumber.push_back(1); // length
-
+    */
 	m_game = new Game;
 }
 
@@ -95,11 +99,19 @@ QVariant FilterModel::data(const QModelIndex &index, int role) const
             }
             if (role == Qt::DisplayRole)
             {
+                // return index number
                 if (index.column() == 0)
                     return i + 1;
-                else {
+                else
+                {
+                    // read game-header-info
                     QString tag = m_game->tag(m_columnTags.at(index.column()));
-                    if (tag == "?") tag.clear();
+                    if (tag == "?") return QString("");
+                    bool ok;
+                    // return as specific type?
+                    { float num = tag.toFloat(&ok); if (ok) return num; }
+                    { int num = tag.toInt(&ok); if (ok) return num; }
+                    // return as string
                     return tag;
                 }
             }
@@ -144,9 +156,12 @@ QModelIndex FilterModel::index(int row, int column, const QModelIndex& parent) c
 		return QModelIndex();
 
     // sorted index
-    if (m_sorted.size() == m_filter->database()->count())
+/*  if (m_sorted.size() == m_filter->database()->count())
+    {
+        qDebug() << "sorted " << row << "->" << m_sorted[row];
         row = m_sorted[row];
-
+    }
+*/
     return createIndex(row, column);
 }
 
@@ -163,7 +178,7 @@ Filter* FilterModel::filter()
 	return m_filter;
 }
 
-
+#ifdef DONE_DIFFERENTLY_NOW__
 void FilterModel::sort(int column, Qt::SortOrder order)
 {
     Q_ASSERT(column < m_isnumber.size());
@@ -182,8 +197,8 @@ void FilterModel::sort(int column, Qt::SortOrder order)
         std::multimap<float,int> map;
         for (int i=0; i<m_sorted.size(); ++i)
         {
-            const QModelIndex oldi = index(i,column);
-            int ig = m_filter->indexToGame(oldi.row());
+            //const QModelIndex oldi = index(i,column);
+            int ig = m_filter->indexToGame(i);//oldi.row());
             if (ig != -1)
             {
                 // XXX inefficient
@@ -244,5 +259,5 @@ void FilterModel::sort(int column, Qt::SortOrder order)
     qSort(m_sorted.begin(), m_sorted.end(), [&](){ * XXX should use c++11 * });
 */
 }
-
+#endif
 
