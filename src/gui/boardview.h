@@ -67,6 +67,8 @@ public slots:
 
     /** Tell the BoardView the best current move, e.g. from analysis. */
     void setBestMove(int from = InvalidSquare, int to = InvalidSquare);
+    /** execute current set best move. Returns true when there was one, false otherwise. */
+    bool execBestMove();
 
 signals:
     /** User clicked source and destination squares */

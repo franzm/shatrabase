@@ -222,7 +222,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_anim_length   (1),
     m_anim_t        (0)
 {    
-    qDebug() << "BoardPainter" << this;
+//    qDebug() << "BoardPainter" << this;
     setScene(m_scene);
 
     // get size of the bitmaps

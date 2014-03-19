@@ -406,7 +406,23 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             }
         }
         // standard event processing
-        return QObject::eventFilter(obj, event);
+        bool r = QObject::eventFilter(obj, event);
+
+        // uncatched keys?
+        if (!r && event->type() == QEvent::KeyPress)
+        {
+            if (QKeyEvent * keyEvent = dynamic_cast<QKeyEvent*>(event))
+            {
+                // delegate spacebar
+                if (keyEvent->key() == Qt::Key_Space)
+                {
+                    m_boardView->execBestMove();
+                    return true;
+                }
+            }
+
+        }
+        return r;
     }
 }
 
@@ -473,10 +489,13 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
         return;
     }
 
+    /*
     if (e->key() == Qt::Key_Space)
     {
         qDebug() << "SPAcE";
-    }
+        e->ignore();
+        QWidget::keyPressEvent(e);
+    }*/
 
     if (game().atGameStart())
         return;

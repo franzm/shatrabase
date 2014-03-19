@@ -146,8 +146,8 @@ void BoardView::setBoard(const Board& value,int from, int to)
             = InvalidSquare;
     m_dragged = InvalidPiece;
 
-    //m_bestMoveFrom = 14; // debug test
-    //m_bestMoveTo = 28;
+    m_bestMoveFrom = 14; // debug test
+    m_bestMoveTo = 28;
 
     // copy position
 	m_board = value;
@@ -596,6 +596,16 @@ void BoardView::wheelEvent(QWheelEvent* e)
     }*/
 }
 
+bool BoardView::execBestMove()
+{
+    if (m_bestMoveFrom && m_bestMoveTo)
+    {
+        emit moveMade(m_bestMoveFrom, m_bestMoveTo, Qt::LeftButton);
+        return true;
+    }
+    return false;
+}
+
 void BoardView::keyPressEvent(QKeyEvent * e)
 {
     // F2 for closing external window
@@ -608,9 +618,8 @@ void BoardView::keyPressEvent(QKeyEvent * e)
     // execute best move
     else if (e->key() == Qt::Key_Space)
     {
-        if (m_bestMoveFrom && m_bestMoveTo)
+        if (execBestMove())
         {
-            emit moveMade(m_bestMoveFrom, m_bestMoveTo, Qt::LeftButton);
             e->accept();
             return;
         }
