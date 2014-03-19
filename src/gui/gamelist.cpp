@@ -42,11 +42,11 @@ GameList::GameList(Filter* filter, QWidget* parent)
 #else
     horizontalHeader()->setSectionsClickable(true);
 #endif
-    connect(horizontalHeader(), SIGNAL(sectionClicked(int)), SLOT(simpleSearch(int)));
-
+    //connect(horizontalHeader(), SIGNAL(sectionClicked(int)), SLOT(sortByColumn(int)));
+                                                    //SLOT(simpleSearch(int)));
     slotReconfigure();
 
-    setSortingEnabled(false);
+    setSortingEnabled(true);
     setDragEnabled(true);
 }
 

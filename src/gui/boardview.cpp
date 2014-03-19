@@ -32,6 +32,8 @@ BoardView::BoardView(QWidget* parent, int flags)
     m_guessNextMove (true),
     m_selectedSquare (InvalidSquare),
     m_hoverSquare (InvalidSquare),
+    m_bestMoveFrom  (InvalidSquare),
+    m_bestMoveTo    (InvalidSquare),
     m_goal_index    (0),
     m_own_from      (0),
     m_own_to        (0),
@@ -138,9 +140,14 @@ void BoardView::setBoard(const Board& value,int from, int to)
 
     // reset gui flags
     m_selectedSquare
-    = m_dragStartSquare
-        = InvalidSquare;
+        = m_dragStartSquare
+        = m_bestMoveFrom
+        = m_bestMoveTo
+            = InvalidSquare;
     m_dragged = InvalidPiece;
+
+    //m_bestMoveFrom = 14; // debug test
+    //m_bestMoveTo = 28;
 
     // copy position
 	m_board = value;
@@ -180,6 +187,28 @@ const BoardTheme& BoardView::theme() const
 {
     return m_theme;
 }
+
+
+void BoardView::setBestMove(int from, int to)
+{
+    if (from == InvalidSquare || to == InvalidSquare)
+        return;
+
+    m_bestMoveFrom = from;
+    m_bestMoveTo = to;
+    /*
+    // find index of the supplied move in own movelist
+    for (size_t i=0; i<m_moves.size(); ++i)
+        if (m_moves[i].from == from &&
+                m_moves[i].to == to)
+    {
+        // set m_goal_index (little hacky XXX)
+        m_goal_index = 0;
+        showGoals_(from, i);
+        break;
+    }*/
+}
+
 
 
 #if (0)
@@ -567,13 +596,33 @@ void BoardView::wheelEvent(QWheelEvent* e)
     }*/
 }
 
+bool BoardView::execBestMove()
+{
+    if (m_bestMoveFrom && m_bestMoveTo)
+    {
+        emit moveMade(m_bestMoveFrom, m_bestMoveTo, Qt::LeftButton);
+        return true;
+    }
+    return false;
+}
+
 void BoardView::keyPressEvent(QKeyEvent * e)
 {
+    // F2 for closing external window
     if (e->key()==Qt::Key_F2 && m_isExternal)
     {
         e->accept();
         close(); // close event will signal mainwindow and update menu-checkbox
         return;
+    }
+    // execute best move
+    else if (e->key() == Qt::Key_Space)
+    {
+        if (execBestMove())
+        {
+            e->accept();
+            return;
+        }
     }
     QWidget::keyPressEvent(e);
 }
@@ -636,7 +685,16 @@ void BoardView::showGoals_(Square s, int gidx)
 
     // set goal-index
     if (gidx < 0)
+    {
         m_goal_index = 0;
+        // set to best-move?
+        if (m_bestMoveFrom == s)
+        {
+            for (size_t i=0; i<squares.size(); ++i)
+                if (squares[i] == m_bestMoveTo)
+                    { m_goal_index = i; break; }
+        }
+    }
     else if (gidx > 0 && squares.size())
     {
         m_goal_index = (m_goal_index + gidx) % squares.size();

@@ -376,27 +376,75 @@ MainWindow::~MainWindow()
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
+    //qDebug() << " filter " << obj << " " << event;
     if (event->type() == QEvent::FileOpen)
     {
         openDatabaseUrl(static_cast<QFileOpenEvent*>(event)->file(),false);
         return true;
     }
-    else
+
+    /*
+    if (event->type() == QEvent::ShortcutOverride)
     {
-        if((obj == this) && (event->type() == QEvent::KeyPress))
+        if (QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event))
         {
-            QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-            if (keyEvent && (keyEvent->key() == Qt::Key_Escape ||
-                    keyEvent->key() == Qt::Key_Return ||
-                    keyEvent->key() == Qt::Key_Enter))
+            if (keyEvent->key() == Qt::Key_Space)
             {
-                keyPressEvent(keyEvent);
+                m_boardView->execBestMove();
                 return true;
             }
         }
+    }*/
+
+    // standard event processing
+    return QObject::eventFilter(obj, event);
+
+#ifdef WHAT_IS_THIS_FOR_QESTIONMARK
+    else
+    {
+        if(event->type() == QEvent::KeyPress)
+        {
+            if (QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event))
+            {
+                /* XXX hard to trap
+                if (keyEvent->key() == Qt::Key_Space)
+                {
+                    qDebug() << " space";
+                }*/
+
+                if (obj == this)
+                {
+                    if (keyEvent->key() == Qt::Key_Escape ||
+                        keyEvent->key() == Qt::Key_Return ||
+                        keyEvent->key() == Qt::Key_Enter)
+                    {
+                        keyPressEvent(keyEvent);
+                        return true;
+                    }
+                }
+            }
+        }
         // standard event processing
-        return QObject::eventFilter(obj, event);
+        bool r = QObject::eventFilter(obj, event);
+
+        // uncatched keys?
+        if (!r && event->type() == QEvent::KeyPress)
+        {
+            //keyPressEvent(e);
+            if (QKeyEvent * keyEvent = dynamic_cast<QKeyEvent*>(event))
+            {
+                // delegate spacebar
+                if (keyEvent->key() == Qt::Key_Space)
+                {
+                    m_boardView->execBestMove();
+                    return true;
+                }
+            }
+
+        }
+        return r;
     }
+#endif
 }
 
 void MainWindow::resizeEvent(QResizeEvent * e)
@@ -456,24 +504,42 @@ void MainWindow::closeEvent(QCloseEvent* e)
 
 void MainWindow::keyPressEvent(QKeyEvent *e)
 {
+    //qDebug() << "key " << e;
+
     if ((e->key() == Qt::Key_Escape) || (e->key() == Qt::Key_Backspace))
     {
 		m_nagText.clear();
+        e->accept();
+        return;
+    }
+
+    // XXX this is actually never reached,
+    // seems like ChessBrowser is eating the spacebar
+    if (e->key() == Qt::Key_Space)
+    {
+        e->accept();
+        // delegate spacebar
+        m_boardView->execBestMove();
         return;
     }
 
     if (game().atGameStart())
+    {
+        e->accept();
         return;
+    }
 
     if (e->key() == Qt::Key_Delete)
     {
         game().clearNags();
         slotGameChanged();
+        e->accept();
         return;
     }
 
     if (e->text().isEmpty())
     {
+        e->accept();
         return;
     }
 
@@ -488,6 +554,8 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
         game().addNag(NagSet::fromString(m_nagText));
         slotGameChanged();
     }
+
+    QWidget::keyPressEvent(e);
 }
 /*
 void MainWindow::resizeEvent()

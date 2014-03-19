@@ -50,7 +50,6 @@ public:
         :   QGraphicsPixmapItem(pixmap, parent),
             square    (square),
             overlay   (0),
-            overlay2  (0),
             frame     (false),
             highlights(0),
             temdek    (false)
@@ -60,9 +59,7 @@ public:
 
     const QPixmap
     /** use for specific square decoration */
-        * overlay,
-    /** use for specific flags */
-        * overlay2;
+        * overlay;
 
     bool frame;
     QPen framePen;
@@ -88,8 +85,6 @@ protected:
         // overlay graphic
         if (overlay && !overlay->isNull())
             painter->drawPixmap(0,0,*overlay);
-        if (overlay2 && !overlay2->isNull())
-            painter->drawPixmap(0,0,*overlay2);
 
         // hover
         if (highlights & BoardPainter::H_HOVER)
@@ -157,7 +152,8 @@ public:
         :   QGraphicsPixmapItem(pixmap, parent),
             piece  (piece),
             square (square),
-            animate(false)
+            animate(false),
+            overlay(0)
     { }
 
     /** associated Piece */
@@ -168,6 +164,8 @@ public:
         squareTo;
     /** should this piece be animated (square > squareTo) */
     bool animate;
+
+    const QPixmap * overlay;
 
     /** Sets 180 rotation on/off */
     void setRotate(bool doit)
@@ -183,6 +181,14 @@ public:
         setTransform(t);
     }
 
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+    {
+        QGraphicsPixmapItem::paint(painter, option, widget);
+
+        // draw overlay
+        if (overlay && !overlay->isNull())
+            painter->drawPixmap(0,0,*overlay);
+    }
 };
 
 
@@ -216,7 +222,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_anim_length   (1),
     m_anim_t        (0)
 {    
-    qDebug() << "BoardPainter" << this;
+//    qDebug() << "BoardPainter" << this;
     setScene(m_scene);
 
     // get size of the bitmaps
@@ -391,12 +397,6 @@ void BoardPainter::createBoard_(const Board& board)
             s->overlay = &m_theme->towerEmboss();
         }
 
-        // set urgent
-        if (board.isUrgent(i))
-        {
-            s->overlay2 = &m_theme->urgent();
-        }
-
         // number display
         if (m_do_square_numbers)
         {
@@ -440,6 +440,12 @@ void BoardPainter::createPieces_(const Board& board)
 
         PieceItem * item = new PieceItem(p, i, pm);
         item->setPos(squarePos(i));
+
+        // set urgent flag
+        if (board.isUrgent(i))
+        {
+            item->overlay = &m_theme->urgent();
+        }
 
         // add to scene
         m_scene->addItem(item);

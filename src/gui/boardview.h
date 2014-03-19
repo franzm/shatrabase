@@ -65,6 +65,11 @@ public slots:
     /** Apply the settings for the board. */
     void configure();
 
+    /** Tell the BoardView the best current move, e.g. from analysis. */
+    void setBestMove(int from = InvalidSquare, int to = InvalidSquare);
+    /** execute current set best move. Returns true when there was one, false otherwise. */
+    bool execBestMove();
+
 signals:
     /** User clicked source and destination squares */
     void moveMade(Square from, Square to, int button);
@@ -177,6 +182,9 @@ private:
     int m_selectedSquare;
     /** square currently under mouse, or InvalidSquare */
     int m_hoverSquare;
+    /** from-Square of best move (setBestMove()), or InvalidSquare. */
+    int m_bestMoveFrom,
+        m_bestMoveTo;
     /** index into m_goals[] */
     unsigned int m_goal_index;
     /** trigger for animation from own action */
