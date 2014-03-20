@@ -39,6 +39,8 @@
 #include "tableview.h"
 #include "toolmainwindow.h"
 
+#include "histogram.h"
+
 #include <time.h>
 
 #include <QFileDialog>
@@ -178,6 +180,15 @@ MainWindow::MainWindow() : QMainWindow(),
 	m_menuView->addAction(gameListDock->toggleViewAction());
 	gameListDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::Key_L);
     connect(m_gameList, SIGNAL(raiseRequest()), gameListDock, SLOT(raise()));
+
+    /* Database stats */
+    DockWidgetEx* statsDock = new DockWidgetEx(tr("Database Statistics"), this);
+    statsDock->setObjectName("DatabaseStats");
+    m_stats = new Histogram(statsDock);
+    m_stats->setMinimumSize(150, 100);
+    statsDock->setWidget(m_stats);
+    addDockWidget(Qt::RightDockWidgetArea, statsDock);
+    QVector<float> v(1000);
 
     // Player List
     DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);

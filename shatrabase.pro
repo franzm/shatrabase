@@ -107,7 +107,8 @@ HEADERS += src/database/board.h \
     src/gui/boardpainter.h \
     src/gui/boardstyle.h \
     src/gui/sortfiltermodel.h \
-    src/database/databasemodel.h
+    src/database/databasemodel.h \
+    src/gui/histogram.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -181,7 +182,8 @@ SOURCES += src/database/board.cpp \
     src/gui/boardpainter.cpp \
     src/gui/boardstyle.cpp \
     src/gui/sortfiltermodel.cpp \
-    src/database/databasemodel.cpp
+    src/database/databasemodel.cpp \
+    src/gui/histogram.cpp
 
 TEMPLATE = app
 INCLUDEPATH += src/database

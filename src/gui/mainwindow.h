@@ -44,6 +44,7 @@ class QToolBar;
 class SaveDialog;
 class TableView;
 class ToolMainWindow;
+class Histogram;
 
 /*
 The MainWindow class represents main Shatrabase window. */
@@ -349,6 +350,7 @@ private:
     PlayerListWidget* m_playerList;
     EventListWidget* m_eventList;
     DatabaseList* m_databaseList;
+    Histogram* m_stats;
 	SaveDialog* m_saveDialog;
 	/* Main gui parts */
 	BoardView* m_boardView;

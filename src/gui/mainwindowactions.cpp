@@ -17,6 +17,7 @@
 #include "chessbrowser.h"
 #include "databaseinfo.h"
 #include "databaselist.h"
+#include "databasemodel.h"
 #include "editaction.h"
 #include "eventlistwidget.h"
 #include "filtermodel.h"
@@ -34,6 +35,7 @@
 #include "settings.h"
 #include "tablebase.h"
 #include "tableview.h"
+#include "histogram.h"
 #include "ushiengine.h"
 #include "version.h"
 
@@ -1049,6 +1051,7 @@ void MainWindow::slotDatabaseChanged()
     gameLoad(gameIndex()>=0 ? gameIndex() : 0, true, true);
     m_playerList->setDatabase(database());
     m_eventList->setDatabase(database());
+    m_stats->setDatabaseModel(*static_cast<DatabaseModel*>(m_gameList->model()));
 	emit databaseChanged(databaseInfo());
 }
 
