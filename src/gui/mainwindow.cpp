@@ -165,7 +165,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Game List */
     DockWidgetEx* gameListDock = new DockWidgetEx(tr("Game List"), this);
 	gameListDock->setObjectName("GameList");
-	m_gameList = new GameList(databaseInfo()->filter(), gameListDock);
+    m_gameList = new GameList(databaseInfo(), gameListDock);
 	m_gameList->setMinimumSize(150, 100);
 	connect(m_gameList, SIGNAL(selected(int)), SLOT(slotFilterLoad(int)));
 	connect(m_gameList, SIGNAL(searchDone()), SLOT(slotFilterChanged()));
@@ -309,9 +309,8 @@ MainWindow::MainWindow() : QMainWindow(),
 		resize(800, 600);
     AppSettings->beginGroup("/MainWindow/");
 	m_boardSplitter->restoreState(AppSettings->value("BoardSplit").toByteArray());
-    m_gameList->m_FilterActive = AppSettings->getValue("FilterFollowsGame").toBool();
+    // XXX remove app setting: m_gameList->m_FilterActive = AppSettings->getValue("FilterFollowsGame").toBool();
 	AppSettings->endGroup();
-    m_toggleFilter->setChecked(m_gameList->m_FilterActive);
     m_oldSize = size();
     m_oldPos = pos();
 
@@ -492,7 +491,6 @@ void MainWindow::closeEvent(QCloseEvent* e)
             AppSettings->setLayout(this);
         AppSettings->beginGroup("/MainWindow/");
 		AppSettings->setValue("BoardSplit", m_boardSplitter->saveState());
-        AppSettings->setValue("FilterFollowsGame", m_gameList->m_FilterActive);
         AppSettings->setValue("GameToolBar", m_gameToolBar->isVisible());
         AppSettings->endGroup();
     }

@@ -55,7 +55,7 @@ public:
     /** No tree - always return self */
 	virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     /** No children */
-	virtual bool hasChildren(const QModelIndex& parent = QModelIndex()) const {return !parent.isValid();}
+    virtual bool hasChildren(const QModelIndex& parent = QModelIndex()) const { return !parent.isValid(); }
     /** Associated filter */
 	virtual Filter* filter();
     /** Changes current database. Resets any views. */

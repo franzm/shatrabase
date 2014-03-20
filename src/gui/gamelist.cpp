@@ -12,12 +12,11 @@
  ***************************************************************************/
 
 #include "database.h"
-#include "filtermodel.h"
+#include "databasemodel.h"
+#include "databaseinfo.h"
 #include "game.h"
 #include "gamelist.h"
 #include "GameMimeData.h"
-#include "quicksearch.h"
-#include "search.h"
 #include "settings.h"
 #include "sortfiltermodel.h"
 
@@ -27,17 +26,19 @@
 #include <QPixmap>
 
 
-GameList::GameList(Filter* filter, QWidget* parent)
-    : TableView(parent)
+GameList::GameList(DatabaseInfo* db, QWidget* parent)
+    : TableView(parent),
+      m_db  (db),
+      m_model   (0)
 {
 	setObjectName("GameList");
 	setWindowTitle(tr("Game list"));
 
-    FilterModel * fm = new FilterModel(filter, this);
-    m_model = new SortFilterModel(this);
-    m_model->setSourceModel(fm);
+    m_model = new DatabaseModel(m_db->database(), this);
+    m_sort = new SortFilterModel(this);
+    m_sort->setSourceModel(m_model);
 
-    setModel(m_model);
+    setModel(m_sort);
 	connect(this, SIGNAL(clicked(const QModelIndex&)), SLOT(itemSelected(const QModelIndex&)));
 	connect(this, SIGNAL(activated(const QModelIndex&)), SLOT(itemSelected(const QModelIndex&)));
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(slotContextMenu(const QPoint&)));
@@ -58,18 +59,22 @@ GameList::GameList(Filter* filter, QWidget* parent)
 
 GameList::~GameList()
 {
-    delete m_model;
 }
 
 void GameList::itemSelected(const QModelIndex& index)
 {
-    emit selected(m_model->sourceFilter()->filter()->indexToGame(index.row()));
+    emit selected(index.row());
     // XXX startToDrag(index);
 }
 
-void GameList::setFilter(Filter* filter)
+void GameList::setDatabaseInfo(DatabaseInfo* dbi)
 {
-    m_model->sourceFilter()->setFilter(filter);
+    m_model->deleteLater();
+
+    m_db = dbi;
+    m_model = new DatabaseModel(m_db->database(), this);
+    m_sort->setSourceModel(m_model);
+
     emit raiseRequest();
 }
 
@@ -85,15 +90,15 @@ void GameList::slotContextMenu(const QPoint& pos)
         menu.addSeparator();
         QAction* deleteAction = menu.addAction(tr("Delete game"), this, SLOT(slotDeleteGame()));
         deleteAction->setCheckable(true);
-        deleteAction->setEnabled(!m_model->sourceFilter()->filter()->database()->isReadOnly());
-        int n = m_model->sourceFilter()->filter()->indexToGame(cell.row());
-        deleteAction->setChecked(m_model->sourceFilter()->filter()->database()->deleted(n));
+        deleteAction->setEnabled(!m_db->database()->isReadOnly());
+        deleteAction->setChecked(m_db->database()->deleted(cell.row()));
         menu.exec(mapToGlobal(pos));
     }
 }
 
 void GameList::simpleSearch(int tagid)
 {
+    /*
 	QuickSearchDialog dialog(this);
 
 	dialog.setTag(tagid);
@@ -153,11 +158,13 @@ void GameList::simpleSearch(int tagid)
 	}
     updateFilter();
 	emit searchDone();
+    */
 }
 
 /* Select and show current game in the list */
 void  GameList::slotFilterListByPlayer(QString s)
 {
+    /*
     TagSearch ts(m_model->sourceFilter()->filter()->database(), "White", s);
     TagSearch ts2(m_model->sourceFilter()->filter()->database(), "Black", s);
     m_model->sourceFilter()->filter()->executeSearch(ts);
@@ -165,19 +172,23 @@ void  GameList::slotFilterListByPlayer(QString s)
     updateFilter();
     emit raiseRequest();	
     emit searchDone();
+    */
 }
 
 void  GameList::slotFilterListByEvent(QString s)
 {
+    /*
     TagSearch ts(m_model->sourceFilter()->filter()->database(), "Event", s);
     m_model->sourceFilter()->filter()->executeSearch(ts);
     updateFilter();
     emit raiseRequest();
     emit searchDone();
+    */
 }
 
 void  GameList::slotFilterListByEventPlayer(QString event, QString player)
 {
+    /*
     TagSearch ts(m_model->sourceFilter()->filter()->database(), "White", player);
     TagSearch ts2(m_model->sourceFilter()->filter()->database(), "Black", player);
     TagSearch ts3(m_model->sourceFilter()->filter()->database(), "Event", event);
@@ -187,20 +198,18 @@ void  GameList::slotFilterListByEventPlayer(QString event, QString player)
     updateFilter();
     emit raiseRequest();
     emit searchDone();
+    */
 }
 
 void GameList::selectGame(int index)
 {
-    int i = m_model->sourceFilter()->filter()->gameToIndex(index);
-	if (i != -1) {
-		setCurrentIndex(m_model->index(i, 0));
-		selectRow(i);
-	}
+    setCurrentIndex(m_sort->index(index, 0));
+    selectRow(index);
 }
 
 void GameList::updateFilter()
 {
-    m_model->sourceFilter()->setFilter(m_model->sourceFilter()->filter());
+    //m_model->sourceFilter()->setFilter(m_model->sourceFilter()->filter());
 }
 
 void GameList::slotCopyGame()

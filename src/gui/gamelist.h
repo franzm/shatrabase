@@ -17,8 +17,8 @@
 #include "tableview.h"
 #include "game.h"
 
-class Filter;
-class FilterModel;
+class DatabaseInfo;
+class DatabaseModel;
 class SortFilterModel;
 
 /** @ingroup GUI
@@ -29,14 +29,13 @@ class GameList : public TableView
 {
 	Q_OBJECT
 public:
-	GameList(Filter* filter, QWidget* parent = 0);
+    GameList(DatabaseInfo * db, QWidget* parent = 0);
     ~GameList();
-    bool m_FilterActive;
 
     /* Set current database */
 public slots:
-    /* Change current filter/database */
-	void setFilter(Filter* filter);
+    /* Change current database */
+    void setDatabaseInfo(DatabaseInfo* db);
     /* Update filter (called after changing filter outside) */
 	void updateFilter();
     /* Perform simple search */
@@ -72,7 +71,9 @@ protected: //Drag'n'Drop Support
     void startToDrag(const QModelIndex&);
 
 private:
-    SortFilterModel* m_model;
+    DatabaseInfo * m_db;
+    DatabaseModel * m_model;
+    SortFilterModel * m_sort;
 };
 
 #endif
