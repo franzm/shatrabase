@@ -103,9 +103,11 @@ void MemoryDatabase::parseGame()
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
     m_index.setValidFlag(n, parseMoves(game));
-//    qDebug() << "mcount " << game->plyCount() << " " << n;
+    //qDebug() << "mcount " << game->plyCount() << " " << n;
+    //exit(-1);
     m_index.setTag("Length", QString::number((game->plyCount()+1) / 2), n);
-    if (g_autoResult0nLoad && game->result() == ResultUnknown) {
+    if (g_autoResult0nLoad && game->result() == ResultUnknown)
+    {
         m_index.setTag("Result", resultString(game->board().gameResult()), n);
         g_resModified = true;
     }

@@ -63,7 +63,8 @@ GameList::~GameList()
 
 void GameList::itemSelected(const QModelIndex& index)
 {
-    emit selected(index.row());
+    //const int i = m_sort->data(m_sort->index(index.row(), 0)).toInt() - 1;
+    emit selected(m_sort->mapToSource(index).row());
     // XXX startToDrag(index);
 }
 
@@ -203,8 +204,9 @@ void  GameList::slotFilterListByEventPlayer(QString event, QString player)
 
 void GameList::selectGame(int index)
 {
-    setCurrentIndex(m_sort->index(index, 0));
-    selectRow(index);
+    const QModelIndex i = m_sort->mapFromSource(m_model->index(index,0,QModelIndex()));
+    setCurrentIndex(i);
+    selectRow(i.row());
 }
 
 void GameList::updateFilter()
