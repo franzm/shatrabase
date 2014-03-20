@@ -23,13 +23,38 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <QPainter>
 #include <QDebug>
+#include <QMenu>
+#include <QAction>
 
 #include <map>
 
 Histogram::Histogram(QWidget *parent) :
     QWidget(parent)
 {
+    // set dark background
+    QPalette p = palette();
+    p.setColor(QPalette::Background, QColor(70,70,70));
+    setPalette(p);
+    setAutoFillBackground(true);
+
+    // enable contextmenu
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
+                this, SLOT(showContextMenu(const QPoint&)));
+
+    // XXX need to refacture this
+    visible_.insert(tr("Moves"), true);
+    visible_.insert(tr("Pieces White"), true);
+    visible_.insert(tr("Pieces Black"), true);
 }
+
+// ---------- persistance ------------
+
+/*
+void Histogram::configure()
+{
+
+}*/
 
 
 // -------- data handling ------------
@@ -60,6 +85,7 @@ void Histogram::setData(const QString key, const QVector<float>& values)
     }
 
     i.value().v = values;
+    i.value().key = key;
     initData_(i.value());
 }
 
@@ -67,7 +93,10 @@ void Histogram::setData(const QString key, const QVector<float>& values)
 void Histogram::initData_(Data &d) const
 {
     d.average = d.min_v = d.max_v;
+    d.visible = false;
     if (!d.v.size()) return;
+
+    d.visible = visible_[d.key];
 
     // get min/max/average
     d.max_v = d.min_v = d.v[0];
@@ -79,8 +108,12 @@ void Histogram::initData_(Data &d) const
     }
     d.average /= d.v.size();
 
+    // display scale [0,1]
     const float range = (d.max_v - d.min_v);
     d.scaley = (range != 0)? 1.f / range : 1.f;
+
+    d.pen = QPen(QColor((rand()&63)+192, (rand()&63)+192, (rand()&63)+192));
+    d.pen.setWidth(1);
 }
 
 
@@ -99,6 +132,12 @@ void Histogram::setDatabaseModel(const DatabaseModel & db)
         v.toInt(&ok);
         if (ok)
         {
+            QString key = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
+
+            // don't add what's not predefined
+            if (visible_.find(key) == visible_.end())
+                continue;
+
             // create histogram
             std::map<int,int> set;
             for (int i=0; i<rows; ++i)
@@ -113,10 +152,10 @@ void Histogram::setDatabaseModel(const DatabaseModel & db)
             for (int i=0; i<vec.size(); ++i, ++k)
                 vec[i] = k->second;
 
-            QString key = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
             setData(key, vec);
         }
     }
+
     update();
 }
 
@@ -129,18 +168,26 @@ void Histogram::paintEvent(QPaintEvent * e)
     QWidget::paintEvent(e);
 
     for (ConstIter i = map_.begin(); i!=map_.end(); ++i)
-        paintCurve(i.value());
+        if (i.value().visible)
+            paintCurve(i.value());
+}
+
+void Histogram::mouseMoveEvent(QMouseEvent * e)
+{
+    QWidget::mouseMoveEvent(e);
 }
 
 void Histogram::paintCurve(const Data &data)
 {
     QPainter p(this);
 
+    p.setPen(data.pen);
+
     int x0 = 0, y0 = 0, x, y;
     for (int i = 0; i<data.v.size(); ++i)
     {
-        x = (float)i / data.v.size() * width();
-        y = (1.f - (data.v[i] - data.min_v) * data.scaley) * height();
+        x = 1 + (float)i / data.v.size() * (width()-2);
+        y = height() - 2 - (data.v[i] - data.min_v) * data.scaley * (height()-3);
 
         if (i!=0)
         {
@@ -151,4 +198,57 @@ void Histogram::paintCurve(const Data &data)
 }
 
 
+void Histogram::showContextMenu(const QPoint& pos)
+{
+    // create context menu
+
+    QMenu headerMenu;
+
+    QAction* showAll = headerMenu.addAction(tr("Show all"));
+    headerMenu.addSeparator();
+    QAction* hideAll = headerMenu.addAction(tr("Hide all"));
+    headerMenu.addSeparator();
+
+    showAll->setEnabled(!map_.empty());
+    hideAll->setEnabled(!map_.empty());
+
+    QVector<QAction*> showKey;
+    for (ConstIter i = map_.begin(); i!=map_.end(); ++i)
+    {
+        QAction * a = headerMenu.addAction(i.key());
+        a->setCheckable(true);
+        a->setChecked(i.value().visible);
+        a->setData(QVariant(i.key()));
+    }
+
+    // execute
+    QAction* selectedItem = headerMenu.exec(mapToGlobal(pos));
+
+    if (selectedItem == hideAll)
+    {
+        for (Iter i = map_.begin(); i!=map_.end(); ++i)
+            i.value().visible = false;
+    }
+    if (selectedItem == showAll)
+    {
+        for (Iter i = map_.begin(); i!=map_.end(); ++i)
+            i.value().visible = true;
+    }
+    else if (selectedItem && (QMetaType::Type)selectedItem->data().type() == QMetaType::QString)
+    {
+        // make data item (in-)visible
+        const QString key = selectedItem->data().toString();
+        Iter i = map_.find(key);
+        if (i!=map_.end())
+        {
+            i.value().visible = selectedItem->isChecked();
+        }
+        // set visible_[] flag
+        QMap<QString,bool>::Iterator j = visible_.find(key);
+        if (j!=visible_.end())
+            j.value() = selectedItem->isChecked();
+    }
+
+    update();
+}
 

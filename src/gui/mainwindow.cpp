@@ -184,11 +184,10 @@ MainWindow::MainWindow() : QMainWindow(),
     /* Database stats */
     DockWidgetEx* statsDock = new DockWidgetEx(tr("Database Statistics"), this);
     statsDock->setObjectName("DatabaseStats");
-    m_stats = new Histogram(statsDock);
+    m_stats = new Histogram(this);
     m_stats->setMinimumSize(150, 100);
     statsDock->setWidget(m_stats);
     addDockWidget(Qt::RightDockWidgetArea, statsDock);
-    QVector<float> v(1000);
 
     // Player List
     DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);
@@ -437,6 +436,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         // standard event processing
         bool r = QObject::eventFilter(obj, event);
 
+        // XXX tried but didnt work
         // uncatched keys?
         if (!r && event->type() == QEvent::KeyPress)
         {

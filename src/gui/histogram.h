@@ -25,6 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QMap>
 #include <QString>
 #include <QVector>
+#include <QPen>
+
 
 class DatabaseModel;
 
@@ -39,6 +41,8 @@ public:
 
     struct Data
     {
+        QString key;
+        /** vector of floats */
         QVector<float> v;
         /** min and max values */
         float min_v, max_v,
@@ -46,14 +50,22 @@ public:
             average,
         /** multiplier to get [0,1] */
             scaley;
+
+        QPen pen;
+
+        bool visible;
     };
 
     // -------- ctor ---------------
 
     explicit Histogram(QWidget *parent = 0);
 
-    // ------ raw data handling ----------
+    // --------- persistance -------------
+//public slots:
+//    void configure();
 
+    // ------ raw data handling ----------
+public:
     /** Clears all */
     void clearData();
 
@@ -72,14 +84,16 @@ public:
 signals:
 
 public slots:
+    void showContextMenu(const QPoint& pos);
 
 protected:
 
     virtual void paintEvent(QPaintEvent * e);
+    virtual void mouseMoveEvent(QMouseEvent * e);
 
     // ------------- stuff ------------
 
-    /** Call after assigning vector to d */
+    /** Call after assigning Data::key and Data::v */
     void initData_(Data& d) const;
 
     void paintCurve(const Data& data);
@@ -87,6 +101,8 @@ protected:
     QMap<QString, Data> map_;
     typedef QMap<QString, Data>::Iterator Iter;
     typedef QMap<QString, Data>::ConstIterator ConstIter;
+
+    QMap<QString, bool> visible_;
 };
 
 #endif // HISTOGRAM_H
