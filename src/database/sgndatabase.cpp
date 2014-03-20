@@ -38,12 +38,14 @@ SgnDatabase::~SgnDatabase()
 
 bool SgnDatabase::open(const QString& filename, bool utf8)
 {
-	if (m_isOpen) {
+    if (m_isOpen)
+    {
 		return false;
 	}
     m_break = false;
 	m_filename = filename;
-    if (openFile(filename)) {
+    if (openFile(filename))
+    {
         m_isOpen = true;
         m_utf8 = utf8;
 		return true;
@@ -332,7 +334,7 @@ void SgnDatabase::loadGameMoves(int index, Game& game)
 
 bool SgnDatabase::loadGame(int index, Game& game)
 {
-	if (!m_isOpen || index >= m_count) {
+    if (!m_isOpen || index >= m_count) {
 		return false;
 	}
 
@@ -418,7 +420,8 @@ void SgnDatabase::parseTagsIntoIndex()
 {
     m_index.setTag("Length", "0", m_count - 1);
     m_index.setTag("Result", "*", m_count - 1);
-	while (m_currentLine.startsWith(QString("[")) && !m_file->atEnd()) {
+    while (m_currentLine.startsWith(QString("[")) && !m_file->atEnd())
+    {
 		int tagend = m_currentLine.indexOf(' ');
 		QString tag = m_currentLine.mid(1, tagend - 1);
 		int valuestart = m_currentLine.indexOf('\"', tagend + 1);
@@ -444,7 +447,7 @@ void SgnDatabase::parseTagsIntoIndex()
 			value = "1/2-1/2";
 
 		// update index
-		m_index.setTag(tag, value, m_count - 1);
+        m_index.setTag(tag, value, m_count - 1);
 
 		if (!hasNextTag)
 			readLine();
@@ -488,6 +491,15 @@ bool SgnDatabase::parseMoves(Game* game)
         }
 //        if(true) game->setResult(game->board().gameResult());
     }
+
+    /*
+    m_index.setTag("Length", QString::number((game->plyCount()+1) / 2), m_count - 1);
+    if (g_autoResult0nLoad && game->result() == ResultUnknown)
+    {
+        m_index.setTag("Result", resultString(game->board().gameResult()), m_count - 1);
+        g_resModified = true;
+    }*/
+
     return true;
 }
 
@@ -659,7 +671,7 @@ void SgnDatabase::parseToken(Game* game, const QString& token)
         }
 
 	default:
-        qDebug() << token;
+        //qDebug() << token;
         parseDefaultToken(game,token);
         break;
 	}

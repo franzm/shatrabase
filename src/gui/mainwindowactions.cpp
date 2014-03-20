@@ -218,12 +218,15 @@ void MainWindow::slotFileCloseName(QString fname)
 
 void MainWindow::slotFileExportFilter()
 {
+    /* XXX
 	int format;
 	QString filename = exportFileName(format);
-	if (!filename.isEmpty()) {
+    if (!filename.isEmpty())
+    {
 		Output output((Output::OutputType)format);
-		output.output(filename, *(databaseInfo()->filter()));
+        output.output(filename, *(databaseInfo()->filter()));
 	}
+    */
 }
 
 void MainWindow::slotFileExportAll()
@@ -572,13 +575,13 @@ void MainWindow::slotGameVarExit()
 
 void MainWindow::slotGameLoadFirst()
 {
-	gameLoad(databaseInfo()->filter()->indexToGame(0));
-	m_gameList->setFocus();
+    gameLoad(0);
+    m_gameList->setFocus();
 }
 
 void MainWindow::slotGameLoadLast()
 {
-	gameLoad(databaseInfo()->filter()->indexToGame(databaseInfo()->filter()->count() - 1));
+    gameLoad(databaseInfo()->database()->count() - 1);
 	m_gameList->setFocus();
 }
 
@@ -586,9 +589,7 @@ void MainWindow::slotGameLoadPrevious()
 {
     if (QuerySaveGame())
     {
-        int game = m_gameList->currentIndex().row();
-        game = databaseInfo()->filter()->indexToGame(game);
-        game = databaseInfo()->filter()->previousGame(game);
+        int game = m_gameList->currentIndex().row() - 1;
         if (game != -1)
         {
             gameLoad(game);
@@ -599,10 +600,8 @@ void MainWindow::slotGameLoadPrevious()
 
 void MainWindow::loadNextGame()
 {
-    int game = m_gameList->currentIndex().row();
-    game = databaseInfo()->filter()->indexToGame(game);
-    game = databaseInfo()->filter()->nextGame(game);
-    if (game != -1)
+    int game = m_gameList->currentIndex().row() + 1;
+    if (game < databaseInfo()->database()->count())
     {
         gameLoad(game);
         m_gameList->setFocus();
@@ -616,10 +615,10 @@ void MainWindow::slotGameLoadNext()
 
 void MainWindow::slotGameLoadRandom()
 {
-    if (databaseInfo()->filter()->count())
+    if (databaseInfo()->database()->count())
     {
-		int random = rand() % databaseInfo()->filter()->count();
-		gameLoad(databaseInfo()->filter()->indexToGame(random));
+        int r = rand() % databaseInfo()->database()->count();
+        gameLoad(r);
 		m_gameList->setFocus();
 	}
 }
@@ -925,12 +924,14 @@ void MainWindow::slotAutoPlayTimeout()
 
 void MainWindow::slotFilterChanged()
 {
+    /*
 	if (gameIndex() >= 0)
 		m_gameList->selectGame(gameIndex());
 	int count = databaseInfo()->filter()->count();
 	QString f = count == database()->count() ? "all" : QString::number(count);
 	m_statusFilter->setText(tr(" %1: %2/%3 ").arg(databaseName())
 				.arg(f).arg(database()->count()));
+    */
 }
 
 void MainWindow::slotFilterLoad(int index)
@@ -979,7 +980,7 @@ void MainWindow::copyGame(QString fileName, const Game& game)
             if (m_databases[i]->isValid())
             {
                 copyGame(i,game);
-                m_databases[i]->filter()->resize(m_databases[i]->database()->count(), true);
+                //XXXm_databases[i]->filter()->resize(m_databases[i]->database()->count(), true);
             }
             return;
         }
@@ -1017,9 +1018,11 @@ void MainWindow::slotDatabaseCopy(int preselect)
 		m_databases[target]->database()->appendGame(game());
 		break;
 	case CopyDialog::Filter:
+        /* XXX
         for (int i = 0; i < database()->count(); ++i)
 			if (databaseInfo()->filter()->contains(i) && database()->loadGame(i, g))
-				m_databases[target]->database()->appendGame(g);
+                m_databases[target]->database()->appendGame(g);
+        */
 		break;
 	case CopyDialog::AllGames:
         for (int i = 0; i < database()->count(); ++i)
@@ -1029,7 +1032,7 @@ void MainWindow::slotDatabaseCopy(int preselect)
 	default:
 		;
 	}
-    m_databases[target]->filter()->resize(m_databases[target]->database()->count(), true);
+    // XXX m_databases[target]->filter()->resize(m_databases[target]->database()->count(), true);
 }
 
 void MainWindow::slotDatabaseCopySingle()
@@ -1041,7 +1044,7 @@ void MainWindow::slotDatabaseChanged()
 {
     database()->index()->calculateCache();
     setWindowTitle(tr("%1 - Shatrabase").arg(databaseName()));
-	m_gameList->setFilter(databaseInfo()->filter());
+    m_gameList->setDatabaseInfo(databaseInfo());
 	slotFilterChanged();
     gameLoad(gameIndex()>=0 ? gameIndex() : 0, true, true);
     m_playerList->setDatabase(database());
@@ -1056,10 +1059,10 @@ void MainWindow::slotSearchTag()
 
 void MainWindow::slotSearchBoard()
 {
-	PositionSearch ps(databaseInfo()->filter()->database(), m_boardView->board());
+    PositionSearch ps(databaseInfo()->database(), m_boardView->board());
     m_openingTree->cancel(false);
     slotBoardSearchStarted();
-	databaseInfo()->filter()->executeSearch(ps);
+    // XXX databaseInfo()->filter()->executeSearch(ps);
     slotBoardSearchUpdate();
 }
 
@@ -1077,31 +1080,33 @@ void MainWindow::slotBoardSearchStarted()
 
 void MainWindow::slotSearchReverse()
 {
-	databaseInfo()->filter()->reverse();
+    /* XXX databaseInfo()->filter()->reverse();
 	m_gameList->updateFilter();
-	slotFilterChanged();
+    slotFilterChanged();
+    */
 }
 
 void MainWindow::slotSearchReset()
 {
-	databaseInfo()->filter()->setAll(1);
+    /* XXX databaseInfo()->filter()->setAll(1);
 	m_gameList->updateFilter();
-	slotFilterChanged();
+    slotFilterChanged(); */
 }
 
 void MainWindow::slotToggleFilter()
 {
-    m_gameList->m_FilterActive = m_toggleFilter->isChecked();
-    m_gameList->updateFilter();
+    /* XXX m_gameList->m_FilterActive = m_toggleFilter->isChecked();
+    m_gameList->updateFilter(); */
 }
 
 void MainWindow::slotTreeUpdate()
 {
+    /* XXX
     if (m_gameList->m_FilterActive)
     {
         m_gameList->updateFilter();
         slotFilterChanged();
-    }
+    } */
     finishOperation(tr("Tree updated."));
     if (m_bGameChange)
     {
@@ -1119,7 +1124,7 @@ void MainWindow::slotSearchTree()
 {
     if (m_openingTreeView->isVisible() )
     {
-    	m_openingTree->update(*databaseInfo()->filter(), m_boardView->board(), m_gameList->m_FilterActive);
+        // XXX m_openingTree->update(*databaseInfo()->filter(), m_boardView->board(), m_gameList->m_FilterActive);
 	}
 }
 
@@ -1152,16 +1157,18 @@ void MainWindow::slotDatabaseDeleteGame()
 
 void MainWindow::slotDatabaseDeleteFilter()
 {
-	database()->remove(*databaseInfo()->filter());
-	m_gameList->updateFilter();
+    /* XXX database()->remove(*databaseInfo()->filter());
+    m_gameList->updateFilter(); */
 }
 
 void MainWindow::slotDatabaseCompact()
 {
+    /* XXX
 	database()->compact();
 	databaseInfo()->resetFilter();
 	slotDatabaseChanged();
 	m_gameList->updateFilter();
+    */
 }
 
 void MainWindow::slotGetGameData(Game& g)

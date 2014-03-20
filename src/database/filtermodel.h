@@ -17,9 +17,12 @@
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 #include <QStringList>
+#include <QHash>
+#include <QVariant>
 
 #include "filter.h"
 #include "game.h"
+
 
 /*
   The FilterModel class is an interface to Database used with Qt
@@ -28,6 +31,10 @@
 class FilterModel: public QAbstractItemModel
 {
 	Q_OBJECT
+
+    /** bitshift for cache value.
+     *  Implicitly defines max number of columns!! */
+    static const int MAX_COLUMNS_SHIFT = 8;
 
 public:
     /** Constructs a FilterModel object using a pointer to a Filter */
@@ -48,13 +55,13 @@ public:
     /** No tree - always return self */
 	virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     /** No children */
-	virtual bool hasChildren(const QModelIndex& parent = QModelIndex()) const {return !parent.isValid();}
+    virtual bool hasChildren(const QModelIndex& parent = QModelIndex()) const { return !parent.isValid(); }
     /** Associated filter */
 	virtual Filter* filter();
     /** Changes current database. Resets any views. */
 	virtual void setFilter(Filter* filter);
 
-    virtual void sort(int column, Qt::SortOrder order);
+    //virtual void sort(int column, Qt::SortOrder order);
 
     /** Get the column tags. */
     const QStringList GetColumnTags()  { return m_columnTags; }
@@ -71,11 +78,12 @@ private:
     /** A pointer to a game object, to hold the retrieved information
 	 * about the game */
 	Game* m_game;
-    /** Current game index - used for caching */
-    mutable int m_gameIndex;
-    /** sorted indices */
-    QVector<int> m_sorted;
-    QVector<bool> m_isnumber;
+    /* Current game index - used for caching */
+    //mutable int m_gameIndex;
+    /** cache for game values */
+    typedef quint64 Hash;
+    mutable QHash<Hash, QVariant> m_cache;
+    typedef QHash<Hash, QVariant>::const_iterator CacheIter;
 };
 
 #endif	// __FilterModelBase_H__

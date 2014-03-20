@@ -17,7 +17,6 @@
 #include <QString>
 
 class Database;
-class Filter;
 
 /** @ingroup Database
 The DatabaseInfo class is a simple class to keep various database-related
@@ -43,8 +42,6 @@ public:
     bool isValid() const  {return m_bLoaded?m_database!=0:false;}
 	/** @return Database object */
     Database* database()  {return m_database;}
-	/** @return current filter */
-	Filter* filter()  {return m_filter;}
 	/** @return current game  */
 	Game& currentGame() {return m_game;}
     const Game& currentGame() const {return m_game;}
@@ -58,9 +55,6 @@ public:
 	in the database, game will be replaced, else if will be appended at the end. */
 	bool saveGame();
 
-	/** Resizes the filter to the number of games in the database and puts
-         *  all games in the filter.*/
-	void resetFilter();
     QString filePath() const { return m_filename; }
     bool IsLoaded() const { return m_bLoaded; }
     bool IsUtf8() const { return m_utf8; }
@@ -73,7 +67,6 @@ signals:
 
 private:
 	Database* m_database;
-	Filter* m_filter;
 	Game m_game;
 	QString m_filename;
 	int m_index;

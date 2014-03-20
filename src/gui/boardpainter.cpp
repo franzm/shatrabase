@@ -359,7 +359,7 @@ void BoardPainter::createBoard_(const Board& board)
                   y = gBoard[i][1];
 
         // select tile texture
-        const QPixmap& pm = m_theme->square((x+y)&1);
+        const QPixmap& pm = m_theme->square(!((x+y)&1));
 
         // setup tile
         SquareItem * s = new SquareItem(i, pm);

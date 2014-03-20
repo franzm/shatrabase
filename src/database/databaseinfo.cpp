@@ -21,13 +21,13 @@
 DatabaseInfo::DatabaseInfo()
 {
     m_database = new MemoryDatabase;
-    m_filter = new Filter(m_database);
     m_bLoaded = true;
     m_utf8 = false;
     newGame();
 }
 
-DatabaseInfo::DatabaseInfo(const QString& fname): m_filter(0), m_index(NewGame)
+DatabaseInfo::DatabaseInfo(const QString& fname)
+    : m_index(NewGame)
 {
 	m_filename = fname;
     m_bLoaded = false;
@@ -55,8 +55,6 @@ void DatabaseInfo::doLoadFile(QString filename)
     m_database->parseFile();
     if (g_resModified)
         m_database->setModified(true); // NB temporary fix
-    delete m_filter;
-    m_filter = new Filter(m_database);
     m_bLoaded = true;
     emit LoadFinished(this);
     g_loading = false;
@@ -90,9 +88,7 @@ void DatabaseInfo::close()
         }
     }
 	if (m_database) delete m_database;
-	if (m_filter) delete m_filter;
     m_database = NULL;
-	m_filter = NULL;
 }
 
 DatabaseInfo::~DatabaseInfo()
@@ -112,7 +108,7 @@ bool DatabaseInfo::loadGame(int index, bool reload)
 	if (!m_database->loadGame(index, m_game))
 		return false;
 	m_index = index;
-	m_game.moveToId(m_filter->gamePosition(index)-1);
+    m_game.moveToId(index);
 	m_game.setModified(false);
 	return true;
 }
@@ -142,19 +138,10 @@ bool DatabaseInfo::saveGame()
     }
     else if (m_index == NewGame && m_database->appendGame(m_game))
     {
-		m_filter->resize(m_database->count(), 1);
 		m_index = m_database->count() - 1;
         m_game.setModified(false);
 		return true;
     }
     return false;
-}
-
-void DatabaseInfo::resetFilter()
-{
-	if (m_filter) {
-		m_filter->resize(m_database->count());
-		m_filter->setAll(1);
-	}
 }
 

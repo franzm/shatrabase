@@ -17,50 +17,51 @@
 #include "tableview.h"
 #include "game.h"
 
-class Filter;
-class FilterModel;
+class DatabaseInfo;
+class DatabaseModel;
+class SortFilterModel;
 
 /** @ingroup GUI
-The GameList class displays list of the games in current filter. It allows
-user to click on list header and perform simple tag searches. */
+The GameList class displays list of the games in a DatabaseInfo object.
+It allows user to click on list header to sort by column. */
 
 class GameList : public TableView
 {
 	Q_OBJECT
 public:
-	GameList(Filter* filter, QWidget* parent = 0);
+    GameList(DatabaseInfo * db, QWidget* parent = 0);
     ~GameList();
-    bool m_FilterActive;
 
-    /* Set current database */
+    /** Set current database */
 public slots:
-    /* Change current filter/database */
-	void setFilter(Filter* filter);
-    /* Update filter (called after changing filter outside) */
+    /** Change current database */
+    void setDatabaseInfo(DatabaseInfo* db);
+    /** Update filter (called after changing filter outside) */
 	void updateFilter();
-    /* Perform simple search */
+    /** Perform simple search */
 	void simpleSearch(int tag);
-    /* Select and show current game in the list */
-	void selectGame(int index);
-    /* Select and show current game in the list */
+    /** Select and show current game in the list */
+    void selectGame(int gameId);
+    /** Select and show current game in the list */
     void slotFilterListByPlayer(QString ns);
-    /* Select and show current event in the list */
+    /** Select and show current event in the list */
     void slotFilterListByEvent(QString ns);
-    /* Select and show current event and player in the list */
+    /** Select and show current event and player in the list */
     void slotFilterListByEventPlayer(QString event, QString player);
 
 private slots:
-    /* Re-emit the request to the receivers to perform some action */
+    /** Re-emit the request to the receivers to perform some action */
 	void itemSelected(const QModelIndex& index);
-    /* Request a context menu for the list members */
+    /** Request a context menu for the list members */
     void slotContextMenu(const QPoint& pos);
-    /* Request a copy dialog for the game identified by m_cell */
+    /** Request a copy dialog for the game identified by m_cell */
     void slotCopyGame();
-    /* Delete or undelete a game */
+    /** Delete or undelete a game */
     void slotDeleteGame();
 
 signals:
-	void selected(int);
+    /** Emmits the clicked game id */
+    void selected(int gameId);
 	void searchDone();
     void raiseRequest();
     void requestCopyGame();
@@ -71,7 +72,9 @@ protected: //Drag'n'Drop Support
     void startToDrag(const QModelIndex&);
 
 private:
-	FilterModel* m_model;
+    DatabaseInfo * m_db;
+    DatabaseModel * m_model;
+    SortFilterModel * m_sort;
 };
 
 #endif

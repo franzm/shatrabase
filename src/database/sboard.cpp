@@ -43,6 +43,30 @@ Result SBoard::gameResult() const
            !m_biyAt[White]? BlackWin : Draw;
 }
 
+int SBoard::pieceCount(Color color) const
+{
+    int num = 0;
+    if (color == White)
+    {
+        for (int i=fsq; i<=lsq; ++i)
+        {
+            const ubyte p = m_sb[NB[i]];
+            if (p>=WhiteBatyr && p<=WhiteShatra)
+                ++num;
+        }
+    }
+    else
+    {
+        for (int i=fsq; i<=lsq; ++i)
+        {
+            const ubyte p = m_sb[NB[i]];
+            if (p>=BlackBatyr && p<=BlackShatra)
+                ++num;
+        }
+    }
+    return num;
+}
+
 QString SBoard::moveToLann(const Move& move) const
 {
     QString lann;
