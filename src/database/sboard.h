@@ -213,6 +213,8 @@ public:
     bool hasNoMoves() const;
     /** Return result based on contents of m_biyAt[] */
     Result gameResult() const;
+    /** Return number of pieces of given color */
+    int pieceCount(Color) const;
 
     /** Return piece at given square number */
     Piece pieceAt(const int at) const;
