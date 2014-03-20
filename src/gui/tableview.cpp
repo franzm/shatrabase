@@ -78,12 +78,29 @@ void TableView::slotReconfigure()
 
 void TableView::ShowContextMenu(const QPoint& pos)
 {
+    // create context menu
+
     QMenu headerMenu;
+
     QAction* hide = headerMenu.addAction(tr("Hide Column"));
     headerMenu.addSeparator();
-    QAction* showAll = headerMenu.addAction(tr("Show all Columns"));
 
+    QAction* showAll = headerMenu.addAction(tr("Show all Columns"));
+    headerMenu.addSeparator();
+
+    QVector<QAction*> showCol;
+    for (int i=0; i<model()->columnCount(); ++i)
+    if (isColumnHidden(i))
+    {
+        QString name = model()->headerData(i, Qt::Horizontal).toString();
+        QAction * a = headerMenu.addAction(name);
+        a->setData(QVariant(i));
+    }
+
+    // execute
     QAction* selectedItem = headerMenu.exec(mapToGlobal(pos));
+
+    // exec selected action
     if (selectedItem == hide)
     {
         int column = columnAt(pos.x());
@@ -102,6 +119,11 @@ void TableView::ShowContextMenu(const QPoint& pos)
                 setColumnWidth(i, 50); // Fix a bugfeature in Qt
             }
         }
+    }
+    else if (selectedItem && (QMetaType::Type)selectedItem->data().type() == QMetaType::Int)
+    {
+        const int i = selectedItem->data().toInt();
+        showColumn(i);
     }
 }
 
