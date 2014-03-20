@@ -42,7 +42,9 @@ DatabaseModel::DatabaseModel(Database * db, QObject *parent) :
     << tr("Date")
     << tr("Result")
     << tr("ECO")
-    << tr("Moves");
+    << tr("Moves")
+    << tr("Pieces White")
+    << tr("Pieces Black");
 
     columnTags_
     << "Nr"
@@ -56,7 +58,9 @@ DatabaseModel::DatabaseModel(Database * db, QObject *parent) :
     << "Date"
     << "Result"
     << "ECO"
-    << "Length";
+    << "Length"
+    << "Pieces White"
+    << "Pieces Black";
 
 }
 /*
