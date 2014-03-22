@@ -56,6 +56,7 @@
 #include <QToolBar>
 
 MainWindow::MainWindow() : QMainWindow(),
+    m_stats(0),
     m_saveDialog(0),
     m_gameWindow(0),
     m_gameToolBar(0),

@@ -1051,7 +1051,8 @@ void MainWindow::slotDatabaseChanged()
     gameLoad(gameIndex()>=0 ? gameIndex() : 0, true, true);
     m_playerList->setDatabase(database());
     m_eventList->setDatabase(database());
-    m_stats->setDatabaseModel(*static_cast<DatabaseModel*>(m_gameList->model()));
+    if (m_stats)
+        m_stats->setDatabaseModel(*static_cast<DatabaseModel*>(m_gameList->model()));
 	emit databaseChanged(databaseInfo());
 }
 

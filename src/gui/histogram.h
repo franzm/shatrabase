@@ -27,7 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QVector>
 #include <QPen>
 
-
+class QListWidget;
+class QFrame;
 class DatabaseModel;
 
 /** Widget for showing a histogram (frequency of values) of
@@ -74,7 +75,7 @@ public:
 
     /** Sets a raw data curve.
         Everything for key will be overwritten. */
-    void setData(const QString key, const QVector<float>& values);
+    Data * setData(const QString key, const QVector<float>& values);
 
     // ------- database handling ---------
 
@@ -103,6 +104,11 @@ protected:
     typedef QMap<QString, Data>::ConstIterator ConstIter;
 
     QMap<QString, bool> visible_;
+
+    // ------ widgets ------
+
+    QListWidget * list_;
+    QFrame * frame_;
 };
 
 #endif // HISTOGRAM_H

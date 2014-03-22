@@ -25,12 +25,36 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QDebug>
 #include <QMenu>
 #include <QAction>
+#include <QListWidget>
+#include <QLayout>
+#include <QFrame>
 
 #include <map>
 
 Histogram::Histogram(QWidget *parent) :
     QWidget(parent)
 {
+    // XXX need to refacture this
+    visible_.insert(("Moves"), true);
+    visible_.insert(("Pieces White"), true);
+    visible_.insert(("Pieces Black"), true);
+
+    /*
+    QHBoxLayout * l0 = new QHBoxLayout(this);
+
+        list_ = new QListWidget(this);
+        list_->setFixedWidth(100);
+        l0->addWidget(list_);
+
+        frame_ = new QFrame(this);
+        l0->addWidget(frame_);
+
+        // set dark background
+        QPalette p = palette();
+        p.setColor(QPalette::Background, QColor(70,70,70));
+        frame_->setPalette(p);
+        frame_->setAutoFillBackground(true);
+    */
     // set dark background
     QPalette p = palette();
     p.setColor(QPalette::Background, QColor(70,70,70));
@@ -42,10 +66,6 @@ Histogram::Histogram(QWidget *parent) :
     connect(this, SIGNAL(customContextMenuRequested(QPoint)),
                 this, SLOT(showContextMenu(const QPoint&)));
 
-    // XXX need to refacture this
-    visible_.insert(tr("Moves"), true);
-    visible_.insert(tr("Pieces White"), true);
-    visible_.insert(tr("Pieces Black"), true);
 }
 
 // ---------- persistance ------------
@@ -62,6 +82,8 @@ void Histogram::configure()
 void Histogram::clearData()
 {
     map_.clear();
+
+    //list_->clear();
     update();
 }
 
@@ -75,7 +97,7 @@ void Histogram::clearData(const QString& key)
     }
 }
 
-void Histogram::setData(const QString key, const QVector<float>& values)
+Histogram::Data * Histogram::setData(const QString key, const QVector<float>& values)
 {
     Iter i = map_.find(key);
     // create entry
@@ -87,6 +109,8 @@ void Histogram::setData(const QString key, const QVector<float>& values)
     i.value().v = values;
     i.value().key = key;
     initData_(i.value());
+
+    return &(i.value());
 }
 
 
@@ -152,7 +176,14 @@ void Histogram::setDatabaseModel(const DatabaseModel & db)
             for (int i=0; i<vec.size(); ++i, ++k)
                 vec[i] = k->second;
 
-            setData(key, vec);
+            // create data entry
+            Data * dat = setData(key, vec);
+
+            // create an item for it
+            /*QAction * act = new QAction(dat->key, list_);
+            act->setCheckable(true);
+            act->setChecked(visible_[key]);
+            list_->addAction(act);*/
         }
     }
 
@@ -183,11 +214,20 @@ void Histogram::paintCurve(const Data &data)
 
     p.setPen(data.pen);
 
+    const int xo = 1,
+              yo = 1,
+              w = width() - 2,
+              h = height() - 2;
+  /*  const int xo = frame_->pos().x() + frame_->frameWidth(),
+              yo = frame_->pos().y() + frame_->frameWidth(),
+              w = frame_->width() - frame_->frameWidth() * 2,
+              h = frame_->height() - frame_->frameWidth() * 2;
+    */
     int x0 = 0, y0 = 0, x, y;
     for (int i = 0; i<data.v.size(); ++i)
     {
-        x = 1 + (float)i / data.v.size() * (width()-2);
-        y = height() - 2 - (data.v[i] - data.min_v) * data.scaley * (height()-3);
+        x = xo + (float)i / data.v.size() * (w-1);
+        y = yo + h - 1 - (data.v[i] - data.min_v) * data.scaley * (h-2);
 
         if (i!=0)
         {
