@@ -3,6 +3,9 @@
 #include "databasestats.h"
 #include "databasestatsmodel.h"
 #include "histogram.h"
+#include "tableview.h"
+
+#include "databasemodel.h"
 
 #include <QBoxLayout>
 #include <QTableView>
@@ -20,13 +23,11 @@ Statistics::Statistics(QWidget *parent)
 
     ui_->setupUi(this);
 
-    //ui_->table->setModel(statsModel_);
-    //ui_->table->set
+    table_ = new TableView(this);
+    ui_->tab->layout()->addWidget(table_);
 
-    QVBoxLayout * l = new QVBoxLayout(ui_->tab_2);
     histogram_ = new Histogram(ui_->tab_2);
-    l->addWidget(histogram_);
-    l->setContentsMargins(1,1,1,1);
+    ui_->tab_2->layout()->addWidget(histogram_);
 }
 
 Statistics::~Statistics()
@@ -38,8 +39,10 @@ Statistics::~Statistics()
 
 void Statistics::setDatabaseModel(const DatabaseModel &db)
 {
+    table_->setModel(0);
     stats_->setDatabaseModel(db);
-    ui_->table->setModel(statsModel_);
+    table_->setModel(statsModel_);
+
     histogram_->setDatabaseModel(db);
     update();
 }

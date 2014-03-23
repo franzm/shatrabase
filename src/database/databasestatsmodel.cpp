@@ -29,13 +29,14 @@ QModelIndex DatabaseStatsModel::index(int row, int column, const QModelIndex &pa
 QModelIndex DatabaseStatsModel::parent(const QModelIndex &child) const
 {
     Q_UNUSED(child);
+
     return QModelIndex();
 }
 
 int DatabaseStatsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) return 0;
-    qDebug() << "rows " << stats_->numKeys();
+
     return stats_->numKeys();
 }
 
@@ -43,7 +44,7 @@ int DatabaseStatsModel::rowCount(const QModelIndex &parent) const
 int DatabaseStatsModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) return 0;
-    qDebug() << "cols " << names_.size();
+
     return names_.size();
 }
 
@@ -64,7 +65,6 @@ QVariant DatabaseStatsModel::data(const QModelIndex &index, int role) const
     if (index.row() < (int)stats_->numKeys()
         && index.column() < names_.size())
     {
-        qDebug() << "data " << index;
 
         if (keys_.size() != (int)stats_->numKeys())
             keys_ = stats_->keys();
@@ -74,7 +74,6 @@ QVariant DatabaseStatsModel::data(const QModelIndex &index, int role) const
 
         if (role == Qt::DisplayRole && d)
         {
-            qDebug() << d->key;
             switch (index.column())
             {
                 case 0: return d->key;
@@ -84,10 +83,6 @@ QVariant DatabaseStatsModel::data(const QModelIndex &index, int role) const
                 case 4: return d->deviation;
                 case 5: return d->histogram.size();
             }
-        }
-        else if (role == Qt::ForegroundRole)
-        {
-            return QColor(Qt::black);
         }
     }
     return QVariant();

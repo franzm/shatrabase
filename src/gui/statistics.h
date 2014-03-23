@@ -7,6 +7,7 @@ class DatabaseModel;
 class DatabaseStats;
 class DatabaseStatsModel;
 class Histogram;
+class TableView;
 
 namespace Ui { class Statistics; }
 
@@ -27,6 +28,8 @@ public:
 
 private:
     Ui::Statistics *ui_;
+
+    TableView * table_;
 
     DatabaseStats * stats_;
     DatabaseStatsModel * statsModel_;

@@ -14,10 +14,11 @@
 #include <QTableView>
 #include <QTreeView>
 
-/*
+/**
 	The TableView class is a specialized version of QTableView with automatic
 	header layout saving.
 
+    It also let's the user move and hide the header sections.
 */
 
 class TableView : public QTableView

@@ -53,22 +53,24 @@ void DatabaseStats::setDatabaseModel(const DatabaseModel & db)
     if (rows)
     for (int j = 0; j<db.columnCount(QModelIndex()); ++j)
     {
+        QString key = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
+
+        // (XXX quick hack, won't work with translations)
+        // don't add these
+        if (   key.compare("nr", Qt::CaseInsensitive) == 0
+            || key.compare("date", Qt::CaseInsensitive) == 0)
+            continue;
+
+        // fill this vector
+        QVector<int> vec;
+
         // determine if numerical column
         const QVariant v = db.data(db.index(0,j,QModelIndex()), Qt::DisplayRole);
         bool ok;
         v.toInt(&ok);
         if (ok)
         {
-            QString key = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
-
-            // XXX quick hack, won't work with translations
-            // don't add these
-            if (   key.compare("nr", Qt::CaseInsensitive) == 0
-                || key.compare("date", Qt::CaseInsensitive) == 0)
-                continue;
-
             // get vector from database game
-            QVector<int> vec;
             for (int i=0; i<rows; ++i)
             {
                 vec.push_back
@@ -77,9 +79,27 @@ void DatabaseStats::setDatabaseModel(const DatabaseModel & db)
                 );
             }
 
-            // create data entry
-            createData_(key, vec);
         }
+        else
+        if (key.compare("result", Qt::CaseInsensitive) == 0)
+        {
+            for (int i=0; i<rows; ++i)
+            {
+                QString r = db.data(db.index(i,j,QModelIndex()), Qt::DisplayRole).toString();
+                if (r.contains("1-0"))
+                    vec.push_back(1);
+                else if (r.contains("0-1"))
+                    vec.push_back(-1);
+                else
+                    vec.push_back(0);
+            }
+        }
+        else
+            continue;
+
+        // create data entry
+        createData_(key, vec);
+
     }
 }
 

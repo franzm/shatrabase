@@ -88,6 +88,7 @@ void TableView::ShowContextMenu(const QPoint& pos)
     QAction* showAll = headerMenu.addAction(tr("Show all Columns"));
     headerMenu.addSeparator();
 
+    // add each column to menu
     QVector<QAction*> showCol;
     for (int i=0; i<model()->columnCount(); ++i)
     if (isColumnHidden(i))
@@ -104,10 +105,10 @@ void TableView::ShowContextMenu(const QPoint& pos)
     if (selectedItem == hide)
     {
         int column = columnAt(pos.x());
-        if (column > 0)
-        {
+        //if (column > 0)
+        //{
             hideColumn(column);
-        }
+        //}
     }
     else if (selectedItem == showAll)
     {
