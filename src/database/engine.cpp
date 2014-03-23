@@ -103,7 +103,8 @@ void Engine::setLogStream(QTextStream* logStream)
 
 void Engine::activate()
 {
-    if (m_process) {
+    if (m_process)
+    {
 		return;
 	}
 
@@ -117,7 +118,6 @@ void Engine::activate()
         connect(m_process, SIGNAL(error(QProcess::ProcessError)), SLOT(processError(QProcess::ProcessError)));
         connect(m_process, SIGNAL(readyReadStandardOutput()), SLOT(pollProcess()));
         connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(processExited()));
-        qDebug() << "exec: " << m_command;
         m_process->start(m_command);
     }
 }
@@ -146,7 +146,8 @@ bool Engine::isAnalyzing()
 
 void Engine::send(const QString& message)
 {
-    qDebug() << "<-- " << message << endl;
+    // debug out
+    commToEngine(message);
 
 	QString out(message);
 	out.append('\n');
@@ -202,7 +203,7 @@ bool Engine::waitForResponse(int wait_ms)
         QThread::msleep(10);
         if (time.elapsed() > wait_ms)
         {
-            qDebug() << "engine timeout after " << wait_ms << "ms";
+            commError(QString("engine timeout after %1 ms").arg(wait_ms));
             return false;
         }
     }
@@ -217,13 +218,35 @@ void Engine::pollProcess()
     while (m_process && m_process->canReadLine())
     {
         message = m_process->readLine().simplified();
-        qDebug() << "--> " << message << endl;
+
+        // debug out
+        commFromEngine(message);
+
+        // send to derived class
         processMessage(message);
     }
 }
 
 void Engine::processError(QProcess::ProcessError errMsg)
 {
+    QString es;
+    switch (errMsg)
+    {
+    case QProcess::FailedToStart:
+        es = tr("failed to start engine"); break;
+    case QProcess::Crashed:
+        es = tr("the engine has crashed"); break;
+    case QProcess::Timedout:
+        es = tr("the engine timed out"); break;
+    case QProcess::WriteError:
+        es = tr("could not speak to engine"); break;
+    case QProcess::ReadError:
+        es = tr("could not read from engine"); break;
+    default:
+        es = tr("an unknown error occured with engine"); break;
+    }
+    commError(es);
+
     setActive(false);
     m_process = 0;
     emit error(errMsg);

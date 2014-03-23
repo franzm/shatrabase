@@ -449,7 +449,7 @@ void BoardPainter::createPieces_(const Board& board)
 
         // pixmap for piece
         const QPixmap& pm = m_theme->piece(p,
-                   (isFlipped() && p == BlackBatyr)
+                    (isFlipped() && p == BlackBatyr)
                 || (!isFlipped() && p == WhiteBatyr) );
 
         PieceItem * item = new PieceItem(p, i, pm);
