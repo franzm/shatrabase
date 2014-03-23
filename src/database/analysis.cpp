@@ -23,10 +23,12 @@ Analysis& Analysis::operator=(const Analysis& rhs)
     if (this != &rhs)
     {
         m_score     = rhs.m_score;
-        m_msec      = rhs.m_msec;
         m_depth     = rhs.m_depth;
-        m_nodes     = rhs.m_nodes;
+        m_msec      = rhs.m_msec;
+        m_resultIn  = rhs.m_resultIn;
+        m_rtype     = rhs.m_rtype;
         m_numpv     = rhs.m_numpv;
+        m_nodes     = rhs.m_nodes;
         m_variation = rhs.m_variation;
     }
     return *this;
@@ -36,7 +38,7 @@ void Analysis::clear()
 {
     m_score = m_msec = m_depth = 0;
 	m_nodes = 0;
-		  m_numpv = 1;
+    m_numpv = 1;
 	m_variation.clear();
 }
 
@@ -108,20 +110,44 @@ void Analysis::setVariation(const MoveList& variation)
 	m_variation = variation;
 }
 
+bool Analysis::isWin() const
+{
+    return m_resultIn != 0 && m_rtype == Win;
+}
+
+bool Analysis::isLoss() const
+{
+    return m_resultIn != 0 && m_rtype == Loss;
+}
+
+bool Analysis::isResult() const
+{
+    return m_resultIn != 0;
+}
+
+int Analysis::movesToResult() const
+{
+    return m_resultIn;
+}
+
+void Analysis::setMovesToResult(int distance, int rtype)
+{
+    m_resultIn = distance;
+    m_rtype = rtype;
+}
+
 QString Analysis::toString(const Board& board) const
 {
 	Board testBoard = board;
 	QString out;
-/*
-    if (isMate()) {
+
+    if (isResult()) {
 		QString color = testBoard.toMove() == White ? "000080" : "800000";
-        QString text = "Mate in";
+        QString text = isWin()? "Win in" : isLoss()? "Loss in" : "";
 		out = QString("<font color=\"#%1\"><b>%2 %3</b></font> ")
-				.arg(color).arg(text).arg(movesToMate());
+                .arg(color).arg(text).arg(movesToResult());
 	}
-    else
-*/
-    if (score() > 0)
+    else if (score() > 0)
 		out = QString("<font color=\"#000080\"><b>+%1</b></font> ").arg(score() / 100.0, 0, 'f', 2);
 	else out = QString("<font color=\"#800000\"><b>%1</b></font> ").arg(score() / 100.0, 0, 'f', 2);
 

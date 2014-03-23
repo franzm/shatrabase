@@ -215,11 +215,23 @@ void USHIEngine::parseAnalysis(const QString& message)
                 scoreFound = true;
             }
             else
-            if (type == "cp") {
+            if (type == "cp" || type == "win" || type == "loss") {
                 score = info.section(' ', section + 2, section + 2).toInt(&ok);
-                if (m_invertBlack && m_board.toMove() == Black)
+
+                if(type == "win")
+                {
+                    analysis.setMovesToResult(abs(score), Win);
+                }
+                else if(type == "loss")
+                {
+                    analysis.setMovesToResult(abs(score), Loss);
+                }
+                else if (m_invertBlack && m_board.toMove() == Black)
+                {
 					analysis.setScore(-score);
+                }
 				else analysis.setScore(score);
+
 				section += 3;
 				if (ok) {
 					scoreFound = true;

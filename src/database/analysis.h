@@ -51,15 +51,27 @@ public:
     MoveList variation() const;
     /* Set main variation. */
     void setVariation(const MoveList& variation);
+    /* Is win. */
+    bool isWin() const;
+    /* Is loss. */
+    bool isLoss() const;
+    /* Is win or loss. */
+    bool isResult() const;
+    /* @return moves to win or loss */
+    int movesToResult() const;
+    /* Set moves to win or loss. */
+    void setMovesToResult(int distance, int rtype);
     /* Convert analysis to formatted text. */
     QString toString(const Board& board) const;
     /* Assignment operator */
     Analysis& operator=(const Analysis& rhs);
 private:
-    int m_numpv;
-    int m_msec;
-    int m_depth;
     int m_score;
+    int m_depth;
+    int m_msec;
+    int m_resultIn;
+    int m_rtype;
+    int m_numpv;
     quint64 m_nodes;
     MoveList m_variation;
     Q_DECLARE_TR_FUNCTIONS(Analysis)
