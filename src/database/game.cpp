@@ -72,6 +72,7 @@ MoveId Game::addMove(const Move& move, const QString& annotation, NagSet nags)
     node.move = move;
     node.nags = nags;
     node.ply = ply() + 1;
+    node.stm = m_currentBoard.toMove();
     m_moveNodes.append(node);
     m_currentNode = m_moveNodes.size() - 1;
     if (!annotation.isEmpty())
@@ -669,18 +670,53 @@ MoveId Game::nodeValid(MoveId moveId) const
     return NO_MOVE;
 }
 
+
+int Game::moveCount() const
+{
+    if (nodeValid(1) == NO_MOVE)
+        return 0;
+
+    int moves = 1, node = 1, bstm = -1,
+        // previous side to move
+        pstm = -1;
+    while (nodeValid(node) != NO_MOVE)
+    {
+        // current side to move
+        int cstm = m_moveNodes[node].stm;
+
+        // side to start
+        if (bstm==-1)
+            bstm = cstm;
+
+        node = m_moveNodes[node].nextNode;
+
+        // player changed
+        if (cstm != pstm)
+        {
+            // if back to start color and not first move
+            if (pstm != -1 && cstm == bstm)
+                moves ++;
+            pstm = cstm;
+        }
+
+    }
+    return moves;
+}
+
 void Game::moveCount(int* moves, int* comments, int* nags) const
 {
     *moves = *comments = *nags = 0;
 
     int node = 1;
-    while (nodeValid(node) != NO_MOVE) {
+    while (nodeValid(node) != NO_MOVE)
+    {
         *moves += 1;
         if (m_moveNodes[node].nags.count() != 0) {
             *nags += 1;
         }
         node = m_moveNodes[node].nextNode;
     }
+
     // Count comments
     for (int i = 0; i < m_annotations.size(); ++i) *comments += 1;
     for (int i = 0; i < m_variationStartAnnotations.size(); ++i) *comments += 1;
@@ -706,18 +742,23 @@ int Game::moveNumber(MoveId moveId) const
 //            return (m_startPly + plyNum - 1) / 2 + 1;
 // kluge time, will adjust for ... in output.cpp
         if (ply(node)) // necessary?
+        {
             return m_currentBoard.moveNumber();
+        }
         return 0;
     }
     return -1;
 }
 
+
 int Game::plyCount() const
 {
+    return m_currentBoard.moveNumber() * 2;
     int count = 0;
     int node = 0;
 
-    while (node != NO_MOVE) {
+    while (node != NO_MOVE)
+    {
         ++count;
         node = m_moveNodes[node].nextNode;
     }

@@ -158,6 +158,8 @@ public :
 	int moveNumber(MoveId moveId = CURRENT_MOVE) const;
 	/* @return number of ply for the whole game (mainline only) */
 	int plyCount() const;
+    /* @return number of moves for the whole game (mainline only) */
+    int moveCount() const;
 	/* @return number of current variation */
 	MoveId variationNumber(MoveId moveId = CURRENT_MOVE) const;
 	/* @return number of variations at the current position */
@@ -274,7 +276,8 @@ private:
 
     QString specialAnnotation(QString& annotation, QString specialMark ) const; // [%csl  [%cal
 
-	struct MoveNode {
+    struct MoveNode
+    {
 		Move move;
 		NagSet nags;
 		MoveId previousNode;
@@ -282,9 +285,10 @@ private:
 		MoveId parentNode;
 		bool removed;
 		int ply;
+        int stm;
 		QList <MoveId> variations;
 		void remove()	{parentNode = previousNode = nextNode = NO_MOVE; removed = true;}
-		MoveNode()		{parentNode = nextNode = previousNode = NO_MOVE; removed = false; ply = 0;}
+        MoveNode()		{parentNode = nextNode = previousNode = NO_MOVE; removed = false; ply = stm = 0;}
 	};
 
     /* commment associated with game */

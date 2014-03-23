@@ -27,18 +27,18 @@ const QString DEFAULT_NOTATION_TEMPLATE = "notation-default.template";
 const QString DEFAULT_LATEX_TEMPLATE = "latex-default.template";
 const QString DEFAULT_SGN_TEMPLATE = "sgn-default.template";
 
-/*
+/**
 The Output class converts game to various formats.
 Usage:
-@code
-Game game;
-SgnDatabase db;
-db.loadGame(0,game);
-Output o(Output::Html,"/usr/local/data/template-file.template");
-o.output(&game);
-@endcode
+ @code
+ Game game;
+ SgnDatabase db;
+ db.loadGame(0,game);
+ Output o(Output::Html,"/usr/local/data/template-file.template");
+ o.output(&game);
+ @endcode
 @todo
-Should output all tags, not just the most important ones.
+ Should output all tags, not just the most important ones.
 */
 
 class Output : public QObject

@@ -655,7 +655,7 @@ void MainWindow::saveGame()
     if (!database()->isReadOnly())
     {
         databaseInfo()->saveGame();
-        database()->index()->setTag("Length", QString::number((game().plyCount() + 1) / 2), gameIndex() );
+        database()->index()->setTag("Length", QString::number(game().moveCount()), gameIndex() );
         m_gameList->updateFilter();
         slotFilterChanged();
         slotGameChanged();
