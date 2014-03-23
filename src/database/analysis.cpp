@@ -37,6 +37,7 @@ Analysis& Analysis::operator=(const Analysis& rhs)
 void Analysis::clear()
 {
     m_score = m_msec = m_depth = 0;
+    m_resultIn = m_rtype = 0;
 	m_nodes = 0;
     m_numpv = 1;
 	m_variation.clear();
