@@ -69,7 +69,6 @@ Histogram::Histogram(QWidget *parent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(QPoint)),
                 this, SLOT(showContextMenu(const QPoint&)));
-
 }
 
 // ---------- persistance ------------

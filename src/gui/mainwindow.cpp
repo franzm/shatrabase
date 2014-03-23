@@ -39,7 +39,7 @@
 #include "tableview.h"
 #include "toolmainwindow.h"
 
-#include "histogram.h"
+#include "statistics.h"
 
 #include <time.h>
 
@@ -121,7 +121,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Game view */
     DockWidgetEx* gameTextDock = new DockWidgetEx(tr("Game Text"), this);
 	gameTextDock->setObjectName("GameTextDock");
-	gameTextDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+    gameTextDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
 
     m_gameWindow = new ToolMainWindow(gameTextDock);
     m_gameWindow->setObjectName("GameWindow");
@@ -153,18 +153,20 @@ MainWindow::MainWindow() : QMainWindow(),
     m_gameView->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
     m_gameView->setMinimumSize(200, 200);
-	m_gameView->slotReconfigure();
+    m_gameView->slotReconfigure();
 	connect(m_gameView, SIGNAL(anchorClicked(const QUrl&)), SLOT(slotGameViewLink(const QUrl&)));
 	connect(m_gameView, SIGNAL(actionRequested(EditAction)), SLOT(slotGameModify(EditAction)));
 	connect(this, SIGNAL(databaseChanged(DatabaseInfo*)), m_gameView, SLOT(slotDatabaseChanged(DatabaseInfo*)));
     connect(this, SIGNAL(displayTime(const QString&, Color)), m_gameView, SLOT(slotDisplayTime(const QString&, Color)));
-    gameTextDock->setWidget(m_gameWindow);
     m_gameWindow->setCentralWidget(m_gameView);
     connect(this, SIGNAL(reconfigure()), m_gameView, SLOT(slotReconfigure()));
-	addDockWidget(Qt::RightDockWidgetArea, gameTextDock);
     m_gameTitle = new QLabel;
     connect(m_gameTitle, SIGNAL(linkActivated(QString)), this, SLOT(slotGameViewLink(QString)));
+    gameTextDock->setWidget(m_gameWindow);
+    addDockWidget(Qt::RightDockWidgetArea, gameTextDock);
     gameTextDock->setTitleBarWidget(m_gameTitle);
+    //m_menuView->addAction(gameTextDock->toggleViewAction());
+    //gameTextDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_T);
 
 	/* Game List */
     DockWidgetEx* gameListDock = new DockWidgetEx(tr("Game List"), this);
@@ -186,9 +188,8 @@ MainWindow::MainWindow() : QMainWindow(),
     /* Database stats */
     DockWidgetEx* statsDock = new DockWidgetEx(tr("Database Statistics"), this);
     statsDock->setObjectName("DatabaseStats");
-    m_stats = new Histogram(this);
-    m_stats->setMinimumSize(150, 100);
-    connect(m_stats, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
+    m_stats = new Statistics(this);
+    //connect(m_stats, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
     statsDock->setWidget(m_stats);
     statsDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_D);
     addDockWidget(Qt::RightDockWidgetArea, statsDock);

@@ -33,6 +33,7 @@
 #include "preferences.h"
 #include "savedialog.h"
 #include "settings.h"
+#include "statistics.h"
 #include "tablebase.h"
 #include "tableview.h"
 #include "histogram.h"

@@ -28,7 +28,8 @@ FORMS += \
     src/gui/copydialog.ui \
     src/gui/commentdialog.ui \
     src/gui/engineoptiondialog.ui \
-    src/gui/tagdetailwidget.ui
+    src/gui/tagdetailwidget.ui \
+    src/gui/statistics.ui
 
 HEADERS += src/database/board.h \
     src/database/move.h \
@@ -108,7 +109,10 @@ HEADERS += src/database/board.h \
     src/gui/boardstyle.h \
     src/gui/sortfiltermodel.h \
     src/database/databasemodel.h \
-    src/gui/histogram.h
+    src/gui/histogram.h \
+    src/gui/statistics.h \
+    src/database/databasestats.h \
+    src/database/databasestatsmodel.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -183,7 +187,10 @@ SOURCES += src/database/board.cpp \
     src/gui/boardstyle.cpp \
     src/gui/sortfiltermodel.cpp \
     src/database/databasemodel.cpp \
-    src/gui/histogram.cpp
+    src/gui/histogram.cpp \
+    src/gui/statistics.cpp \
+    src/database/databasestats.cpp \
+    src/database/databasestatsmodel.cpp
 
 TEMPLATE = app
 INCLUDEPATH += src/database
