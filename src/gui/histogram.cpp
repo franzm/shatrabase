@@ -28,11 +28,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QListWidget>
 #include <QLayout>
 #include <QFrame>
+#include <QMouseEvent>
 
 #include <map>
 
 Histogram::Histogram(QWidget *parent) :
-    QWidget(parent)
+    QWidget         (parent),
+    m_messageSend   (false)
 {
     // XXX need to refacture this
     visible_.insert(("Moves"), true);
@@ -97,7 +99,7 @@ void Histogram::clearData(const QString& key)
     }
 }
 
-Histogram::Data * Histogram::setData(const QString key, const QVector<float>& values)
+Histogram::Data * Histogram::setData(const QString key, const QVector<int>& values)
 {
     Iter i = map_.find(key);
     // create entry
@@ -126,8 +128,8 @@ void Histogram::initData_(Data &d) const
     d.max_v = d.min_v = d.v[0];
     for (int i=1; i<d.v.size(); ++i)
     {
-        d.max_v = std::max(d.max_v, d.v[i]);
-        d.min_v = std::min(d.min_v, d.v[i]);
+        d.max_v = std::max((int)d.max_v, d.v[i]);
+        d.min_v = std::min((int)d.min_v, d.v[i]);
         d.average += d.v[i];
     }
     d.average /= d.v.size();
@@ -170,14 +172,22 @@ void Histogram::setDatabaseModel(const DatabaseModel & db)
                 set[val]++;
             }
 
-            // transfer vector
-            QVector<float> vec(set.size());
+            // transfer frequence vector
+            QVector<int> vec(set.size());
             std::map<int,int>::const_iterator k = set.begin();
             for (int i=0; i<vec.size(); ++i, ++k)
                 vec[i] = k->second;
 
             // create data entry
             Data * dat = setData(key, vec);
+
+            // transfer 'what' vector
+            dat->what.resize(set.size());
+            size_t j = 0;
+            for (std::map<int,int>::const_iterator i=set.begin(); i!=set.end(); ++i, ++j)
+            {
+                dat->what[j] = i->first;
+            }
 
             // create an item for it
             /*QAction * act = new QAction(dat->key, list_);
@@ -192,7 +202,11 @@ void Histogram::setDatabaseModel(const DatabaseModel & db)
 
 
 
-
+void Histogram::displayMessage(const QString &msg)
+{
+    m_messageSend = true;
+    signalDisplayMessage(msg);
+}
 
 void Histogram::paintEvent(QPaintEvent * e)
 {
@@ -203,8 +217,36 @@ void Histogram::paintEvent(QPaintEvent * e)
             paintCurve(i.value());
 }
 
+void Histogram::leaveEvent(QEvent *)
+{
+    if (m_messageSend)
+    {
+        m_messageSend = false;
+        signalDisplayMessage("");
+    }
+}
+
 void Histogram::mouseMoveEvent(QMouseEvent * e)
 {
+    if (!map_.empty())
+    {
+        QString msg;
+
+        // needs to match paintCurve() below!!
+        float x = (float)(e->pos().x() - 1) / (width()-2);
+
+        for (Iter i=map_.begin(); i!=map_.end(); ++i)
+        {
+            int j = x * i.value().v.size();
+            if (j >= 0 && j < i.value().v.size() &&
+                          j < i.value().what.size())
+            {
+                msg += QString("%1: [%2:%3] ").arg(i.value().key)
+                        .arg(i.value().what[j])
+                        .arg(i.value().v[j]);
+            }
+        }
+    }
     QWidget::mouseMoveEvent(e);
 }
 

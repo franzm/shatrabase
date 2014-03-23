@@ -43,8 +43,10 @@ public:
     struct Data
     {
         QString key;
-        /** vector of floats */
-        QVector<float> v;
+        /** vector representing the counted indices */
+        QVector<int> v;
+        /** vector representing the actual value for each index in v */
+        QVector<int> what;
         /** min and max values */
         float min_v, max_v,
         /** average value */
@@ -75,7 +77,7 @@ public:
 
     /** Sets a raw data curve.
         Everything for key will be overwritten. */
-    Data * setData(const QString key, const QVector<float>& values);
+    Data * setData(const QString key, const QVector<int>& values);
 
     // ------- database handling ---------
 
@@ -83,12 +85,16 @@ public:
     void setDatabaseModel(const DatabaseModel & db);
 
 signals:
+    void signalDisplayMessage(const QString& msg);
 
 public slots:
     void showContextMenu(const QPoint& pos);
 
 protected:
 
+    void displayMessage(const QString& msg);
+
+    virtual void leaveEvent(QEvent * e);
     virtual void paintEvent(QPaintEvent * e);
     virtual void mouseMoveEvent(QMouseEvent * e);
 
@@ -109,6 +115,10 @@ protected:
 
     QListWidget * list_;
     QFrame * frame_;
+
+    // ---- stuff ----
+
+    bool m_messageSend;
 };
 
 #endif // HISTOGRAM_H
