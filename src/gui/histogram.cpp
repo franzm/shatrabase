@@ -36,6 +36,8 @@ Histogram::Histogram(QWidget *parent) :
     QWidget         (parent),
     m_messageSend   (false)
 {
+    setMouseTracking(true);
+
     // XXX need to refacture this
     visible_.insert(("Moves"), true);
     visible_.insert(("Pieces White"), true);
@@ -246,6 +248,9 @@ void Histogram::mouseMoveEvent(QMouseEvent * e)
                         .arg(i.value().v[j]);
             }
         }
+
+        if (!msg.isNull())
+            displayMessage(msg);
     }
     QWidget::mouseMoveEvent(e);
 }

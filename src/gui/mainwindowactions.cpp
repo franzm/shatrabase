@@ -869,7 +869,9 @@ void MainWindow::slotToggleAutoAnalysis()
     slotToggleAutoPlayer();
     if (m_autoAnalysis->isChecked() && !m_mainAnalysis->isEngineRunning())
     {
-        MessageDialog::information(tr("Analysis Pane 1 is not running an engine for automatic analysis."), tr("Auto Analysis"));
+        MessageDialog::information(
+            tr("Analysis Pane 1 is not running an engine for automatic analysis."),
+            tr("Auto Analysis"));
     }
 }
 
@@ -982,7 +984,7 @@ void MainWindow::copyGame(QString fileName, const Game& game)
             if (m_databases[i]->isValid())
             {
                 copyGame(i,game);
-                //XXXm_databases[i]->filter()->resize(m_databases[i]->database()->count(), true);
+                //XXX m_databases[i]->filter()->resize(m_databases[i]->database()->count(), true);
             }
             return;
         }

@@ -188,8 +188,11 @@ MainWindow::MainWindow() : QMainWindow(),
     statsDock->setObjectName("DatabaseStats");
     m_stats = new Histogram(this);
     m_stats->setMinimumSize(150, 100);
+    connect(m_stats, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
     statsDock->setWidget(m_stats);
+    statsDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_D);
     addDockWidget(Qt::RightDockWidgetArea, statsDock);
+    m_menuView->addAction(statsDock->toggleViewAction());
 
     // Player List
     DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);
