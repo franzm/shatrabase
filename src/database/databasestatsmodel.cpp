@@ -79,9 +79,9 @@ QVariant DatabaseStatsModel::data(const QModelIndex &index, int role) const
                 case 0: return d->key;
                 case 1: return d->min_value;
                 case 2: return d->max_value;
-                case 3: return d->mean;
-                case 4: return d->deviation;
-                case 5: return d->histogram.size();
+                case 3: return QString("%1 (%2%)").arg(d->mean).arg((int)(d->mean_ratio*100));
+                case 4: return QString("%1 (%2%)").arg(d->deviation).arg((int)(d->deviation_ratio*100));
+                case 5: return QString("%1 (%2%)").arg(d->histogram.size()).arg((int)(d->unique_ratio*100));
             }
         }
     }

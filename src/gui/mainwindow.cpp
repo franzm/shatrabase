@@ -189,7 +189,7 @@ MainWindow::MainWindow() : QMainWindow(),
     DockWidgetEx* statsDock = new DockWidgetEx(tr("Database Statistics"), this);
     statsDock->setObjectName("DatabaseStats");
     m_stats = new Statistics(this);
-    //connect(m_stats, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
+    connect(m_stats, SIGNAL(displayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
     statsDock->setWidget(m_stats);
     statsDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_D);
     addDockWidget(Qt::RightDockWidgetArea, statsDock);

@@ -25,6 +25,14 @@ public:
         The data is created and the object is not longer needed. */
     void setDatabaseModel(const DatabaseModel & db);
 
+signals:
+    /** Sends messages out to status bar */
+    void displayMessage(const QString&);
+
+protected slots:
+
+    /** used to catch signals from childs */
+    void slotDisplayMessage(const QString& msg) { displayMessage(msg); }
 
 private:
     Ui::Statistics *ui_;

@@ -55,8 +55,8 @@ void DatabaseStats::setDatabaseModel(const DatabaseModel & db)
     {
         QString key = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
 
-        // (XXX quick hack, won't work with translations)
         // don't add these
+        //   (XXX quick hack, won't work with translations)
         if (   key.compare("nr", Qt::CaseInsensitive) == 0
             || key.compare("date", Qt::CaseInsensitive) == 0)
             continue;
@@ -81,6 +81,7 @@ void DatabaseStats::setDatabaseModel(const DatabaseModel & db)
 
         }
         else
+                    // another hack
         if (key.compare("result", Qt::CaseInsensitive) == 0)
         {
             for (int i=0; i<rows; ++i)
@@ -142,7 +143,10 @@ void DatabaseStats::calculateData_(Data &d) const
         d.min_value = std::min((int)d.min_value, d.v[i]);
         d.mean += d.v[i];
     }
+    float range = d.max_value - d.min_value;
+
     d.mean /= d.v.size();
+    d.mean_ratio = range? (d.mean - d.min_value) / range : 0;
 
     // get deviation
     for (int i=0; i<d.v.size(); ++i)
@@ -150,6 +154,7 @@ void DatabaseStats::calculateData_(Data &d) const
         d.deviation += (d.v[i] - d.mean) * (d.v[i] - d.mean);
     }
     d.deviation = std::sqrt(d.deviation / d.v.size());
+    d.deviation_ratio = range? (d.deviation - d.min_value) / range : 0;
 
     // ----- histogram -----
 
@@ -165,4 +170,7 @@ void DatabaseStats::calculateData_(Data &d) const
     std::map<int,int>::const_iterator k = set.begin();
     for (size_t i=0; i<set.size(); ++i, ++k)
         d.histogram[i] = k->second;
+
+    // uniqueness ratio
+    d.unique_ratio = (float)d.histogram.size() / d.v.size();
 }

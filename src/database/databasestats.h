@@ -31,8 +31,14 @@ public:
         float
         /** average value */
             mean,
+        /** ratio of mean in whole value range [0,1] */
+            mean_ratio,
         /** standard deviation */
-            deviation;
+            deviation,
+        /** ratio of mean in whole value range [0,1] */
+            deviation_ratio,
+        /** ratio between overall and unique values [0,1] */
+            unique_ratio;
     };
 
 

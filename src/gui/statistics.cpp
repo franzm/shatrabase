@@ -28,6 +28,7 @@ Statistics::Statistics(QWidget *parent)
 
     histogram_ = new Histogram(ui_->tab_2);
     ui_->tab_2->layout()->addWidget(histogram_);
+    connect(histogram_, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayMessage(QString)));
 }
 
 Statistics::~Statistics()
