@@ -46,35 +46,34 @@ class SquareItem : public QGraphicsPixmapItem
 {
 public:
     SquareItem(Square square, const QPixmap& pixmap,
-              QGraphicsItem * parent = 0)
+               const BoardPainter::Decoration& decoration,
+               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
-            square    (square),
-            overlay   (0),
-            frame     (false),
-            highlights(0),
-            temdek    (false)
+            square     (square),
+            deco       (decoration),
+            overlay    (0),
+            frame      (false),
+            temdek     (false),
+            highlights (0)
     { }
 
     Square square;
+
+    const BoardPainter::Decoration deco;
 
     const QPixmap
     /** use for specific square decoration */
         * overlay;
 
+    /** Show frame around square */
     bool frame;
-    QPen framePen;
 
-    int highlights;
-    /** 0=H_HOVER, 1=H_GOAL */
-    QBrush highlightBrush[2];
-    QPen selectPen;
-
-    bool temdek;
-    QPen temdekPen;
+    /** 0=off, 1 = White, 2 = Black */
+    int temdek,
+    /** Or combi of BoardPainter::Highlight */
+        highlights;
 
     QString numberStr;
-    QFont font;
-    QPen fontPen;
 
 protected:
 
@@ -90,51 +89,60 @@ protected:
         if (highlights & BoardPainter::H_HOVER)
         {
             painter->setPen(QPen(Qt::NoPen));
-            painter->setBrush(highlightBrush[0]);
+            painter->setBrush(deco.highlightBrush[0]);
             painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
         }
-        // goal/target highlight
-        if ((highlights & BoardPainter::H_GOAL) ||
-            (highlights & BoardPainter::H_TARGET))
+        // goal highlight (every possible goal)
+        if (highlights & BoardPainter::H_GOAL)
         {
-            painter->setPen(QPen(Qt::NoPen));
-            painter->setBrush(highlightBrush[1]);
+            painter->setPen(Qt::NoPen);
+            painter->setBrush(deco.highlightBrush[1]);
             int r = pixmap().width() / 1.5;
-            if (highlights & BoardPainter::H_TARGET)
-                r /= 2;
             painter->drawRect(QRect(r/2,r/2,pixmap().width()-r, pixmap().height()-r));
+        }
+        // target highlight (selected target)
+        if (highlights & BoardPainter::H_TARGET)
+        {
+            painter->setBrush(Qt::NoBrush);
+            painter->setPen(deco.highlightPen[1]);
+            painter->drawRect(QRect(deco.highlightPen[1].width()/2,
+                                    deco.highlightPen[1].width()/2,
+                                    pixmap().width() - deco.highlightPen[1].width(),
+                                    pixmap().height() - deco.highlightPen[1].width()));
         }
         // temdek cross
         if (temdek)
         {
-            painter->setPen(temdekPen);
+            painter->setPen(temdek == 1? deco.whiteTemdekPen : deco.blackTemdekPen);
             painter->setBrush(Qt::NoBrush);
-            int o = temdekPen.width()/2;
+            int o = deco.whiteTemdekPen.width()/2;
             painter->drawLine(o, o, pixmap().width()-o, pixmap().height()-o);
             painter->drawLine(o, pixmap().height()-o, pixmap().width()-o, o);
         }
         // frame
         if (frame)
         {
-            painter->setPen(framePen);
+            painter->setPen(deco.framePen);
             painter->setBrush(Qt::NoBrush);
             painter->drawRect(QRect(0,0,pixmap().width(), pixmap().height()));
         }
         // number display
         if (!numberStr.isNull())
         {
-            painter->setFont(font);
-            painter->setPen(fontPen);
+            painter->setFont(deco.font);
+            painter->setPen(deco.fontPen);
             painter->drawText(pixmap().rect(),
                               Qt::AlignCenter | Qt::AlignHCenter, numberStr);
         }
         // select highlight
         if (highlights & BoardPainter::H_SELECT)
         {
-            painter->setPen(selectPen);
+            painter->setPen(deco.selectPen);
             painter->setBrush(Qt::NoBrush);
-            painter->drawRect(QRect(selectPen.width()/2,selectPen.width()/2,
-                                    pixmap().width()-selectPen.width(), pixmap().height()-selectPen.width()));
+            painter->drawRect(QRect(deco.selectPen.width()/2,
+                                    deco.selectPen.width()/2,
+                                    pixmap().width() - deco.selectPen.width(),
+                                    pixmap().height() - deco.selectPen.width()));
         }
 
     }
@@ -266,10 +274,10 @@ void BoardPainter::configure()
     m_anim_speed = AppSettings->getValue("animateMovesSpeed").toDouble();
     m_fixed_anim_length = AppSettings->getValue("animateMovesLength").toDouble();
     m_use_fixed_anim_length = AppSettings->getValue("animateMovesSpeedVsLength").toDouble();
-    m_hoverColor = AppSettings->getValue("highlightColor").value<QColor>();
-    m_hoverColor.setAlpha(70);
-    m_selectColor = AppSettings->getValue("currentMoveColor").value<QColor>();
-    m_selectColor.setAlpha(150);
+    m_deco.hoverColor = AppSettings->getValue("highlightColor").value<QColor>();
+    m_deco.hoverColor.setAlpha(70);
+    m_deco.selectColor = AppSettings->getValue("currentMoveColor").value<QColor>();
+    m_deco.selectColor.setAlpha(150);
     QColor back1 = AppSettings->getValue("backgroundColor").value<QColor>();
     QColor back2 = AppSettings->getValue("backgroundColor2").value<QColor>();
     AppSettings->endGroup();
@@ -352,6 +360,27 @@ void BoardPainter::createBoard_(const Board& board)
     }
     m_squares.clear();
 
+    // set standard brushes/pens and stuff
+    m_deco.highlightBrush[0] = QBrush(m_deco.hoverColor);
+    m_deco.highlightBrush[1] = QBrush(m_deco.hoverColor);
+    m_deco.highlightPen[0] = QPen(m_deco.hoverColor);
+    m_deco.highlightPen[0].setWidth(m_size / 10);
+    m_deco.highlightPen[0].setCapStyle(Qt::RoundCap);
+    m_deco.highlightPen[1] = m_deco.highlightPen[0];
+    m_deco.selectPen = QPen(m_deco.selectColor);
+    m_deco.selectPen.setWidth(m_size / 10);
+    m_deco.selectPen.setCapStyle(Qt::RoundCap);
+    m_deco.framePen.setColor( m_theme->color(BoardTheme::Frame) );
+    m_deco.framePen.setWidth( m_frame_width * m_theme->size().width() / 100);
+    m_deco.blackTemdekPen = QPen(Qt::black);
+    m_deco.blackTemdekPen.setCapStyle(Qt::RoundCap);
+    m_deco.blackTemdekPen.setWidthF(m_size/10);
+    m_deco.whiteTemdekPen = m_deco.blackTemdekPen;
+    m_deco.whiteTemdekPen.setColor(Qt::white);
+    m_deco.fontPen = QPen(QColor(178,178,178,150));
+    m_deco.font.setPixelSize(m_size/2);
+    // XXX m_deco.font.setFamily(?);
+
     // create board squares
     for (Square i=fsq; i<=lsq; ++i)
     {
@@ -362,33 +391,21 @@ void BoardPainter::createBoard_(const Board& board)
         const QPixmap& pm = m_theme->square(!((x+y)&1));
 
         // setup tile
-        SquareItem * s = new SquareItem(i, pm);
+        SquareItem * s = new SquareItem(i, pm, m_deco);
         s->setPos(squarePos(i));
         s->setZValue(-1); // always behind pieces
-
-        // standard brushes/pens
-        s->highlightBrush[0] = QBrush(m_hoverColor);
-        s->highlightBrush[1] = QBrush(m_hoverColor);
-        s->selectPen = QPen(m_selectColor);
-        s->selectPen.setWidth(m_size / 10);
-        s->selectPen.setCapStyle(Qt::RoundCap);
 
         // set frame
         if (m_do_show_frame)
         {
             s->frame = true;
-            s->framePen.setColor( m_theme->color(BoardTheme::Frame) );
-            s->framePen.setWidth( m_frame_width * m_theme->size().width() / 100);
         }
 
         // set temdek flag
         if ((i == temdekAt[Black] && board.temdekOn(Black)) ||
             (i == temdekAt[White] && board.temdekOn(White)))
         {
-            s->temdek = true;
-            s->temdekPen = QPen(i==temdekAt[White]? Qt::black : Qt::white );
-            s->temdekPen.setCapStyle(Qt::RoundCap);
-            s->temdekPen.setWidthF(s->pixmap().width()/10);
+            s->temdek = (i == temdekAt[White])? 1 : 2;
         }
 
         // set tower square overlay
@@ -400,9 +417,6 @@ void BoardPainter::createBoard_(const Board& board)
         // number display
         if (m_do_square_numbers)
         {
-            s->fontPen = QPen(QColor(178,178,178,150));
-            s->font.setPixelSize(s->pixmap().width()/2);
-            // XXX s->font.setFamily(?);
             s->numberStr = QString::number(BN[NB[i]]);
         }
 
@@ -435,7 +449,7 @@ void BoardPainter::createPieces_(const Board& board)
 
         // pixmap for piece
         const QPixmap& pm = m_theme->piece(p,
-                   (isFlipped() && p == BlackBatyr)
+                    (isFlipped() && p == BlackBatyr)
                 || (!isFlipped() && p == WhiteBatyr) );
 
         PieceItem * item = new PieceItem(p, i, pm);

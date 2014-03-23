@@ -26,7 +26,7 @@
 
 #include "engineoptiondata.h"
 
-/*
+/**
  *	Provides a simple interface to a shatra engine.
  */
 
@@ -36,90 +36,99 @@ class Engine : public QObject
 
 public:
 
-	/* Constructs an engine with a given path/command, and log stream */
+    /** Constructs an engine with a given path/command, and log stream */
 	Engine(const QString& name,
 		const QString& command,
         bool  bTestMode,
 		const QString& directory = QString(),
 		QTextStream* logStream = NULL);
 
-	/* Virtual destructor */
+    /** Virtual destructor */
 	virtual ~Engine();
 
-	/* Set the stream that the debug output goes to */
+    /** Set the stream that the debug output goes to */
 	void setLogStream(QTextStream* logStream = NULL);
 
-	/* Launch and initialize engine, fire activated() signal when done*/
+    /** Launch and initialize engine, fire activated() signal when done*/
 	void activate();
 
-	/* Destroy engine process */
+    /** Destroy engine process */
 	void deactivate();
 
-	/* Returns whether the engine is active or not */
+    /** Returns whether the engine is active or not */
 	bool isActive();
 
-	/* Analyzes the given position */
+    /** Analyzes the given position */
 	virtual bool startAnalysis(const Board& board, int nv = 1) = 0;
 
-	/* Stops any analysis */
+    /** Stops any analysis */
 	virtual void stopAnalysis() = 0;
 
-	/* Returns whether the engine is analyzing or not */
+    /** Returns whether the engine is analyzing or not */
 	bool isAnalyzing();
 
-	/* Create a new engine, pass index into engine settings list */
+    /** Create a new engine, pass index into engine settings list */
     static Engine* newEngine(int index);
     static Engine* newEngine(int index, bool bTestMode);
     static Engine* newEngine(EngineList& engineList, int index, bool bTestMode);
 
-	/* Set number of lines. */
+    /** Set number of lines. */
 	virtual void setMpv(int mpv);
 
     virtual bool providesMvp() { return false; }
+
 signals:
-	/* Fired when the engine is activated */
+    /** Fired when the engine is activated */
 	void activated();
 
-	/* Fired when the engine is deactivated */
+    /** Fired when the engine is deactivated */
 	void deactivated();
 
-	/* Fired when the engine is deactivated */
+    /** Fired when the engine is deactivated */
     void error(QProcess::ProcessError);
 
-	/* Fired when analysis starts */
+    /** Fired when analysis starts */
 	void analysisStarted();
 
-	/* Fired when analysis stops */
+    /** Fired when analysis stops */
 	void analysisStopped();
 
-	/* Fired when the engine has produced some analysis */
+    /** Fired when the engine has produced some analysis */
 	void analysisUpdated(const Analysis& analysis);
 
-	/* Fired when a log item has been written to the log */
+    /** Fired when a log item has been written to the log */
 	void logUpdated();
 
+    /** Sends the raw communication from the engine */
+    void commFromEngine(const QString& msg);
+
+    /** Sends the raw communication that was issued to the engine */
+    void commToEngine(const QString& msg);
+
+    /** Sends error messages */
+    void commError(const QString& msg);
 
 protected:
     /** Waits the given milliseconds until an output of the engine.
         Returns false if timed-out. */
     virtual bool waitForResponse(int wait_ms = 1000);
 
-	/* Performs any shutdown procedure required by the engine protocol */
+    /** Performs any shutdown procedure required by the engine protocol */
 	virtual void protocolEnd() = 0;
 
-	/* Processes messages from the engine */
+    /** Processes messages from the engine */
 	virtual void processMessage(const QString& message) = 0;
 
-	/* Sends a message to the engine */
+    /** Sends a message to the engine */
 	void send(const QString& message);
 
-	/* Sets whether the engine is active or not */
+    /** Sets whether the engine is active or not */
 	void setActive(bool active);
 
-	/* Sets whether the engine is analysing or not */
+    /** Sets whether the engine is analysing or not */
 	void setAnalyzing(bool analyzing);
 
-	/* Sends an analysis signal */
+    /** Sends an analysis signal */
 	void sendAnalysis(const Analysis& analysis);
 
 	bool m_invertBlack;
@@ -127,16 +136,16 @@ protected:
     bool m_bTestMode;
 
 private slots:
-	/* Receives notification that there is process output to read */
+    /** Receives notification that there is process output to read */
     void pollProcess();
 
-	/* Receives notification that the process has terminated */
+    /** Receives notification that the process has terminated */
 	void processExited();
 
-	/* Performs any initialisation required by the engine protocol */
+    /** Performs any initialisation required by the engine protocol */
 	virtual void protocolStart() = 0;
 
-	/* Processes messages from the engine */
+    /** Processes messages from the engine */
     void processError(QProcess::ProcessError);
 
 public:

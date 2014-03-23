@@ -18,7 +18,9 @@
 #include "messagedialog.h"
 
 AnalysisWidget::AnalysisWidget()
-        : m_engine(0)
+        : QWidget(0),
+          m_engine(0),
+          m_debug(true)
 {
     ui.setupUi(this);
     connect(ui.engineList, SIGNAL(activated(int)), SLOT(toggleAnalysis()));
@@ -59,6 +61,9 @@ void AnalysisWidget::startEngine()
         connect(m_engine, SIGNAL(deactivated()), SLOT(engineDeactivated()));
         connect(m_engine, SIGNAL(analysisUpdated(const Analysis&)),
                   SLOT(showAnalysis(const Analysis&)));
+        connect(m_engine, SIGNAL(commFromEngine(QString)), SLOT(slotCommFromEngine(QString)));
+        connect(m_engine, SIGNAL(commToEngine(QString)), SLOT(slotCommToEngine(QString)));
+        connect(m_engine, SIGNAL(commError(QString)), SLOT(slotCommEngineError(QString)));
         m_engine->activate();
         QString key = QString("/")+objectName()+"/Engine";
         AppSettings->setValue(key, ui.engineList->itemText(index));
@@ -132,7 +137,8 @@ void AnalysisWidget::slotReconfigure()
     int index = names.indexOf(oldEngineName);
     if (index != -1)
         ui.engineList->setCurrentIndex(index);
-    else {
+    else
+    {
         ui.engineList->setCurrentIndex(0);
         stopEngine();
     }
@@ -157,7 +163,8 @@ void AnalysisWidget::showAnalysis(const Analysis& analysis)
 
 void AnalysisWidget::setPosition(const Board& board)
 {
-    if (m_board != board) {
+    if (m_board != board)
+    {
         m_board = board;
         m_analyses.clear();
 //      m_tablebase->abortLookup();
@@ -188,12 +195,41 @@ void AnalysisWidget::slotLinkClicked(const QUrl& url)
 
 void AnalysisWidget::slotMpvChanged(int mpv)
 {
-    if (isEngineRunning()) {
+    if (isEngineRunning())
+    {
         while (m_analyses.count() > mpv)
             m_analyses.removeLast();
         m_engine->setMpv(mpv);
     }
 }
+
+void AnalysisWidget::slotCommToEngine(const QString& msg)
+{
+    if (m_debug)
+    {
+        ui.commText->setTextColor(Qt::black);
+        ui.commText->append("<-- " + msg);
+    }
+}
+
+void AnalysisWidget::slotCommFromEngine(const QString& msg)
+{
+    if (m_debug)
+    {
+        ui.commText->setTextColor(Qt::darkGreen);
+        ui.commText->append("--> " + msg);
+    }
+}
+
+void AnalysisWidget::slotCommEngineError(const QString& msg)
+{
+    if (m_debug)
+    {
+        ui.commText->setTextColor(Qt::darkRed);
+        ui.commText->append(msg);
+    }
+}
+
 
 bool AnalysisWidget::isAnalysisEnabled() const
 {

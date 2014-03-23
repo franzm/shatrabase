@@ -44,6 +44,26 @@ public:
     static const int maxHighlights = 2;
     static const int AllHighlights = H_HOVER | H_SELECT | H_GOAL | H_TARGET;
 
+    /** Collection of Pens and Brushes,
+        initialized by configure() */
+    struct Decoration
+    {
+        QColor hoverColor,
+               selectColor;
+        /** Pen for frame around squares */
+        QPen framePen;
+
+        /** 0=H_HOVER, 1=H_GOAL */
+        QBrush highlightBrush[2];
+        QPen highlightPen[2];
+        QPen selectPen;
+
+        QPen blackTemdekPen,
+             whiteTemdekPen;
+        /** For numbers on squares */
+        QFont font;
+        QPen fontPen;
+    };
 
     // --- ctor ---
 
@@ -53,6 +73,9 @@ public:
 
     /** Loads system settings */
     void configure();
+
+    /** Return current brushes and stuff */
+    const Decoration& decoration();
 
     // ----------- coords -------------
 
@@ -104,7 +127,8 @@ signals:
 
     /** Emitted when a move animation has ended. */
     void moveFinished();
-
+    /** Signal to display a message, e.g. on hover. */
+    void displayMessage(const QString& msg);
 protected slots:
 
     /** animation executer */
@@ -196,8 +220,7 @@ protected:
     /** current animation from 0 to 1 */
         m_anim_t;
 
-    QColor m_hoverColor,
-           m_selectColor;
+    Decoration m_deco;
 
     int m_own_from, m_own_to;
 };

@@ -42,6 +42,7 @@ class QSplitter;
 class QTimer;
 class QToolBar;
 class SaveDialog;
+class Statistics;
 class TableView;
 class ToolMainWindow;
 
@@ -289,6 +290,8 @@ public slots:
     void slotGetGameData(Game& g);
     /* Copy game from other database by drag'n'drop */
     void copyGame(QString fileName, const Game& game);
+    /** Displays the message @p msg in the status bar. */
+    void slotDisplayStatusMessage(const QString& msg);
 
 protected slots:
     void loadError(QUrl url);
@@ -349,6 +352,7 @@ private:
     PlayerListWidget* m_playerList;
     EventListWidget* m_eventList;
     DatabaseList* m_databaseList;
+    Statistics* m_stats;
 	SaveDialog* m_saveDialog;
 	/* Main gui parts */
 	BoardView* m_boardView;

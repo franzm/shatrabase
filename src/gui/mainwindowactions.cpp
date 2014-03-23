@@ -17,6 +17,7 @@
 #include "chessbrowser.h"
 #include "databaseinfo.h"
 #include "databaselist.h"
+#include "databasemodel.h"
 #include "editaction.h"
 #include "eventlistwidget.h"
 #include "filtermodel.h"
@@ -32,8 +33,10 @@
 #include "preferences.h"
 #include "savedialog.h"
 #include "settings.h"
+#include "statistics.h"
 #include "tablebase.h"
 #include "tableview.h"
+#include "histogram.h"
 #include "ushiengine.h"
 #include "version.h"
 
@@ -867,7 +870,9 @@ void MainWindow::slotToggleAutoAnalysis()
     slotToggleAutoPlayer();
     if (m_autoAnalysis->isChecked() && !m_mainAnalysis->isEngineRunning())
     {
-        MessageDialog::information(tr("Analysis Pane 1 is not running an engine for automatic analysis."), tr("Auto Analysis"));
+        MessageDialog::information(
+            tr("Analysis Pane 1 is not running an engine for automatic analysis."),
+            tr("Auto Analysis"));
     }
 }
 
@@ -980,7 +985,7 @@ void MainWindow::copyGame(QString fileName, const Game& game)
             if (m_databases[i]->isValid())
             {
                 copyGame(i,game);
-                //XXXm_databases[i]->filter()->resize(m_databases[i]->database()->count(), true);
+                //XXX m_databases[i]->filter()->resize(m_databases[i]->database()->count(), true);
             }
             return;
         }
@@ -1049,6 +1054,8 @@ void MainWindow::slotDatabaseChanged()
     gameLoad(gameIndex()>=0 ? gameIndex() : 0, true, true);
     m_playerList->setDatabase(database());
     m_eventList->setDatabase(database());
+    if (m_stats)
+        m_stats->setDatabaseModel(*static_cast<DatabaseModel*>(m_gameList->model()));
 	emit databaseChanged(databaseInfo());
 }
 

@@ -70,6 +70,9 @@ public slots:
     /** execute current set best move. Returns true when there was one, false otherwise. */
     bool execBestMove();
 
+protected slots:
+    void slotDisplayMessage(const QString& msg) { displayMessage(msg); }
+
 signals:
     /** User clicked source and destination squares */
     void moveMade(Square from, Square to, int button);
@@ -86,9 +89,18 @@ signals:
     void pieceDropped(Square to, Piece p);
     /** Board came back from external window. */
     void externalClosed();
+    /** Signal to display a message, e.g. on hover. */
+    void signalDisplayMessage(const QString& msg);
 protected:
+    /** Calls signalDisplayMessage and keeps a flag that
+     *  a message has been sent. The message will be reset
+     *  on-leave. */
+    void displayMessage(const QString& msg);
 
     // -------------- events ------------------
+
+    /** used to remove a previously send message */
+    virtual void leaveEvent(QEvent *);
 
     /** Handle mouse events */
     virtual void mousePressEvent(QMouseEvent* e);
@@ -199,6 +211,8 @@ private:
     QPoint m_dragStart;
     /** current end of drag (window space) */
     QPoint m_dragPoint;
+
+    bool m_messageSend;
 
     //int m_button;
     //bool m_clickUsed;

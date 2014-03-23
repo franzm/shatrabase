@@ -79,8 +79,6 @@ void USHIEngine::protocolEnd()
 
 void USHIEngine::processMessage(const QString& message)
 {
-    //qDebug() << "process " << message;
-
     if (message == "ushiok") {
 		//once the engine is running wait for it to initialise
 		m_waitingOn = "ushiok";
@@ -243,7 +241,7 @@ void USHIEngine::parseAnalysis(const QString& message)
                 Move move = board.parseMove(moveText);
 				if (!move.isLegal())
                 {
-                    qDebug() << "illegal move '" << moveText << "' from engine.";
+                    commError(tr("illegal move '%1' from engine!").arg(moveText));
 					break;
                 }
 				board.doMove(move);
@@ -385,11 +383,10 @@ void USHIEngine::parseOptions(const QString& message)
     }
     if (!error.isEmpty())
     {
-        qDebug() << "Cannot parse Option string: '"
-                 << message
-                 << "' looking at token '"
-                 << error
-                 << "'!";
+        commError(tr(
+                 "Cannot parse Option string: '%1' "
+                 "looking at token '%2'!")
+                 .arg(message).arg(error));
         return;
     }
     if (done || (phase > EXPECT_DEFAULT_VALUE))
@@ -407,9 +404,9 @@ void USHIEngine::parseOptions(const QString& message)
     }
     else
     {
-        qDebug() << "Incomplete syntax parsing Option string: '"
-                 << message
-                 << "'!";
+        commError(tr(
+                    "Incomplete syntax parsing Option string: '%1' !")
+                    .arg(message));
         return;
     }
 }

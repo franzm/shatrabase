@@ -40,11 +40,12 @@ BoardView::BoardView(QWidget* parent, int flags)
     //m_currentFrom(InvalidSquare),
     //m_currentTo(InvalidSquare),
     m_dragged (InvalidPiece),
-    m_dragStartSquare(InvalidSquare)
+    m_dragStartSquare(InvalidSquare),
     //m_clickUsed(false),
     // m_wheelCurrentDelta(0),
     //m_minDeltaWheel(0),
     //m_moveListCurrent(0)
+    m_messageSend   (false)
 {
     // that's how it's meant
     Q_ASSERT(m_parent);
@@ -88,11 +89,19 @@ void BoardView::configure()
 
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
+    connect(m_view, SIGNAL(displayMessage(QString)), SLOT(slotDisplayMessage(QString)));
+
     setFlipped(flipped);
 
     m_layout->addWidget(m_view);
 
     update();
+}
+
+void BoardView::displayMessage(const QString& msg)
+{
+    m_messageSend = true;
+    signalDisplayMessage(msg);
 }
 
 void BoardView::closeEvent(QCloseEvent * e)
@@ -356,6 +365,15 @@ Square BoardView::squareAt(const QPoint& p) const
     return m_view? m_view->squareAt(p) : InvalidSquare;
 }
 
+void BoardView::leaveEvent(QEvent *)
+{
+    if (m_messageSend)
+    {
+        m_messageSend = false;
+        signalDisplayMessage("");
+    }
+}
+
 void BoardView::mousePressEvent(QMouseEvent* event)
 {
     // leftclick
@@ -415,6 +433,13 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 	{
         Square s = squareAt(event->pos());
 
+        if (s != InvalidSquare)
+            displayMessage(QString("Square %1").arg(s));
+        else
+        if (m_messageSend)
+        {
+            //displayMessage("");
+        }
 
         if (canDrag(s))
         {
