@@ -43,6 +43,7 @@ DatabaseModel::DatabaseModel(Database * db, QObject *parent) :
     << tr("Result")
     << tr("ECO")
     << tr("Moves")
+    << tr("Ply")
     << tr("Pieces White")
     << tr("Pieces Black");
 
@@ -59,6 +60,7 @@ DatabaseModel::DatabaseModel(Database * db, QObject *parent) :
     << "Result"
     << "ECO"
     << "Length"
+    << "Ply"
     << "Pieces White"
     << "Pieces Black";
 

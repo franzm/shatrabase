@@ -753,7 +753,6 @@ int Game::moveNumber(MoveId moveId) const
 
 int Game::plyCount() const
 {
-    return m_currentBoard.moveNumber() * 2;
     int count = 0;
     int node = 0;
 

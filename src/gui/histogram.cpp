@@ -40,6 +40,7 @@ Histogram::Histogram(QWidget *parent) :
 
     // XXX need to refacture this
     visible_.insert(("Moves"), true);
+    visible_.insert(("Ply"), true);
     visible_.insert(("Pieces White"), true);
     visible_.insert(("Pieces Black"), true);
 
