@@ -104,7 +104,8 @@ signals:
 
     /** Emitted when a move animation has ended. */
     void moveFinished();
-
+    /** Signal to display a message, e.g. on hover. */
+    void displayMessage(const QString& msg);
 protected slots:
 
     /** animation executer */

@@ -108,6 +108,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotBoardClick(Square, int, QPoint)));
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));
     connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
+    connect(m_boardView, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
 //    DockWidgetEx* boardDock = new DockWidgetEx(tr("Board"), this);
 //    boardDock->setObjectName("BoardDock");
 //    boardDock->setWidget(m_boardView);
@@ -1211,6 +1212,11 @@ void MainWindow::cancelOperation(const QString& msg)
 {
 	statusBar()->showMessage(msg);
 	statusBar()->removeWidget(m_progressBar);
+}
+
+void MainWindow::slotDisplayStatusMessage(const QString& msg)
+{
+    statusBar()->showMessage(msg);
 }
 
 bool MainWindow::QuerySaveGame()

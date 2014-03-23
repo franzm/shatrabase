@@ -290,6 +290,8 @@ public slots:
     void slotGetGameData(Game& g);
     /* Copy game from other database by drag'n'drop */
     void copyGame(QString fileName, const Game& game);
+    /** Displays the message @p msg in the status bar. */
+    void slotDisplayStatusMessage(const QString& msg);
 
 protected slots:
     void loadError(QUrl url);
