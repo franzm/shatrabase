@@ -155,6 +155,11 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
 
+    map.insert("/PlayerSetup/Engine1", "");
+    map.insert("/PlayerSetup/Engine2", "");
+    map.insert("/PlayerSetup/Name1", tr("Player 1"));
+    map.insert("/PlayerSetup/Name2", tr("Player 2"));
+
     // board config
     map.insert("/Board/external", false);
     map.insert("/Board/minWheelCount", MIN_WHEEL_COUNT);

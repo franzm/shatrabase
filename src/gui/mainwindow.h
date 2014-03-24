@@ -36,6 +36,7 @@ class Game;
 class GameList;
 class OpeningTree;
 class PlayerListWidget;
+class PlayerSelect;
 class QLabel;
 class QProgressBar;
 class QSplitter;
@@ -350,6 +351,7 @@ private:
 	/* Dialogs  */
 	GameList* m_gameList;
     PlayerListWidget* m_playerList;
+    PlayerSelect * m_playerSelect;
     EventListWidget* m_eventList;
     DatabaseList* m_databaseList;
     Statistics* m_stats;

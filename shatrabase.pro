@@ -29,7 +29,8 @@ FORMS += \
     src/gui/commentdialog.ui \
     src/gui/engineoptiondialog.ui \
     src/gui/tagdetailwidget.ui \
-    src/gui/statistics.ui
+    src/gui/statistics.ui \
+    src/gui/playerselect.ui
 
 HEADERS += src/database/board.h \
     src/database/move.h \
@@ -112,7 +113,9 @@ HEADERS += src/database/board.h \
     src/gui/histogram.h \
     src/gui/statistics.h \
     src/database/databasestats.h \
-    src/database/databasestatsmodel.h
+    src/database/databasestatsmodel.h \
+    src/gui/playerselect.h \
+    src/database/playersetup.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -190,7 +193,9 @@ SOURCES += src/database/board.cpp \
     src/gui/histogram.cpp \
     src/gui/statistics.cpp \
     src/database/databasestats.cpp \
-    src/database/databasestatsmodel.cpp
+    src/database/databasestatsmodel.cpp \
+    src/gui/playerselect.cpp \
+    src/database/playersetup.cpp
 
 TEMPLATE = app
 INCLUDEPATH += src/database
