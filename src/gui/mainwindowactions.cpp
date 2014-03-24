@@ -510,7 +510,7 @@ void MainWindow::slotMoveChanged()
     emit displayTime(g.timeAnnotation(), g.board().toMove());
 
 	// Highlight current move
-	m_gameView->showMove(g.currentMove());
+    m_gameView->showMove(g.currentMove());
 
 	slotSearchTree();
 	emit boardChange(g.board());
@@ -780,7 +780,7 @@ void MainWindow::slotGameChanged()
 	if (header.length() > 8)
 		title.append(QString("<br>") + header);
     m_gameTitle->setText(QString("<qt>%1</qt>").arg(title));
-	slotMoveChanged();
+    slotMoveChanged();
 }
 
 void MainWindow::slotGameViewLink(const QUrl& url)
