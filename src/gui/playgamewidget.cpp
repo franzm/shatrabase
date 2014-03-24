@@ -56,6 +56,15 @@ PlayGameWidget::~PlayGameWidget()
     delete ui_;
 }
 
+bool PlayGameWidget::whiteCanMove() const
+{
+    return !play_->player1IsEngine();
+}
+
+bool PlayGameWidget::blackCanMove() const
+{
+    return !play_->player2IsEngine();
+}
 
 void PlayGameWidget::slotReconfigure()
 {
@@ -89,10 +98,8 @@ void PlayGameWidget::slotReconfigure()
         ui_->engineCombo2->setCurrentIndex(0);
 
     // update human-player led colors
-    if (!play_->player1IsEngine())
-        ui_->led1->setOnColor(QLed::Green);
-    if (!play_->player2IsEngine())
-        ui_->led2->setOnColor(QLed::Green);
+    ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Red : QLed::Green);
+    ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Red : QLed::Green);
 }
 
 
@@ -109,12 +116,13 @@ void PlayGameWidget::slotName2Changed_(const QString& s)
 void PlayGameWidget::slotEngine1Changed_(const QString& s)
 {
     play_->setEngineName1(s);
+    ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Red : QLed::Green);
 }
 
 void PlayGameWidget::slotEngine2Changed_(const QString& s)
 {
-    qDebug() << s;
     play_->setEngineName2(s);
+    ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Red : QLed::Green);
 }
 
 void PlayGameWidget::start_()
@@ -132,11 +140,13 @@ void PlayGameWidget::start_()
 
     playing_ = true;
 
+    emit startNewGame();
 }
 
 void PlayGameWidget::resign_()
 {
     playing_ = false;
+
     ui_->b_new->setEnabled(true);
     ui_->b_resign->setEnabled(false);
     ui_->b_flip->setEnabled(true);
@@ -144,6 +154,8 @@ void PlayGameWidget::resign_()
     ui_->nameEdit2->setEnabled(true);
     ui_->engineCombo1->setEnabled(true);
     ui_->engineCombo2->setEnabled(true);
+
+    emit resignGame();
 }
 
 void PlayGameWidget::flipPlayers_()
@@ -160,15 +172,27 @@ void PlayGameWidget::setPosition(const Board& board)
 {
     if (!playing_) return;
 
+    // White is next
     if (board.toMove() == White)
     {
         ui_->led1->setValue(true);
         ui_->led2->setValue(false);
+
+        if (play_->player1IsEngine())
+        {
+            play_->setPosition(board);
+        }
     }
+    // Black is next
     else
     {
         ui_->led1->setValue(false);
         ui_->led2->setValue(true);
+
+        if (play_->player2IsEngine())
+        {
+            play_->setPosition(board);
+        }
     }
 }
 

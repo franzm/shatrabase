@@ -185,8 +185,13 @@ public slots:
 	void slotGameViewToggle(bool source);
     /* Dump all node information to the console */
     void slotGameDumpMoveNodes();
-    /* Create new empty game (to be appended to the database. */
-	void slotGameNew();
+    /* Create new empty game (to be appended to the database).
+        Returns false if the database is readonly or save-current-game was cancelled. */
+    bool slotGameNew();
+    /** Connected to PlayGameWidget to signal start of new game */
+    void slotPlayGameNew();
+    /** Connected to the resign button in PlayGameWidget */
+    void slotPlayGameResign();
     /* Save game, replacing old one if modified, appending if new
         @return false if cancelled, true if changes are to be saved or discarded. */
     bool slotGameSave();

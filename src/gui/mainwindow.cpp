@@ -205,6 +205,8 @@ MainWindow::MainWindow() : QMainWindow(),
     playerSelDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_P);
     m_menuView->addAction(playerSelDock->toggleViewAction());
     addDockWidget(Qt::RightDockWidgetArea, playerSelDock);
+    connect(m_playGame, SIGNAL(startNewGame()), SLOT(slotPlayGameNew()));
+    connect(m_playGame, SIGNAL(resignGame()), SLOT(slotPlayGameResign()));
 
     /* Player List */
     DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);

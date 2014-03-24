@@ -77,6 +77,9 @@ public:
 
     virtual bool providesMvp() { return false; }
 
+    /** Returns the descriptive error text */
+    static QString processErrorText(QProcess::ProcessError);
+
 signals:
     /** Fired when the engine is activated */
 	void activated();

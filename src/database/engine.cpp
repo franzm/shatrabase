@@ -227,25 +227,28 @@ void Engine::pollProcess()
     }
 }
 
-void Engine::processError(QProcess::ProcessError errMsg)
+QString Engine::processErrorText(QProcess::ProcessError errMsg)
 {
-    QString es;
     switch (errMsg)
     {
     case QProcess::FailedToStart:
-        es = tr("failed to start engine"); break;
+        return tr("failed to start engine"); break;
     case QProcess::Crashed:
-        es = tr("the engine has crashed"); break;
+        return tr("the engine has crashed"); break;
     case QProcess::Timedout:
-        es = tr("the engine timed out"); break;
+        return tr("the engine timed out"); break;
     case QProcess::WriteError:
-        es = tr("could not speak to engine"); break;
+        return tr("could not speak to engine"); break;
     case QProcess::ReadError:
-        es = tr("could not read from engine"); break;
+        return tr("could not read from engine"); break;
     default:
-        es = tr("an unknown error occured with engine"); break;
+        return tr("an unknown error occured with engine"); break;
     }
-    commError(es);
+}
+
+void Engine::processError(QProcess::ProcessError errMsg)
+{
+    commError(processErrorText(errMsg));
 
     setActive(false);
     m_process = 0;

@@ -639,7 +639,7 @@ void MainWindow::slotGameLoadChosen()
 	m_gameList->setFocus();
 }
 
-void MainWindow::slotGameNew()
+bool MainWindow::slotGameNew()
 {
 	if (database()->isReadOnly())
     {
@@ -651,8 +651,28 @@ void MainWindow::slotGameNew()
         {
             databaseInfo()->newGame();
             slotGameChanged();
+            return true;
         }
 	}
+    return false;
+}
+
+void MainWindow::slotPlayGameNew()
+{
+    if (slotGameNew())
+    {
+        // set boardview flags
+        m_boardView->setFlags(
+                    (BoardView::F_DisableWhite * (!m_playGame->whiteCanMove()))
+                  | (BoardView::F_DisableBlack * (!m_playGame->blackCanMove()))
+                );
+    }
+}
+
+void MainWindow::slotPlayGameResign()
+{
+    // restore boardview flags
+    m_boardView->setFlags(0);
 }
 
 void MainWindow::saveGame()

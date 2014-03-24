@@ -596,7 +596,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             m_board.getReachableSquares(from,v);
 
             // auto execute move?
-            if (m_guessMove && v.size())
+            if (m_guessMove && v.size() && canDrag(m_selectedSquare))
             {
                 m_own_from = from;
                 m_own_to = v[m_goal_index%v.size()];
@@ -749,6 +749,11 @@ bool BoardView::canDrag(Square s)
 {
     //if (m_dragged != InvalidPiece) // already dragging
     //    return false;
+    if ((m_flags & F_DisableWhite) && m_board.toMove() == White)
+        return false;
+    if ((m_flags & F_DisableBlack) && m_board.toMove() == Black)
+        return false;
+
     if (s == InvalidSquare)
         return false;
     if (m_flags & F_AllowAllMoves)

@@ -31,7 +31,8 @@ class BoardView : public QWidget
     Q_OBJECT
 public:
     enum { WheelUp = Qt::LeftButton, WheelDown = Qt::RightButton };
-    enum { F_AllowAllMoves = 1, F_AllowCopyPiece = 2, F_HideMoveHelp = 4, F_ExecuteMoves = 8 };
+    enum { F_AllowAllMoves = 1, F_AllowCopyPiece = 2, F_HideMoveHelp = 4, F_ExecuteMoves = 8,
+           F_DisableWhite = 16, F_DisableBlack = 32 };
     /** Create board widget.
         The parent is expected to exist. BoardView can be externalized, and
         will reconnect to parent on close. */
@@ -212,6 +213,7 @@ private:
     /** current end of drag (window space) */
     QPoint m_dragPoint;
 
+    /** flag for deleting the statusbar on leaveEvent() */
     bool m_messageSend;
 
     //int m_button;

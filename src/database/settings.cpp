@@ -155,10 +155,10 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
 
-    map.insert("/PlayerSetup/Engine1", "");
-    map.insert("/PlayerSetup/Engine2", "");
-    map.insert("/PlayerSetup/Name1", tr("Player 1"));
-    map.insert("/PlayerSetup/Name2", tr("Player 2"));
+    map.insert("/PlayGame/Engine1", "");
+    map.insert("/PlayGame/Engine2", "");
+    map.insert("/PlayGame/Name1", tr("Player 1"));
+    map.insert("/PlayGame/Name2", tr("Player 2"));
 
     // board config
     map.insert("/Board/external", false);
@@ -211,7 +211,7 @@ QVariant Settings::getValue(const QString &key) const
             return value(key, defaultValues.value(groupKey));
         }
     }
-    Q_ASSERT(false);
+    Q_ASSERT_X(false, "request for unknown key", key.toStdString().c_str());
     return QVariant();
 }
 

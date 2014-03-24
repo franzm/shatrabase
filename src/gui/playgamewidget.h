@@ -38,7 +38,17 @@ public:
 
     bool isPlaying() const { return playing_; }
 
+    /** Returns if White should be able to interact with board */
+    bool whiteCanMove() const;
+    /** Returns if Black should be able to interact with board */
+    bool blackCanMove() const;
+
 signals:
+    /** Emitted when a new game wants to be played */
+    void startNewGame();
+    /** Emitted when player wants to resign. */
+    void resignGame();
+
     /** The Engine has send a new position. */
     void positionUpdated(const Board& board);
 
