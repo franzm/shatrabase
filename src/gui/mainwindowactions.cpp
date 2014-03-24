@@ -30,6 +30,7 @@
 #include "output.h"
 #include "sgndatabase.h"
 #include "playerlistwidget.h"
+#include "playgamewidget.h"
 #include "preferences.h"
 #include "savedialog.h"
 #include "settings.h"
@@ -468,6 +469,10 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
 
         game().forward();
     }
+
+    if (m_playGame->isPlaying())
+        m_playGame->setPosition(board);
+
     slotGameChanged();
 }
 

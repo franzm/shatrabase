@@ -31,12 +31,12 @@ class Analysis;
 
 /** This class handles the setup of the two players (human or engine)
  *  and can be used to play a game. */
-class PlayerSetup : public QObject
+class PlayGame : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlayerSetup(QObject *parent = 0);
-    ~PlayerSetup();
+    explicit PlayGame(QObject *parent = 0);
+    ~PlayGame();
 
     // ------- getter -----------
 

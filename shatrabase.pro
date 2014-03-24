@@ -114,8 +114,8 @@ HEADERS += src/database/board.h \
     src/gui/statistics.h \
     src/database/databasestats.h \
     src/database/databasestatsmodel.h \
-    src/gui/playerselect.h \
-    src/database/playersetup.h
+    src/gui/playgamewidget.h \
+    src/database/playgame.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -194,8 +194,8 @@ SOURCES += src/database/board.cpp \
     src/gui/statistics.cpp \
     src/database/databasestats.cpp \
     src/database/databasestatsmodel.cpp \
-    src/gui/playerselect.cpp \
-    src/database/playersetup.cpp
+    src/gui/playgamewidget.cpp \
+    src/database/playgame.cpp
 
 TEMPLATE = app
 INCLUDEPATH += src/database

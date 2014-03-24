@@ -32,7 +32,7 @@
 #include "output.h"
 #include "sgndatabase.h"
 #include "playerlistwidget.h"
-#include "playerselect.h"
+#include "playgamewidget.h"
 #include "preferences.h"
 #include "savedialog.h"
 #include "settings.h"
@@ -196,13 +196,12 @@ MainWindow::MainWindow() : QMainWindow(),
     addDockWidget(Qt::RightDockWidgetArea, statsDock);
     m_menuView->addAction(statsDock->toggleViewAction());
 
-    /* Player Select */
-    DockWidgetEx* playerSelDock = new DockWidgetEx(tr("Player selection"), this);
-    playerSelDock->setObjectName("PlayerSelectDock");
-    m_playerSelect = new PlayerSelect(this);
-    m_playerSelect->slotReconfigure();
-    //connect(m_stats, SIGNAL(displayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
-    playerSelDock->setWidget(m_playerSelect);
+    /* Play Game */
+    DockWidgetEx* playerSelDock = new DockWidgetEx(tr("Play Game"), this);
+    playerSelDock->setObjectName("PlayGameDock");
+    m_playGame = new PlayGameWidget(this);
+    m_playGame->slotReconfigure();
+    playerSelDock->setWidget(m_playGame);
     playerSelDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_P);
     m_menuView->addAction(playerSelDock->toggleViewAction());
     addDockWidget(Qt::RightDockWidgetArea, playerSelDock);

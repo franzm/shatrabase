@@ -24,17 +24,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QWidget>
 
 class Board;
-class PlayerSetup;
+class PlayGame;
 
 namespace Ui { class PlayerSelect; }
 
-class PlayerSelect : public QWidget
+class PlayGameWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PlayerSelect(QWidget *parent = 0);
-    ~PlayerSelect();
+    explicit PlayGameWidget(QWidget *parent = 0);
+    ~PlayGameWidget();
+
+    bool isPlaying() const { return playing_; }
 
 signals:
     /** The Engine has send a new position. */
@@ -65,7 +67,9 @@ protected slots:
 private:
     Ui::PlayerSelect * ui_;
 
-    PlayerSetup * player_;
+    PlayGame * play_;
+
+    bool playing_;
 };
 
 #endif // PLAYERSELECT_H
