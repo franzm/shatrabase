@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "playgame.h"
 
 #include <QMessageBox>
+#include <QDate>
 
 PlayGameWidget::PlayGameWidget(QWidget *parent) :
     QWidget     (parent),
@@ -152,9 +153,17 @@ void PlayGameWidget::start_()
     // XXX not really working right now
     sendFreshBoardWhenReady_ = play_->player1IsEngine();
 
-    play_->activate();
+    // predefine the known game tags
+    QMap<QString, QString> tags;
+    tags.insert("White", play_->playerName1());
+    tags.insert("Black", play_->playerName2());
+    tags.insert("Date", QDate::currentDate().toString(Qt::ISODate));
 
-    emit startNewGame();
+    emit startNewGame(tags);
+
+    // XXX This should actually wait for MainWindow
+    // to do it's save-unchanged stuff
+    play_->activate();
 }
 
 void PlayGameWidget::resign_()

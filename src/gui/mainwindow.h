@@ -189,7 +189,7 @@ public slots:
         Returns false if the database is readonly or save-current-game was cancelled. */
     bool slotGameNew();
     /** Connected to PlayGameWidget to signal start of new game */
-    void slotPlayGameNew();
+    void slotPlayGameNew(const QMap<QString, QString>& tags);
     /** Connected to the resign button in PlayGameWidget */
     void slotPlayGameResign();
     /** Connected to PlayGameWidget: Engine has made a move */

@@ -205,7 +205,7 @@ MainWindow::MainWindow() : QMainWindow(),
     playerSelDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_P);
     m_menuView->addAction(playerSelDock->toggleViewAction());
     addDockWidget(Qt::RightDockWidgetArea, playerSelDock);
-    connect(m_playGame, SIGNAL(startNewGame()), SLOT(slotPlayGameNew()));
+    connect(m_playGame, SIGNAL(startNewGame(QMap<QString,QString>)), SLOT(slotPlayGameNew(QMap<QString,QString>)));
     connect(m_playGame, SIGNAL(resignGame()), SLOT(slotPlayGameResign()));
     connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));
     connect(this, SIGNAL(reconfigure()), m_playGame, SLOT(slotReconfigure()));

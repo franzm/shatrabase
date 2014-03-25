@@ -657,7 +657,7 @@ bool MainWindow::slotGameNew()
     return false;
 }
 
-void MainWindow::slotPlayGameNew()
+void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
 {
     if (slotGameNew())
     {
@@ -666,6 +666,15 @@ void MainWindow::slotPlayGameNew()
                     (BoardView::F_DisableWhite * (!m_playGame->whiteCanMove()))
                   | (BoardView::F_DisableBlack * (!m_playGame->blackCanMove()))
                 );
+
+        // transfer tags
+        Game &g = databaseInfo()->currentGame();
+        for (QMap<QString, QString>::const_iterator i=tags.begin(); i!=tags.end(); ++i)
+        {
+            g.setTag(i.key(), i.value());
+        }
+        g.setModified(true);
+        slotGameChanged();
     }
 }
 

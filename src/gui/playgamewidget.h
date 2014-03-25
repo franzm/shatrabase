@@ -50,7 +50,7 @@ public:
 
 signals:
     /** Emitted when a new game wants to be played */
-    void startNewGame();
+    void startNewGame(const QMap<QString, QString>& tags);
     /** Emitted when player wants to resign. */
     void resignGame();
 
