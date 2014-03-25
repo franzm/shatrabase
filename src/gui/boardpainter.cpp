@@ -59,7 +59,7 @@ public:
 
     Square square;
 
-    const BoardPainter::Decoration deco;
+    const BoardPainter::Decoration& deco;
 
     const QPixmap
     /** use for specific square decoration */
@@ -637,35 +637,7 @@ void BoardPainter::clearHighlights(int highlights)
     }
 }
 
-/*
-void BoardPainter::setSquareColor(Square sq, const QColor& color)
-{
-    SquareItem * s = squareItemAt(sq);
-    if (!s) return;
 
-    QColor col(color);
-    col.setAlpha(100);
-
-    s->highlight = true;
-    s->highlightBrush = QBrush(col);
-    s->update();
-}
-
-void BoardPainter::clearSquareColor(Square sq)
-{
-    SquareItem * s = squareItemAt(sq);
-    if (s) { s->highlight = false; s->update(); }
-}
-
-void BoardPainter::clearSquareColors()
-{
-    for (size_t i=0; i<m_squares.size(); ++i)
-    {
-        m_squares[i]->highlight = false;
-        m_squares[i]->update();
-    }
-}
-*/
 
 void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
 {
@@ -713,30 +685,6 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
     else
         m_drag_piece->setPos(pos);
 }
-/*
-void BoardPainter::setReachableSquares(const std::vector<Square>& squares)
-{
-    clearReachableSquares();
-
-    for (size_t i=0; i<squares.size(); ++i)
-    {
-        SquareItem * s = squareItemAt(squares[i]);
-        if (!s) continue;
-        s->reachable = true;
-        s->update();
-    }
-}
-
-void BoardPainter::clearReachableSquares()
-{
-    for (size_t i=0; i<m_squares.size(); ++i)
-    {
-        bool was = m_squares[i]->reachable;
-        m_squares[i]->reachable = false;
-        if (was) m_squares[i]->update();
-    }
-}
-*/
 
 
 // --------------------- animation -------------------------

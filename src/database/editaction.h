@@ -16,7 +16,7 @@
 #include "game.h"
 #include <QtCore>
 
-/* The EditAction is a ChessBrowser action. */
+/** The EditAction is a ChessBrowser action. */
 class EditAction
 {
 public:

@@ -37,8 +37,6 @@ BoardView::BoardView(QWidget* parent, int flags)
     m_goal_index    (0),
     m_own_from      (0),
     m_own_to        (0),
-    //m_currentFrom(InvalidSquare),
-    //m_currentTo(InvalidSquare),
     m_dragged (InvalidPiece),
     m_dragStartSquare(InvalidSquare),
     //m_clickUsed(false),
@@ -102,6 +100,34 @@ void BoardView::displayMessage(const QString& msg)
 {
     m_messageSend = true;
     signalDisplayMessage(msg);
+}
+
+QString BoardView::squareToString_(Square s) const
+{
+    QString r = QString("square %1 ").arg(s);
+    switch (m_board.pieceAt(s))
+    {
+        case WhiteBatyr:  r += tr("white batyr"); break;
+        case WhiteTura:   r += tr("white tura"); break;
+        case WhiteYalkyn: r += tr("white yalkyn"); break;
+        case WhiteBiy:    r += tr("white biy"); break;
+        case WhiteShatra: r += tr("white shatra"); break;
+
+        case BlackBatyr:  r += tr("black batyr"); break;
+        case BlackTura:   r += tr("black tura"); break;
+        case BlackYalkyn: r += tr("black yalkyn"); break;
+        case BlackBiy:    r += tr("black biy"); break;
+        case BlackShatra: r += tr("black shatra"); break;
+
+        case WasBatyr:  r += tr("captured batyr"); break;
+        case WasTura:   r += tr("captured tura"); break;
+        case WasYalkyn: r += tr("captured yalkyn"); break;
+        case WasShatra: r += tr("captured shatra"); break;
+
+        default: break;
+    }
+
+    return r;
 }
 
 void BoardView::closeEvent(QCloseEvent * e)
@@ -434,11 +460,11 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
         Square s = squareAt(event->pos());
 
         if (s != InvalidSquare)
-            displayMessage(QString("Square %1").arg(s));
+            displayMessage(squareToString_(s));
         else
         if (m_messageSend)
         {
-            //displayMessage("");
+            displayMessage("");
         }
 
         if (canDrag(s))

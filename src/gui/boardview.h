@@ -129,6 +129,9 @@ private:
     bool canDrag(Square s);
     //bool eventFilter(QObject *obj, QEvent *ev);
 
+    /** Returns a nice string for each square */
+    QString squareToString_(Square s) const;
+
     // ------ highlighting ------
 
     /* Selects given square. Previously selected square is unselected automatically.

@@ -107,17 +107,6 @@ public:
     /** Clears all given OR-combined highlights for all squares. */
     void clearHighlights(int highlights = AllHighlights);
 
-    /* Shows a half-transparent rect on Square @p sq.
-        Any previous color will be overwritten.
-    void setSquareColor(Square sq, const QColor& color);
-    void clearSquareColor(Square sq);
-    void clearSquareColors();
-
-    * Hilights all squares as reachable.
-        Previous hilights are removed.
-    void setReachableSquares(const std::vector<Square>& squares);
-    void clearReachableSquares(); */
-
     /** Sets the drag/move display.
         @p view is the current mouse coords for the piece.
         Set @p sq to InvalidSquare to stop dragging. */
