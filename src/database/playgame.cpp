@@ -30,6 +30,9 @@ PlayGame::PlayGame(QObject *parent)
 {
     SB_PLAY_DEBUG("PlayGame::PlayGame(...)");
 
+    connect(engine1_, SIGNAL(moveMade(Move)), SLOT(engineMove1_(Move)));
+    connect(engine2_, SIGNAL(moveMade(Move)), SLOT(engineMove2_(Move)));
+
     slotReconfigure();
 }
 
@@ -58,6 +61,8 @@ void PlayGame::slotReconfigure()
         engineName1_ = QString();
     if (!checkEngineName_(engineName2_))
         engineName2_ = QString();
+
+    SB_PLAY_DEBUG("PlayGame::reconfigure(): engine1="<<engineName1_<<" engine2="<<engineName2_);
 
     name1_ = AppSettings->getValue("/PlayGame/Name1").toString();
     name2_ = AppSettings->getValue("/PlayGame/Name2").toString();
@@ -152,10 +157,14 @@ bool PlayGame::setPosition(const Board& board)
 
 void PlayGame::engineMove1_(Move m)
 {
+    SB_PLAY_DEBUG("PlayGame::engineMove1_("<<m.from()<<"-"<<m.to()<<")");
+
     emit moveMade1(m);
 }
 
 void PlayGame::engineMove2_(Move m)
 {
+    SB_PLAY_DEBUG("PlayGame::engineMove2_("<<m.from()<<"-"<<m.to()<<")");
+
     emit moveMade2(m);
 }

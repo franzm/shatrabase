@@ -38,11 +38,11 @@ bool PlayGameEngine::createEngine_()
     {
         engine_ = Engine::newEngine(i);
 
-        connect(engine_, SIGNAL(activated()), SLOT(engine1Activated_()));
-        connect(engine_, SIGNAL(error(QProcess::ProcessError)), SLOT(engine1Error_(QProcess::ProcessError)));
-        connect(engine_, SIGNAL(deactivated()), SLOT(engine1Deactivated_()));
+        connect(engine_, SIGNAL(activated()), SLOT(engineActivated_()));
+        connect(engine_, SIGNAL(error(QProcess::ProcessError)), SLOT(engineError_(QProcess::ProcessError)));
+        connect(engine_, SIGNAL(deactivated()), SLOT(engineDeactivated_()));
         connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
-                                    SLOT(engine1Analysis_(const Analysis&)));
+                                    SLOT(engineAnalysis_(const Analysis&)));
         engine_->activate();
         SB_PLAY_DEBUG("PlayGameEngine::createEngine_(): created Engine " << name_);
         return true;
@@ -93,6 +93,7 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
     // we got what we wanted
     listening_ = false;
 
+    // send best move
     MoveList m = a.variation();
     if (!m.empty())
     {

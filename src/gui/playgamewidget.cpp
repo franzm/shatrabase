@@ -74,7 +74,7 @@ bool PlayGameWidget::blackCanMove() const
 
 void PlayGameWidget::slotReconfigure()
 {
-    // all settings are stored in PlayerSetup
+    // all settings are stored in PlayGame
     play_->slotReconfigure();
 
     ui_->nameEdit1->setText(play_->playerName1());
