@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #define PLAYERSELECT_H
 
 #include <QWidget>
+#include <QList>
 
 #include "board.h"
 
@@ -61,14 +62,16 @@ public slots:
         If required, the Engine will be queried. */
     void setPosition(const Board& board);
 
+    /** Signal that board has done the last issued move */
+    void animationFinished();
+
 private slots:
 
     // -- engine callbacks --
 
     void enginesReady();
     void engineClueless();
-    void moveFromEngine1(Move);
-    void moveFromEngine2(Move);
+    void moveFromEngine(Move);
 
     // -- widget callbacks --
 
@@ -87,12 +90,17 @@ private slots:
 
 private:
 
-    /** update widgets */
-    void setPlayer_(int stm);
+    /** Updates widgets */
+    void setWidgetsPlayer_(int stm);
+    /** Updates widgets */
+    void setWidgetsPlaying_(bool);
 
     Ui::PlayGame * ui_;
 
     PlayGame * play_;
+
+    Move lastMoveSend_;
+    QList<Move> plyQue_;
 
     bool playing_,
     /** Flag used when first player is Engine */

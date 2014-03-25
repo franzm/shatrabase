@@ -68,11 +68,14 @@ public slots:
 
     /** Tell the BoardView the best current move, e.g. from analysis. */
     void setBestMove(int from = InvalidSquare, int to = InvalidSquare);
-    /** execute current set best move. Returns true when there was one, false otherwise. */
+    /** Executes current set best move. Returns true when there was one, false otherwise. */
     bool execBestMove();
 
 protected slots:
-    void slotDisplayMessage(const QString& msg) { displayMessage(msg); }
+    /** Weiterleitung from BoardPainter */
+    void slotDisplayMessage(const QString& msg) { emit displayMessage(msg); }
+    /** Weiterleitung from BoardPainter */
+    void slotAnimationFinished() { emit animationFinished(); }
 
 signals:
     /** User clicked source and destination squares */
@@ -92,6 +95,10 @@ signals:
     void externalClosed();
     /** Signal to display a message, e.g. on hover. */
     void signalDisplayMessage(const QString& msg);
+
+    /** A piece move animation has been finished */
+    void animationFinished();
+
 protected:
     /** Calls signalDisplayMessage and keeps a flag that
      *  a message has been sent. The message will be reset

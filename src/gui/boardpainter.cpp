@@ -321,6 +321,7 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
 
 void BoardPainter::setBoard(const Board& board, int from, int to)
 {
+    qDebug() << "BoardPainter::setBoard(board," << from << ", " << to << ")";
 
     // keep side to turn
     m_is_white = board.toMove() == White;
@@ -723,7 +724,7 @@ void BoardPainter::stopAnimation_()
     // center everything
     //ensureVisible(sceneRect(), m_margin, m_margin);
 
-    emit moveFinished();
+    emit animationFinished();
 }
 
 void BoardPainter::animationStep_()

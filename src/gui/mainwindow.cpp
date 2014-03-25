@@ -110,6 +110,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));
     connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
     connect(m_boardView, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
+    connect(m_boardView, SIGNAL(animationFinished()), SLOT(slotBoardAnimationFinished()));
 //    DockWidgetEx* boardDock = new DockWidgetEx(tr("Board"), this);
 //    boardDock->setObjectName("BoardDock");
 //    boardDock->setWidget(m_boardView);
@@ -207,6 +208,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_playGame, SIGNAL(startNewGame()), SLOT(slotPlayGameNew()));
     connect(m_playGame, SIGNAL(resignGame()), SLOT(slotPlayGameResign()));
     connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));
+    connect(this, SIGNAL(reconfigure()), m_playGame, SLOT(slotReconfigure()));
 
     /* Player List */
     DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);

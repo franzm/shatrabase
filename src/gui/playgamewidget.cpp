@@ -37,8 +37,8 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
 
     // ----- setup PlayGame -----
 
-    connect(play_, SIGNAL(moveMade1(Move)), SLOT(moveFromEngine1(Move)));
-    connect(play_, SIGNAL(moveMade2(Move)), SLOT(moveFromEngine2(Move)));
+    connect(play_, SIGNAL(moveMade1(Move)), SLOT(moveFromEngine(Move)));
+    connect(play_, SIGNAL(moveMade2(Move)), SLOT(moveFromEngine(Move)));
     connect(play_, SIGNAL(ready()), SLOT(enginesReady()));
     connect(play_, SIGNAL(engineClueless()), SLOT(engineClueless()));
 
@@ -108,8 +108,8 @@ void PlayGameWidget::slotReconfigure()
         ui_->engineCombo2->setCurrentIndex(0);
 
     // update human/engine led colors
-    ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Red : QLed::Green);
-    ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Red : QLed::Green);
+    ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Blue : QLed::Green);
+    ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Blue : QLed::Green);
 }
 
 
@@ -126,27 +126,20 @@ void PlayGameWidget::slotName2Changed_(const QString& s)
 void PlayGameWidget::slotEngine1Changed_(const QString& s)
 {
     play_->setEngineName1(s);
-    ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Red : QLed::Green);
+    ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Blue : QLed::Green);
 }
 
 void PlayGameWidget::slotEngine2Changed_(const QString& s)
 {
     play_->setEngineName2(s);
-    ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Red : QLed::Green);
+    ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Blue : QLed::Green);
 }
 
 void PlayGameWidget::start_()
 {
     // update widget Spaß
-    ui_->led1->setValue(true);
-    ui_->led2->setValue(false);
-    ui_->b_new->setEnabled(false);
-    ui_->b_resign->setEnabled(true);
-    ui_->b_flip->setEnabled(false);
-    ui_->nameEdit1->setEnabled(false);
-    ui_->nameEdit2->setEnabled(false);
-    ui_->engineCombo1->setEnabled(false);
-    ui_->engineCombo2->setEnabled(false);
+    setWidgetsPlayer_(White);
+    setWidgetsPlaying_(true);
 
     playing_ = true;
 
@@ -162,14 +155,6 @@ void PlayGameWidget::resign_()
 {
     playing_ = false;
 
-    ui_->b_new->setEnabled(true);
-    ui_->b_resign->setEnabled(false);
-    ui_->b_flip->setEnabled(true);
-    ui_->nameEdit1->setEnabled(true);
-    ui_->nameEdit2->setEnabled(true);
-    ui_->engineCombo1->setEnabled(true);
-    ui_->engineCombo2->setEnabled(true);
-
     emit resignGame();
 }
 
@@ -183,33 +168,23 @@ void PlayGameWidget::flipPlayers_()
     slotReconfigure();
 }
 
-void PlayGameWidget::setPosition(const Board& board)
+void PlayGameWidget::setWidgetsPlayer_(int stm)
 {
-    SB_PLAY_DEBUG("PlayGameWidget::setPosition()");
-
-    if (!playing_) return;
-
-    // White is next
-    if (board.toMove() == White)
-    {
-        setPlayer_(White);
-
-        if (play_->player1IsEngine())
-        {
-            play_->setPosition(board);
-        }
-    }
-    // Black is next
-    else
-    {
-        setPlayer_(Black);
-
-        if (play_->player2IsEngine())
-        {
-            play_->setPosition(board);
-        }
-    }
+    ui_->led1->setValue(stm == White);
+    ui_->led2->setValue(stm != White);
 }
+
+void PlayGameWidget::setWidgetsPlaying_(bool p)
+{
+    ui_->b_new->setEnabled(!p);
+    ui_->b_resign->setEnabled(p);
+    ui_->b_flip->setEnabled(!p);
+    ui_->nameEdit1->setEnabled(!p);
+    ui_->nameEdit2->setEnabled(!p);
+    ui_->engineCombo1->setEnabled(!p);
+    ui_->engineCombo2->setEnabled(!p);
+}
+
 
 void PlayGameWidget::enginesReady()
 {
@@ -227,27 +202,75 @@ void PlayGameWidget::enginesReady()
 
 void PlayGameWidget::engineClueless()
 {
+    // XXX what to do here?
     QMessageBox::warning(
              this,
              tr("Shatra Engine"),
              tr("Sorry, but the Engine did not respond\n"
                 "in the specified time... You win!"));
+
+    setWidgetsPlaying_(playing_ = false);
 }
 
-void PlayGameWidget::moveFromEngine1(Move m)
+void PlayGameWidget::setPosition(const Board& board)
 {
-    setPlayer_(m.sideMoving());
-    emit moveMade(m);
+    SB_PLAY_DEBUG("PlayGameWidget::setPosition() plyQue_.size()=" << plyQue_.size());
+
+    if (!playing_) return;
+
+    // White is next
+    if (board.toMove() == White)
+    {
+        setWidgetsPlayer_(White);
+
+        if (play_->player1IsEngine())
+        {
+            play_->setPosition(board);
+        }
+    }
+    // Black is next
+    else
+    {
+        setWidgetsPlayer_(Black);
+
+        if (play_->player2IsEngine())
+        {
+            play_->setPosition(board);
+        }
+    }
 }
 
-void PlayGameWidget::moveFromEngine2(Move m)
+
+void PlayGameWidget::moveFromEngine(Move m)
 {
-    setPlayer_(m.sideMoving());
-    emit moveMade(m);
+    SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
+
+    plyQue_.append(m);
+
+    // first ply can be send right away
+    if (plyQue_.size() == 1)
+    {
+        lastMoveSend_ = m;
+        emit moveMade(m);
+        return;
+    }
 }
 
-void PlayGameWidget::setPlayer_(int stm)
+void PlayGameWidget::animationFinished()
 {
-    ui_->led1->setValue(stm == White);
-    ui_->led2->setValue(stm != White);
+    SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
+
+    // more plies in the que?
+    if (plyQue_.size() >= 1)
+    {
+        plyQue_.pop_front();
+        if (!plyQue_.empty())
+        {
+            lastMoveSend_ = plyQue_.first();
+            emit moveMade(lastMoveSend_);
+            return;
+        }
+    }
+
+    setWidgetsPlayer_(oppositeColor((Color)lastMoveSend_.sideMoving()));
 }

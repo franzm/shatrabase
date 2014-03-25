@@ -679,7 +679,16 @@ void MainWindow::slotPlayGameMove(Move m)
 {
     game().addMove(m);
     game().forward();
-    slotGameChanged();
+    // trigger animation
+    m_currentFrom = BN[m.from()];
+    m_currentTo = BN[m.to()];
+    slotMoveChanged();
+}
+
+void MainWindow::slotBoardAnimationFinished()
+{
+    if (m_playGame->isPlaying())
+        m_playGame->animationFinished();
 }
 
 void MainWindow::saveGame()

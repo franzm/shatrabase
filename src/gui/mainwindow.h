@@ -194,6 +194,8 @@ public slots:
     void slotPlayGameResign();
     /** Connected to PlayGameWidget: Engine has made a move */
     void slotPlayGameMove(Move);
+    /** The piece move animation has finished. */
+    void slotBoardAnimationFinished();
     /* Save game, replacing old one if modified, appending if new
         @return false if cancelled, true if changes are to be saved or discarded. */
     bool slotGameSave();

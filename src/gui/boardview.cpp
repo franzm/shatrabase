@@ -88,6 +88,7 @@ void BoardView::configure()
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
     connect(m_view, SIGNAL(displayMessage(QString)), SLOT(slotDisplayMessage(QString)));
+    connect(m_view, SIGNAL(animationFinished()), SLOT(slotAnimationFinished()));
 
     setFlipped(flipped);
 
@@ -119,10 +120,10 @@ QString BoardView::squareToString_(Square s) const
         case BlackBiy:    r += tr("black biy"); break;
         case BlackShatra: r += tr("black shatra"); break;
 
-        case WasBatyr:  r += tr("captured batyr"); break;
-        case WasTura:   r += tr("captured tura"); break;
-        case WasYalkyn: r += tr("captured yalkyn"); break;
-        case WasShatra: r += tr("captured shatra"); break;
+        case WasBatyr:    r += tr("captured batyr"); break;
+        case WasTura:     r += tr("captured tura"); break;
+        case WasYalkyn:   r += tr("captured yalkyn"); break;
+        case WasShatra:   r += tr("captured shatra"); break;
 
         default: break;
     }
