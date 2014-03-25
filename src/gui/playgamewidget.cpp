@@ -29,11 +29,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 PlayGameWidget::PlayGameWidget(QWidget *parent) :
     QWidget     (parent),
     ui_         (new Ui::PlayGame),
+    activeLed_  (0),
     play_       (new PlayGame(this)),
     playing_    (false)
 {
     setObjectName("PlayGameWidget");
     setWindowTitle(tr("Player selection"));
+
+    blinkTimer_.setSingleShot(false);
+    blinkTimer_.setInterval(blinkInterval_);
+    connect(&blinkTimer_, SIGNAL(timeout()), SLOT(slotBlinkTimer_()));
 
     // ----- setup PlayGame -----
 
@@ -108,8 +113,8 @@ void PlayGameWidget::slotReconfigure()
         ui_->engineCombo2->setCurrentIndex(0);
 
     // update human/engine led colors
-    ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Blue : QLed::Green);
-    ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Blue : QLed::Green);
+    ui_->led1->setOnColor(play_->player1IsEngine()? colorEngine0_ : colorPlayer_);
+    ui_->led2->setOnColor(play_->player2IsEngine()? colorEngine0_ : colorPlayer_);
 }
 
 
@@ -126,13 +131,13 @@ void PlayGameWidget::slotName2Changed_(const QString& s)
 void PlayGameWidget::slotEngine1Changed_(const QString& s)
 {
     play_->setEngineName1(s);
-    ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Blue : QLed::Green);
+    ui_->led1->setOnColor(play_->player1IsEngine()? colorEngine0_ : colorPlayer_);
 }
 
 void PlayGameWidget::slotEngine2Changed_(const QString& s)
 {
     play_->setEngineName2(s);
-    ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Blue : QLed::Green);
+    ui_->led2->setOnColor(play_->player2IsEngine()? colorEngine0_ : colorPlayer_);
 }
 
 void PlayGameWidget::start_()
@@ -144,6 +149,7 @@ void PlayGameWidget::start_()
     playing_ = true;
 
     // first player is engine? - then go
+    // XXX not really working right now
     sendFreshBoardWhenReady_ = play_->player1IsEngine();
 
     play_->activate();
@@ -170,12 +176,15 @@ void PlayGameWidget::flipPlayers_()
 
 void PlayGameWidget::setWidgetsPlayer_(int stm)
 {
+    activeLed_ = stm;
     ui_->led1->setValue(stm == White);
     ui_->led2->setValue(stm != White);
 }
 
 void PlayGameWidget::setWidgetsPlaying_(bool p)
 {
+    blinkTimer_.stop();
+
     ui_->b_new->setEnabled(!p);
     ui_->b_resign->setEnabled(p);
     ui_->b_flip->setEnabled(!p);
@@ -227,6 +236,7 @@ void PlayGameWidget::setPosition(const Board& board)
 
         if (play_->player1IsEngine())
         {
+            blinkTimer_.start();
             play_->setPosition(board);
         }
     }
@@ -237,6 +247,7 @@ void PlayGameWidget::setPosition(const Board& board)
 
         if (play_->player2IsEngine())
         {
+            blinkTimer_.start();
             play_->setPosition(board);
         }
     }
@@ -246,6 +257,8 @@ void PlayGameWidget::setPosition(const Board& board)
 void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
+
+    blinkTimer_.stop();
 
     plyQue_.append(m);
 
@@ -280,4 +293,12 @@ void PlayGameWidget::animationFinished()
         setWidgetsPlayer_(oppositeColor(lastStm_));
     }
 
+}
+
+void PlayGameWidget::slotBlinkTimer_()
+{
+    QLed * led = (activeLed_ == 0)? ui_->led1 : ui_->led2;
+
+    led->setOnColor(led->onColor() == colorEngine0_ ?
+                          colorEngine1_ : colorEngine0_);
 }

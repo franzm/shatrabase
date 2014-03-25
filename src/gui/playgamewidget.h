@@ -23,8 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <QWidget>
 #include <QList>
+#include <QTimer>
 
 #include "board.h"
+#include "qled.h"
 
 class Board;
 class PlayGame;
@@ -81,6 +83,8 @@ private slots:
     void slotEngine1Changed_(const QString&);
     void slotEngine2Changed_(const QString&);
 
+    void slotBlinkTimer_();
+
     /** Starts new game */
     void start_();
     /** Flip the players */
@@ -90,12 +94,22 @@ private slots:
 
 private:
 
+    static const QLed::ledColor colorPlayer_ = QLed::Green;
+    // for blinking when engine thinks
+    static const QLed::ledColor colorEngine0_ = QLed::Blue;
+    static const QLed::ledColor colorEngine1_ = QLed::Green;
+    // blinking interval in ms
+    static const int blinkInterval_ = 500;
+
     /** Updates widgets */
     void setWidgetsPlayer_(int stm);
     /** Updates widgets */
     void setWidgetsPlaying_(bool);
 
     Ui::PlayGame * ui_;
+
+    QTimer blinkTimer_;
+    int activeLed_;
 
     PlayGame * play_;
 
