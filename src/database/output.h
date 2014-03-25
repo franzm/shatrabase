@@ -76,7 +76,7 @@ public:
 		MarkupSiteTag,
 		MarkupResultTag,
         MarkupRoundTag,
-        MarkupMate
+        MarkupKC
 	};
     /* The supported output types */
 	enum OutputType {

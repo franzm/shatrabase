@@ -144,7 +144,7 @@ QString Analysis::toString(const Board& board) const
 
     if (isResult()) {
 		QString color = testBoard.toMove() == White ? "000080" : "800000";
-        QString text = isWin()? "Win in" : isLoss()? "Loss in" : "";
+        QString text = isWin()? tr("Win in") : isLoss()? tr("Loss in") : "";
 		out = QString("<font color=\"#%1\"><b>%2 %3</b></font> ")
                 .arg(color).arg(text).arg(movesToResult());
 	}
@@ -171,7 +171,7 @@ QString Analysis::toString(const Board& board) const
 	out += moveText;
     QTime t(0,0,0,0);
     t = t.addMSecs(time());
-    QString elapsed = t.toString("h:mm:ss");
+    QString elapsed = t.toString(tr("h:mm:ss"));
     out += tr(" (depth %1, %2)").arg(depth()).arg(elapsed);
 
 	return out;

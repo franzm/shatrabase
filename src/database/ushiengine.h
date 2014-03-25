@@ -45,7 +45,7 @@ public:
 
     void test()
     {
-        send("position spn sqssrsbrb/k/sssssss/7/7/7/7/SSSSSSS/K/BRBSRSSQS w Tt - - - 1");
+        send("position spn SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - 1");
         send("go");
     }
 protected:

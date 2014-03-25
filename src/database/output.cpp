@@ -86,7 +86,7 @@ void Output::readTemplateFile(const QString& path)
 				optionDefFields = line.split(",");
 				if (!m_options.createOption(optionDefFields[0], optionDefFields[1],
 								 optionDefFields[2], optionDefFields[3], optionDefFields[4])) {
-					qWarning("Could not create option. Ignoring line %d in file %s :\n%s", i, path.toLatin1().constData(), line.toLatin1().constData());
+                    qWarning("Could not create option. Ignoring line %d in file %s :\n%s", i, path.toLatin1().constData(), line.toLatin1().constData());
 				}
 
 				break;
@@ -156,8 +156,8 @@ void Output::readTemplateFile(const QString& path)
 					setMarkupTag(MarkupColumnStyleRow, tags[0], tags[1]);
 				} else if (name == "MarkupColumnStyleMainline") {
 					setMarkupTag(MarkupColumnStyleMainline, tags[0], tags[1]);
-                } else if (name == "MarkupMate") {
-                    setMarkupTag(MarkupMate, tags[0], tags[1]);
+                } else if (name == "MarkupKC") {
+                    setMarkupTag(MarkupKC, tags[0], tags[1]);
 				} else {
 					qWarning("Unkown Markup Tag found in file %s line %d. Ignoring : %s", path.toLatin1().constData(), i,  line.toLatin1().constData());
 				}
@@ -249,8 +249,8 @@ void Output::writeMove(MoveToWrite moveToWrite)
     if (moveToWrite == NextMove) san = m_game->moveToLann();
     else
         san = m_game->moveToLann(Game::MoveOnly, Game::PreviousMove);
-    QString mate = m_startTagMap[MarkupMate] + "x" + m_endTagMap[MarkupMate];
-    san.replace("x", mate);
+    QString kingcapt = m_startTagMap[MarkupKC] + "x" + m_endTagMap[MarkupKC];
+    san.replace("x", kingcapt);
     m_output += san;
 
  // *** End the markup for the move
