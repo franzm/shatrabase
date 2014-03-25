@@ -99,7 +99,7 @@ private:
 
     PlayGame * play_;
 
-    Move lastMoveSend_;
+    Color lastStm_;
     QList<Move> plyQue_;
 
     bool playing_,

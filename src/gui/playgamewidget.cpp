@@ -153,7 +153,7 @@ void PlayGameWidget::start_()
 
 void PlayGameWidget::resign_()
 {
-    playing_ = false;
+    setWidgetsPlaying_(playing_ = false);
 
     emit resignGame();
 }
@@ -218,6 +218,8 @@ void PlayGameWidget::setPosition(const Board& board)
 
     if (!playing_) return;
 
+    lastStm_ = board.toMove();
+
     // White is next
     if (board.toMove() == White)
     {
@@ -247,10 +249,10 @@ void PlayGameWidget::moveFromEngine(Move m)
 
     plyQue_.append(m);
 
-    // first ply can be send right away
+    // first ply of a sequence can be send right away
     if (plyQue_.size() == 1)
     {
-        lastMoveSend_ = m;
+        lastStm_ = (Color)m.sideMoving();
         emit moveMade(m);
         return;
     }
@@ -260,17 +262,22 @@ void PlayGameWidget::animationFinished()
 {
     SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
 
+    if (!playing_)
+        return;
+
     // more plies in the que?
-    if (plyQue_.size() >= 1)
+    if (!plyQue_.empty())
     {
+        // we sent that one before
         plyQue_.pop_front();
+        // next ply?
         if (!plyQue_.empty())
         {
-            lastMoveSend_ = plyQue_.first();
-            emit moveMade(lastMoveSend_);
+            emit moveMade(plyQue_.first());
             return;
         }
+
+        setWidgetsPlayer_(oppositeColor(lastStm_));
     }
 
-    setWidgetsPlayer_(oppositeColor((Color)lastMoveSend_.sideMoving()));
 }

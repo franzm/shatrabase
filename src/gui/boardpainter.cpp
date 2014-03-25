@@ -321,7 +321,7 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
 
 void BoardPainter::setBoard(const Board& board, int from, int to)
 {
-    qDebug() << "BoardPainter::setBoard(board," << from << ", " << to << ")";
+    //qDebug() << "BoardPainter::setBoard(board," << from << ", " << to << ")";
 
     // keep side to turn
     m_is_white = board.toMove() == White;
