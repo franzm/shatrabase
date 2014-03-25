@@ -66,7 +66,7 @@ private slots:
 
     /** Send what's in bestMove_.
         If gotMove_ == false or bestMove_ is empty,
-        engineCluess() will be emitted.
+        engineClueless() will be emitted.
         Also stops or deactivates the engine. */
     void sendMoves_();
 

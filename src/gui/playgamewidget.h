@@ -94,17 +94,20 @@ private slots:
 
 private:
 
-    static const QLed::ledColor colorPlayer_ = QLed::Green;
-    // for blinking when engine thinks
-    static const QLed::ledColor colorEngine0_ = QLed::Blue;
-    static const QLed::ledColor colorEngine1_ = QLed::Green;
-    // blinking interval in ms
-    static const int blinkInterval_ = 500;
-
     /** Updates widgets */
     void setWidgetsPlayer_(int stm);
     /** Updates widgets */
     void setWidgetsPlaying_(bool);
+
+    // ---- config ---
+    QLed::ledColor colorPlayer_;
+    // for blinking when engine thinks
+    QLed::ledColor colorEngine0_;
+    QLed::ledColor colorEngine1_;
+    /** Engine thinking blinking interval in ms */
+    int blinkInterval_;
+
+    // ___ MEMBER ___
 
     Ui::PlayGame * ui_;
 

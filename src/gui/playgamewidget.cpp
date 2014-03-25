@@ -28,11 +28,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QDate>
 
 PlayGameWidget::PlayGameWidget(QWidget *parent) :
-    QWidget     (parent),
-    ui_         (new Ui::PlayGame),
-    activeLed_  (0),
-    play_       (new PlayGame(this)),
-    playing_    (false)
+    QWidget         (parent),
+    colorPlayer_    (QLed::Green),
+    colorEngine0_   (QLed::Green),
+    colorEngine1_   (QLed::Blue),
+    blinkInterval_  (500),
+    ui_             (new Ui::PlayGame),
+    activeLed_      (0),
+    play_           (new PlayGame(this)),
+    playing_        (false)
 {
     setObjectName("PlayGameWidget");
     setWindowTitle(tr("Player selection"));
