@@ -25,9 +25,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QString>
 #include <QProcess>
 
-class Board;
-class Engine;
-class Analysis;
+#include "playgameengine.h"
+
+
 
 /** This class handles the setup of the two players (human or engine)
  *  and can be used to play a game. */
@@ -50,9 +50,6 @@ public:
     /** Return name of engine, or null-string if human */
     const QString& engineName2() const;
 
-    bool engine1Ready() const { return engine1Active_; }
-    bool engine2Ready() const { return engine2Active_; }
-
     bool player1IsEngine() const { return !engineName1_.isNull(); }
     bool player2IsEngine() const { return !engineName2_.isNull(); }
 
@@ -71,29 +68,30 @@ public:
 
 signals:
 
+    /** Emitted when a move has been suggested by Engine for Player 1 */
+    void moveMade1(Move);
+    /** Emitted when a move has been suggested by Engine for Player 2 */
+    void moveMade2(Move);
+
 public slots:
+
     /** Updates settings */
     void slotReconfigure();
 
-    /** Start playing (creates Engines) */
-    void start();
+    /** creates Engines as needed */
+    void activate();
 
     /** Sets new position. Signals, that a move has been performed.
-        If required, the Engine will be queried. */
-    void setPosition(const Board& board);
+        If required, the Engine will be queried.
+        Returns true when the Engine is (at least) requested to analyse. */
+    bool setPosition(const Board& board);
 
 protected slots:
 
     // ---- callbacks from Engine ----
 
-    void engine1Activated_();
-    void engine1Deactivated_();
-    void engine1Error_(QProcess::ProcessError);
-    void engine1Analysis_(const Analysis&);
-    void engine2Activated_();
-    void engine2Deactivated_();
-    void engine2Error_(QProcess::ProcessError);
-    void engine2Analysis_(const Analysis&);
+    void engineMove1_(Move);
+    void engineMove2_(Move);
 
 private:
 
@@ -101,16 +99,14 @@ private:
     bool checkEngineName_(const QString& name) const;
     /** Create the engines, if necessary */
     void createEngines_();
+    /** Lazy destroy processes and engines. */
+    void destroyEngines_();
 
     QString engineName1_, engineName2_,
             name1_, name2_;
 
-    /** current board */
-    Board * board_;
+    PlayGameEngine * engine1_, * engine2_;
 
-    Engine * engine1_, * engine2_;
-
-    bool engine1Active_, engine2Active_;
 };
 
 #endif // PLAYERSETUP_H

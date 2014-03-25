@@ -192,6 +192,8 @@ public slots:
     void slotPlayGameNew();
     /** Connected to the resign button in PlayGameWidget */
     void slotPlayGameResign();
+    /** Connected to PlayGameWidget: Engine has made a move */
+    void slotPlayGameMove(Move);
     /* Save game, replacing old one if modified, appending if new
         @return false if cancelled, true if changes are to be saved or discarded. */
     bool slotGameSave();

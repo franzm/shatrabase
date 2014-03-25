@@ -26,6 +26,15 @@
 
 #include "engineoptiondata.h"
 
+
+#if 1
+#   define SB_ENGINE_DEBUG(stream_arg__) { qDebug() << stream_arg__; }
+#else
+#   define SB_ENGINE_DEBUG(unused__) { }
+#endif
+
+
+
 /**
  *	Provides a simple interface to a shatra engine.
  */

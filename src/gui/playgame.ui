@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PlayerSelect</class>
- <widget class="QWidget" name="PlayerSelect">
+ <class>PlayGame</class>
+ <widget class="QWidget" name="PlayGame">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -45,7 +45,7 @@
      <item>
       <widget class="QPushButton" name="b_flip">
        <property name="text">
-        <string>Flip players</string>
+        <string>Swap players</string>
        </property>
       </widget>
      </item>

@@ -23,6 +23,8 @@ Engine::Engine(const QString& name,
 			 const QString& directory,
 			 QTextStream* logStream)
 {
+    SB_ENGINE_DEBUG("Engine::Engine("<<name<<","<<command<<","<<bTestMode<<","<<directory<<")");
+
 	m_name = name;
 	m_command = command;
     m_bTestMode = bTestMode;
@@ -40,6 +42,8 @@ Engine* Engine::newEngine(int index)
 
 Engine* Engine::newEngine(EngineList& engineList, int index, bool bTestMode)
 {
+    SB_ENGINE_DEBUG("Engine::newEngine("<<index<<","<<bTestMode<<")");
+
     Engine *engine = 0;
 
     QString name      = engineList[index].name;
@@ -63,6 +67,8 @@ Engine* Engine::newEngine(EngineList& engineList, int index, bool bTestMode)
 
 Engine* Engine::newEngine(int index, bool bTestMode)
 {
+    SB_ENGINE_DEBUG("Engine::newEngine("<<index<<","<<bTestMode<<")");
+
 	Engine *engine = 0;
 
     AppSettings->beginGroup("/Engines/");
@@ -90,8 +96,11 @@ Engine* Engine::newEngine(int index, bool bTestMode)
 
 Engine::~Engine()
 {
-    if (m_process) {
-        m_process = 0;
+    SB_ENGINE_DEBUG("Engine::~Engine()");
+
+    if (m_process)
+    {
+        delete m_process;
     }
 }
 
@@ -103,6 +112,8 @@ void Engine::setLogStream(QTextStream* logStream)
 
 void Engine::activate()
 {
+    SB_ENGINE_DEBUG("Engine::activate()");
+
     if (m_process)
     {
 		return;
@@ -124,6 +135,8 @@ void Engine::activate()
 
 void Engine::deactivate()
 {
+    SB_ENGINE_DEBUG("Engine::deactivate()");
+
     if (m_active)
     {
         protocolEnd();
@@ -146,6 +159,8 @@ bool Engine::isAnalyzing()
 
 void Engine::send(const QString& message)
 {
+    SB_ENGINE_DEBUG("Engine::send("<<message<<")");
+
     // debug out
     commToEngine(message);
 
@@ -157,11 +172,15 @@ void Engine::send(const QString& message)
 
 void Engine::setActive(bool active)
 {
-	if (active && !m_active) {
+    if (active && !m_active)
+    {
 		m_active = true;
 		emit activated();
-	} else {
-		if (!active && m_active) {
+    }
+    else
+    {
+        if (!active && m_active)
+        {
 			setAnalyzing(false);
 			m_active = false;
 			emit deactivated();
@@ -171,11 +190,15 @@ void Engine::setActive(bool active)
 
 void Engine::setAnalyzing(bool analyzing)
 {
-	if (analyzing) {
+    if (analyzing)
+    {
 		m_analyzing = true;
 		emit analysisStarted();
-	} else {
-		if (!analyzing && m_analyzing) {
+    }
+    else
+    {
+        if (!analyzing && m_analyzing)
+        {
 			m_analyzing = false;
 			emit analysisStopped();
 		}
@@ -203,7 +226,7 @@ bool Engine::waitForResponse(int wait_ms)
         QThread::msleep(10);
         if (time.elapsed() > wait_ms)
         {
-            commError(QString("engine timeout after %1 ms").arg(wait_ms));
+            commError(tr("engine timeout after %1 ms").arg(wait_ms));
             return false;
         }
     }
@@ -220,6 +243,7 @@ void Engine::pollProcess()
         message = m_process->readLine().simplified();
 
         // debug out
+        SB_ENGINE_DEBUG("Engine::pollProcess():" << message);
         commFromEngine(message);
 
         // send to derived class
@@ -248,6 +272,8 @@ QString Engine::processErrorText(QProcess::ProcessError errMsg)
 
 void Engine::processError(QProcess::ProcessError errMsg)
 {
+    SB_ENGINE_DEBUG("Engine::processError("<<errMsg<<")");
+
     commError(processErrorText(errMsg));
 
     setActive(false);
@@ -257,6 +283,8 @@ void Engine::processError(QProcess::ProcessError errMsg)
 
 void Engine::processExited()
 {
+    SB_ENGINE_DEBUG("Engine::processExited()");
+
 	setActive(false);
 	m_process = 0;
     emit deactivated();

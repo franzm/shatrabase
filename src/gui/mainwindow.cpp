@@ -200,13 +200,13 @@ MainWindow::MainWindow() : QMainWindow(),
     DockWidgetEx* playerSelDock = new DockWidgetEx(tr("Play Game"), this);
     playerSelDock->setObjectName("PlayGameDock");
     m_playGame = new PlayGameWidget(this);
-    m_playGame->slotReconfigure();
     playerSelDock->setWidget(m_playGame);
     playerSelDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_P);
     m_menuView->addAction(playerSelDock->toggleViewAction());
     addDockWidget(Qt::RightDockWidgetArea, playerSelDock);
     connect(m_playGame, SIGNAL(startNewGame()), SLOT(slotPlayGameNew()));
     connect(m_playGame, SIGNAL(resignGame()), SLOT(slotPlayGameResign()));
+    connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));
 
     /* Player List */
     DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);

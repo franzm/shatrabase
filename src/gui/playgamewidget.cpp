@@ -19,22 +19,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 ****************************************************************************/
 
 #include "playgamewidget.h"
-#include "ui_playerselect.h"
+#include "ui_playgame.h"
 #include "settings.h"
 #include "enginelist.h"
 #include "playgame.h"
-#include "board.h"
 
 #include <QDebug>
 
 PlayGameWidget::PlayGameWidget(QWidget *parent) :
     QWidget     (parent),
-    ui_         (new Ui::PlayerSelect),
-    play_     (new PlayGame(this)),
+    ui_         (new Ui::PlayGame),
+    play_       (new PlayGame(this)),
     playing_    (false)
 {
     setObjectName("PlayGameWidget");
     setWindowTitle(tr("Player selection"));
+
+    // ----- setup PlayGame -----
+
+    connect(play_, SIGNAL(moveMade1(Move)), SLOT(moveFromEngine1(Move)));
+    connect(play_, SIGNAL(moveMade2(Move)), SLOT(moveFromEngine2(Move)));
+
+    // ------- setup ui ------
 
     ui_->setupUi(this);
 
@@ -97,7 +103,7 @@ void PlayGameWidget::slotReconfigure()
     else
         ui_->engineCombo2->setCurrentIndex(0);
 
-    // update human-player led colors
+    // update human/engine led colors
     ui_->led1->setOnColor(play_->player1IsEngine()? QLed::Red : QLed::Green);
     ui_->led2->setOnColor(play_->player2IsEngine()? QLed::Red : QLed::Green);
 }
@@ -139,6 +145,8 @@ void PlayGameWidget::start_()
     ui_->engineCombo2->setEnabled(false);
 
     playing_ = true;
+
+    play_->activate();
 
     emit startNewGame();
 }
@@ -196,3 +204,16 @@ void PlayGameWidget::setPosition(const Board& board)
     }
 }
 
+void PlayGameWidget::moveFromEngine1(Move m)
+{
+    ui_->led1->setValue(false);
+    ui_->led2->setValue(true);
+    emit moveMade(m);
+}
+
+void PlayGameWidget::moveFromEngine2(Move m)
+{
+    ui_->led1->setValue(true);
+    ui_->led2->setValue(false);
+    emit moveMade(m);
+}

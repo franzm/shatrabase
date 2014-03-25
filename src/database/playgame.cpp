@@ -21,25 +21,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "playgame.h"
 #include "settings.h"
 #include "enginelist.h"
-
-#include "board.h"
 #include "engine.h"
 
 PlayGame::PlayGame(QObject *parent)
     :   QObject     (parent),
-        board_      (new Board),
-        engine1_    (0),
-        engine2_    (0),
-        engine1Active_  (false),
-        engine2Active_  (false)
+        engine1_    (new PlayGameEngine(this)),
+        engine2_    (new PlayGameEngine(this))
 {
+    SB_PLAY_DEBUG("PlayGame::PlayGame(...)");
+
+    slotReconfigure();
 }
 
 PlayGame::~PlayGame()
 {
-    if (engine1_) delete engine1_;
-    if (engine2_) delete engine2_;
-    delete board_;
+    SB_PLAY_DEBUG("PlayGame::~PlayGame()");
 }
 
 bool PlayGame::checkEngineName_(const QString& name) const
@@ -49,7 +45,6 @@ bool PlayGame::checkEngineName_(const QString& name) const
     EngineList elist;
     elist.restore();
 
-    // make a null-string for "" or when engine is not in the list
     return elist.names().contains(name);
 }
 
@@ -58,6 +53,7 @@ void PlayGame::slotReconfigure()
     engineName1_ = AppSettings->getValue("/PlayGame/Engine1").toString();
     engineName2_ = AppSettings->getValue("/PlayGame/Engine2").toString();
 
+    // make a null-string for "" or when engine is not in the list
     if (!checkEngineName_(engineName1_))
         engineName1_ = QString();
     if (!checkEngineName_(engineName2_))
@@ -67,9 +63,19 @@ void PlayGame::slotReconfigure()
     name2_ = AppSettings->getValue("/PlayGame/Name2").toString();
 }
 
-void PlayGame::start()
+void PlayGame::activate()
 {
-    createEngines_();
+    SB_PLAY_DEBUG("PlayGame::activate()");
+
+    if (!engineName1_.isNull())
+    {
+        engine1_->startEngine(engineName1_);
+    }
+
+    if (!engineName2_.isNull())
+    {
+        engine2_->startEngine(engineName2_);
+    }
 }
 
 const QString& PlayGame::playerName1() const
@@ -125,87 +131,31 @@ void PlayGame::setEngineName2(const QString &s)
 }
 
 
-void PlayGame::setPosition(const Board& board)
+bool PlayGame::setPosition(const Board& board)
 {
-    *board_ = board;
-}
+    SB_PLAY_DEBUG("PlayGame::setPosition(Board) stm = " << board.toMove());
 
-
-void PlayGame::createEngines_()
-{
-    if (engine1_) delete engine1_;
-    if (engine2_) delete engine2_;
-    engine1_ = engine2_ = 0;
-    engine1Active_ = engine2Active_ = false;
-
-    EngineList elist;
-    elist.restore();
-
-    // setup engine 1
-    int i = elist.names().indexOf(engineName1_);
-    if (i >= 0)
+    if (board.toMove() == White)
     {
-        engine1_ = Engine::newEngine(i);
-
-        connect(engine1_, SIGNAL(activated()), SLOT(engine1Activated_()));
-        connect(engine1_, SIGNAL(error(QProcess::ProcessError)), SLOT(engine1Error_(QProcess::ProcessError)));
-        connect(engine1_, SIGNAL(deactivated()), SLOT(engine1Deactivated_()));
-        connect(engine1_, SIGNAL(analysisUpdated(const Analysis&)),
-                                    SLOT(engine1Analysis_(const Analysis&)));
-        engine1_->activate();
+        return (engine1_ && engine1_->setPosition(board));
+    }
+    else
+    {
+        return (engine2_ && engine2_->setPosition(board));
     }
 
-    // setup engine 2
-    i = elist.names().indexOf(engineName2_);
-    if (i >= 0)
-    {
-        engine2_ = Engine::newEngine(i);
+    SB_PLAY_DEBUG("...did not care for the position, "
+                  "because there was no engine set up for this player.");
 
-        connect(engine2_, SIGNAL(activated()), SLOT(engine2Activated_()));
-        connect(engine2_, SIGNAL(error(QProcess::ProcessError)), SLOT(engine2Error_(QProcess::ProcessError)));
-        connect(engine2_, SIGNAL(deactivated()), SLOT(engine2Deactivated_()));
-        connect(engine2_, SIGNAL(analysisUpdated(const Analysis&)),
-                                    SLOT(engine2Analysis_(const Analysis&)));
-        engine2_->activate();
-    }
+    return false;
 }
 
-void PlayGame::engine1Activated_()
+void PlayGame::engineMove1_(Move m)
 {
-    engine1Active_ = true;
+    emit moveMade1(m);
 }
 
-void PlayGame::engine1Deactivated_()
+void PlayGame::engineMove2_(Move m)
 {
-    engine1Active_ = false;
-}
-
-void PlayGame::engine1Error_(QProcess::ProcessError)
-{
-
-}
-
-void PlayGame::engine1Analysis_(const Analysis&)
-{
-
-}
-
-void PlayGame::engine2Activated_()
-{
-    engine2Active_ = true;
-}
-
-void PlayGame::engine2Deactivated_()
-{
-    engine2Active_ = false;
-}
-
-void PlayGame::engine2Error_(QProcess::ProcessError)
-{
-
-}
-
-void PlayGame::engine2Analysis_(const Analysis&)
-{
-
+    emit moveMade2(m);
 }

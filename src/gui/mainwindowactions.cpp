@@ -675,6 +675,13 @@ void MainWindow::slotPlayGameResign()
     m_boardView->setFlags(0);
 }
 
+void MainWindow::slotPlayGameMove(Move m)
+{
+    game().addMove(m);
+    game().forward();
+    slotGameChanged();
+}
+
 void MainWindow::saveGame()
 {
     if (!database()->isReadOnly())
@@ -827,7 +834,7 @@ void MainWindow::slotGameViewLink(const QUrl& url)
 		if (!game().atGameEnd())
 			game().addVariation(url.path());
 		else
-			game().addMove(url.path());
+            game().addMove(url.path());
 		game().forward();
 		slotGameChanged();
 	} else if (url.scheme() == "tag") {

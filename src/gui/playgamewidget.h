@@ -23,10 +23,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <QWidget>
 
+#include "board.h"
+
 class Board;
 class PlayGame;
 
-namespace Ui { class PlayerSelect; }
+namespace Ui { class PlayGame; }
 
 class PlayGameWidget : public QWidget
 {
@@ -50,7 +52,7 @@ signals:
     void resignGame();
 
     /** The Engine has send a new position. */
-    void positionUpdated(const Board& board);
+    void moveMade(Move);
 
 public slots:
     void slotReconfigure();
@@ -59,8 +61,11 @@ public slots:
         If required, the Engine will be queried. */
     void setPosition(const Board& board);
 
-
 protected slots:
+
+    void moveFromEngine1(Move);
+    void moveFromEngine2(Move);
+
     void slotName1Changed_(const QString&);
     void slotName2Changed_(const QString&);
 
@@ -75,7 +80,7 @@ protected slots:
     void resign_();
 
 private:
-    Ui::PlayerSelect * ui_;
+    Ui::PlayGame * ui_;
 
     PlayGame * play_;
 
