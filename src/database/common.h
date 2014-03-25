@@ -130,7 +130,7 @@ inline bb bSq( const Square sq)
 /* character parsing */
 inline bool isUpper(const char c) { return c >= 'A' && c <= 'Z'; }
 inline bool isAlpha(const char c) { return c >= 'a' && c <= 'z'; }
-inline bool isNum(const char c) { return c >= '0' && c <= '9'; }
+inline bool isNum(const char c)   { return c >= '0' && c <= '9'; }
 
 // Pre-Increment
 //Piece& operator++(Piece& w);

@@ -22,7 +22,7 @@ into ChessX format.
 #include "playerdatabase.h"
 #include <QDir>
 
-class DatabaseConversion
+class DatabaseConversion : public QObject
 {
 
 public:

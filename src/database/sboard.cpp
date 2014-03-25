@@ -73,7 +73,7 @@ QString SBoard::moveToLann(const Move& move) const
     int from = move.from();
     int to = move.to();
 
-    if (move.isPassMove()) return "pass";
+    if (move.isPassMove()) return QObject::tr("pass");
 
     switch (g_notation)
     {
@@ -837,7 +837,7 @@ Move SBoard::parseMove(const QString& algebraic)
         case 'K': type = Biy;    c = *s++; break;
  // pass option
         case 'p':
-            if (algebraic != "pass") return move;
+            if (algebraic != QObject::tr("pass")) return move;
             to = m_biyAt[m_stm]; // NB woz *m_transit* ???
             return prepareMove(to, to);
 
@@ -1128,14 +1128,14 @@ void SBoardInit()
 { 
     SBoardInitRun = true;
     standardPosition.fromSPN
-        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
+        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - 1");
 }
 
 SBoard getStandardPosition()
 {
     SBoard b;
     b.fromSPN
-        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
+        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - 1");
     return b;
 }
 
