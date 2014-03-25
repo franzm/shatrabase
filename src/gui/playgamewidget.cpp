@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "enginelist.h"
 #include "playgame.h"
 
-#include <QDebug>
+#include <QMessageBox>
 
 PlayGameWidget::PlayGameWidget(QWidget *parent) :
     QWidget     (parent),
@@ -39,6 +39,8 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
 
     connect(play_, SIGNAL(moveMade1(Move)), SLOT(moveFromEngine1(Move)));
     connect(play_, SIGNAL(moveMade2(Move)), SLOT(moveFromEngine2(Move)));
+    connect(play_, SIGNAL(ready()), SLOT(enginesReady()));
+    connect(play_, SIGNAL(engineClueless()), SLOT(engineClueless()));
 
     // ------- setup ui ------
 
@@ -55,6 +57,8 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
     connect(ui_->b_new, SIGNAL(clicked()), SLOT(start_()));
     connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
     connect(ui_->b_resign, SIGNAL(clicked()), SLOT(resign_()));
+
+    slotReconfigure();
 }
 
 PlayGameWidget::~PlayGameWidget()
@@ -146,6 +150,9 @@ void PlayGameWidget::start_()
 
     playing_ = true;
 
+    // first player is engine? - then go
+    sendFreshBoardWhenReady_ = play_->player1IsEngine();
+
     play_->activate();
 
     emit startNewGame();
@@ -178,13 +185,14 @@ void PlayGameWidget::flipPlayers_()
 
 void PlayGameWidget::setPosition(const Board& board)
 {
+    SB_PLAY_DEBUG("PlayGameWidget::setPosition()");
+
     if (!playing_) return;
 
     // White is next
     if (board.toMove() == White)
     {
-        ui_->led1->setValue(true);
-        ui_->led2->setValue(false);
+        setPlayer_(White);
 
         if (play_->player1IsEngine())
         {
@@ -194,8 +202,7 @@ void PlayGameWidget::setPosition(const Board& board)
     // Black is next
     else
     {
-        ui_->led1->setValue(false);
-        ui_->led2->setValue(true);
+        setPlayer_(Black);
 
         if (play_->player2IsEngine())
         {
@@ -204,16 +211,43 @@ void PlayGameWidget::setPosition(const Board& board)
     }
 }
 
+void PlayGameWidget::enginesReady()
+{
+    SB_PLAY_DEBUG("PlayGameWidget::enginesReady()");
+
+    if (sendFreshBoardWhenReady_)
+    {
+        sendFreshBoardWhenReady_ = false;
+
+        Board b;
+        b.setStandardPosition();
+        setPosition(b);
+    }
+}
+
+void PlayGameWidget::engineClueless()
+{
+    QMessageBox::warning(
+             this,
+             tr("Shatra Engine"),
+             tr("Sorry, but the Engine did not respond\n"
+                "in the specified time... You win!"));
+}
+
 void PlayGameWidget::moveFromEngine1(Move m)
 {
-    ui_->led1->setValue(false);
-    ui_->led2->setValue(true);
+    setPlayer_(m.sideMoving());
     emit moveMade(m);
 }
 
 void PlayGameWidget::moveFromEngine2(Move m)
 {
-    ui_->led1->setValue(true);
-    ui_->led2->setValue(false);
+    setPlayer_(m.sideMoving());
     emit moveMade(m);
+}
+
+void PlayGameWidget::setPlayer_(int stm)
+{
+    ui_->led1->setValue(stm == White);
+    ui_->led2->setValue(stm != White);
 }

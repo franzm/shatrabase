@@ -1,13 +1,18 @@
 #include "playgameengine.h"
-#include "engine.h"
 
 PlayGameEngine::PlayGameEngine(QObject *parent)
     :   QObject             (parent),
         engine_             (0),
+        minWaitTime_        (2*1000),
+        maxWaitTime_        (6*1000),
         stopBetweenMoves_   (true),
-        listening_          (true)
+        listening_          (false),
+        sendPositionOnActivate_(false)
 {
     SB_PLAY_DEBUG("PlayGameEngine::PlayGameEngine()");
+
+    terminateTimer_.setSingleShot(true);
+    connect(&terminateTimer_, SIGNAL(timeout()), SLOT(sendMoves_()));
 }
 
 PlayGameEngine::~PlayGameEngine()
@@ -22,6 +27,14 @@ bool PlayGameEngine::startEngine(const QString& name)
 
     name_ = name;
     return createEngine_();
+}
+
+void PlayGameEngine::stop()
+{
+    SB_PLAY_DEBUG("PlayGameEngine::stop()");
+
+    if (engine_ && engine_->isActive())
+        engine_->deactivate();
 }
 
 bool PlayGameEngine::createEngine_()
@@ -43,7 +56,9 @@ bool PlayGameEngine::createEngine_()
         connect(engine_, SIGNAL(deactivated()), SLOT(engineDeactivated_()));
         connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
                                     SLOT(engineAnalysis_(const Analysis&)));
-        engine_->activate();
+        //if (!stopBetweenMoves_)
+            engine_->activate();
+
         SB_PLAY_DEBUG("PlayGameEngine::createEngine_(): created Engine " << name_);
         return true;
     }
@@ -58,18 +73,31 @@ void PlayGameEngine::destroyEngine_()
 {
     SB_PLAY_DEBUG("PlayGameEngine::destroyEngine_()");
 
+    listening_ = false;
     if (engine_)
     {
-        engine_->deactivate();
+        if (engine_->isRunning())
+            engine_->deactivate();
         delete engine_;
         engine_ = 0;
     }
-    listening_ = false;
 }
 
 void PlayGameEngine::engineActivated_()
 {
-    SB_PLAY_DEBUG("PlayGameEngine::engineActivated()");
+    SB_PLAY_DEBUG("PlayGameEngine::engineActivated() sendPositionOnActivate_="
+                    << sendPositionOnActivate_);
+
+    emit ready();
+
+
+    if (sendPositionOnActivate_)
+    {
+        startAnalysis_(board_);
+
+        sendPositionOnActivate_ = false;
+    }
+
 }
 
 void PlayGameEngine::engineDeactivated_()
@@ -90,15 +118,25 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
     if (!listening_)
         return;
 
-    // we got what we wanted
+    // keep the mainline
+    bestMove_ = a.variation();
+    gotMove_ = true;
+
+    // leave the Engine some time
+    if (waitTimer_.elapsed() < minWaitTime_)
+        return;
+
+    // send best move (and stop engine)
+    sendMoves_();
+
+}
+
+void PlayGameEngine::sendMoves_()
+{
+    // thanks, we got what we wanted
     listening_ = false;
 
-    // send best move
-    MoveList m = a.variation();
-    if (!m.empty())
-    {
-        emit moveMade(m[0]);
-    }
+    terminateTimer_.stop();
 
     if (engine_) /* it should be there though */
     {
@@ -107,13 +145,55 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
         else
             engine_->stopAnalysis();
     }
+
+    if (gotMove_ && !bestMove_.empty())
+    {
+        emit moveMade(bestMove_[0]);
+
+        // multi-ply?
+        int stm = bestMove_[0].sideMoving();
+        int i = 1;
+        while (i < bestMove_.size() && bestMove_[i].sideMoving() == stm)
+        {
+            emit moveMade(bestMove_[i]);
+            ++i;
+        }
+    }
+    else
+        emit engineClueless();
 }
 
 bool PlayGameEngine::setPosition(const Board &b)
 {
+    SB_PLAY_DEBUG("PlayGameEngine::setPosition() stopBetweenMoves_=" << stopBetweenMoves_);
+
+    if (!engine_) return false;
+
+    if (stopBetweenMoves_)
+    {
+        if (engine_->isRunning())
+            engine_->deactivate();
+
+        sendPositionOnActivate_ = true;
+        board_ = b;
+
+        engine_->activate();
+        return true; // best guess
+    }
+
+    return startAnalysis_(b);
+}
+
+
+bool PlayGameEngine::startAnalysis_(const Board& b)
+{
     if (!engine_) return false;
 
     listening_ = true;
+    gotMove_ = false;
+    waitTimer_.start();
+    terminateTimer_.start(maxWaitTime_);
+
     return engine_->startAnalysis(b, 1);
 }
 

@@ -42,7 +42,7 @@ Engine* Engine::newEngine(int index)
 
 Engine* Engine::newEngine(EngineList& engineList, int index, bool bTestMode)
 {
-    SB_ENGINE_DEBUG("Engine::newEngine("<<index<<","<<bTestMode<<")");
+    //SB_ENGINE_DEBUG("Engine::newEngine("<<index<<","<<bTestMode<<")");
 
     Engine *engine = 0;
 
@@ -67,7 +67,7 @@ Engine* Engine::newEngine(EngineList& engineList, int index, bool bTestMode)
 
 Engine* Engine::newEngine(int index, bool bTestMode)
 {
-    SB_ENGINE_DEBUG("Engine::newEngine("<<index<<","<<bTestMode<<")");
+    //SB_ENGINE_DEBUG("Engine::newEngine("<<index<<","<<bTestMode<<")");
 
 	Engine *engine = 0;
 
@@ -110,9 +110,9 @@ void Engine::setLogStream(QTextStream* logStream)
 	m_logStream = logStream;
 }
 
-void Engine::activate()
+void Engine::activate(bool do_wait)
 {
-    SB_ENGINE_DEBUG("Engine::activate()");
+    SB_ENGINE_DEBUG("Engine::activate("<<do_wait<<")");
 
     if (m_process)
     {
@@ -129,7 +129,11 @@ void Engine::activate()
         connect(m_process, SIGNAL(error(QProcess::ProcessError)), SLOT(processError(QProcess::ProcessError)));
         connect(m_process, SIGNAL(readyReadStandardOutput()), SLOT(pollProcess()));
         connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(processExited()));
-        m_process->start(m_command);
+        if (do_wait)
+            m_process->waitForStarted(2000);
+        else
+            m_process->start(m_command);
+        SB_ENGINE_DEBUG("Engine::activate: process started");
     }
 }
 
@@ -142,17 +146,24 @@ void Engine::deactivate()
         protocolEnd();
         if (m_process)
         {
-            m_process->waitForFinished(200);
+            m_process->waitForFinished(1000);
+            delete m_process;
+            m_process = 0;
         }
     }
 }
 
-bool Engine::isActive()
+bool Engine::isRunning() const
+{
+    return m_process;
+}
+
+bool Engine::isActive() const
 {
 	return m_active;
 }
 
-bool Engine::isAnalyzing()
+bool Engine::isAnalyzing() const
 {
 	return m_analyzing;
 }
@@ -277,6 +288,8 @@ void Engine::processError(QProcess::ProcessError errMsg)
     commError(processErrorText(errMsg));
 
     setActive(false);
+    if (m_process)
+        delete m_process;
     m_process = 0;
     emit error(errMsg);
 }
@@ -286,7 +299,9 @@ void Engine::processExited()
     SB_ENGINE_DEBUG("Engine::processExited()");
 
 	setActive(false);
-	m_process = 0;
+    if (m_process)
+        delete m_process;
+    m_process = 0;
     emit deactivated();
 }
 

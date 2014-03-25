@@ -502,6 +502,7 @@ inline void SBoard::initState()
 {
     memset(this, 0, sizeof(SBoard)); // right down here where
     memcpy(m_sb, SB, sizeof(SB));    // no one will notice it
+                                     // aha! saw it - sb
 }
 
 #endif // __SBOARD_H__

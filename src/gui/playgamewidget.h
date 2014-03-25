@@ -61,10 +61,16 @@ public slots:
         If required, the Engine will be queried. */
     void setPosition(const Board& board);
 
-protected slots:
+private slots:
 
+    // -- engine callbacks --
+
+    void enginesReady();
+    void engineClueless();
     void moveFromEngine1(Move);
     void moveFromEngine2(Move);
+
+    // -- widget callbacks --
 
     void slotName1Changed_(const QString&);
     void slotName2Changed_(const QString&);
@@ -80,11 +86,17 @@ protected slots:
     void resign_();
 
 private:
+
+    /** update widgets */
+    void setPlayer_(int stm);
+
     Ui::PlayGame * ui_;
 
     PlayGame * play_;
 
-    bool playing_;
+    bool playing_,
+    /** Flag used when first player is Engine */
+         sendFreshBoardWhenReady_;
 };
 
 #endif // PLAYERSELECT_H

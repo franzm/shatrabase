@@ -68,6 +68,13 @@ public:
 
 signals:
 
+    /** All needed Engines are activated.
+        Not send, if no Engine is selected. */
+    void ready();
+
+    /** One of the Engines has timed out without returning a move */
+    void engineClueless();
+
     /** Emitted when a move has been suggested by Engine for Player 1 */
     void moveMade1(Move);
     /** Emitted when a move has been suggested by Engine for Player 2 */
@@ -78,8 +85,13 @@ public slots:
     /** Updates settings */
     void slotReconfigure();
 
-    /** creates Engines as needed */
+    /** Creates Engines as needed.
+        The ready() signal is emitted, when all required Engines are setup,
+        but only if at least one player is an Engine. */
     void activate();
+
+    /** shut down Engines */
+    void deactivate();
 
     /** Sets new position. Signals, that a move has been performed.
         If required, the Engine will be queried.
@@ -90,8 +102,13 @@ protected slots:
 
     // ---- callbacks from Engine ----
 
+    void engineActivated1_();
+    void engineActivated2_();
+
     void engineMove1_(Move);
     void engineMove2_(Move);
+
+    void engineClueless_();
 
 private:
 
@@ -107,6 +124,9 @@ private:
 
     PlayGameEngine * engine1_, * engine2_;
 
+    /* used to check if both engines are ready, if they are engines,
+       and to emit ready() when both are ready. */
+    bool player1Ready_, player2Ready_, readySend_;
 };
 
 #endif // PLAYERSETUP_H

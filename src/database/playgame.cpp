@@ -23,15 +23,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "enginelist.h"
 #include "engine.h"
 
+
 PlayGame::PlayGame(QObject *parent)
-    :   QObject     (parent),
-        engine1_    (new PlayGameEngine(this)),
-        engine2_    (new PlayGameEngine(this))
+    :   QObject         (parent),
+        engine1_        (new PlayGameEngine(this)),
+        engine2_        (new PlayGameEngine(this)),
+        player1Ready_   (false),
+        player2Ready_   (false),
+        readySend_      (false)
 {
     SB_PLAY_DEBUG("PlayGame::PlayGame(...)");
 
     connect(engine1_, SIGNAL(moveMade(Move)), SLOT(engineMove1_(Move)));
     connect(engine2_, SIGNAL(moveMade(Move)), SLOT(engineMove2_(Move)));
+
+    connect(engine1_, SIGNAL(ready()), SLOT(engineActivated1_()));
+    connect(engine2_, SIGNAL(ready()), SLOT(engineActivated2_()));
+
+    connect(engine1_, SIGNAL(engineClueless()), SLOT(engineClueless_()));
+    connect(engine2_, SIGNAL(engineClueless()), SLOT(engineClueless_()));
 
     slotReconfigure();
 }
@@ -72,15 +82,28 @@ void PlayGame::activate()
 {
     SB_PLAY_DEBUG("PlayGame::activate()");
 
+    readySend_ = false;
+
     if (!engineName1_.isNull())
     {
+        player1Ready_ = false;
         engine1_->startEngine(engineName1_);
     }
+    else player1Ready_ = true;
 
     if (!engineName2_.isNull())
     {
+        player2Ready_ = false;
         engine2_->startEngine(engineName2_);
     }
+    else player2Ready_ = true;
+}
+
+void PlayGame::deactivate()
+{
+    engine1_->stop();
+    engine2_->stop();
+    player1Ready_ = player2Ready_ = readySend_ = false;
 }
 
 const QString& PlayGame::playerName1() const
@@ -142,11 +165,11 @@ bool PlayGame::setPosition(const Board& board)
 
     if (board.toMove() == White)
     {
-        return (engine1_ && engine1_->setPosition(board));
+        if (engine1_) return engine1_->setPosition(board);
     }
     else
     {
-        return (engine2_ && engine2_->setPosition(board));
+        if (engine2_) return engine2_->setPosition(board);
     }
 
     SB_PLAY_DEBUG("...did not care for the position, "
@@ -167,4 +190,39 @@ void PlayGame::engineMove2_(Move m)
     SB_PLAY_DEBUG("PlayGame::engineMove2_("<<m.from()<<"-"<<m.to()<<")");
 
     emit moveMade2(m);
+}
+
+
+// one of these should fire ;)
+
+void PlayGame::engineActivated1_()
+{
+    SB_PLAY_DEBUG("PlayGame::engineActivated1_() player1Ready_="<<player1Ready_
+                     <<" player2Ready_="<<player2Ready_<<" readySend_="<<readySend_);
+
+    if (!readySend_ && player2Ready_)
+    {
+        readySend_ = true;
+        emit ready();
+    }
+    player1Ready_ = true;
+}
+
+void PlayGame::engineActivated2_()
+{
+    SB_PLAY_DEBUG("PlayGame::engineActivated2_() player1Ready_="<<player1Ready_
+                     <<" player2Ready_="<<player2Ready_<<" readySend_="<<readySend_);
+
+    if (!readySend_ && player1Ready_)
+    {
+        readySend_ = true;
+        emit ready();
+    }
+    player2Ready_ = true;
+}
+
+
+void PlayGame::engineClueless_()
+{
+   emit engineClueless();
 }

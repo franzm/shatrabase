@@ -28,7 +28,7 @@
 
 
 #if 1
-#   define SB_ENGINE_DEBUG(stream_arg__) { qDebug() << stream_arg__; }
+#   define SB_ENGINE_DEBUG(stream_arg__) { qDebug() << (void*)this << stream_arg__; }
 #else
 #   define SB_ENGINE_DEBUG(unused__) { }
 #endif
@@ -58,14 +58,18 @@ public:
     /** Set the stream that the debug output goes to */
 	void setLogStream(QTextStream* logStream = NULL);
 
-    /** Launch and initialize engine, fire activated() signal when done*/
-	void activate();
+    /** Launch and initialize engine, fire activated() signal when done.
+        If @p wait == true, the function returns when the process is activated. */
+    void activate(bool wait = false);
 
     /** Destroy engine process */
 	void deactivate();
 
+    /** Returns whether the engine process is actually running */
+    bool isRunning() const;
+
     /** Returns whether the engine is active or not */
-	bool isActive();
+    bool isActive() const;
 
     /** Analyzes the given position */
 	virtual bool startAnalysis(const Board& board, int nv = 1) = 0;
@@ -74,7 +78,7 @@ public:
 	virtual void stopAnalysis() = 0;
 
     /** Returns whether the engine is analyzing or not */
-	bool isAnalyzing();
+    bool isAnalyzing() const;
 
     /** Create a new engine, pass index into engine settings list */
     static Engine* newEngine(int index);
