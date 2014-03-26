@@ -38,9 +38,9 @@ int main(int argc, char** argv)
 	// Language may have two forms: "pt_BR" or "pl"
     QTranslator translator;
 	if (translator.load(AppSettings->dataPath() + "/lang/" + fullLang) ||
-		 translator.load(QString(":i18n/") + fullLang) ||
+         translator.load(QString(":translation/") + fullLang) ||
 		 translator.load(AppSettings->dataPath() + "/lang/" + shortLang) ||
-		 translator.load(QString(":i18n/") + shortLang))
+         translator.load(QString(":translation/") + shortLang))
 		a.installTranslator(&translator);
 
 	MainWindow* mainWindow = new MainWindow;
