@@ -6,22 +6,23 @@
     <message>
         <location filename="../src/database/analysis.cpp" line="147"/>
         <source>Win in</source>
-        <translation type="unfinished"></translation>
+        <translation>Gewonnen in</translation>
     </message>
     <message>
         <location filename="../src/database/analysis.cpp" line="147"/>
         <source>Loss in</source>
-        <translation type="unfinished"></translation>
+        <translation>Verloren in</translation>
     </message>
     <message>
         <location filename="../src/database/analysis.cpp" line="174"/>
         <source>h:mm:ss</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>nicht ganz klar</translatorcomment>
+        <translation>h:mm:ss</translation>
     </message>
     <message>
         <location filename="../src/database/analysis.cpp" line="175"/>
         <source> (depth %1, %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiefe (%1, %2)</translation>
     </message>
 </context>
 <context>
@@ -34,7 +35,7 @@
     <message>
         <location filename="../src/gui/analysiswidget.cpp" line="104"/>
         <source>There was an error (%1) running engine &lt;b&gt;%2&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Es ist ein Fehler (%1) beim Ausführen der Engine &lt;b&gt;%2&lt;/b&gt; aufgetreten.</translation>
     </message>
     <message>
         <source>Draw</source>
@@ -43,7 +44,7 @@
     <message>
         <location filename="../src/gui/analysiswidget.ui" line="69"/>
         <source>&amp;Lines:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Zeilen:</translation>
     </message>
     <message>
         <location filename="../src/gui/analysiswidget.ui" line="105"/>
@@ -54,17 +55,17 @@
     <message>
         <location filename="../src/gui/analysiswidget.ui" line="124"/>
         <source>Displays the analysis output of the engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeigt die Analyse der Engine</translation>
     </message>
     <message>
         <location filename="../src/gui/analysiswidget.ui" line="130"/>
         <source>A</source>
-        <translation type="unfinished"></translation>
+        <translation>A</translation>
     </message>
     <message>
         <location filename="../src/gui/analysiswidget.ui" line="162"/>
         <source>D</source>
-        <translation type="unfinished"></translation>
+        <translation>D</translation>
     </message>
     <message>
         <source>F2</source>
@@ -124,17 +125,18 @@
     <message>
         <location filename="../src/gui/boardsetup.ui" line="81"/>
         <source>Side to move:</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>there may be a better word</translatorcomment>
+        <translation>ziehende Farbe</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.ui" line="20"/>
         <source>FEN</source>
-        <translation type="unfinished"></translation>
+        <translation>FEN</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.ui" line="91"/>
         <source>Move:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zug:</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.ui" line="347"/>
@@ -182,17 +184,17 @@ hen auf der ersten oder achten Reihe</translation>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="235"/>
         <source>No white biy</source>
-        <translation type="unfinished"></translation>
+        <translation>Kein weisser König</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="237"/>
         <source>No black biy</source>
-        <translation type="unfinished"></translation>
+        <translation>Kein schwarzer König</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="239"/>
         <source>Too many biys</source>
-        <translation type="unfinished"></translation>
+        <translation>Zu viele Könige</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="241"/>
@@ -207,12 +209,12 @@ hen auf der ersten oder achten Reihe</translation>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="253"/>
         <source>SPN: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>SPN: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="286"/>
         <source>Text in clipboard does not represent valid SPN:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Der Text in der Zwischenablage ist keine SPN:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="128"/>
@@ -352,7 +354,7 @@ hen auf der ersten oder achten Reihe</translation>
         <location filename="../src/gui/boardtheme.cpp" line="194"/>
         <source>Cannot find piece data.
 Please check your installation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann keine Figuren-Grafiken finden. Bitte überprüfen Sie die Installation.</translation>
     </message>
 </context>
 <context>

@@ -62,5 +62,7 @@
         <file alias="themes/shadow/franz1.png">data/themes/shadow/franz1.png</file>
         <file alias="themes/outline/franz1.png">data/themes/outline/franz1.png</file>
         <file alias="/images/square_emboss.png">data/images/square_emboss.png</file>
+        <file alias="translation/shatrabase_de.qm">translation/shatrabase_de.qm</file>
+        <file alias="translation/shatrabase_ru.qm">translation/shatrabase_ru.qm</file>
     </qresource>
 </RCC>

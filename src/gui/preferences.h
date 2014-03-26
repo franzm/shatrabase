@@ -60,6 +60,7 @@ public slots:
     /* select Algebraic notation for moves */
     void slotAlgebraicNotation();
 
+    void slotShowLanguageMessage();
 protected:
 	/* Overridden to save size */
     virtual void closeEvent(QCloseEvent* e);

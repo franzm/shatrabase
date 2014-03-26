@@ -28,6 +28,7 @@
 #include <QRadioButton>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QMessageBox>
 
 int PreferencesDialog::s_lastIndex = 0;
 
@@ -56,6 +57,13 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.engineOptionMore, SIGNAL(clicked(bool)), SLOT(slotShowOptionDialog()));
     connect(ui.notationNumeric, SIGNAL(clicked()), SLOT(slotNumericNotation()));
     connect(ui.notationAlgebraic, SIGNAL(clicked()), SLOT(slotAlgebraicNotation()));
+
+    const QMap<QString,QString> lang = AppSettings->languages();
+    for (QMap<QString,QString>::const_iterator i=lang.begin(); i!=lang.end(); ++i)
+    {
+        ui.languageCombo->addItem(i.value(), QVariant(i.key()));
+    }
+    connect(ui.languageCombo, SIGNAL(activated(int)), SLOT(slotShowLanguageMessage()));
 
 	restoreSettings();
 
@@ -264,6 +272,10 @@ void PreferencesDialog::restoreSettings()
 
 	// Read Board settings
     AppSettings->beginGroup("/General/");
+    QString locale = AppSettings->getValue("Language").toString();
+    for (int i=0; i<ui.languageCombo->count(); ++i)
+        if (ui.languageCombo->itemData(i).toString() == locale)
+            ui.languageCombo->setCurrentIndex(i);
     ui.notationNumeric->setChecked(!AppSettings->getValue("Notation").toBool());
     ui.notationAlgebraic->setChecked(AppSettings->getValue("Notation").toBool());
     g_notation = AppSettings->getValue("Notation").toBool();
@@ -354,6 +366,13 @@ void PreferencesDialog::restoreSettings()
 void PreferencesDialog::saveSettings()
 {
     AppSettings->beginGroup("/General/");
+    QString locale;
+    int i = ui.languageCombo->currentIndex();
+    if (i<ui.languageCombo->count())
+        locale = ui.languageCombo->itemData(i).toString();
+    else
+        locale = AppSettings->defaultLocale();
+    AppSettings->setValue("Language",QVariant(locale));
     AppSettings->setValue("Notation",QVariant(ui.notationAlgebraic->isChecked()));
     AppSettings->setValue("useIndexFile",QVariant(ui.useIndexFile->isChecked()));
     AppSettings->setValue("autoCommitDB",QVariant(ui.cbAutoCommitDB->isChecked()));
@@ -422,4 +441,12 @@ void PreferencesDialog::saveColorList(ColorList* list, const QStringList& cfgnam
 {
     for (int i = 0; i < list->count(); ++i)
 		AppSettings->setValue(cfgnames[i], list->color(i));
+}
+
+void PreferencesDialog::slotShowLanguageMessage()
+{
+    // XXX This text should be in the correct language ...
+    QMessageBox::information(this, tr("Language change"),
+                             tr("You need to restart Shatrabase, "
+                                "to apply the language change."));
 }

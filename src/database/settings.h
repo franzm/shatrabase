@@ -45,9 +45,23 @@ public:
     /** @return directory where data is stored. */
     QString dataPath();
 
-    /** Returns current board style name. */
+    /** Returns map of short locale (e.g. 'en') to language name */
+    const QMap<QString, QString>& languages() const { return m_langMap; }
+
+    /** Returns the language name for the given locale.
+        Return 'English' if unknown. */
+    const QString& language(const QString& locale) const;
+
+    /** Returns the short locale (e.g. 'en') for the language name (as in languages()).
+        Returns 'en' when unknown. */
+    const QString& locale(const QString& languageName) const;
+
+    /** Returns 'en' */
+    const QString& defaultLocale() const { return m_defaultLocale; }
+
+    /* Returns current board style name. */
     //const QString& boardStyle() const { return m_boardStyle; }
-    /** Returns @p index'th style name */
+    /* Returns @p index'th style name */
     //const QString& boardStyle(unsigned int index) const { return m_boardStyles[index]; }
 
     /** Restore widget's layout based on its name. Optionally show window if it is visible.
@@ -78,11 +92,16 @@ public:
 private:
 
     QMap<QString, QVariant> initDefaultValues() const;
+
+    QMap<QString, QString> m_langMap;
+    QString m_defaultLocale, m_defaultLanguageName;
+
     QString m_dataPath,
     /** Current board style */
             m_boardStyle;
     /** All created styles */
     std::vector<QString> m_boardStyles;
+
 };
 
 extern Settings* AppSettings;

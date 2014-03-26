@@ -20,8 +20,19 @@
 #include <QMainWindow>
 #include <QDebug>
 
-Settings::Settings() : QSettings(IniFormat, UserScope, "shatrabase", "shatrabase")
-{}
+Settings::Settings()
+    :   QSettings(IniFormat, UserScope, "shatrabase", "shatrabase"),
+        m_defaultLocale("en"),
+        m_defaultLanguageName(tr("English"))
+{
+    //: language name
+    m_langMap.insert("en", tr("English"));
+    //: language name
+    m_langMap.insert("de", tr("German"));
+    //: language name
+    m_langMap.insert("ru", tr("Russian"));
+
+}
 
 Settings::~Settings()
 {}
@@ -141,9 +152,33 @@ void Settings::getMap(const QString& key, OptionValueList& map)
     delete stream;
 }
 
+const QString& Settings::locale(const QString& l) const
+{
+    for (QMap<QString, QString>::const_iterator i=m_langMap.begin();
+         i != m_langMap.end(); ++i)
+    {
+        if (i.value() == l)
+            return i.key();
+    }
+    return m_defaultLocale;
+}
+
+const QString& Settings::language(const QString &locale) const
+{
+    QMap<QString, QString>::const_iterator i = m_langMap.find(locale);
+    if (i == m_langMap.end())
+        return m_defaultLanguageName;
+    else
+        return i.value();
+}
+
 QMap<QString, QVariant> Settings::initDefaultValues() const
 {
     QMap<QString, QVariant> map;
+
+    QString lang = language(QLocale::system().name().left(2));
+    map.insert("/General/Language", lang);
+
     map.insert("/General/EditLimit", 10);
     map.insert("/General/Notation", NUM);
     map.insert("/General/useIndexFile", true);

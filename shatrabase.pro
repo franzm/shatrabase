@@ -267,8 +267,8 @@ TRANSLATIONS = \
 # --------- automatically build translations ------------------
 #
 # this will build the .qm files needed for QTranslator.
-# note that if the .qm files are added to the resources
-# they will be recompiled on each build which takes some time..
+# note that the .qm files are recreated on each build
+# whether they changed or not, which takes some seconds..
 #
 # comment-out the below code (until PRE_TARGETDEPS..) to
 # disable rebuild of .qm files

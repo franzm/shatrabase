@@ -32,15 +32,11 @@ int main(int argc, char** argv)
     signal(SIGPIPE, SIG_IGN);
 #endif
 
-    QString shortLang = QString("shatrabase_%1.qm").arg(QLocale::system().name().left(2));
-    QString fullLang = QString("shatrabase_%1.qm").arg(QLocale::system().name().left(5));
+    QString langFile = QString("shatrabase_%1.qm").arg(AppSettings->getValue("/General/Language").toString());
 
-	// Language may have two forms: "pt_BR" or "pl"
     QTranslator translator;
-	if (translator.load(AppSettings->dataPath() + "/lang/" + fullLang) ||
-         translator.load(QString(":translation/") + fullLang) ||
-		 translator.load(AppSettings->dataPath() + "/lang/" + shortLang) ||
-         translator.load(QString(":translation/") + shortLang))
+    if (translator.load(AppSettings->dataPath() + "/lang/" + langFile) ||
+         translator.load(QString(":translation/") + langFile))
 		a.installTranslator(&translator);
 
 	MainWindow* mainWindow = new MainWindow;
