@@ -21,7 +21,7 @@
 /** @ingroup Core
 The OutputOptions class manages options for @ref Output class.
 */
-class OutputOptions
+class OutputOptions : public QObject
 {
 public :
 	enum OutputOptionType { Boolean, String, Integer, Color };

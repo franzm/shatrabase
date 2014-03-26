@@ -83,16 +83,19 @@ void Output::readTemplateFile(const QString& path)
 
 			switch (status) {
 			case ReadingOptionDefs:
-				optionDefFields = line.split(",");
-				if (!m_options.createOption(optionDefFields[0], optionDefFields[1],
-								 optionDefFields[2], optionDefFields[3], optionDefFields[4])) {
-                    qWarning("Could not create option. Ignoring line %d in file %s :\n%s", i, path.toLatin1().constData(), line.toLatin1().constData());
+                optionDefFields = line.split(",");
+                if (!m_options.createOption(optionDefFields[0], optionDefFields[1],
+                                 optionDefFields[2], optionDefFields[3], optionDefFields[4])) {
+                    QString ww = tr("Could not create option. Ignoring line %d in file %s :\n%s");
+                    const char *warn = ww.toUtf8().constData();
+                    qWarning(warn, i, path.toLatin1().constData(), line.toLatin1().constData());
 				}
-
 				break;
 			case ReadingOptions:
 				if (!m_options.setOption(line)) {
-					qWarning("Invalid option or value in file %s line %d. Ignoring : %s", path.toLatin1().constData(), i, line.toLatin1().constData());
+                    QString ww = tr("Invalid option or value in file %s line %d. Ignoring : %s");
+                    const char *warn = ww.toUtf8().constData();
+                    qWarning(warn, path.toLatin1().constData(), i, line.toLatin1().constData());
 				}
 				break;
 			case ReadingOutputHeader:

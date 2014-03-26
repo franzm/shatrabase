@@ -60,7 +60,9 @@ bool OutputOptions::createOption(const QString& optionName, OutputOptionType opt
 		m_allow.remove(optionName);
 		m_default.remove(optionName);
 		m_description.remove(optionName);
-		qWarning("Option '%s' could not be created", optionName.toLatin1().constData());
+        QString ww = tr("Option '%s' could not be created");
+        const char *warn = ww.toUtf8().constData();
+		qWarning(warn, optionName.toLatin1().constData());
 
 		return false;
 	}
@@ -76,7 +78,9 @@ bool OutputOptions::setOption(const QString& optionString)
 bool OutputOptions::setOption(const QString& optionName, const QString& optionValue)
 {
 	if (!validateValue(optionName, optionValue)) {
-		qWarning("Option '%s' could not be set", optionName.toLatin1().constData());
+        QString ww = tr("Option '%s' could not be set");
+        const char *warn = ww.toUtf8().constData();
+		qWarning(warn, optionName.toLatin1().constData());
 		return false;
 	}
 	m_list[optionName] = optionValue;

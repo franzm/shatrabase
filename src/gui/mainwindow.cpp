@@ -373,11 +373,11 @@ MainWindow::MainWindow() : QMainWindow(),
 	updateMenuDatabases();
 	slotDatabaseChanged();
 
-    //QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/chessdata";
+    //QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/shatradata";
 #if QT_VERSION < 0x050000
-    QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/chessdata";
+    QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/shatradata";
 #else
-    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/chessdata";
+    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/shatradata";
 #endif
 
     QString dir = AppSettings->value("/General/DefaultDataPath", dataPath).toString();
