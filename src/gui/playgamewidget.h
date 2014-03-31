@@ -51,6 +51,10 @@ public:
 signals:
     /** Emitted when a new game wants to be played */
     void startNewGame(const QMap<QString, QString>& tags);
+
+    /** Emitted when the current game in Chessbrowser should be continued. */
+    void continueGame();
+
     /** Emitted when player wants to resign. */
     void resignGame();
 
@@ -58,7 +62,12 @@ signals:
     void moveMade(Move);
 
 public slots:
+
+    /** Applies app settings */
     void slotReconfigure();
+
+    /** Stops play mode. E.g. when save current game was cancelled. */
+    void stop();
 
     /** Sets new position. Signals that a move has been performed.
         If required, the Engine will be queried. */
@@ -87,6 +96,8 @@ private slots:
 
     /** Starts new game */
     void start_();
+    /** Continues current game in ChessBrowser */
+    void continue_();
     /** Flip the players */
     void flipPlayers_();
     /** haveit */

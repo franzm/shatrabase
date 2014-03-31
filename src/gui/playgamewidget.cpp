@@ -65,6 +65,7 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
     connect(ui_->engineCombo2, SIGNAL(activated(QString)), SLOT(slotEngine2Changed_(QString)));
 
     connect(ui_->b_new, SIGNAL(clicked()), SLOT(start_()));
+    connect(ui_->b_continue, SIGNAL(clicked()), SLOT(continue_()));
     connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
     connect(ui_->b_resign, SIGNAL(clicked()), SLOT(resign_()));
 
@@ -166,8 +167,28 @@ void PlayGameWidget::start_()
     emit startNewGame(tags);
 
     // XXX This should actually wait for MainWindow
-    // to do it's save-unchanged stuff
+    // to do it's save-changed stuff
     play_->activate();
+}
+
+void PlayGameWidget::continue_()
+{
+    // update widget Spaß
+    setWidgetsPlaying_(true);
+
+    playing_ = true;
+
+    play_->activate();
+
+    emit continueGame();
+
+    // wait for setPosition() from MainWindow
+}
+
+void PlayGameWidget::stop()
+{
+    setWidgetsPlaying_(playing_ = false);
+    play_->deactivate();
 }
 
 void PlayGameWidget::resign_()
@@ -199,6 +220,7 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
     blinkTimer_.stop();
 
     ui_->b_new->setEnabled(!p);
+    ui_->b_continue->setEnabled(!p);
     ui_->b_resign->setEnabled(p);
     ui_->b_flip->setEnabled(!p);
     ui_->nameEdit1->setEnabled(!p);

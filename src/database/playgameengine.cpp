@@ -33,7 +33,8 @@ void PlayGameEngine::stop()
 {
     SB_PLAY_DEBUG("PlayGameEngine::stop()");
 
-    if (engine_ && engine_->isActive())
+    // XXX Engine::isActive() is stupid!
+    if (engine_ && (engine_->isRunning() || engine_->isActive()))
         engine_->deactivate();
 }
 

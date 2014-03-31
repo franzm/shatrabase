@@ -64,5 +64,8 @@
         <file alias="/images/square_emboss.png">data/images/square_emboss.png</file>
         <file alias="translation/shatrabase_de.qm">translation/shatrabase_de.qm</file>
         <file alias="translation/shatrabase_ru.qm">translation/shatrabase_ru.qm</file>
+        <file alias="images/b_pause.png">data/images/b_pause.png</file>
+        <file alias="images/b_play.png">data/images/b_play.png</file>
+        <file alias="images/b_playstart.png">data/images/b_playstart.png</file>
     </qresource>
 </RCC>

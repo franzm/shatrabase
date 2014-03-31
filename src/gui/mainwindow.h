@@ -190,6 +190,8 @@ public slots:
     bool slotGameNew();
     /** Connected to PlayGameWidget to signal start of new game */
     void slotPlayGameNew(const QMap<QString, QString>& tags);
+    /** Connected to PlayGameWidget to signal continuation of current game */
+    void slotPlayGameContinue();
     /** Connected to the resign button in PlayGameWidget */
     void slotPlayGameResign();
     /** Connected to PlayGameWidget: Engine has made a move */

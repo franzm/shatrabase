@@ -206,6 +206,7 @@ MainWindow::MainWindow() : QMainWindow(),
     m_menuView->addAction(playerSelDock->toggleViewAction());
     addDockWidget(Qt::RightDockWidgetArea, playerSelDock);
     connect(m_playGame, SIGNAL(startNewGame(QMap<QString,QString>)), SLOT(slotPlayGameNew(QMap<QString,QString>)));
+    connect(m_playGame, SIGNAL(continueGame()), SLOT(slotPlayGameContinue()));
     connect(m_playGame, SIGNAL(resignGame()), SLOT(slotPlayGameResign()));
     connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));
     connect(this, SIGNAL(reconfigure()), m_playGame, SLOT(slotReconfigure()));

@@ -678,6 +678,15 @@ void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
         g.setModified(true);
         slotGameChanged();
     }
+    else
+        m_playGame->stop();
+}
+
+void MainWindow::slotPlayGameContinue()
+{
+    Game &g = databaseInfo()->currentGame();
+
+    m_playGame->setPosition(g.board());
 }
 
 void MainWindow::slotPlayGameResign()

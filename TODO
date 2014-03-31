@@ -8,8 +8,9 @@
 
 -- gui --
 
+* position setup not working
+
 * russian font too faint
-* save game should be more easy (e.g. slotFileSave does not save Clipboard !?)
 * play game from set position
 * during play: add option to change game text instead of insert variation
 * investigate touch displays
@@ -18,6 +19,12 @@
 * OK fix window max'd save/restore (common Qt prob) 
   * save maximized state but keep default pos/size
 * OK fix board sometimes off (animation/autoplay)
+
+
+-- IO --
+
+* save game should be more easy (e.g. slotFileSave does not save Clipboard !?)
+* add timed move to Engine (alternatives to 'go inifinite')
 
 -- strange things --
 
