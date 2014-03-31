@@ -3,12 +3,13 @@
 * piece graphics
   * shadow and outline versions
 * OK tower squares
+* capture / defunkt animations
 
 
 -- gui --
 
 * russian font too faint
-* save game should be more easy
+* save game should be more easy (e.g. slotFileSave does not save Clipboard !?)
 * play game from set position
 * during play: add option to change game text instead of insert variation
 * investigate touch displays
@@ -17,3 +18,8 @@
 * OK fix window max'd save/restore (common Qt prob) 
   * save maximized state but keep default pos/size
 * OK fix board sometimes off (animation/autoplay)
+
+-- strange things --
+
+* app crash on play-game after urgent capture (not sure if related)
+

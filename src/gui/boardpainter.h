@@ -150,6 +150,9 @@ protected:
 
     // --------- internal ------------
 
+    /** Compares new board with old board and sets up animations */
+    void guessAnimations_(const Board& newBoard);
+
     void createBoard_(const Board& board);
     void createPieces_(const Board& board);
     void updateMoveIndicators_();
@@ -213,6 +216,9 @@ protected:
     Decoration m_deco;
 
     int m_own_from, m_own_to;
+
+    /** used to automatically trigger animations */
+    Board * oldBoard_;
 };
 
 #endif // BOARDPAINTER_H

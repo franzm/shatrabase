@@ -333,6 +333,14 @@ void BoardPainter::setBoard(const Board& board, int from, int to)
     createPieces_(board);
     updateMoveIndicators_();
 
+    /*
+    if (m_do_animate && m_anim_speed > 0.0)
+        guessAnimations_(board);
+
+    oldBoard_ = board;
+    */
+
+
     if (m_do_animate && m_anim_speed > 0.0)
     if (from != InvalidSquare && to != InvalidSquare)
     {
@@ -349,6 +357,31 @@ void BoardPainter::setBoard(const Board& board, int from, int to)
     }
 }
 
+
+void BoardPainter::guessAnimations_(const Board& b)
+{
+    /* PieceItems are already placed at the new positions on entry. */
+
+    for (int i=fsq; i<=lsq; ++i)
+    {
+        Piece pold = oldBoard_->pieceAt(i),
+              pnew = b.pieceAt(i);
+
+        // nothing's changed on that square?
+        if (pold == pnew)
+            continue;
+
+        // XXX Todo
+        if (isDefunkt(pnew))
+            continue;
+
+        // disappeared
+        if (pnew == InvalidPiece)
+        {
+            // arghh.. can't decide if captured or moved....
+        }
+    }
+}
 
 
 void BoardPainter::createBoard_(const Board& board)

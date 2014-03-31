@@ -17,6 +17,7 @@
 #include <QString>
 #include <QMap>
 
+/** NOT USED RIGHT NOW - just an idea */
 class BoardStyle : public QObject
 {
     Q_OBJECT
