@@ -63,10 +63,14 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
     connect(ui_->engineCombo1, SIGNAL(activated(QString)), SLOT(slotEngine1Changed_(QString)));
     connect(ui_->engineCombo2, SIGNAL(activated(QString)), SLOT(slotEngine2Changed_(QString)));
 
+    connect(ui_->b_settings1, SIGNAL(clicked()), SLOT(slotConfig1Clicked_()));
+    connect(ui_->b_settings2, SIGNAL(clicked()), SLOT(slotConfig2Clicked_()));
+
     connect(ui_->b_new, SIGNAL(clicked()), SLOT(start_()));
     connect(ui_->b_continue, SIGNAL(clicked()), SLOT(continue_()));
     connect(ui_->b_pause, SIGNAL(clicked()), SLOT(pause_()));
     connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
+
 
     setWidgetsPlaying_(false);
 
@@ -119,11 +123,21 @@ void PlayGameWidget::slotReconfigure()
     else
         ui_->engineCombo2->setCurrentIndex(0);
 
-    // update human/engine led colors
-    ui_->led1->setOnColor(play_->player1IsEngine()? colorEngine0_ : colorPlayer_);
-    ui_->led2->setOnColor(play_->player2IsEngine()? colorEngine0_ : colorPlayer_);
+    updateEngineWidgets_();
 }
 
+void PlayGameWidget::updateEngineWidgets_()
+{
+    bool e1 = play_->player1IsEngine(),
+         e2 = play_->player2IsEngine();
+
+    // update human/engine led colors
+    ui_->led1->setOnColor(e1 ? colorEngine0_ : colorPlayer_);
+    ui_->led2->setOnColor(e2 ? colorEngine0_ : colorPlayer_);
+
+    ui_->b_settings1->setEnabled(e1);
+    ui_->b_settings2->setEnabled(e2);
+}
 
 void PlayGameWidget::slotName1Changed_(const QString& s)
 {
@@ -138,14 +152,25 @@ void PlayGameWidget::slotName2Changed_(const QString& s)
 void PlayGameWidget::slotEngine1Changed_(const QString& s)
 {
     play_->setEngineName1(s);
-    ui_->led1->setOnColor(play_->player1IsEngine()? colorEngine0_ : colorPlayer_);
+    updateEngineWidgets_();
 }
 
 void PlayGameWidget::slotEngine2Changed_(const QString& s)
 {
     play_->setEngineName2(s);
-    ui_->led2->setOnColor(play_->player2IsEngine()? colorEngine0_ : colorPlayer_);
+    updateEngineWidgets_();
 }
+
+void PlayGameWidget::slotConfig1Clicked_()
+{
+
+}
+
+void PlayGameWidget::slotConfig2Clicked_()
+{
+
+}
+
 
 void PlayGameWidget::start_()
 {
@@ -228,10 +253,10 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
     ui_->b_new->setEnabled(!p);
     ui_->b_continue->setEnabled(!p);
     ui_->b_pause->setEnabled(p);
-    ui_->b_flip->setEnabled(!p);
+    ui_->b_flip->setEnabled(/*!p*/false); // XXX Don't allow as long as first Player can't be Engine
     ui_->nameEdit1->setEnabled(!p);
     ui_->nameEdit2->setEnabled(!p);
-    ui_->engineCombo1->setEnabled(!p);
+    ui_->engineCombo1->setEnabled(/*!p*/false); // XXX Don't allow as long as first Player can't be Engine
     ui_->engineCombo2->setEnabled(!p);
 
     if (!p)

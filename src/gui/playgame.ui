@@ -139,6 +139,20 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="b_settings1">
+       <property name="toolTip">
+        <string>Configutation / Settings</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/images/b_config.png</normaloff>:/images/b_config.png</iconset>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -173,6 +187,20 @@
          <width>170</width>
          <height>0</height>
         </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="b_settings2">
+       <property name="toolTip">
+        <string>Configutation / Settings</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/images/b_config.png</normaloff>:/images/b_config.png</iconset>
        </property>
       </widget>
      </item>

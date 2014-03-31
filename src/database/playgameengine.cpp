@@ -33,7 +33,7 @@ void PlayGameEngine::stop()
 {
     SB_PLAY_DEBUG("PlayGameEngine::stop()");
 
-    // XXX Engine::isActive() is stupid!
+    // XXX Engine::isActive() is stupid! (not clear what to call here)
     if (engine_ && (engine_->isRunning() || engine_->isActive()))
         engine_->deactivate();
 }
@@ -91,7 +91,7 @@ void PlayGameEngine::engineActivated_()
 
     emit ready();
 
-
+    // keep right going
     if (sendPositionOnActivate_)
     {
         startAnalysis_(board_);

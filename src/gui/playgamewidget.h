@@ -96,6 +96,9 @@ private slots:
     void slotEngine1Changed_(const QString&);
     void slotEngine2Changed_(const QString&);
 
+    void slotConfig1Clicked_();
+    void slotConfig2Clicked_();
+
     void slotBlinkTimer_();
 
     /** Starts new game */
@@ -113,6 +116,8 @@ private:
     void setWidgetsPlayer_(int stm);
     /** Updates widgets */
     void setWidgetsPlaying_(bool);
+    /** Updates widgets according to who's an Engine */
+    void updateEngineWidgets_();
 
     // ---- config ---
     QLed::ledColor colorPlayer_;
