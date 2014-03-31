@@ -36,7 +36,8 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
     ui_             (new Ui::PlayGame),
     activeLed_      (0),
     play_           (new PlayGame(this)),
-    playing_        (false)
+    playing_        (false),
+    ignoreAnswer_   (false)
 {
     setObjectName("PlayGameWidget");
     setWindowTitle(tr("Player selection"));
@@ -64,8 +65,8 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
 
     connect(ui_->b_new, SIGNAL(clicked()), SLOT(start_()));
     connect(ui_->b_continue, SIGNAL(clicked()), SLOT(continue_()));
-    connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
     connect(ui_->b_pause, SIGNAL(clicked()), SLOT(pause_()));
+    connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
 
     setWidgetsPlaying_(false);
 
@@ -153,6 +154,7 @@ void PlayGameWidget::start_()
     setWidgetsPlaying_(true);
 
     playing_ = true;
+    ignoreAnswer_ = false;
 
     // first player is engine? - then go
     // XXX not really working right now
@@ -166,8 +168,6 @@ void PlayGameWidget::start_()
 
     emit startNewGame(tags);
 
-    // XXX This should actually wait for MainWindow
-    // to do it's save-changed stuff
     play_->activate();
 }
 
@@ -177,17 +177,25 @@ void PlayGameWidget::continue_()
     setWidgetsPlaying_(true);
 
     playing_ = true;
+    ignoreAnswer_ = false;
 
     play_->activate();
 
     emit continueGame();
 
-    // wait for setPosition() from MainWindow
+    // ... wait for setPosition() from MainWindow from here
 }
 
 void PlayGameWidget::stop()
 {
     setWidgetsPlaying_(playing_ = false);
+    play_->deactivate();
+}
+
+void PlayGameWidget::stopThinking()
+{
+    ignoreAnswer_ = true;
+    blinkTimer_.stop();
     play_->deactivate();
 }
 
@@ -267,6 +275,15 @@ void PlayGameWidget::setPosition(const Board& board)
 
     if (!playing_) return;
 
+    // game ended?
+    if (   board.gameResult() == WhiteWin
+        || board.gameResult() == BlackWin
+        || board.hasNoMoves())
+    {
+        stop();
+        return;
+    }
+
     lastStm_ = board.toMove();
 
     // White is next
@@ -301,8 +318,9 @@ void PlayGameWidget::moveFromEngine(Move m)
     blinkTimer_.stop();
 
     // Stopped playing while Engine was thinking?
-    if (!playing_)
+    if (!playing_ || ignoreAnswer_)
     {
+        ignoreAnswer_ = false;
         plyQue_.clear();
         return;
     }

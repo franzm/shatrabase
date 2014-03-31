@@ -103,6 +103,7 @@ Engine::~Engine()
 
 void Engine::deleteProcess_()
 {
+    SB_ENGINE_DEBUG("Engine::deleteProcess_()");
     if (m_process)
     {
         m_process->waitForFinished(1000);
@@ -151,7 +152,9 @@ void Engine::deactivate()
     if (m_active)
     {
         protocolEnd();
-        deleteProcess_();
+        if (m_process)
+            m_process->waitForFinished(1000);
+        //deleteProcess_();
     }
 }
 
@@ -300,8 +303,10 @@ void Engine::processExited()
     SB_ENGINE_DEBUG("Engine::processExited()");
 
 	setActive(false);
-    deleteProcess_();
     emit deactivated();
+
+    m_process = 0;
+    //deleteProcess_();
 }
 
 

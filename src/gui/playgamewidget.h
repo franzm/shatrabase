@@ -69,6 +69,10 @@ public slots:
     /** Stops play mode. E.g. when save current game was cancelled. */
     void stop();
 
+    /** Stops any connected Engines and discards their next moves.
+        XXX Not possible to restart thinking right now. */
+    void stopThinking();
+
     /** Sets new position. Signals that a move has been performed.
         If required, the Engine will be queried. */
     void setPosition(const Board& board);
@@ -131,8 +135,10 @@ private:
     QList<Move> plyQue_;
 
     bool playing_,
+    /** Ignore the next answer from Engine */
+        ignoreAnswer_,
     /** Flag used when first player is Engine */
-         sendFreshBoardWhenReady_;
+        sendFreshBoardWhenReady_;
 };
 
 #endif // PLAYERSELECT_H

@@ -104,7 +104,6 @@ void PlayGameEngine::engineActivated_()
 void PlayGameEngine::engineDeactivated_()
 {
     SB_PLAY_DEBUG("PlayGameEngine::engineDeactivated()");
-    //emit engineStopped();
 }
 
 void PlayGameEngine::engineError_(QProcess::ProcessError e)
