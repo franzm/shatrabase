@@ -170,7 +170,9 @@ public:
     OptionValueList m_mapOptionValues;
 
 protected://rivate:
-	QString m_name;
+    void deleteProcess_();
+
+    QString m_name;
 	QString	m_command;
 	QString	m_directory;
 	QTextStream* m_logStream;

@@ -43,6 +43,9 @@ PlayGame::PlayGame(QObject *parent)
     connect(engine1_, SIGNAL(engineClueless()), SLOT(engineClueless_()));
     connect(engine2_, SIGNAL(engineClueless()), SLOT(engineClueless_()));
 
+    connect(engine1_, SIGNAL(engineCrashed()), SLOT(engineClueless_()));
+    connect(engine1_, SIGNAL(engineCrashed()), SLOT(engineClueless_()));
+
     slotReconfigure();
 }
 

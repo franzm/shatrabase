@@ -47,6 +47,9 @@ signals:
     /** The Engine did not return a move in the maximum time allowed. */
     void engineClueless();
 
+    /** What it says */
+    void engineCrashed();
+
 public slots:
 
     /** Sets new position and queries the Engine.

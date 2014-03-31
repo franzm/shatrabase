@@ -98,12 +98,19 @@ Engine::~Engine()
 {
     SB_ENGINE_DEBUG("Engine::~Engine()");
 
-    if (m_process)
-    {
-        delete m_process;
-    }
+    //deleteProcess_();
 }
 
+void Engine::deleteProcess_()
+{
+    if (m_process)
+    {
+        m_process->waitForFinished(1000);
+        m_process->deleteLater();
+        m_process = 0;
+    }
+    m_active = false;
+}
 
 void Engine::setLogStream(QTextStream* logStream)
 {
@@ -119,7 +126,7 @@ void Engine::activate(bool do_wait)
 		return;
 	}
 
-	m_process = new QProcess(this);
+    m_process = new QProcess(this);
     if (m_process)
     {
         m_process->setReadChannel(QProcess::StandardOutput);
@@ -144,12 +151,7 @@ void Engine::deactivate()
     if (m_active)
     {
         protocolEnd();
-        if (m_process)
-        {
-            m_process->waitForFinished(1000);
-            delete m_process;
-            m_process = 0;
-        }
+        deleteProcess_();
     }
 }
 
@@ -288,9 +290,8 @@ void Engine::processError(QProcess::ProcessError errMsg)
     commError(processErrorText(errMsg));
 
     setActive(false);
-    if (m_process)
-        delete m_process;
-    m_process = 0;
+    deleteProcess_();
+
     emit error(errMsg);
 }
 
@@ -299,9 +300,7 @@ void Engine::processExited()
     SB_ENGINE_DEBUG("Engine::processExited()");
 
 	setActive(false);
-    if (m_process)
-        delete m_process;
-    m_process = 0;
+    deleteProcess_();
     emit deactivated();
 }
 

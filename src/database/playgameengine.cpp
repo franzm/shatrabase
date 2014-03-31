@@ -104,12 +104,14 @@ void PlayGameEngine::engineActivated_()
 void PlayGameEngine::engineDeactivated_()
 {
     SB_PLAY_DEBUG("PlayGameEngine::engineDeactivated()");
+    //emit engineStopped();
 }
 
 void PlayGameEngine::engineError_(QProcess::ProcessError e)
 {
 //    QT_UNUSED(e);
     SB_PLAY_DEBUG("PlayGameEngine::engineError()" << Engine::processErrorText(e));
+    emit engineCrashed();
 }
 
 void PlayGameEngine::engineAnalysis_(const Analysis& a)
