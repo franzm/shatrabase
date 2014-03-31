@@ -71,8 +71,9 @@ public:
     /** Returns whether the engine is active or not */
     bool isActive() const;
 
-    /** Analyzes the given position */
-	virtual bool startAnalysis(const Board& board, int nv = 1) = 0;
+    /** Analyzes the given position.
+        If @p movetime_ms > 0, limit the analysis time to given millisecs. */
+    virtual bool startAnalysis(const Board& board, int nv = 1, int movetime_ms = 0) = 0;
 
     /** Stops any analysis */
 	virtual void stopAnalysis() = 0;

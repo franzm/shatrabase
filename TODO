@@ -11,8 +11,8 @@
 * position setup not working
 
 * russian font too faint
-* play game from set position
-* during play: add option to change game text instead of insert variation
+* OK play game from set position
+	* rationalize: change game text instead of insert variation
 * investigate touch displays
 
 * OK save board flipped status

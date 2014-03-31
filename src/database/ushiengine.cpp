@@ -26,7 +26,7 @@ USHIEngine::USHIEngine(const QString& name,
 
 }
 
-bool USHIEngine::startAnalysis(const Board& board, int nv)
+bool USHIEngine::startAnalysis(const Board& board, int nv, int movetime)
 {
 	m_mpv = nv;
 	if (!isActive()) {
@@ -39,6 +39,7 @@ bool USHIEngine::startAnalysis(const Board& board, int nv)
 
 	m_position = board.toSPN();
 	m_waitingOn = "ushinewgame";
+    m_movetime = movetime;
 	send("stop");
     send("ushinewgame");
     send("isready");
@@ -131,7 +132,10 @@ void USHIEngine::processMessage(const QString& message)
 			m_waitingOn = "";
 			send(QString("setoption name MultiPV value %1").arg(m_mpv));
 			send("position spn " + m_position);
-            send("go infinite");
+            if (m_movetime <= 0)
+                send("go infinite");
+            else
+                send(QString("go movetime %1").arg(m_movetime));
         }
 	}
 

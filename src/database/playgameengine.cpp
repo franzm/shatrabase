@@ -108,6 +108,7 @@ void PlayGameEngine::engineDeactivated_()
 
 void PlayGameEngine::engineError_(QProcess::ProcessError e)
 {
+//    QT_UNUSED(e);
     SB_PLAY_DEBUG("PlayGameEngine::engineError()" << Engine::processErrorText(e));
 }
 
@@ -195,6 +196,6 @@ bool PlayGameEngine::startAnalysis_(const Board& b)
     waitTimer_.start();
     terminateTimer_.start(maxWaitTime_);
 
-    return engine_->startAnalysis(b, 1);
+    return engine_->startAnalysis(b, 1, maxWaitTime_);
 }
 

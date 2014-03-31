@@ -32,8 +32,9 @@ public:
 		const QString& directory = QString(),
 		QTextStream* logStream = NULL);
 
-	/** Analyses the the given position */
-	bool startAnalysis(const Board& board, int nv);
+    /** Analyses the the given position.
+        If @p movetime_ms > 0, limit the analysis time to given millisecs. */
+    bool startAnalysis(const Board& board, int nv, int movetime_ms = 0);
 
 	/** Stops any analysis */
 	void stopAnalysis();
@@ -69,6 +70,7 @@ private:
 
 	QString m_position;
 	QString m_waitingOn;
+    int m_movetime;
 	bool m_quitAfterAnalysis;
 };
 
