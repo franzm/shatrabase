@@ -569,6 +569,17 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
     }
     */
 
+
+    // --- remove piece in board setup ---
+
+    if ((m_flags & F_AllowAllMoves) && (m_flags && F_NoExecuteMoves)
+        && !(event->button() & Qt::LeftButton))
+    {
+        if (s != InvalidSquare)
+            emit invalidMove(s);
+    }
+
+
     // ---- piece drop ----
 
     if (m_dragged != InvalidPiece)
@@ -597,7 +608,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             else
                 emit moveMade(from, s, event->button() + event->modifiers());
         }
-        //else emit invalidMove(from);
+        else emit invalidMove(from);
 
     }
 
