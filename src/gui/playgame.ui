@@ -30,24 +30,70 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QPushButton" name="b_new">
+       <property name="toolTip">
+        <string>Start a new game</string>
+       </property>
        <property name="text">
-        <string>Start new game</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/images/b_playstart.png</normaloff>:/images/b_playstart.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="b_continue">
+       <property name="toolTip">
+        <string>Continue current game</string>
+       </property>
        <property name="text">
-        <string>Continue</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/images/b_play.png</normaloff>:/images/b_play.png</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="b_resign">
+      <widget class="QPushButton" name="b_pause">
+       <property name="toolTip">
+        <string>Pause the current game</string>
+       </property>
        <property name="text">
-        <string>Resign</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/images/b_pause.png</normaloff>:/images/b_pause.png</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+S</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <widget class="QPushButton" name="b_flip">
@@ -79,7 +125,7 @@
      <item>
       <widget class="QLineEdit" name="nameEdit1">
        <property name="text">
-        <string>Player 1</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -116,7 +162,7 @@
      <item>
       <widget class="QLineEdit" name="nameEdit2">
        <property name="text">
-        <string>Player 2</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -142,6 +188,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

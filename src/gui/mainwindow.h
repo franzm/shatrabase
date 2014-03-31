@@ -192,8 +192,8 @@ public slots:
     void slotPlayGameNew(const QMap<QString, QString>& tags);
     /** Connected to PlayGameWidget to signal continuation of current game */
     void slotPlayGameContinue();
-    /** Connected to the resign button in PlayGameWidget */
-    void slotPlayGameResign();
+    /** Will restore the Board flags from playing to normal. */
+    void slotPlayGameEnd();
     /** Connected to PlayGameWidget: Engine has made a move */
     void slotPlayGameMove(Move);
     /** The piece move animation has finished. */

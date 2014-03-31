@@ -55,8 +55,8 @@ signals:
     /** Emitted when the current game in Chessbrowser should be continued. */
     void continueGame();
 
-    /** Emitted when player wants to resign. */
-    void resignGame();
+    /** Emitted when player needs a break. */
+    void pauseGame();
 
     /** The Engine has send a new position. */
     void moveMade(Move);
@@ -100,8 +100,8 @@ private slots:
     void continue_();
     /** Flip the players */
     void flipPlayers_();
-    /** haveit */
-    void resign_();
+    /** haveit for now */
+    void pause_();
 
 private:
 

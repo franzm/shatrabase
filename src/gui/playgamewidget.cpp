@@ -56,8 +56,6 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
 
     ui_->setupUi(this);
 
-    ui_->b_resign->setEnabled(false);
-
     connect(ui_->nameEdit1, SIGNAL(textEdited(QString)), SLOT(slotName1Changed_(QString)));
     connect(ui_->nameEdit2, SIGNAL(textEdited(QString)), SLOT(slotName2Changed_(QString)));
 
@@ -67,7 +65,9 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
     connect(ui_->b_new, SIGNAL(clicked()), SLOT(start_()));
     connect(ui_->b_continue, SIGNAL(clicked()), SLOT(continue_()));
     connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
-    connect(ui_->b_resign, SIGNAL(clicked()), SLOT(resign_()));
+    connect(ui_->b_pause, SIGNAL(clicked()), SLOT(pause_()));
+
+    setWidgetsPlaying_(false);
 
     slotReconfigure();
 }
@@ -191,11 +191,11 @@ void PlayGameWidget::stop()
     play_->deactivate();
 }
 
-void PlayGameWidget::resign_()
+void PlayGameWidget::pause_()
 {
     setWidgetsPlaying_(playing_ = false);
 
-    emit resignGame();
+    emit pauseGame();
 }
 
 void PlayGameWidget::flipPlayers_()
@@ -216,17 +216,22 @@ void PlayGameWidget::setWidgetsPlayer_(int stm)
 }
 
 void PlayGameWidget::setWidgetsPlaying_(bool p)
-{
-    blinkTimer_.stop();
-
+{    
     ui_->b_new->setEnabled(!p);
     ui_->b_continue->setEnabled(!p);
-    ui_->b_resign->setEnabled(p);
+    ui_->b_pause->setEnabled(p);
     ui_->b_flip->setEnabled(!p);
     ui_->nameEdit1->setEnabled(!p);
     ui_->nameEdit2->setEnabled(!p);
     ui_->engineCombo1->setEnabled(!p);
     ui_->engineCombo2->setEnabled(!p);
+
+    if (!p)
+    {
+        blinkTimer_.stop();
+        ui_->led1->setValue(false);
+        ui_->led2->setValue(false);
+    }
 }
 
 
@@ -294,6 +299,13 @@ void PlayGameWidget::moveFromEngine(Move m)
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
 
     blinkTimer_.stop();
+
+    // Stopped playing while Engine was thinking?
+    if (!playing_)
+    {
+        plyQue_.clear();
+        return;
+    }
 
     plyQue_.append(m);
 

@@ -60,7 +60,7 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     connect(m_boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotSelected(Square, int)));
     connect(m_boardView, SIGNAL(moveMade(Square, Square, int)), SLOT(slotMovePiece(Square, Square)));
     connect(m_boardView, SIGNAL(copyPiece(Square, Square)), SLOT(slotCopyPiece(Square, Square)));
-    connect(m_boardView, SIGNAL(invalidMove(Square)), SLOT(slotInvalidMove(Square)));
+    //connect(m_boardView, SIGNAL(invalidMove(Square)), SLOT(slotInvalidMove(Square)));
     connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotChangePiece(int)));
     connect(m_boardView, SIGNAL(pieceDropped(Square,Piece)), SLOT(slotDroppedPiece(Square, Piece)));
 	connect(ui.toMoveButton, SIGNAL(clicked()), SLOT(slotToggleSide()));

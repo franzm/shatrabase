@@ -689,7 +689,7 @@ void MainWindow::slotPlayGameContinue()
     m_playGame->setPosition(g.board());
 }
 
-void MainWindow::slotPlayGameResign()
+void MainWindow::slotPlayGameEnd()
 {
     // restore boardview flags
     m_boardView->setFlags(0);
