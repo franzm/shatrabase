@@ -61,6 +61,9 @@ signals:
     /** The Engine has send a new position. */
     void moveMade(Move);
 
+    void playerWins();
+    void playerLoses();
+
 public slots:
 
     /** Applies app settings */
@@ -78,7 +81,7 @@ public slots:
     void setPosition(const Board& board);
 
     /** Signal that board has done the last issued move */
-    void animationFinished();
+    void animationFinished(const Board& board);
 
 private slots:
 
@@ -118,6 +121,9 @@ private:
     void setWidgetsPlaying_(bool);
     /** Updates widgets according to who's an Engine */
     void updateEngineWidgets_();
+
+    /** Checks Game result and talks with MainWindow */
+    bool checkGameResult_(const Board&, bool triggerWinSignals, bool doStop);
 
     // ---- config ---
     QLed::ledColor colorPlayer_;

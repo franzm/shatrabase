@@ -699,16 +699,33 @@ void MainWindow::slotPlayGameMove(Move m)
 {
     game().addMove(m);
     game().forward();
+    slotGameChanged();
+
     // trigger animation
     m_currentFrom = BN[m.from()];
     m_currentTo = BN[m.to()];
     slotMoveChanged();
 }
 
+void MainWindow::slotPlayPlayerWins()
+{
+    QMessageBox::information(this,
+                             tr("!!!"),
+                             tr("You win!\n(XXX This should trigger an animation)")
+                             );
+}
+
+void MainWindow::slotPlayOtherWins()
+{
+    QMessageBox::information(this,
+                             tr("..."),
+                             tr("You did not win!\n(XXX This should trigger an animation)")
+                             );
+}
+
 void MainWindow::slotBoardAnimationFinished()
 {
-    if (m_playGame->isPlaying())
-        m_playGame->animationFinished();
+    m_playGame->animationFinished(game().board());
 }
 
 void MainWindow::saveGame()

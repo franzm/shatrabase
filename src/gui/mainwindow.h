@@ -196,6 +196,10 @@ public slots:
     void slotPlayGameEnd();
     /** Connected to PlayGameWidget: Engine has made a move */
     void slotPlayGameMove(Move);
+    /** Player has won. */
+    void slotPlayPlayerWins();
+    /** Not the player has won. */
+    void slotPlayOtherWins();
     /** The piece move animation has finished. */
     void slotBoardAnimationFinished();
     /* Save game, replacing old one if modified, appending if new

@@ -281,6 +281,9 @@ void PlayGameWidget::enginesReady()
 {
     SB_PLAY_DEBUG("PlayGameWidget::enginesReady()");
 
+    if (!playing_)
+        return;
+
     if (sendFreshBoardWhenReady_)
     {
         sendFreshBoardWhenReady_ = false;
@@ -293,6 +296,9 @@ void PlayGameWidget::enginesReady()
 
 void PlayGameWidget::engineClueless()
 {
+    if (!playing_)
+        return;
+
     // XXX what to do here?
     QMessageBox::warning(
              this,
@@ -309,14 +315,10 @@ void PlayGameWidget::setPosition(const Board& board)
 
     if (!playing_) return;
 
-    // game ended?
-    if (   board.gameResult() == WhiteWin
-        || board.gameResult() == BlackWin
-        || board.hasNoMoves())
-    {
-        stop();
+    // check if last player move ended game
+    // (Win/Lose will be checked after move animation ended)
+    if (checkGameResult_(board, false, false))
         return;
-    }
 
     lastStm_ = board.toMove();
 
@@ -370,7 +372,7 @@ void PlayGameWidget::moveFromEngine(Move m)
     }
 }
 
-void PlayGameWidget::animationFinished()
+void PlayGameWidget::animationFinished(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
 
@@ -392,6 +394,40 @@ void PlayGameWidget::animationFinished()
         setWidgetsPlayer_(oppositeColor(lastStm_));
     }
 
+    // check if last engine move ended game
+    checkGameResult_(board, true, true);
+}
+
+
+bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool dostop)
+{
+    bool end = false;
+
+    const bool
+        wwin = board.gameResult() == WhiteWin,
+        bwin = board.gameResult() == BlackWin,
+        e1 = play_->player1IsEngine(),
+        e2 = play_->player2IsEngine();
+
+    // stop playing
+    if ( wwin || bwin || board.hasNoMoves() )
+    {
+        if (dostop)
+            stop();
+        end = true;
+    }
+
+    if (trigger)
+    {
+        // emit appropriate signals
+        if ((wwin && !e1) || (bwin && !e2))
+            emit playerWins();
+        else
+        if ((wwin && e1) || (bwin && e2))
+            emit playerLoses();
+    }
+
+    return end;
 }
 
 void PlayGameWidget::slotBlinkTimer_()
