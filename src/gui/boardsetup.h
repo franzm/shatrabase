@@ -95,6 +95,7 @@ protected:
     int m_minDeltaWheel;
     Piece m_selectedPiece;
     BoardView * m_boardView;
+    Board m_board;
 };
 
 

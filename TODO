@@ -8,11 +8,13 @@
 
 -- gui --
 
-* position setup not working
+* position setup not fully working
 
 * russian font too faint
 * OK play game from set position
 	* rationalize: change game text instead of insert variation
+* playgame: disable Engine move when game over
+* playgame: disable Engine move when jumping in gametext
 * investigate touch displays
 
 * OK save board flipped status
@@ -24,7 +26,7 @@
 -- IO --
 
 * save game should be more easy (e.g. slotFileSave does not save Clipboard !?)
-* add timed move to Engine (alternatives to 'go inifinite')
+* OK add timed move to Engine (alternatives to 'go inifinite')
 
 -- strange things --
 

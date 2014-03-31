@@ -236,7 +236,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     // get size of the bitmaps
     m_size = m_theme->rect().width();
 
-    // get hover events
+    // XXX need to do this although we don't want the events here...
     setMouseTracking(true);
 
     // timer for animations
@@ -673,7 +673,7 @@ void BoardPainter::clearHighlights(int highlights)
 
 
 
-void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
+void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view, bool visible)
 {
     bool remove = (sq == InvalidSquare || piece == InvalidPiece);
 
@@ -698,7 +698,7 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view)
     if (!it) return;
 
     // remove original piece to be dragged
-    it->setVisible(false);
+    it->setVisible(visible);
     m_org_drag_piece = it;
 
     // get position

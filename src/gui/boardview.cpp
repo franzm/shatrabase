@@ -37,7 +37,7 @@ BoardView::BoardView(QWidget* parent, int flags)
     m_goal_index    (0),
     m_own_from      (0),
     m_own_to        (0),
-    m_dragged (InvalidPiece),
+    m_dragged       (InvalidPiece),
     m_dragStartSquare(InvalidSquare),
     //m_clickUsed(false),
     // m_wheelCurrentDelta(0),
@@ -49,6 +49,8 @@ BoardView::BoardView(QWidget* parent, int flags)
     Q_ASSERT(m_parent);
 
     setMouseTracking(true);
+    setAcceptDrops(true);
+
     //installEventFilter(this); XXX currently not used
 	m_board.setStandardPosition();
 
@@ -422,7 +424,8 @@ void BoardView::mousePressEvent(QMouseEvent* event)
     }
     // right-click
     else if ((event->button() & Qt::RightButton)
-             && (m_hoverSquare != InvalidSquare))
+             && (m_hoverSquare != InvalidSquare)
+             && !(m_flags && F_NoExecuteMoves))
     {
         if (m_guessNextMove && m_board.isMovable(m_hoverSquare))
         {
@@ -435,25 +438,13 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 {
     //m_button = event->button() + event->modifiers();
 
-/*
-    if (event->modifiers() & Qt::ControlModifier)
+    // signal copying
+    if (m_flags & F_AllowCopyPiece)
     {
-        setCursor(QCursor(Qt::UpArrowCursor));
-    }
-    else if (event->modifiers() & Qt::AltModifier)
-    {
-        setCursor(QCursor(Qt::DragCopyCursor));
-    }
-    else
-    {
-        setCursor(QCursor(Qt::ArrowCursor));
+        setCursor((event->modifiers() & Qt::ShiftModifier)?
+            QCursor(Qt::DragCopyCursor) : QCursor(Qt::DragMoveCursor));
     }
 
-    if (event->modifiers() & Qt::ShiftModifier)
-    {
-        return;
-    }
-*/
     // -- on hover --
 
     if (!event->buttons())
@@ -501,7 +492,9 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 
         // update painter
         if (m_view)
-            m_view->setDragPiece(m_dragStartSquare, m_dragged, m_dragPoint);
+            m_view->setDragPiece(m_dragStartSquare, m_dragged, m_dragPoint,
+                                 (m_flags & F_AllowAllMoves) && (event->modifiers() & Qt::ShiftModifier)
+                                 );
 
         event->accept();
         return;
@@ -594,17 +587,14 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
 
         // dropped on a new square on board?
         if (s != InvalidSquare && s != m_dragStartSquare)
-        {   /*
+        {
             // copy piece
-            if ((m_flags & AllowCopyPiece) && (event->modifiers() & Qt::AltModifier))
+            if ((m_flags & F_AllowCopyPiece) && (event->modifiers() & Qt::ShiftModifier))
             {
-                if (m_board.pieceAt(from) != Empty)
-                {
-                    emit copyPiece(from, s);
-                }
-            }*/
+                emit copyPiece(from, s);
+            }
             // or move piece
-            //else
+            else
                 emit moveMade(from, s, event->button() + event->modifiers());
         }
         //else emit invalidMove(from);
@@ -623,7 +613,8 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             m_board.getReachableSquares(from,v);
 
             // auto execute move?
-            if (m_guessMove && v.size() && canDrag(m_selectedSquare))
+            if (m_guessMove && v.size() && canDrag(m_selectedSquare)
+                && !(m_flags & F_NoExecuteMoves))
             {
                 m_own_from = from;
                 m_own_to = v[m_goal_index%v.size()];
@@ -800,6 +791,7 @@ int BoardView::heightForWidth(int width) const
 
 void BoardView::dragEnterEvent(QDragEnterEvent *event)
 {
+    qDebug() << event;
     const BoardViewMimeData *mimeData = qobject_cast<const BoardViewMimeData *>(event->mimeData());
     if (mimeData)
     {
@@ -827,6 +819,7 @@ void BoardView::dropEvent(QDropEvent *event)
         event->acceptProposedAction();
     }
 }
+
 #if (0)
 void BoardView::drawSquareAnnotations(QPaintEvent* event)
 {

@@ -111,7 +111,7 @@ public:
         @p view is the current mouse coords for the piece.
         Set @p sq to InvalidSquare to stop dragging. */
     void setDragPiece(Square sq = InvalidSquare, Piece piece = InvalidPiece,
-                      const QPoint& view = QPoint());
+                      const QPoint& view = QPoint(), bool previous_visible = false);
 signals:
 
     /** Emitted when a move animation has ended. */
@@ -135,6 +135,10 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent * e) { e->ignore(); };
     virtual void mouseReleaseEvent(QMouseEvent * e) { e->ignore(); };
     virtual void mouseDoubleClickEvent(QMouseEvent * e) { e->ignore(); }
+
+    virtual void dragEnterEvent(QDragEnterEvent * e) { e->ignore(); }
+    virtual void dragMoveEvent(QDragMoveEvent * e) { e->ignore(); }
+    virtual void dragLeaveEvent(QDragLeaveEvent * e) { e->ignore(); }
 
     // -------- coords ---------------
 

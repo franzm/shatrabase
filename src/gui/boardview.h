@@ -31,18 +31,33 @@ class BoardView : public QWidget
     Q_OBJECT
 public:
     enum { WheelUp = Qt::LeftButton, WheelDown = Qt::RightButton };
-    enum { F_AllowAllMoves = 1, F_AllowCopyPiece = 2, F_HideMoveHelp = 4, F_ExecuteMoves = 8,
-           F_DisableWhite = 16, F_DisableBlack = 32 };
+    enum BoardFlags
+    {   /** Don't check for sanity of moves. */
+        F_AllowAllMoves = 1,
+        /** Allow copy-drag with shift */
+        F_AllowCopyPiece = 2,
+        /** Do not show move highlights, regardless of properties. */
+        F_HideMoveHelp = 4,
+        /** Do not execute moves on click, regardless of properties */
+        F_NoExecuteMoves = 8,
+        /** Don't allow white to move */
+        F_DisableWhite = 16,
+        /** Don't allow black to move */
+        F_DisableBlack = 32
+    };
+
     /** Create board widget.
-        The parent is expected to exist. BoardView can be externalized, and
-        will reconnect to parent on close. */
+        The parent is expected to exist!
+        BoardView can be externalized, and will reconnect to parent on close.
+        For @p flags see BoardFlags enum */
     BoardView(QWidget* parent, int flags = 0);
+
     /** Destroy widget. */
     ~BoardView();
-    /** Set flags for board. Flags include:
-    * @p IgnoreSideToMove - allow dragging all pieces (useful for setting up a position)
-    */
+
+    /** Set flags for board interaction. @see BoardFlags enum */
     void setFlags(int flags);
+
     /** Update and shows current position.
         @p to and @p from trigger an animation of the piece. */
     void setBoard(const Board& value, int from = InvalidSquare, int to = InvalidSquare);
@@ -82,9 +97,8 @@ signals:
     void moveMade(Square from, Square to, int button);
     /** User dragged and dropped a piece holding Control */
     void copyPiece(Square from, Square to);
-    /* User attempted an invalid move (like out of board)
-        XXX who cares? */
-    //void invalidMove(Square from);
+    /** User attempted an out of board move, used for position setup */
+    void invalidMove(Square from);
     /** User clicked square */
     void clicked(Square square, int button, QPoint pos);
     /** User moved mouse wheel. */
