@@ -30,7 +30,8 @@ FORMS += \
     src/gui/engineoptiondialog.ui \
     src/gui/tagdetailwidget.ui \
     src/gui/statistics.ui \
-    src/gui/playgame.ui
+    src/gui/playgame.ui \
+    src/gui/playgameenginedialog.ui
 
 HEADERS += src/database/board.h \
     src/database/move.h \
@@ -116,7 +117,8 @@ HEADERS += src/database/board.h \
     src/database/databasestatsmodel.h \
     src/gui/playgamewidget.h \
     src/database/playgame.h \
-    src/database/playgameengine.h
+    src/database/playgameengine.h \
+    src/gui/playgameenginedialog.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -197,7 +199,8 @@ SOURCES += src/database/board.cpp \
     src/database/databasestatsmodel.cpp \
     src/gui/playgamewidget.cpp \
     src/database/playgame.cpp \
-    src/database/playgameengine.cpp
+    src/database/playgameengine.cpp \
+    src/gui/playgameenginedialog.cpp
 
 TEMPLATE = app
 INCLUDEPATH += src/database

@@ -66,8 +66,8 @@ bool PlayGame::checkEngineName_(const QString& name) const
 
 void PlayGame::slotReconfigure()
 {
-    engineName1_ = AppSettings->getValue("/PlayGame/Engine1").toString();
-    engineName2_ = AppSettings->getValue("/PlayGame/Engine2").toString();
+    engineName1_ = AppSettings->getValue("/PlayGame/Player1/engine").toString();
+    engineName2_ = AppSettings->getValue("/PlayGame/Player2/engine").toString();
 
     // make a null-string for "" or when engine is not in the list
     if (!checkEngineName_(engineName1_))
@@ -77,8 +77,8 @@ void PlayGame::slotReconfigure()
 
     SB_PLAY_DEBUG("PlayGame::reconfigure(): engine1="<<engineName1_<<" engine2="<<engineName2_);
 
-    name1_ = AppSettings->getValue("/PlayGame/Name1").toString();
-    name2_ = AppSettings->getValue("/PlayGame/Name2").toString();
+    name1_ = AppSettings->getValue("/PlayGame/Player1/name").toString();
+    name2_ = AppSettings->getValue("/PlayGame/Player2/name").toString();
 }
 
 void PlayGame::activate()
@@ -91,6 +91,10 @@ void PlayGame::activate()
     {
         player1Ready_ = false;
         engine1_->startEngine(engineName1_);
+        engine1_->setWaitTime(
+                    AppSettings->getValue("/PlayGame/Player1/minTime").toInt(),
+                    AppSettings->getValue("/PlayGame/Player1/minTime").toInt()
+                    );
     }
     else player1Ready_ = true;
 
@@ -98,6 +102,10 @@ void PlayGame::activate()
     {
         player2Ready_ = false;
         engine2_->startEngine(engineName2_);
+        engine2_->setWaitTime(
+                    AppSettings->getValue("/PlayGame/Player2/minTime").toInt(),
+                    AppSettings->getValue("/PlayGame/Player2/minTime").toInt()
+                    );
     }
     else player2Ready_ = true;
 }
@@ -132,13 +140,13 @@ const QString& PlayGame::engineName2() const
 void PlayGame::setPlayerName1(const QString &s)
 {
     name1_ = s;
-    AppSettings->setValue("/PlayGame/Name1", name1_);
+    AppSettings->setValue("/PlayGame/Player1/name", name1_);
 }
 
 void PlayGame::setPlayerName2(const QString &s)
 {
     name2_ = s;
-    AppSettings->setValue("/PlayGame/Name2", name2_);
+    AppSettings->setValue("/PlayGame/Player2/name", name2_);
 }
 
 void PlayGame::setEngineName1(const QString &s)
@@ -148,7 +156,7 @@ void PlayGame::setEngineName1(const QString &s)
     else
         engineName1_ = s;
 
-    AppSettings->setValue("/PlayGame/Engine1", engineName1_);
+    AppSettings->setValue("/PlayGame/Player1/engine", engineName1_);
 }
 
 void PlayGame::setEngineName2(const QString &s)
@@ -158,7 +166,7 @@ void PlayGame::setEngineName2(const QString &s)
     else
         engineName2_ = s;
 
-    AppSettings->setValue("/PlayGame/Engine2", engineName2_);
+    AppSettings->setValue("/PlayGame/Player2/engine", engineName2_);
 }
 
 

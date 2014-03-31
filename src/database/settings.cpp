@@ -190,10 +190,13 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
 
-    map.insert("/PlayGame/Engine1", "");
-    map.insert("/PlayGame/Engine2", "");
-    map.insert("/PlayGame/Name1", tr("Player 1"));
-    map.insert("/PlayGame/Name2", tr("Player 2"));
+    for (int i=1; i<=2; ++i)
+    {
+        map.insert(QString("/PlayGame/Player%1/engine").arg(i), "");
+        map.insert(QString("/PlayGame/Player%1/name").arg(i), tr("Player %1").arg(i));
+        map.insert(QString("/PlayGame/Player%1/minTime").arg(i), 2000);
+        map.insert(QString("/PlayGame/Player%1/maxTime").arg(i), 6000);
+    }
 
     // board config
     map.insert("/Board/external", false);

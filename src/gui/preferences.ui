@@ -89,169 +89,13 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
        <string>&amp;Board</string>
       </attribute>
       <layout class="QGridLayout">
-       <item row="14" column="0" colspan="3">
-        <widget class="QGroupBox" name="groupBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title">
-          <string>Mouse Behaviour</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
-          </property>
-          <item>
-           <widget class="QCheckBox" name="guessMoveCheck">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>&amp;Guess move on left-click</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="guessNextMoveCheck">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Next guess on right click</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="labelWheel">
-              <property name="text">
-               <string>Wheel sensitivity</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="labelFast">
-              <property name="text">
-               <string>Fast</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="minWheelCount">
-              <property name="maximum">
-               <number>240</number>
-              </property>
-              <property name="singleStep">
-               <number>60</number>
-              </property>
-              <property name="pageStep">
-               <number>60</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="invertedAppearance">
-               <bool>false</bool>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>60</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Slow</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Colors:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
-         <property name="buddy">
-          <cstring>boardColorsList</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <layout class="QHBoxLayout">
-         <item>
-          <widget class="QComboBox" name="pieceThemeCombo">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="pieceEffect">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <item>
-            <property name="text">
-             <string>plain</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>outline</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>outline+shadow</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
-       </item>
        <item row="5" column="2">
         <layout class="QHBoxLayout" name="horizontalLayout_6">
          <property name="topMargin">
@@ -415,6 +259,45 @@
          </property>
         </spacer>
        </item>
+       <item row="0" column="2">
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QComboBox" name="pieceThemeCombo">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="pieceEffect">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <item>
+            <property name="text">
+             <string>plain</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>outline</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>outline+shadow</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="2" column="2">
         <widget class="ColorList" name="boardColorsList"/>
        </item>
@@ -428,13 +311,13 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="2">
-        <widget class="QCheckBox" name="hilightAllMoves">
-         <property name="toolTip">
-          <string>When selected, all possible moves will be hilighted for a piece when the mouse is moved over it</string>
+       <item row="8" column="2">
+        <widget class="QCheckBox" name="hilightCurrentMove">
+         <property name="enabled">
+          <bool>true</bool>
          </property>
          <property name="text">
-          <string>Highlight all possible moves</string>
+          <string>Highlight current move</string>
          </property>
         </widget>
        </item>
@@ -448,20 +331,13 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="2">
-        <widget class="QCheckBox" name="hilightCurrentMove">
-         <property name="enabled">
-          <bool>true</bool>
+       <item row="9" column="2">
+        <widget class="QCheckBox" name="hilightAllMoves">
+         <property name="toolTip">
+          <string>When selected, all possible moves will be hilighted for a piece when the mouse is moved over it</string>
          </property>
          <property name="text">
-          <string>Highlight current move</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QCheckBox" name="boardMoatCheck">
-         <property name="text">
-          <string>Ditch in board</string>
+          <string>Highlight all possible moves</string>
          </property>
         </widget>
        </item>
@@ -477,6 +353,130 @@
          <property name="text">
           <string>Show square numbers</string>
          </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QCheckBox" name="boardMoatCheck">
+         <property name="text">
+          <string>Ditch in board</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Colors:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="buddy">
+          <cstring>boardColorsList</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0" colspan="3">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Mouse Behaviour</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="guessMoveCheck">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>&amp;Guess move on left-click</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="guessNextMoveCheck">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Next guess on right click</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="labelWheel">
+              <property name="text">
+               <string>Wheel sensitivity</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelFast">
+              <property name="text">
+               <string>Fast</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="minWheelCount">
+              <property name="maximum">
+               <number>240</number>
+              </property>
+              <property name="singleStep">
+               <number>60</number>
+              </property>
+              <property name="pageStep">
+               <number>60</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="invertedAppearance">
+               <bool>false</bool>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksBothSides</enum>
+              </property>
+              <property name="tickInterval">
+               <number>60</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Slow</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -689,6 +689,9 @@
           </item>
           <item row="4" column="2">
            <widget class="QRadioButton" name="engineProtocolUnknown">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Unknown</string>
             </property>
@@ -746,7 +749,7 @@
           <item row="4" column="1">
            <widget class="QRadioButton" name="engineProtocolUSHI">
             <property name="text">
-             <string>USI</string>
+             <string>USHI</string>
             </property>
            </widget>
           </item>

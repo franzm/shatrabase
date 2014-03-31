@@ -52,6 +52,7 @@ EngineOptionDialog::~EngineOptionDialog()
 
 void EngineOptionDialog::accept()
 {
+
     QDialog::accept();
 }
 

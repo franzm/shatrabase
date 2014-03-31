@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "settings.h"
 #include "enginelist.h"
 #include "playgame.h"
+#include "playgameenginedialog.h"
 
 #include <QMessageBox>
 #include <QDate>
@@ -94,6 +95,9 @@ bool PlayGameWidget::blackCanMove() const
 
 void PlayGameWidget::slotReconfigure()
 {
+    if (playing_)
+        stop();
+
     // all settings are stored in PlayGame
     play_->slotReconfigure();
 
@@ -135,8 +139,8 @@ void PlayGameWidget::updateEngineWidgets_()
     ui_->led1->setOnColor(e1 ? colorEngine0_ : colorPlayer_);
     ui_->led2->setOnColor(e2 ? colorEngine0_ : colorPlayer_);
 
-    ui_->b_settings1->setEnabled(e1);
-    ui_->b_settings2->setEnabled(e2);
+    ui_->b_settings1->setEnabled(e1 && !playing_);
+    ui_->b_settings2->setEnabled(e2 && !playing_);
 }
 
 void PlayGameWidget::slotName1Changed_(const QString& s)
@@ -163,12 +167,14 @@ void PlayGameWidget::slotEngine2Changed_(const QString& s)
 
 void PlayGameWidget::slotConfig1Clicked_()
 {
-
 }
 
 void PlayGameWidget::slotConfig2Clicked_()
 {
+    PlayGameEngineDialog * d = new PlayGameEngineDialog(play_, 1, this);
+    connect(d,SIGNAL(accepted()), SLOT(slotReconfigure()));
 
+    d->exec();
 }
 
 
@@ -265,6 +271,9 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
         ui_->led1->setValue(false);
         ui_->led2->setValue(false);
     }
+
+    // bit hacky here
+    updateEngineWidgets_();
 }
 
 

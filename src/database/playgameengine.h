@@ -36,6 +36,9 @@ public:
     /** Stops the Engine if running */
     void stop();
 
+    /** Set minimum at maximum wait time in millisecs */
+    void setWaitTime(int min_ms, int max_ms) { minWaitTime_ = min_ms; maxWaitTime_ = max_ms; }
+
 signals:
 
     /** Engine is activated */
