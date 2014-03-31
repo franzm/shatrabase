@@ -4,9 +4,16 @@
   * shadow and outline versions
 * OK tower squares
 
+
 -- gui --
+
+* russian font too faint
+* save game should be more easy
+* play game from set position
+* during play: add option to change game text instead of insert variation
+* investigate touch displays
 
 * OK save board flipped status
 * OK fix window max'd save/restore (common Qt prob) 
   * save maximized state but keep default pos/size
-* fix board sometimes off (animation/autoplay)
+* OK fix board sometimes off (animation/autoplay)
