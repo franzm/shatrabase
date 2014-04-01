@@ -11,10 +11,6 @@
 * OK position setup not fully working
 
 * russian font too faint
-* OK play game from set position
-	* rationalize: change game text instead of insert variation
-* playgame: disable Engine move when game over
-* playgame: disable Engine move when jumping in gametext
 * investigate touch displays
 
 * OK save board flipped status
@@ -23,10 +19,21 @@
 * OK fix board sometimes off (animation/autoplay)
 
 
+-- gameplay --
+
+* OK play game from set position
+* rationalize: change game text instead of insert variation
+* OK disable Engine thinking when game over
+* OK win/lose
+	* draw
+* disable Engine thinking when jumping in gametext
+
+
 -- IO --
 
 * save game should be more easy (e.g. slotFileSave does not save Clipboard !?)
 * OK add timed move to Engine (alternatives to 'go inifinite')
+
 
 -- strange things --
 
