@@ -73,9 +73,9 @@ class OpeningTree : public QAbstractTableModel
 	Q_OBJECT
 public:
 	/** Empty constructor. */
-	OpeningTree();
+    OpeningTree(QObject * parent);
     /** Initialized constructor, performing automatic update */
-    OpeningTree(Filter& f, const Board& b, bool updateFilter);
+    OpeningTree(Filter& f, const Board& b, bool updateFilter, QObject * parent);
     /** Calculate opening tree from given position, using given filter. It sets
     the filter to contain only game matching position @p b .
     @return true if the update was not cancelled.*/

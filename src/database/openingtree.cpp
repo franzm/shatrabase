@@ -250,12 +250,14 @@ int OpeningTree::columnCount(const QModelIndex&) const
 	return m_names.count();
 }
 
-OpeningTree::OpeningTree() : m_sortcolumn(1), m_order(Qt::DescendingOrder), m_filter(0)
+OpeningTree::OpeningTree(QObject * parent)
+    : QAbstractTableModel(parent), m_sortcolumn(1), m_order(Qt::DescendingOrder), m_filter(0)
 {
     m_names << tr("Move") << tr("Count") << tr("Score") << tr("Rating") << tr("Year");
 }
 
-OpeningTree::OpeningTree(Filter & f, const Board & b, bool updateFilter) :
+OpeningTree::OpeningTree(Filter & f, const Board & b, bool updateFilter, QObject * parent)
+    : QAbstractTableModel(parent),
         m_sortcolumn(1), m_order(Qt::DescendingOrder), m_filter(0)
 {
     m_names << tr("Move") << tr("Count") << tr("Score") << tr("Rating") << tr("Year");

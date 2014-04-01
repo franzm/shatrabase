@@ -273,7 +273,7 @@ MainWindow::MainWindow() : QMainWindow(),
     /* Opening Tree */
     DockWidgetEx* openingDock = new DockWidgetEx(tr("Opening Tree"), this);
 	openingDock->setObjectName("OpeningTreeDock");
-	m_openingTree = new OpeningTree;
+    m_openingTree = new OpeningTree(this);
     m_openingTreeView = new TableView(openingDock);
     m_openingTreeView->setObjectName("OpeningTree");
     m_openingTreeView->setMinimumSize(150, 100);
