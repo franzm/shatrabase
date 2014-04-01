@@ -36,8 +36,13 @@ public:
     /** Stops the Engine if running */
     void stop();
 
+    // --- proerties ---
+
     /** Set minimum at maximum wait time in millisecs */
     void setWaitTime(int min_ms, int max_ms) { minWaitTime_ = min_ms; maxWaitTime_ = max_ms; }
+
+    /** Set's the maximum search depth in (moves or ply?) */
+    void setMaxDepth(int max_search_depth_in_ply_questionmark) { maxDepth_ = max_search_depth_in_ply_questionmark; }
 
 signals:
 
@@ -104,10 +109,16 @@ private:
     /** For forcing the Engine to quit */
     QTimer terminateTimer_;
 
+    // --- properties ---
+
     /** Time to wait in millisecs for the Engine answer */
     int minWaitTime_,
     /** Time after which the Engine gets stopped and the last move is returned. */
-        maxWaitTime_;
+        maxWaitTime_,
+    /** Searchdepth */
+        maxDepth_;
+
+    // -- state logic --
 
     bool
     /** Already got a move from Engine (for maxWaitTime_) */

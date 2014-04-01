@@ -5,6 +5,7 @@ PlayGameEngine::PlayGameEngine(QObject *parent)
         engine_             (0),
         minWaitTime_        (2*1000),
         maxWaitTime_        (6*1000),
+        maxDepth_           (0),
         stopBetweenMoves_   (true),
         listening_          (false),
         sendPositionOnActivate_(false)
@@ -198,6 +199,6 @@ bool PlayGameEngine::startAnalysis_(const Board& b)
     waitTimer_.start();
     terminateTimer_.start(maxWaitTime_);
 
-    return engine_->startAnalysis(b, 1, maxWaitTime_, 2);
+    return engine_->startAnalysis(b, 1, maxWaitTime_, maxDepth_);
 }
 

@@ -24,6 +24,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "playgameengine.h"
 #include "settings.h"
 
+/*  For new options, you need to change:
+ *  PlayGameEngineDialog::
+ *      - form widget / connect / slot
+ *      - new entry in options_ stringlist
+ *      - updateWidgets_()
+ *  Settings::
+ *      - new entry in getmap
+ *  PlayGame::
+ *      - add property to creation of PlayGameEngine
+ *
+ **/
+
 
 PlayGameEngineDialog::PlayGameEngineDialog(PlayGame * play, int player, QWidget *parent) :
     QDialog (parent),
@@ -36,16 +48,19 @@ PlayGameEngineDialog::PlayGameEngineDialog(PlayGame * play, int player, QWidget 
     connect(ui_->cb_player, SIGNAL(activated(int)), SLOT(changedPlayer_(int)));
     connect(ui_->sb_mintime, SIGNAL(valueChanged(double)), SLOT(changedMinTime_(double)));
     connect(ui_->sb_maxtime, SIGNAL(valueChanged(double)), SLOT(changedMaxTime_(double)));
+    connect(ui_->sb_depth, SIGNAL(valueChanged(int)), SLOT(changedMaxDepth_(int)));
 
     for (int i=1; i<=2; ++i)
     {
         ui_->cb_player->addItem(tr("Player %1").arg(i), QVariant(i-1));
     }
 
-    options_.append("engine");
-    options_.append("name");
-    options_.append("minTime");
-    options_.append("maxTime");
+    options_
+    << "engine"
+    << "name"
+    << "minTime"
+    << "maxTime"
+    << "maxDepth";
 }
 
 PlayGameEngineDialog::~PlayGameEngineDialog()
@@ -75,6 +90,7 @@ void PlayGameEngineDialog::updateWidgets_()
 
     ui_->sb_mintime->setValue( settings_[url_ + "minTime"].toDouble() / 1000.0 );
     ui_->sb_maxtime->setValue( settings_[url_ + "maxTime"].toDouble() / 1000.0 );
+    ui_->sb_depth->setValue( settings_[url_ + "maxDepth"].toInt() );
 }
 
 void PlayGameEngineDialog::saveSettings_()
@@ -121,4 +137,9 @@ void PlayGameEngineDialog::changedMinTime_(double v)
 void PlayGameEngineDialog::changedMaxTime_(double v)
 {
     settings_[url_ + "maxTime"].setValue((int)(v * 1000));
+}
+
+void PlayGameEngineDialog::changedMaxDepth_(int v)
+{
+    settings_[url_ + "maxDepth"].setValue(v);
 }

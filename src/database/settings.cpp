@@ -196,6 +196,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
         map.insert(QString("/PlayGame/Player%1/name").arg(i), tr("Player %1").arg(i));
         map.insert(QString("/PlayGame/Player%1/minTime").arg(i), 2000);
         map.insert(QString("/PlayGame/Player%1/maxTime").arg(i), 6000);
+        map.insert(QString("/PlayGame/Player%1/maxDepth").arg(i), 0);
     }
 
     // board config

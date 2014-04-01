@@ -95,6 +95,9 @@ void PlayGame::activate()
                     AppSettings->getValue("/PlayGame/Player1/minTime").toInt(),
                     AppSettings->getValue("/PlayGame/Player1/minTime").toInt()
                     );
+        engine1_->setMaxDepth(
+                    AppSettings->getValue("/PlayGame/Player1/maxDepth").toInt()
+                    );
     }
     else player1Ready_ = true;
 
@@ -105,6 +108,9 @@ void PlayGame::activate()
         engine2_->setWaitTime(
                     AppSettings->getValue("/PlayGame/Player2/minTime").toInt(),
                     AppSettings->getValue("/PlayGame/Player2/minTime").toInt()
+                    );
+        engine2_->setMaxDepth(
+                    AppSettings->getValue("/PlayGame/Player2/maxDepth").toInt()
                     );
     }
     else player2Ready_ = true;

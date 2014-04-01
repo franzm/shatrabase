@@ -60,6 +60,7 @@ private slots:
 
     void changedMinTime_(double);
     void changedMaxTime_(double);
+    void changedMaxDepth_(int);
 
 protected:
 
