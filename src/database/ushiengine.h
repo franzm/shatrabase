@@ -33,8 +33,9 @@ public:
 		QTextStream* logStream = NULL);
 
     /** Analyses the the given position.
-        If @p movetime_ms > 0, limit the analysis time to given millisecs. */
-    bool startAnalysis(const Board& board, int nv, int movetime_ms = 0);
+        If @p movetime_ms > 0, limit the analysis time to given millisecs.
+        If @p max_ply > 0, only the specified number of plies will be searched. */
+    bool startAnalysis(const Board& board, int nv, int movetime_ms = 0, int max_ply = 0);
 
 	/** Stops any analysis */
 	void stopAnalysis();
@@ -70,7 +71,7 @@ private:
 
 	QString m_position;
 	QString m_waitingOn;
-    int m_movetime;
+    int m_movetime, m_max_ply;
 	bool m_quitAfterAnalysis;
 };
 

@@ -27,7 +27,7 @@
 #include "engineoptiondata.h"
 
 
-#if 0
+#if 1
 #   define SB_ENGINE_DEBUG(stream_arg__) { qDebug() << (void*)this << stream_arg__; }
 #else
 #   define SB_ENGINE_DEBUG(unused__) { }
@@ -72,8 +72,10 @@ public:
     bool isActive() const;
 
     /** Analyzes the given position.
-        If @p movetime_ms > 0, limit the analysis time to given millisecs. */
-    virtual bool startAnalysis(const Board& board, int nv = 1, int movetime_ms = 0) = 0;
+        If @p movetime_ms > 0, limit the analysis time to given millisecs.
+        If @p max_ply > 0, only the specified number of plies will be searched. */
+    virtual bool startAnalysis(const Board& board, int nv = 1,
+                               int movetime_ms = 0, int max_ply = 0) = 0;
 
     /** Stops any analysis */
 	virtual void stopAnalysis() = 0;

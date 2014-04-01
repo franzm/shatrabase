@@ -1,3 +1,9 @@
+-- general --
+
+* installer (maybe http://www.installjammer.com)
+* remove all chessx / chesssettings references
+
+
 -- graphics --
 
 * piece graphics
@@ -18,6 +24,7 @@
   * save maximized state but keep default pos/size
 * OK fix board sometimes off (animation/autoplay)
 
+* win animation
 
 -- gameplay --
 
@@ -25,14 +32,15 @@
 * rationalize: change game text instead of insert variation
 * OK disable Engine thinking when game over
 * OK win/lose
-	* draw
+  * draw
 * disable Engine thinking when jumping in gametext
 
 
 -- IO --
 
 * save game should be more easy (e.g. slotFileSave does not save Clipboard !?)
-* OK add timed move to Engine (alternatives to 'go inifinite')
+* OK add 'go movetime x'
+* add more analysis options (USHI)
 
 
 -- strange things --

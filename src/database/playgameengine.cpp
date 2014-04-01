@@ -198,6 +198,6 @@ bool PlayGameEngine::startAnalysis_(const Board& b)
     waitTimer_.start();
     terminateTimer_.start(maxWaitTime_);
 
-    return engine_->startAnalysis(b, 1, maxWaitTime_);
+    return engine_->startAnalysis(b, 1, maxWaitTime_, 2);
 }
 
