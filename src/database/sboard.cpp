@@ -276,7 +276,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
             if (j != spn_slash[sl++] + 1) return false;
             c = spn[++i];
         }
-        bt = j >= temdekAt[Black]; wt = j <= temdekAt[White];
+        bt = j >= gateAt[Black]; wt = j <= gateAt[White];
         if (isNum(c)) { sp = c - '0'; continue; }
 
         if (c == '!') urg = true;
@@ -538,7 +538,7 @@ inline void SBoard::doCFlags(int from, int to, int cp)
  // if dropping from home fort, add decTemdek flag if T on
 inline bool SBoard::getDrops(int s, PieceType piece)
 {
-    bool t = s <= temdekAt[White];
+    bool t = s <= gateAt[White];
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
     t ^= (m_stm != White); // our own fortress?
@@ -967,7 +967,7 @@ bool SBoard::doMove(const Move& m)
     {       
         m_biyAt[m_stm] = m_to;
         if (temdekOn(m_stm))
-            if ((m_to == temdekAtB[m_stm]) && (m_to != m_from))
+            if ((m_to == gateAtB[m_stm]) && (m_to != m_from))
                 ++m_temdek[m_stm];
     }
     m_lstm = m_stm;
@@ -1028,7 +1028,7 @@ void SBoard::undoMove(const Move& m)
     {       
         m_biyAt[m_stm] = m_from;
         if (temdekOn(m_stm))
-            if ((m_to == temdekAtB[m_stm]) && (m_to != m_from))
+            if ((m_to == gateAtB[m_stm]) && (m_to != m_from))
                 --m_temdek[m_stm];
     }
     m_epSquare = m.oldEPAvail();

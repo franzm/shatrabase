@@ -132,8 +132,9 @@ void BoardSetupDialog::slotAccept()
 void BoardSetupDialog::slotClear()
 {
 	Board b;
-    b.setAt(temdekAt[White], WhiteBiy);
-    b.setAt(temdekAt[Black], BlackBiy);
+//    b.setAt(gateAt[White], WhiteBiy);
+//    b.setAt(gateAt[Black], BlackBiy);
+    b.fillOffboard();
 	setBoard(b);
 }
 

@@ -436,10 +436,10 @@ void BoardPainter::createBoard_(const Board& board)
         }
 
         // set temdek flag
-        if ((i == temdekAt[Black] && board.temdekOn(Black)) ||
-            (i == temdekAt[White] && board.temdekOn(White)))
+        if ((i == gateAt[Black] && board.temdekOn(Black)) ||
+            (i == gateAt[White] && board.temdekOn(White)))
         {
-            s->temdek = (i == temdekAt[White])? 2 : 1;
+            s->temdek = (i == gateAt[White])? 2 : 1;
         }
 
         // set tower square overlay

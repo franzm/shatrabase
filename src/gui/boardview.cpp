@@ -263,8 +263,8 @@ void BoardView::drawSquares(QPaintEvent* event)
         QPoint pos(r.x(), r.y());
         p.drawPixmap(pos, m_theme.square((x + y) % 2));
 
-        if ((sq == temdekAt[Black] && m_board.temdekOn(Black)) ||
-            (sq == temdekAt[White] && m_board.temdekOn(White)))
+        if ((sq == gateAt[Black] && m_board.temdekOn(Black)) ||
+            (sq == gateAt[White] && m_board.temdekOn(White)))
         {
             QLine cross[2]; // draw temdeks here
 

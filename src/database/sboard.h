@@ -366,7 +366,7 @@ inline bool SBoard::isVacant(const int at) const
 
 inline bool SBoard::isBiyOnTemdek(const Square s) const
 {
-	return s == temdekAt[m_stm] && temdekOn(m_stm);
+    return s == gateAt[m_stm] && temdekOn(m_stm);
 }
 
 inline bool SBoard::temdekOn(int side) const
@@ -410,8 +410,8 @@ inline bool SBoard::isReserve(const Square s) const
 {
     if (temdekOff(m_stm)) return false;
     return m_stm?
-        s >= temdekAt[Black] :
-        s <= temdekAt[White];
+        s >= gateAt[Black] :
+        s <= gateAt[White];
 }
 
 inline bool SBoard::isUrgent(const Square s) const
