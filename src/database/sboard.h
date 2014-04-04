@@ -24,7 +24,8 @@ class Move;
 
 enum BoardStatus
 {
-    Valid, NoWhiteBiy, NoBlackBiy, TooManyBiys, InvalidEnPassant
+    Valid, NoWhiteBiy, NoBlackBiy, TooManyBiys, InvalidEnPassant,
+    StatusUnknown
 };
 
 enum D
@@ -272,6 +273,8 @@ public:
     //
     /** Check current position and return "Valid" or problem */
     BoardStatus validate() const;
+    /** Return true if EP capture possible on given square */
+    bool epPossible(int sq, Color side);
     /** Return true if given SPN can be parsed */
 	bool isValidSPN(const QString& spn) const;
     
@@ -306,7 +309,7 @@ public:
     bb  m_allurgent;           // bitboard of all pieces marked urgent
   private:
     int m_sntm;                // side not to move
-    int m_lstm;                // last side not to move :) (okay, not not)
+    int m_lstm;                // last side to move
     int m_from;
     int m_to;
     int m_biyAt[2];            // locations of the biys
@@ -315,6 +318,7 @@ public:
     int m_epVictim;            // ep victim square
     int m_latePromo;           // square of last late promotion
     int m_moveNumber;          // move number in game (inc after black moves)
+    int m_halfMoves;           // number of gameply since last capture or promotion
     int m_offBoard[12];        // pieces are either on or off the board
     int m_pieceCount[2];       // simple counter for onboard pieces
     int m_promoWait[2];        // could need 3 for each side??? :)

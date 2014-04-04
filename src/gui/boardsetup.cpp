@@ -241,7 +241,7 @@ QString BoardSetupDialog::boardStatusMessage() const
 	case InvalidEnPassant:
 		return tr("En passant square is not correct");
 	default:
-		return tr("Unknown reason");
+        return tr("Incomplete");
 	}
 }
 

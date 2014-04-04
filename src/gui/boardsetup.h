@@ -22,8 +22,7 @@ class QAction;
 class QActionGroup;
 class BoardView;
 
-/**  @ingroup GUI
-  The BoardSetupDialog class represents a dialog for setting up a position.  */
+/** The BoardSetupDialog class represents a dialog for setting up a position.  */
 
 class BoardSetupDialog : public QDialog
 {
