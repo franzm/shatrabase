@@ -19,6 +19,7 @@
 #include <QWidget>
 #include <QMainWindow>
 #include <QDebug>
+#include <QColorDialog>
 
 Settings::Settings()
     :   QSettings(IniFormat, UserScope, "shatrabase", "shatrabase"),
@@ -198,6 +199,13 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
         map.insert(QString("/PlayGame/Player%1/maxTime").arg(i), 6000);
         map.insert(QString("/PlayGame/Player%1/maxDepth").arg(i), 0);
     }
+
+    // custom colors (colordialog)
+    for (int i=0; i<QColorDialog::customCount(); ++i)
+    {
+        map.insert(QString("/CustomColors/Color%1").arg(i), QColor(Qt::white));
+    }
+
 
     // board config
     map.insert("/Board/external", false);
