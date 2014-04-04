@@ -19,6 +19,8 @@
 #include <QPainter>
 #include <QPixmap>
 
+#include "settings.h"
+
 ColorList::ColorList(QWidget* parent) : QListWidget(parent)
 {
 }
@@ -40,9 +42,35 @@ void ColorList::editItemColor(QListWidgetItem* item)
 {
 	if (!item)
 		return;
-	QColor col = QColorDialog::getColor(color(item));
-	if (col.isValid())
-		setItemColor(item, col);
+
+    qDebug() << "diag";
+
+    QColorDialog * cd = new QColorDialog(color(item), this);
+
+    cd->setWindowTitle(tr("Choose color for %1").arg(item->text()));
+    cd->setOptions(QColorDialog::DontUseNativeDialog);
+
+    // read custom colors
+    for (int i=0; i<QColorDialog::customCount(); ++i)
+    {
+        QColorDialog::setCustomColor(i,
+            AppSettings->getValue(QString("/CustomColors/Color%1").arg(i)).value<QColor>());
+    }
+
+    if (cd->exec())
+    {
+        if (cd->currentColor().isValid())
+            setItemColor(item, cd->currentColor());
+    }
+
+    // store custom colors
+    for (int i=0; i<QColorDialog::customCount(); ++i)
+    {
+        AppSettings->setValue(QString("/CustomColors/Color%1").arg(i),
+                              QColorDialog::customColor(i));
+    }
+
+
 }
 
 void ColorList::mousePressEvent(QMouseEvent* event)
