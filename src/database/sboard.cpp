@@ -447,9 +447,13 @@ bool SBoard::SPNToBoard(const QString& qspn)
         default:
             j = i;
             while (isNum(c)) c = spn[++i];
-            m_epSquare = NB[spn.mid(j, i - j).toInt()];
-            found = true;
-            // check for legality here
+            int eps = spn.mid(j, i - j).toInt();
+            if (epPossible(eps, Color(m_stm)))
+            {
+                m_epSquare = NB[eps];
+                found = true;
+            }
+            else return false;
         }
     }
     if (!found) return false; found = false;
@@ -528,7 +532,7 @@ QString SBoard::toSPN() const
  // move number
     spn += QString::number(m_moveNumber);
 
-    qDebug() << spn;
+//    qDebug() << spn;
 
     return spn;
 }
@@ -977,6 +981,7 @@ Move SBoard::parseMove(const QString& algebraic)
 
 bool SBoard::doMove(const Move& m)
 {
+    ++m_halfMoves;
     m_from = m.from();
     m_to = m.to();
 
@@ -1011,11 +1016,13 @@ bool SBoard::doMove(const Move& m)
             ++m_offBoard[piece];
             m_sb[m_to] = piece = m.promotedPiece();
             --m_offBoard[piece];
+            m_halfMoves = 0;
         }
     }
 
     if (m.isCapture())
     {
+        m_halfMoves = 0;
         Piece victim = m.capturedPiece();
         PieceType v = pieceType(victim);
         int victim_at = m.capturedAt();
@@ -1072,6 +1079,7 @@ bool SBoard::doMove(const Move& m)
  // NB undoMove is incapable of resurrecting a list of captured pieces
 void SBoard::undoMove(const Move& m)
 {
+    --m_halfMoves;
     m_from = m.from();
     m_to = m.to();
 
