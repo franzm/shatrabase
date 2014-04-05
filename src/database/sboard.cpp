@@ -533,7 +533,7 @@ QString SBoard::toSPN() const
  // move number
     spn += QString::number(m_moveNumber);
 
-    qDebug() << spn;
+//    qDebug() << spn;
 
     return spn;
 }
