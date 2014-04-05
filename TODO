@@ -1,6 +1,7 @@
 -- general --
 
 * installer (maybe http://www.installjammer.com)
+* setup default sdev engine on installation
 * remove all chessx / chesssettings references
 
 
@@ -8,42 +9,42 @@
 
 * piece graphics
   * shadow and outline versions
-* OK tower squares
+# OK tower squares
 * capture / defunkt animations
 
 
 -- gui --
 
-* OK position setup not fully working
+# OK position setup not fully working
 
 * russian font too faint
 * investigate touch displays
 
-* OK save board flipped status
-* OK fix window max'd save/restore (common Qt prob) 
+# OK save board flipped status
+# OK fix window max'd save/restore (common Qt prob) 
   * save maximized state but keep default pos/size
-* OK fix board sometimes off (animation/autoplay)
+# OK fix board sometimes off (animation/autoplay)
 
 * win animation
 
 -- gameplay --
 
-* OK play game from set position
+# OK play game from set position
 * rationalize: change game text instead of insert variation
-* OK disable Engine thinking when game over
-* OK win/lose
+# OK disable Engine thinking when game over
+# OK win/lose
   * draw
 * disable Engine thinking when jumping in gametext
-
+* add autoAddGameAndContinue option
 
 -- IO --
 
 * save game should be more easy (e.g. slotFileSave does not save Clipboard !?)
-* OK add 'go movetime x'
+# OK add 'go movetime x'
 * add more analysis options (USHI)
 
 
 -- strange things --
 
-* OK app crash on play-game after urgent capture (not sure if related)
+# OK app crash on play-game after urgent capture (not sure if related)
 

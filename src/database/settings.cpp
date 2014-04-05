@@ -210,7 +210,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     // board config
     map.insert("/Board/external", false);
     map.insert("/Board/minWheelCount", MIN_WHEEL_COUNT);
-    map.insert("/Board/AutoPlayerInterval", 3000);
+    //map.insert("/Board/AutoPlayerInterval", 3000);
     map.insert("/Board/AutoSaveAndContinue", false);
     map.insert("/Board/guessMove", true);
     map.insert("/Board/guessNextMove", true);

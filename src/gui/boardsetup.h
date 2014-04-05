@@ -66,7 +66,7 @@ private slots:
 	/* Select square and insert piece */
 	void slotSelected(Square s, int button);
 	/* Manually adjust en passant square. */
-	void slotEnPassantSquare();
+    //void slotEnPassantSquare();
 	/* Adjust move number. */
 	void slotMoveNumber();
 	/* Move piece */
@@ -77,7 +77,13 @@ private slots:
     void slotInvalidMove(Square from);
 	/* Toggle side to move */
 	void slotToggleSide();
-	private:
+
+    void slotSquareDefunkt();
+    void slotSquareTemdek();
+    void slotSquareEnPassant();
+    void slotSquareUrgent();
+
+private:
 	Ui::BoardSetupDialog ui;
 
 	Color m_toMove;
@@ -87,6 +93,9 @@ private slots:
 	QString boardStatusMessage() const;
 	/* Sets status message for the board (either spn or error message). */
 	void setStatusMessage();
+
+    void openSquarePopup(Square s);
+
 protected:
 	/* Scroll current piece with a wheel */
 	virtual void wheelEvent(QWheelEvent* e);
@@ -95,6 +104,13 @@ protected:
     Piece m_selectedPiece;
     BoardView * m_boardView;
     Board m_board;
+    QMenu * m_popmenu;
+    Square m_popsquare;
+    // popup actions
+    QAction * pa_defunkt,
+            * pa_temdek,
+            * pa_enpassant,
+            * pa_urgent;
 };
 
 

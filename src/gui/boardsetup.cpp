@@ -18,6 +18,7 @@
 
 #include <QtGui>
 #include <QPixmap>
+#include <QMenu>
 
 BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     : QDialog(parent), m_wheelCurrentDelta(0), m_selectedPiece(Empty)
@@ -31,27 +32,38 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
 
     m_minDeltaWheel = AppSettings->getValue("/Board/minWheelCount").toInt();
 
-    for (int piece = Empty; piece <= BlackShatra; piece++)
+    for (int piece = WhiteBatyr; piece <= BlackShatra; piece++)
     {
         BoardSetupToolButton* button = new BoardSetupToolButton(this);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         //button->setAlignment(Qt::AlignJustify|Qt::AlignVCenter);
         button->setMinimumSize(QSize(50,50));
         button->m_piece = (Piece)piece;
-        if (piece == Empty)
-        {
-            button->m_pixmap = QPixmap(0,0);
-            ui.buttonLayout->addWidget(button, 5, 0);
-        }
-		else
-        {
-            button->m_pixmap = m_boardView->theme().piece(Piece(piece));
-            ui.buttonLayout->addWidget(button, (piece - 1) % 5, piece >= BlackBatyr);
-        }
-        connect(button, SIGNAL(signalDragStarted(QWidget*,QMouseEvent*)), this, SLOT(startDrag(QWidget*,QMouseEvent*)));
+
+        button->m_pixmap = m_boardView->theme().piece(Piece(piece));
+        ui.buttonLayout->addWidget(button, (piece - 1) % 5, piece >= BlackBatyr);
+
+        connect(button, SIGNAL(signalDragStarted(QWidget*,QMouseEvent*)),
+                                    SLOT(startDrag(QWidget*,QMouseEvent*)));
         connect(button, SIGNAL(signalClicked(Piece)), this, SLOT(labelClicked(Piece)));
         connect(this, SIGNAL(signalClearBackground(Piece)),button, SLOT(slotClearBackground(Piece)));
 	}
+
+    // popup menu
+    m_popmenu = new QMenu(this);
+
+    pa_temdek = new QAction(/* name will be set later */ m_popmenu);
+    connect(pa_temdek, SIGNAL(triggered()), SLOT(slotSquareTemdek()));
+    m_popmenu->addAction(pa_temdek);
+    pa_defunkt = new QAction(tr("Set defunkt"), m_popmenu);
+    connect(pa_defunkt, SIGNAL(triggered()), SLOT(slotSquareDefunkt()));
+    m_popmenu->addAction(pa_defunkt);
+    pa_enpassant = new QAction(/* name will be set later */ m_popmenu);
+    connect(pa_enpassant, SIGNAL(triggered()), SLOT(slotSquareDefunkt()));
+    m_popmenu->addAction(pa_enpassant);
+    pa_urgent = new QAction(/* name will be set later */ m_popmenu);
+    connect(pa_urgent, SIGNAL(triggered()), SLOT(slotSquareUrgent()));
+    m_popmenu->addAction(pa_urgent);
 
     emit signalClearBackground(Empty);
 
@@ -66,7 +78,7 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotChangePiece(int)));
     connect(m_boardView, SIGNAL(pieceDropped(Square,Piece)), SLOT(slotDroppedPiece(Square, Piece)));
 	connect(ui.toMoveButton, SIGNAL(clicked()), SLOT(slotToggleSide()));
-	connect(ui.epCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotEnPassantSquare()));
+//	connect(ui.epCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotEnPassantSquare()));
 	connect(ui.moveSpin, SIGNAL(valueChanged(int)), SLOT(slotMoveNumber()));
 	connect(ui.copyButton, SIGNAL(clicked()), SLOT(slotCopySPN()));
 	connect(ui.pasteButton, SIGNAL(clicked()), SLOT(slotPasteSPN()));
@@ -90,15 +102,19 @@ void BoardSetupDialog::setBoard(const Board& b)
     m_board = b;
     m_boardView->setBoard(b);
 	ui.moveSpin->setValue(b.moveNumber());
+    /*
     if (b.enPassantSquare() == NoSquare)
 		ui.epCombo->setCurrentIndex(0);
-	else if (b.toMove() == White && b.pieceAt(b.enPassantSquare() - 8) == BlackShatra &&
+    else
+        ui.epCombo->setCurrentIndex();
+       if (b.toMove() == White && b.pieceAt(b.enPassantSquare() - 8) == BlackShatra &&
 			b.pieceAt(b.enPassantSquare()) == Empty && b.pieceAt(b.enPassantSquare() + 8) == Empty)
 		ui.epCombo->setCurrentIndex(b.enPassantSquare() % 8 + 1);
 	else if (b.toMove() == Black && b.pieceAt(b.enPassantSquare() + 8) == WhiteShatra &&
 			b.pieceAt(b.enPassantSquare()) == Empty && b.pieceAt(b.enPassantSquare() - 8) == Empty)
 		ui.epCombo->setCurrentIndex(b.enPassantSquare() % 8 + 1);
 	else ui.epCombo->setCurrentIndex(0);
+    */
 	m_toMove = b.toMove();
 	showSideToMove();
 	setStatusMessage();
@@ -140,18 +156,34 @@ void BoardSetupDialog::slotClear()
 
 void BoardSetupDialog::slotSelected(Square square, int button)
 {
-    Piece piece = (button & Qt::MidButton) ? Empty : m_selectedPiece;
-    if (button & Qt::RightButton) {
-        if (piece >= BlackBiy)
-            piece = (Piece)(piece - (BlackBiy - WhiteBiy));
-        else if (piece != Empty)
-            piece = (Piece)(piece + (BlackBiy - WhiteBiy));
+    // popup
+    if (button & Qt::LeftButton)
+    {
+        openSquarePopup(square);
     }
-    if (m_board.pieceAt(square) == piece)
-        piece = Empty;
-    m_board.setAt(square, piece);
-    setBoard(m_board);
+    // flip color
+    if (button & Qt::RightButton)
+    {
+        Piece piece = m_board.pieceAt(square);
+        if (piece == Empty || piece == InvalidPiece)
+            return;
+
+        if (piece >= BlackBatyr && piece <= BlackShatra)
+            piece = (Piece)(piece - (BlackBatyr - WhiteBatyr));
+        else if (piece >= WhiteBatyr && piece <= WhiteShatra)
+            piece = (Piece)(piece + (BlackBatyr - WhiteBatyr));
+        else
+            return;
+
+        Board b(m_board);
+        b.removeFrom(square);
+        b.setAt(square, piece);
+        if (b.pieceAt(square) != piece)
+            return;
+        setBoard(b);
+    }
 }
+
 
 void BoardSetupDialog::showSideToMove()
 {
@@ -293,11 +325,11 @@ void BoardSetupDialog::slotPasteSPN()
         setBoard(b);
     }
 }
-
+/*
 void BoardSetupDialog::slotEnPassantSquare()
 {
 	Board b(board());
-	if (ui.epCombo->currentIndex() == 0)
+    if (ui.epCombo->currentIndex() == 0)
 		b.clearEnPassantSquare();
 	else {
 		int shift = b.toMove() == White ? 39 : 15;
@@ -305,7 +337,7 @@ void BoardSetupDialog::slotEnPassantSquare()
 	}
 	setBoard(b);
 }
-
+*/
 void BoardSetupDialog::slotMoveNumber()
 {
 	Board b(board());
@@ -339,4 +371,141 @@ void BoardSetupDialog::labelClicked(Piece p)
 {
     m_selectedPiece = p;
     emit signalClearBackground(m_selectedPiece);
+}
+
+// -------------- popup --------------
+
+void BoardSetupDialog::openSquarePopup(Square s)
+{
+    if (s == InvalidSquare)
+        return;
+
+    m_popsquare = s;
+    Piece piece = m_board.pieceAt(s);
+
+    bool ispiece = !(piece == Empty || piece == InvalidPiece)
+                     && piece < WasBatyr;
+
+    pa_temdek->setEnabled(s<=10 || s>=53);
+    pa_temdek->setText( m_board.temdekOn(s>31)?
+                            tr("Open temdek") : tr("Close temdek") );
+    pa_enpassant->setEnabled((s>=18 && s<=24) || (s>=39 && s<=45));
+    pa_enpassant->setText(m_board.enPassantSquare() == s?
+                    tr("Clear en passant square") : tr("Set en passant square"));
+    pa_urgent->setEnabled(ispiece && isInHomeFort(s, s<=31? White : Black));
+    pa_urgent->setText(m_board.isUrgent(s)? tr("Clear urgent") : tr("Set urgent"));
+
+    pa_defunkt->setEnabled(ispiece && piece != WhiteBiy && piece != BlackBiy);
+
+    m_popmenu->exec(QCursor::pos());
+}
+
+void BoardSetupDialog::slotSquareDefunkt()
+{
+    int p = m_board.pieceAt(m_popsquare);
+    if (p >= WhiteBatyr && p<=WhiteShatra)
+        p += (WasBatyr - WhiteBatyr);
+    else
+    if (p >= BlackBatyr && p<=BlackShatra)
+        p += (WasBatyr - BlackBatyr);
+    else return;
+
+    m_board.setAt(m_popsquare, (Piece)p);
+    setBoard(m_board);
+}
+
+void BoardSetupDialog::slotSquareTemdek()
+{
+    QString spn = m_board.toSPN();
+
+    int stm = m_popsquare > 31;
+
+    if (m_board.temdekOn(stm))
+    {
+        if (m_board.temdekOn(!stm))
+        {
+            // clear one of T or t
+            spn.replace(stm? "t" : "T", "");
+        }
+        else
+        {
+            // remove temdek completely
+            spn.replace(stm? "t" : "T", "-");
+        }
+    }
+    else
+    {
+        // insert
+        if (stm == White)
+        {
+            // T before t
+            if (m_board.temdekOn(Black))
+            {
+                const int i = spn.indexOf("t");
+                if (i<0) return;
+                spn.insert(i, "T");
+            }
+            else
+            // T after w/b
+            {
+                const int i = spn.indexOf('-');
+                if (i<0) return;
+                spn.replace(i, 1, "T");
+            }
+        }
+        else
+        {
+            // t after T
+            if (m_board.temdekOn(White))
+            {
+                const int i = spn.indexOf("T");
+                if (i<0) return;
+                spn.insert(i+1, "t");
+            }
+            else
+            // t replaces - after w/b
+            {
+                const int i = spn.indexOf('-');
+                if (i<0) return;
+                spn.replace(i, 1, "t");
+            }
+        }
+    }
+    //qDebug() << spn;
+    Board b;
+    if (b.fromSPN(spn))
+        setBoard(b);
+    else
+        qDebug() << "temdek failed";
+    //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1
+    //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w - - - 1
+}
+
+void BoardSetupDialog::slotSquareEnPassant()
+{
+    Board b(m_board);
+    if (b.enPassantSquare() == m_popsquare)
+        b.setEnPassantSquare(NoSquare);
+    else
+        b.setEnPassantSquare(m_popsquare);
+
+    if (b.fromSPN(b.toSPN()))
+        setBoard(b);
+    else
+        qDebug() << "en passant failed";
+}
+
+
+void BoardSetupDialog::slotSquareUrgent()
+{
+    Board b(m_board);
+    if (b.isUrgent(m_popsquare))
+        b.clearUrgentAt(NB[m_popsquare]);
+    else
+        b.setUrgentAt(NB[m_popsquare]);
+
+    if (b.fromSPN(b.toSPN()))
+        setBoard(b);
+    else
+        qDebug() << "urgent failed";
 }

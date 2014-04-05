@@ -299,8 +299,8 @@ void PreferencesDialog::restoreSettings()
         AppSettings->getValue("animateMovesSpeedVsLength").toDouble()
         * ui.animateMovesSpeedVsLength->maximum());
     ui.minWheelCount->setValue(AppSettings->getValue("minWheelCount").toInt());
-    ui.autoPlayInterval->setValue(AppSettings->getValue("AutoPlayerInterval").toInt());
-    ui.cbSaveAndContinue->setChecked(AppSettings->getValue("AutoSaveAndContinue").toBool());
+    //ui.autoPlayInterval->setValue(AppSettings->getValue("AutoPlayerInterval").toInt());
+    //ui.cbSaveAndContinue->setChecked(AppSettings->getValue("AutoSaveAndContinue").toBool());
     QString pieceTheme = AppSettings->getValue("pieceTheme").toString();
     ui.pieceEffect->setCurrentIndex(AppSettings->getValue("pieceEffect").toInt());
     QString boardTheme = AppSettings->getValue("boardTheme").toString();
@@ -393,10 +393,10 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("animateMovesSpeedVsLength", QVariant(
         (double)ui.animateMovesSpeedVsLength->value() / ui.animateMovesSpeedVsLength->maximum()));
     AppSettings->setValue("minWheelCount", ui.minWheelCount->value());
-    AppSettings->setValue("AutoPlayerInterval", ui.autoPlayInterval->value());
+    //AppSettings->setValue("AutoPlayerInterval", ui.autoPlayInterval->value());
 	AppSettings->setValue("pieceTheme", ui.pieceThemeCombo->currentText());
 	AppSettings->setValue("pieceEffect", ui.pieceEffect->currentIndex());
-    AppSettings->setValue("AutoSaveAndContinue",QVariant(ui.cbSaveAndContinue->isChecked()));
+    //AppSettings->setValue("AutoSaveAndContinue",QVariant(ui.cbSaveAndContinue->isChecked()));
     if (ui.boardThemeCombo->currentIndex() != ui.boardThemeCombo->count() - 1)
 		AppSettings->setValue("boardTheme", ui.boardThemeCombo->currentText());
 	else	AppSettings->setValue("boardTheme", QString());
