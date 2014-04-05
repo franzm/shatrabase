@@ -397,7 +397,13 @@ void BoardSetupDialog::openSquarePopup(Square s)
 
     pa_defunkt->setEnabled(ispiece && piece != WhiteBiy && piece != BlackBiy);
 
-    m_popmenu->exec(QCursor::pos());
+    bool doexe = false;
+    for (int i=0; i<m_popmenu->actions().size(); ++i)
+        if (m_popmenu->actions()[i]->isEnabled())
+            { doexe = true; break; }
+
+    if (doexe)
+        m_popmenu->exec(QCursor::pos());
 }
 
 void BoardSetupDialog::slotSquareDefunkt()
