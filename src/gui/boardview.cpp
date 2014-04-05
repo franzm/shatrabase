@@ -459,6 +459,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
             displayMessage("");
         }
 
+        // draggable piece?
         if (canDrag(s))
         {
             setCursor(QCursor(Qt::OpenHandCursor));
@@ -466,10 +467,14 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
             // highlight goal squares
             showGoals_(s);
         }
+        // clear highlights
         else
         {
             setCursor(QCursor(Qt::ArrowCursor));
-            setHoverSquare_();
+            if (m_flags & F_AllowAllMoves)
+                setHoverSquare_(s); // always highlight square
+            else
+                setHoverSquare_();
             showGoals_();
         }
         event->accept();
@@ -572,12 +577,13 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
 
     // --- remove piece in board setup ---
 
+    /*
     if ((m_flags & F_AllowAllMoves) && (m_flags && F_NoExecuteMoves)
         && !(event->button() & Qt::LeftButton))
     {
         if (s != InvalidSquare)
             emit invalidMove(s);
-    }
+    }*/
 
 
     // ---- piece drop ----
@@ -610,6 +616,8 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
         }
         else emit invalidMove(from);
 
+        event->accept();
+        return;
     }
 
     // any valid square action?
@@ -631,9 +639,18 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
                 m_own_to = v[m_goal_index%v.size()];
                 emit moveMade(from, m_own_to,
                                 event->button() + event->modifiers());
+                event->accept();
+                return;
             }
         }
+    }
 
+    // any click/release on any square?
+    if (s != InvalidSquare && F_AllowAllMoves)
+    {
+        emit clicked(s, event->button(), event->pos());
+        event->accept();
+        return;
     }
 
 }

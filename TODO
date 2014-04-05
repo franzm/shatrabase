@@ -35,7 +35,7 @@
 # OK win/lose
   * draw
 * disable Engine thinking when jumping in gametext
-
+* add autoAddGameAndContinue option
 
 -- IO --
 
