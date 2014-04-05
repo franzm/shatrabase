@@ -30,6 +30,7 @@ SBoard::SBoard()
     initState();
     if (!SBoardInitRun) SBoardInit();
     m_sntm = Black;
+    m_moveNumber = 1;
 }
 
 bool SBoard::hasNoMoves() const
@@ -532,7 +533,7 @@ QString SBoard::toSPN() const
  // move number
     spn += QString::number(m_moveNumber);
 
-//    qDebug() << spn;
+    qDebug() << spn;
 
     return spn;
 }
