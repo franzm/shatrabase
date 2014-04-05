@@ -30,6 +30,7 @@ SBoard::SBoard()
     initState();
     if (!SBoardInitRun) SBoardInit();
     m_sntm = Black;
+    m_moveNumber = 1;
 }
 
 bool SBoard::hasNoMoves() const
@@ -533,7 +534,7 @@ QString SBoard::toSPN() const
  // move number
     spn += QString::number(m_moveNumber);
 
-//    qDebug() << spn;
+    qDebug() << spn;
 
     return spn;
 }
@@ -983,6 +984,8 @@ Move SBoard::parseMove(const QString& algebraic)
 bool SBoard::doMove(const Move& m)
 {
     ++m_halfMoves;
+                    if (m_halfMoves > 50)
+                        bool debug = true;
     m_from = m.from();
     m_to = m.to();
 
@@ -1080,7 +1083,7 @@ bool SBoard::doMove(const Move& m)
  // NB undoMove is incapable of resurrecting a list of captured pieces
 void SBoard::undoMove(const Move& m)
 {
-    --m_halfMoves;
+    if (m_halfMoves) --m_halfMoves;
     m_from = m.from();
     m_to = m.to();
 
