@@ -61,6 +61,9 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     pa_enpassant = new QAction(/* name will be set later */ m_popmenu);
     connect(pa_enpassant, SIGNAL(triggered()), SLOT(slotSquareDefunkt()));
     m_popmenu->addAction(pa_enpassant);
+    pa_urgent = new QAction(/* name will be set later */ m_popmenu);
+    connect(pa_urgent, SIGNAL(triggered()), SLOT(slotSquareUrgent()));
+    m_popmenu->addAction(pa_urgent);
 
     emit signalClearBackground(Empty);
 
@@ -75,7 +78,7 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotChangePiece(int)));
     connect(m_boardView, SIGNAL(pieceDropped(Square,Piece)), SLOT(slotDroppedPiece(Square, Piece)));
 	connect(ui.toMoveButton, SIGNAL(clicked()), SLOT(slotToggleSide()));
-	connect(ui.epCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotEnPassantSquare()));
+//	connect(ui.epCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotEnPassantSquare()));
 	connect(ui.moveSpin, SIGNAL(valueChanged(int)), SLOT(slotMoveNumber()));
 	connect(ui.copyButton, SIGNAL(clicked()), SLOT(slotCopySPN()));
 	connect(ui.pasteButton, SIGNAL(clicked()), SLOT(slotPasteSPN()));
@@ -99,15 +102,19 @@ void BoardSetupDialog::setBoard(const Board& b)
     m_board = b;
     m_boardView->setBoard(b);
 	ui.moveSpin->setValue(b.moveNumber());
+    /*
     if (b.enPassantSquare() == NoSquare)
 		ui.epCombo->setCurrentIndex(0);
-	else if (b.toMove() == White && b.pieceAt(b.enPassantSquare() - 8) == BlackShatra &&
+    else
+        ui.epCombo->setCurrentIndex();
+       if (b.toMove() == White && b.pieceAt(b.enPassantSquare() - 8) == BlackShatra &&
 			b.pieceAt(b.enPassantSquare()) == Empty && b.pieceAt(b.enPassantSquare() + 8) == Empty)
 		ui.epCombo->setCurrentIndex(b.enPassantSquare() % 8 + 1);
 	else if (b.toMove() == Black && b.pieceAt(b.enPassantSquare() + 8) == WhiteShatra &&
 			b.pieceAt(b.enPassantSquare()) == Empty && b.pieceAt(b.enPassantSquare() - 8) == Empty)
 		ui.epCombo->setCurrentIndex(b.enPassantSquare() % 8 + 1);
 	else ui.epCombo->setCurrentIndex(0);
+    */
 	m_toMove = b.toMove();
 	showSideToMove();
 	setStatusMessage();
@@ -184,13 +191,17 @@ void BoardSetupDialog::openSquarePopup(Square s)
 
     Piece piece = m_board.pieceAt(s);
 
-    bool ispiece = !(piece == Empty || piece == InvalidPiece);
+    bool ispiece = !(piece == Empty || piece == InvalidPiece)
+                     && piece < WasBatyr;
 
     pa_temdek->setEnabled(s<=10 || s>=53);
     pa_enpassant->setEnabled((s>=18 && s<=24) || (s>=39 && s<=45));
     pa_enpassant->setText(m_board.enPassantSquare() == s?
                     tr("Clear en passant square") : tr("Set en passant square"));
-    pa_defunkt->setEnabled(ispiece);
+    pa_urgent->setEnabled(ispiece && isInHomeFort(s, s<=31? White : Black));
+    pa_urgent->setText(m_board.isUrgent(s)? tr("Clear urgent") : tr("Set urgent"));
+
+    pa_defunkt->setEnabled(ispiece && piece != WhiteBiy && piece != BlackBiy);
 
     m_popsquare = s;
     m_popmenu->exec(QCursor::pos());
@@ -336,11 +347,11 @@ void BoardSetupDialog::slotPasteSPN()
         setBoard(b);
     }
 }
-
+/*
 void BoardSetupDialog::slotEnPassantSquare()
 {
 	Board b(board());
-	if (ui.epCombo->currentIndex() == 0)
+    if (ui.epCombo->currentIndex() == 0)
 		b.clearEnPassantSquare();
 	else {
 		int shift = b.toMove() == White ? 39 : 15;
@@ -348,7 +359,7 @@ void BoardSetupDialog::slotEnPassantSquare()
 	}
 	setBoard(b);
 }
-
+*/
 void BoardSetupDialog::slotMoveNumber()
 {
 	Board b(board());
@@ -386,7 +397,16 @@ void BoardSetupDialog::labelClicked(Piece p)
 
 void BoardSetupDialog::slotSquareDefunkt()
 {
+    int p = m_board.pieceAt(m_popsquare);
+    if (p >= WhiteBatyr && p<=WhiteShatra)
+        p += (WasBatyr - WhiteBatyr);
+    else
+    if (p >= BlackBatyr && p<=BlackShatra)
+        p += (WasBatyr - BlackBatyr);
+    else return;
 
+    m_board.setAt(m_popsquare, (Piece)p);
+    setBoard(m_board);
 }
 
 void BoardSetupDialog::slotSquareTemdek()
@@ -400,4 +420,14 @@ void BoardSetupDialog::slotSquareEnPassant()
         m_board.setEnPassantSquare(NoSquare);
     else
         m_board.setEnPassantSquare(m_popsquare);
+    setBoard(m_board);
+}
+
+void BoardSetupDialog::slotSquareUrgent()
+{
+    if (m_board.isUrgent(m_popsquare))
+        m_board.clearUrgentAt(NB[m_popsquare]);
+    else
+        m_board.setUrgentAt(NB[m_popsquare]);
+    setBoard(m_board);
 }

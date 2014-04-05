@@ -66,7 +66,7 @@ private slots:
 	/* Select square and insert piece */
 	void slotSelected(Square s, int button);
 	/* Manually adjust en passant square. */
-	void slotEnPassantSquare();
+    //void slotEnPassantSquare();
 	/* Adjust move number. */
 	void slotMoveNumber();
 	/* Move piece */
@@ -81,6 +81,7 @@ private slots:
     void slotSquareDefunkt();
     void slotSquareTemdek();
     void slotSquareEnPassant();
+    void slotSquareUrgent();
 
 private:
 	Ui::BoardSetupDialog ui;
@@ -108,7 +109,8 @@ protected:
     // popup actions
     QAction * pa_defunkt,
             * pa_temdek,
-            * pa_enpassant;
+            * pa_enpassant,
+            * pa_urgent;
 };
 
 
