@@ -982,6 +982,8 @@ Move SBoard::parseMove(const QString& algebraic)
 bool SBoard::doMove(const Move& m)
 {
     ++m_halfMoves;
+                    if (m_halfMoves > 50)
+                        bool debug = true;
     m_from = m.from();
     m_to = m.to();
 
@@ -1079,7 +1081,7 @@ bool SBoard::doMove(const Move& m)
  // NB undoMove is incapable of resurrecting a list of captured pieces
 void SBoard::undoMove(const Move& m)
 {
-    --m_halfMoves;
+    if (m_halfMoves) --m_halfMoves;
     m_from = m.from();
     m_to = m.to();
 
