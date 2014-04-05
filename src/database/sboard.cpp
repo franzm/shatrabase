@@ -46,24 +46,13 @@ Result SBoard::gameResult() const
 int SBoard::pieceCount(Color color) const
 {
     int num = 0;
-    if (color == White)
-    {
         for (int i=fsq; i<=lsq; ++i)
         {
             const ubyte p = m_sb[NB[i]];
-            if (p>=WhiteBatyr && p<=WhiteShatra)
+            if ((color == White && p>=WhiteBatyr && p<=WhiteShatra)
+             || (color == Black && p>=BlackBatyr && p<=BlackShatra))
                 ++num;
         }
-    }
-    else
-    {
-        for (int i=fsq; i<=lsq; ++i)
-        {
-            const ubyte p = m_sb[NB[i]];
-            if (p>=BlackBatyr && p<=BlackShatra)
-                ++num;
-        }
-    }
     return num;
 }
 
@@ -233,7 +222,82 @@ bool SBoard::fromSPN(const QString& spn)
 
 BoardStatus SBoard::validate() const
 {
-    return Valid; // will do something here...
+    int piece, r = StatusUnknown, wb = 0, bb = 0;
+
+    for (int i = fsq; i <= lsq; i++)
+    {
+        piece = m_sb[NB[i]];
+        if (piece)
+        {
+            Piece p = Piece(piece);
+            if (p == WhiteBiy) ++wb;
+            if (p == BlackBiy) ++bb;
+        }
+    }
+    if (wb && bb)
+    {
+        r = !wb? NoWhiteBiy :
+            !bb? NoBlackBiy :
+            (wb > 1 || bb > 1)? TooManyBiys :
+            Valid;
+    }
+
+    return BoardStatus(r); // will do something here...
+}
+
+bool SBoard::epPossible(int sq, Color side) // should be Square?
+{
+    bool okay = false;
+    int bsq = NB[sq];
+
+    switch (side)
+    {
+    case White :
+        if (pieceAt(bsq + s) != WhiteShatra)
+            break;
+        if (pieceAt(bsq + ne) == BlackShatra
+         && pieceAt(bsq + sw) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + nw) == BlackShatra
+         && pieceAt(bsq + se) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + e) == BlackShatra
+         && pieceAt(bsq + w) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + w) == BlackShatra
+         && pieceAt(bsq + e) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + se) == BlackShatra
+         && pieceAt(bsq + nw) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + sw) == BlackShatra
+         && pieceAt(bsq + ne) == Empty)
+            { okay = true; break; }
+        break;
+    case Black :
+        if (pieceAt(bsq + n) != BlackShatra)
+            break;        
+        if (pieceAt(bsq + ne) == WhiteShatra
+         && pieceAt(bsq + sw) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + nw) == WhiteShatra
+         && pieceAt(bsq + se) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + e) == WhiteShatra
+         && pieceAt(bsq + w) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + w) == WhiteShatra
+         && pieceAt(bsq + e) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + se) == WhiteShatra
+         && pieceAt(bsq + nw) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + sw) == WhiteShatra
+         && pieceAt(bsq + ne) == Empty)
+            { okay = true; break; }
+
+    }
+    return okay;
 }
 
  // Why QString throws asserts for access past end of string and
@@ -383,7 +447,28 @@ bool SBoard::SPNToBoard(const QString& qspn)
         default:
             j = i;
             while (isNum(c)) c = spn[++i];
-            m_epSquare = NB[spn.mid(j, i - j).toInt()];
+            int eps = spn.mid(j, i - j).toInt();
+            if (epPossible(eps, Color(m_stm)))
+            {
+                m_epSquare = NB[eps];
+                found = true;
+            }
+            else return false;
+        }
+    }
+    if (!found) return false; found = false;
+  // half move clock
+    while(!found)
+    {
+        c = spn[++i];
+        switch(c)
+        {
+        case ' ': break;
+        case '-': found = true; break;
+        default:
+            j = i;
+            while (isNum(c)) c = spn[++i];
+            m_halfMoves = NB[spn.mid(j, i - j).toInt()];
             found = true;
         }
     }
@@ -441,8 +526,13 @@ QString SBoard::toSPN() const
  // ep square
     if (m_epSquare) spn += QString::number(enPassantSquare());
     else spn += '-'; spn += ' ';
+ // half move clock
+    if (m_halfMoves) spn += QString::number(m_halfMoves);
+    else spn += '-'; spn += ' ';
  // move number
     spn += QString::number(m_moveNumber);
+
+//    qDebug() << spn;
 
     return spn;
 }
@@ -891,6 +981,7 @@ Move SBoard::parseMove(const QString& algebraic)
 
 bool SBoard::doMove(const Move& m)
 {
+    ++m_halfMoves;
     m_from = m.from();
     m_to = m.to();
 
@@ -925,11 +1016,13 @@ bool SBoard::doMove(const Move& m)
             ++m_offBoard[piece];
             m_sb[m_to] = piece = m.promotedPiece();
             --m_offBoard[piece];
+            m_halfMoves = 0;
         }
     }
 
     if (m.isCapture())
     {
+        m_halfMoves = 0;
         Piece victim = m.capturedPiece();
         PieceType v = pieceType(victim);
         int victim_at = m.capturedAt();
@@ -986,6 +1079,7 @@ bool SBoard::doMove(const Move& m)
  // NB undoMove is incapable of resurrecting a list of captured pieces
 void SBoard::undoMove(const Move& m)
 {
+    --m_halfMoves;
     m_from = m.from();
     m_to = m.to();
 
@@ -1128,14 +1222,14 @@ void SBoardInit()
 { 
     SBoardInitRun = true;
     standardPosition.fromSPN
-        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - 1");
+        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
 }
 
 SBoard getStandardPosition()
 {
     SBoard b;
     b.fromSPN
-        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - 1");
+        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
     return b;
 }
 
