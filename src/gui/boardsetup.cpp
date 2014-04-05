@@ -429,8 +429,8 @@ void BoardSetupDialog::slotSquareTemdek()
         }
         else
         {
-            // remove whitespace as well
-            spn.replace(stm? "t " : "T ", "");
+            // remove temdek completely
+            spn.replace(stm? "t" : "T", "-");
         }
     }
     else
@@ -448,9 +448,9 @@ void BoardSetupDialog::slotSquareTemdek()
             else
             // T after w/b
             {
-                const int i = spn.indexOf(m_board.toMove()? "b" : "w");
+                const int i = spn.indexOf('-');
                 if (i<0) return;
-                spn.insert(i+2, "T ");
+                spn.replace(i, 1, "T");
             }
         }
         else
@@ -463,11 +463,11 @@ void BoardSetupDialog::slotSquareTemdek()
                 spn.insert(i+1, "t");
             }
             else
-            // t after w/b
+            // t replaces - after w/b
             {
-                const int i = spn.indexOf(m_board.toMove()? "b" : "w");
+                const int i = spn.indexOf('-');
                 if (i<0) return;
-                spn.insert(i+2, "t ");
+                spn.replace(i, 1, "t");
             }
         }
     }
@@ -475,24 +475,37 @@ void BoardSetupDialog::slotSquareTemdek()
     Board b;
     if (b.fromSPN(spn))
         setBoard(b);
+    else
+        qDebug() << "temdek failed";
     //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1
     //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w - - - 1
 }
 
 void BoardSetupDialog::slotSquareEnPassant()
 {
-    if (m_board.enPassantSquare() == m_popsquare)
-        m_board.setEnPassantSquare(NoSquare);
+    Board b(m_board);
+    if (b.enPassantSquare() == m_popsquare)
+        b.setEnPassantSquare(NoSquare);
     else
-        m_board.setEnPassantSquare(m_popsquare);
-    setBoard(m_board);
+        b.setEnPassantSquare(m_popsquare);
+
+    if (b.fromSPN(b.toSPN()))
+        setBoard(b);
+    else
+        qDebug() << "en passant failed";
 }
+
 
 void BoardSetupDialog::slotSquareUrgent()
 {
-    if (m_board.isUrgent(m_popsquare))
-        m_board.clearUrgentAt(NB[m_popsquare]);
+    Board b(m_board);
+    if (b.isUrgent(m_popsquare))
+        b.clearUrgentAt(NB[m_popsquare]);
     else
-        m_board.setUrgentAt(NB[m_popsquare]);
-    setBoard(m_board);
+        b.setUrgentAt(NB[m_popsquare]);
+
+    if (b.fromSPN(b.toSPN()))
+        setBoard(b);
+    else
+        qDebug() << "urgent failed";
 }
