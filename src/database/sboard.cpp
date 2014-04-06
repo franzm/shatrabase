@@ -255,6 +255,28 @@ bool SBoard::epPossible(int sq, Color side) // should be Square?
     switch (side)
     {
     case White :
+        if (pieceAt(bsq + n) != BlackShatra)
+            break;
+        if (pieceAt(bsq + ne) == WhiteShatra
+         && pieceAt(bsq + sw) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + nw) == WhiteShatra
+         && pieceAt(bsq + se) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + e) == WhiteShatra
+         && pieceAt(bsq + w) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + w) == WhiteShatra
+         && pieceAt(bsq + e) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + se) == WhiteShatra
+         && pieceAt(bsq + nw) == Empty)
+            { okay = true; break; }
+        if (pieceAt(bsq + sw) == WhiteShatra
+         && pieceAt(bsq + ne) == Empty)
+            { okay = true; break; }
+        break;
+    case Black :
         if (pieceAt(bsq + s) != WhiteShatra)
             break;
         if (pieceAt(bsq + ne) == BlackShatra
@@ -275,29 +297,6 @@ bool SBoard::epPossible(int sq, Color side) // should be Square?
         if (pieceAt(bsq + sw) == BlackShatra
          && pieceAt(bsq + ne) == Empty)
             { okay = true; break; }
-        break;
-    case Black :
-        if (pieceAt(bsq + n) != BlackShatra)
-            break;        
-        if (pieceAt(bsq + ne) == WhiteShatra
-         && pieceAt(bsq + sw) == Empty)
-            { okay = true; break; }
-        if (pieceAt(bsq + nw) == WhiteShatra
-         && pieceAt(bsq + se) == Empty)
-            { okay = true; break; }
-        if (pieceAt(bsq + e) == WhiteShatra
-         && pieceAt(bsq + w) == Empty)
-            { okay = true; break; }
-        if (pieceAt(bsq + w) == WhiteShatra
-         && pieceAt(bsq + e) == Empty)
-            { okay = true; break; }
-        if (pieceAt(bsq + se) == WhiteShatra
-         && pieceAt(bsq + nw) == Empty)
-            { okay = true; break; }
-        if (pieceAt(bsq + sw) == WhiteShatra
-         && pieceAt(bsq + ne) == Empty)
-            { okay = true; break; }
-
     }
     return okay;
 }
