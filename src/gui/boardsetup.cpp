@@ -57,7 +57,7 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     m_popmenu->addAction(pa_temdek);
 
     pa_enpassant = new QAction(/* name will be set later */ m_popmenu);
-    connect(pa_enpassant, SIGNAL(triggered()), SLOT(slotSquareDefunkt()));
+    connect(pa_enpassant, SIGNAL(triggered()), SLOT(slotSquareEnPassant()));
     m_popmenu->addAction(pa_enpassant);
 
     pa_defunkt = new QAction(tr("Set defunkt"), m_popmenu);
@@ -417,6 +417,13 @@ void BoardSetupDialog::openSquarePopup(Square s)
 
     if (doexe)
         m_popmenu->exec(QCursor::pos());
+
+    // en passant
+    // SQSSRSBRB/K/SSSS1SS/7/7/1sS4/7/2sssss/k/brbsrssqs w Tt - 40 - 5
+    // SQSSRSBRB/K/SSS2S1/4S1S/7/1ssS3/7/s2ssss/k/brbsrssqs w Tt - 41 4 3
+    // defunkt & transit
+    // SQSSRSBRB/K/SSS1SSS/3p3/3S3/3s3/7/ss2sss/k/brbsrssqs w Tt 28 - - 1
+
 }
 
 void BoardSetupDialog::slotSquareDefunkt()
@@ -496,11 +503,6 @@ void BoardSetupDialog::slotSquareTemdek()
         setBoard(b);
     else
         qDebug() << "temdek failed";
-    // en passant
-    // SQSSRSBRB/K/SSSS1SS/7/7/1sS4/7/2sssss/k/brbsrssqs w Tt - 40 - 5
-    // SQSSRSBRB/K/SSS2S1/4S1S/7/1ssS3/7/s2ssss/k/brbsrssqs w Tt - 41 4 3
-    // defunkt & transit
-    // SQSSRSBRB/K/SSS1SSS/3p3/3S3/3s3/7/ss2sss/k/brbsrssqs w Tt 28 - - 1
 }
 
 void BoardSetupDialog::slotSquareEnPassant()

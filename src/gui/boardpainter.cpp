@@ -449,7 +449,8 @@ void BoardPainter::createBoard_(const Board& board)
         }
 
         // hint for enPassant
-        if (board.epPossible(i, board.toMove()))//enPassantSquare() == i)
+        if (board.enPassantSquare() == i
+                && board.epPossible(i, board.toMove()))
         {
             s->overlay = &m_theme->enPassantOverlay();
         }
