@@ -1125,6 +1125,7 @@ void MainWindow::setupActions()
     refactorMenu->addAction(createAction(tr("Remove Variations"), SLOT(slotGameRemoveVariations())));
 
     /* Search menu */
+    /*
 	QMenu* search = menuBar()->addMenu(tr("Fi&nd"));
 	search->addAction(createAction(tr("Find &tag"), SLOT(slotSearchTag()), Qt::CTRL +
 						 Qt::SHIFT + Qt::Key_T));
@@ -1136,6 +1137,7 @@ void MainWindow::setupActions()
     search->addAction(m_toggleFilter);
     search->addAction(createAction(tr("&Reset filter"), SLOT(slotSearchReset()),     Qt::CTRL + Qt::Key_F));
     search->addAction(createAction(tr("&Reverse filter"), SLOT(slotSearchReverse()), Qt::CTRL + Qt::SHIFT + Qt::Key_F));
+    */
 
 	/* Database menu */
 	QMenu* menuDatabase = menuBar()->addMenu(tr("&Database"));

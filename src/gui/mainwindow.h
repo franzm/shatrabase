@@ -402,7 +402,7 @@ private:
 	OpeningTree* m_openingTree;
 	QString m_nagText;
     QTimer* m_autoPlayTimer;
-    QAction * m_toggleFilter,
+    QAction //* m_toggleFilter,
             * m_ExternalBoardAction;
     bool m_bGameChange;
     int m_currentFrom;
