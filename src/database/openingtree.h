@@ -15,7 +15,7 @@
 
 #include <QAbstractTableModel>
 
-#include "filter.h"
+#include "database.h"
 #include "game.h"
 
 class MoveData
@@ -48,7 +48,7 @@ class OpeningTreeUpdater : public QThread
 public:
     void run();
     void cancel();
-    bool update(Filter& f, const Board& b, QList<MoveData>&, int&, bool updateFilter);
+    bool update(Database& f, const Board& b, QList<MoveData>&, int&, bool updateFilter);
 
 signals:
     void UpdateFinished(Board*);
@@ -62,7 +62,7 @@ private:
     bool    m_break;
     bool    m_updateFilter;
     Board   m_board;
-    Filter* m_filter;
+    Database* m_database;
 };
 
 /** @ingroup Search
@@ -75,11 +75,11 @@ public:
 	/** Empty constructor. */
     OpeningTree(QObject * parent);
     /** Initialized constructor, performing automatic update */
-    OpeningTree(Filter& f, const Board& b, bool updateFilter, QObject * parent);
+    OpeningTree(Database& db, const Board& b, bool updateFilter, QObject * parent);
     /** Calculate opening tree from given position, using given filter. It sets
     the filter to contain only game matching position @p b .
     @return true if the update was not cancelled.*/
-    bool update(Filter& f, const Board& b, bool updateFilter);
+    bool update(Database& db, const Board& b, bool updateFilter);
     /** Debug string */
 	QString debug();
 	/** Returns the number of moves in the Opening Tree */
@@ -115,7 +115,7 @@ private:
 	int m_sortcolumn;
 	Qt::SortOrder m_order;
 	Board m_board;
-	Filter* m_filter;
+    Database* m_database;
     bool m_updateFilter;
 };
 

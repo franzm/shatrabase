@@ -1212,7 +1212,9 @@ void MainWindow::slotSearchTree()
 {
     if (m_openingTreeView->isVisible() )
     {
-        // XXX m_openingTree->update(*databaseInfo()->filter(), m_boardView->board(), m_gameList->m_FilterActive);
+        // XXX
+        m_openingTree->update(*databaseInfo()->database(),
+                              m_boardView->board(), false);//m_gameList->m_FilterActive);
 	}
 }
 

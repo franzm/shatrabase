@@ -99,15 +99,15 @@ void OpeningTreeUpdater::run()
     Game g;
     QMap<Move, MoveData> moves;
     int games = 0;
-    for (int i = 0; i < m_filter->size(); ++i) {
-        m_filter->database()->loadGameMoves(i, g);
+    for (int i = 0; i < m_database->count(); ++i) {
+        m_database->loadGameMoves(i, g);
         int id = g.findPosition(m_board);
         if (id != NO_MOVE)	{
             if (m_updateFilter)
             {
-                m_filter->set(i, id + 1); // not zero means success, but id could be 0.
+                //m_database->set(i, id + 1); // not zero means success, but id could be 0.
             }
-            m_filter->database()->loadGameHeaders(i, g);
+            m_database->loadGameHeaders(i, g);
             g.moveToId(id);
             if (g.atGameEnd())
             {
@@ -124,12 +124,12 @@ void OpeningTreeUpdater::run()
         {
             if (m_updateFilter)
             {
-                m_filter->set(i, 0);
+                //m_database->set(i, 0);
             }
         }
-        if (i * 100 / m_filter->size() > (i - 1) * 100 / m_filter->size())
+        if (i * 100 / m_database->count() > (i - 1) * 100 / m_database->count())
         {
-            emit progress(i * 100 / m_filter->size());
+            emit progress(i * 100 / m_database->count());
         }
         if (m_break)
         {
@@ -156,10 +156,10 @@ void OpeningTreeUpdater::cancel()
     m_break = true;
 }
 
-bool OpeningTreeUpdater::update(Filter& f, const Board& b, QList<MoveData>& m, int& g, bool updateFilter)
+bool OpeningTreeUpdater::update(Database& db, const Board& b, QList<MoveData>& m, int& g, bool updateFilter)
 {
     m_break = false;
-    m_filter = &f;
+    m_database = &db;
     m_board = b;
     m_moves = &m;
     m_games = &g;
@@ -169,28 +169,28 @@ bool OpeningTreeUpdater::update(Filter& f, const Board& b, QList<MoveData>& m, i
     return true;
 }
 
-bool OpeningTree::update(Filter& f, const Board& b, bool updateFilter)
+bool OpeningTree::update(Database& db, const Board& b, bool updateFilter)
 {
     if (!oupd.isRunning())
     {
-        if (&f==m_filter && b==m_board)
+        if (&db==m_database && b==m_board)
             return true;
         m_board = b;
-        m_filter = &f;
+        m_database = &db;
         m_updateFilter = updateFilter;
         emit openingTreeUpdateStarted();
         m_bRequestPending = false;
         connect(&oupd, SIGNAL(UpdateFinished(Board*)), this, SLOT(updateFinished(Board*)), Qt::UniqueConnection);
         connect(&oupd, SIGNAL(UpdateTerminated(Board*)), this, SLOT(updateTerminated(Board*)), Qt::UniqueConnection);
         connect(&oupd,SIGNAL(progress(int)), SIGNAL(progress(int)), Qt::UniqueConnection);
-        return oupd.update(f,b, m_moves, m_games, m_updateFilter);
+        return oupd.update(db,b, m_moves, m_games, m_updateFilter);
     }
     else
     {
-        if (&f==m_filter && b==m_board)
+        if (&db==m_database && b==m_board)
             return true;
         m_board = b;
-        m_filter = &f;
+        m_database = &db;
         m_updateFilter = updateFilter;
         m_bRequestPending = true;
         oupd.cancel();
@@ -227,7 +227,7 @@ void OpeningTree::updateTerminated(Board*)
         connect(&oupd, SIGNAL(UpdateFinished(Board*)), this, SLOT(updateFinished(Board*)), Qt::UniqueConnection);
         connect(&oupd, SIGNAL(UpdateTerminated(Board*)), this, SLOT(updateTerminated(Board*)), Qt::UniqueConnection);
         connect(&oupd,SIGNAL(progress(int)),SIGNAL(progress(int)), Qt::UniqueConnection);
-        oupd.update(*m_filter,m_board, m_moves, m_games, m_updateFilter);
+        oupd.update(*m_database,m_board, m_moves, m_games, m_updateFilter);
     }
 }
 
@@ -251,17 +251,17 @@ int OpeningTree::columnCount(const QModelIndex&) const
 }
 
 OpeningTree::OpeningTree(QObject * parent)
-    : QAbstractTableModel(parent), m_sortcolumn(1), m_order(Qt::DescendingOrder), m_filter(0)
+    : QAbstractTableModel(parent), m_sortcolumn(1), m_order(Qt::DescendingOrder), m_database(0)
 {
     m_names << tr("Move") << tr("Count") << tr("Score") << tr("Rating") << tr("Year");
 }
 
-OpeningTree::OpeningTree(Filter & f, const Board & b, bool updateFilter, QObject * parent)
+OpeningTree::OpeningTree(Database & db, const Board & b, bool updateFilter, QObject * parent)
     : QAbstractTableModel(parent),
-        m_sortcolumn(1), m_order(Qt::DescendingOrder), m_filter(0)
+        m_sortcolumn(1), m_order(Qt::DescendingOrder), m_database(0)
 {
     m_names << tr("Move") << tr("Count") << tr("Score") << tr("Rating") << tr("Year");
-	update(f, b, updateFilter);
+    update(db, b, updateFilter);
 }
 
 QVariant OpeningTree::headerData(int section, Qt::Orientation orientation, int role) const
