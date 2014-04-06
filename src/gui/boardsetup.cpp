@@ -484,7 +484,6 @@ void BoardSetupDialog::slotSquareTemdek()
     else
         qDebug() << "temdek failed";
     //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1
-    //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w - - - 1
 }
 
 void BoardSetupDialog::slotSquareEnPassant()
