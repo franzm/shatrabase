@@ -214,7 +214,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(this, SIGNAL(reconfigure()), m_playGame, SLOT(slotReconfigure()));
 
     /* Player List */
-    DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);
+/*    DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);
     playerListDock->setObjectName("PlayerList");
     m_playerList = new PlayerListWidget(this);
     m_playerList->setMinimumSize(150, 100);
@@ -242,7 +242,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_eventList, SIGNAL(filterEventPlayerRequest(QString,QString)), m_playerList, SLOT(slotSelectPlayer(QString)));
     connect(this, SIGNAL(reconfigure()), m_eventList, SLOT(slotReconfigure()));
     eventListDock->hide();
-
+*/
     // Database List
     DockWidgetEx* dbListDock = new DockWidgetEx(tr("Databases"), this);
     dbListDock->setObjectName("Databases");

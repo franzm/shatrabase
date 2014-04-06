@@ -365,9 +365,9 @@ private:
 
 	/* Dialogs  */
 	GameList* m_gameList;
-    PlayerListWidget* m_playerList;
+    //PlayerListWidget* m_playerList;
     PlayGameWidget * m_playGame;
-    EventListWidget* m_eventList;
+    //EventListWidget* m_eventList;
     DatabaseList* m_databaseList;
     Statistics* m_stats;
 	SaveDialog* m_saveDialog;

@@ -252,12 +252,12 @@ void MainWindow::slotFileQuit()
 
 void MainWindow::slotPlayerListWidget()
 {
-    m_playerList->setDatabase(database());
+    //m_playerList->setDatabase(database());
 }
 
 void MainWindow::slotEventListWidget()
 {
-    m_eventList->setDatabase(database());
+    //m_eventList->setDatabase(database());
 }
 
 void MainWindow::slotConfigure()
@@ -883,7 +883,9 @@ void MainWindow::slotGameViewLink(const QUrl& url)
             game().addMove(url.path());
 		game().forward();
 		slotGameChanged();
-	} else if (url.scheme() == "tag") {
+    } else if (url.scheme() == "tag")
+    {
+        /*
         m_playerList->setDatabase(database());
 		if (url.path() == "white")
         {
@@ -893,6 +895,7 @@ void MainWindow::slotGameViewLink(const QUrl& url)
         {
             m_playerList->slotSelectPlayer(game().tag("Black"));
         }
+        */
 	}
 }
 
@@ -1130,8 +1133,8 @@ void MainWindow::slotDatabaseChanged()
     m_gameList->setDatabaseInfo(databaseInfo());
 	slotFilterChanged();
     gameLoad(gameIndex()>=0 ? gameIndex() : 0, true, true);
-    m_playerList->setDatabase(database());
-    m_eventList->setDatabase(database());
+    //m_playerList->setDatabase(database());
+    //m_eventList->setDatabase(database());
     if (m_stats)
         m_stats->setDatabaseModel(*static_cast<DatabaseModel*>(m_gameList->model()));
 	emit databaseChanged(databaseInfo());
