@@ -58,7 +58,9 @@ public:
     /* @return pixmap for urgent square. */
     const QPixmap& urgent() const;
     /** @return pixmap for embossing tower squares. */
-    const QPixmap& towerEmboss() const;
+    const QPixmap& towerOverlay() const;
+    /** @return pixmap for overlaying en passant squares */
+    const QPixmap& enPassantOverlay() const;
     /* Checks if themes is valid (pixmaps loaded). */
     bool isValid() const;
     /* Returns name of board theme. It is just file without a path and extension. */
@@ -88,8 +90,8 @@ private:
     QPixmap m_square[2];
     QPixmap m_originalUrgent;
     QPixmap m_urgent;
-    QPixmap m_originalTowerEmboss;
-    QPixmap m_towerEmboss;
+    QPixmap m_originalTowerOverlay, m_originalEpOverlay;
+    QPixmap m_towerOverlay, m_epOverlay;
     QSize m_size;
     QColor m_colors[ColorRoleEndEntry];
     QString m_pieceFilename;

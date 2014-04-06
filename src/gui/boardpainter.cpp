@@ -445,13 +445,13 @@ void BoardPainter::createBoard_(const Board& board)
         // set tower square overlay
         if (m_do_tower && board.isTower(i))
         {
-            s->overlay = &m_theme->towerEmboss();
+            s->overlay = &m_theme->towerOverlay();
         }
 
-        // XXX quick hack to see en passant
-        if (board.enPassantSquare() == i)
+        // hint for enPassant
+        if (board.epPossible(i, board.toMove()))//enPassantSquare() == i)
         {
-            s->overlay = &m_theme->towerEmboss();
+            s->overlay = &m_theme->enPassantOverlay();
         }
 
         // number display

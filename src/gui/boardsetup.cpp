@@ -396,7 +396,9 @@ void BoardSetupDialog::openSquarePopup(Square s)
     pa_temdek->setEnabled(s<=10 || s>=53);
     pa_temdek->setText( m_board.temdekOn(s>31)?
                             tr("Open temdek") : tr("Close temdek") );
-    pa_enpassant->setEnabled(((s>=18 && s<=24) || (s>=39 && s<=45)) && !notempty);
+    pa_enpassant->setEnabled(m_board.epPossible(s, White) ||
+                             m_board.epPossible(s, Black));
+                             //(s>=18 && s<=24) || (s>=39 && s<=45)) && !notempty);
     pa_enpassant->setText(m_board.enPassantSquare() == s?
                     tr("Clear en passant square") : tr("Set en passant square"));
     pa_urgent->setEnabled(ispiece && isInHomeFort(s, s<=31? White : Black));
@@ -494,8 +496,9 @@ void BoardSetupDialog::slotSquareTemdek()
         setBoard(b);
     else
         qDebug() << "temdek failed";
-    // urgent
+    // en passant
     // SQSSRSBRB/K/SSSS1SS/7/7/1sS4/7/2sssss/k/brbsrssqs w Tt - 40 - 5
+    // SQSSRSBRB/K/SSS2S1/4S1S/7/1ssS3/7/s2ssss/k/brbsrssqs w Tt - 41 4 3
     // defunkt & transit
     // SQSSRSBRB/K/SSS1SSS/3p3/3S3/3s3/7/ss2sss/k/brbsrssqs w Tt 28 - - 1
 }
@@ -504,7 +507,7 @@ void BoardSetupDialog::slotSquareEnPassant()
 {
     Board b(m_board);
     if (b.enPassantSquare() == m_popsquare)
-        b.setEnPassantSquare(NoSquare);
+        b.clearEnPassantSquare();
     else
         b.setEnPassantSquare(m_popsquare);
 

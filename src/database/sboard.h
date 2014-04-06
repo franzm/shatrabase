@@ -276,7 +276,7 @@ public:
     /** Check current position and return "Valid" or problem */
     BoardStatus validate() const;
     /** Return true if EP capture possible on given square */
-    bool epPossible(int sq, Color side);
+    bool epPossible(int sq, Color side) const;
     /** Return true if given SPN can be parsed */
 	bool isValidSPN(const QString& spn) const;
     

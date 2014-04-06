@@ -22,8 +22,8 @@ BoardTheme::BoardTheme()
 {
     m_pieceFilename = "new QString()";
     m_originalUrgent.load(":/images/urgent.png");
-    m_originalTowerEmboss.load(":/images/square_emboss.png");
-
+    m_originalTowerOverlay.load(":/images/square_emboss.png");
+    m_originalEpOverlay.load(":/images/square_emboss_sunken.png");
 }
 
 BoardTheme::~BoardTheme()
@@ -63,9 +63,14 @@ const QPixmap& BoardTheme::urgent() const
     return m_urgent;
 }
 
-const QPixmap& BoardTheme::towerEmboss() const
+const QPixmap& BoardTheme::towerOverlay() const
 {
-    return m_towerEmboss;
+    return m_towerOverlay;
+}
+
+const QPixmap& BoardTheme::enPassantOverlay() const
+{
+    return m_epOverlay;
 }
 
 
@@ -223,7 +228,9 @@ void BoardTheme::setSize(const QSize& value)
     updateSquares();
     m_urgent = m_originalUrgent.scaled(m_size,
         Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    m_towerEmboss = m_originalTowerEmboss.scaled(m_size,
+    m_towerOverlay = m_originalTowerOverlay.scaled(m_size,
+        Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    m_epOverlay = m_originalEpOverlay.scaled(m_size,
         Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 

@@ -255,7 +255,7 @@ BoardStatus SBoard::validate() const
     return BoardStatus(r); // will do something here...
 }
 
-bool SBoard::epPossible(int sq, Color side) // should be Square?
+bool SBoard::epPossible(int sq, Color side) const // should be Square?
 {
     bool okay = false;
     int bsq = NB[sq];
@@ -484,7 +484,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
         default:
             j = i;
             while (isNum(c)) c = spn[++i];
-            m_halfMoves = NB[spn.mid(j, i - j).toInt()];
+            m_halfMoves = spn.mid(j, i - j).toInt();
             found = true;
         }
     }

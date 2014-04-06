@@ -68,5 +68,6 @@
         <file alias="images/b_play.png">data/images/b_play.png</file>
         <file alias="images/b_playstart.png">data/images/b_playstart.png</file>
         <file alias="images/b_config.png">data/images/button_config.png</file>
+        <file alias="/images/square_emboss_sunken.png">data/images/square_emboss_sunken.png</file>
     </qresource>
 </RCC>
