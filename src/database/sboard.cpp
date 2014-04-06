@@ -689,31 +689,28 @@ inline void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
 
     while (isVacant(to += d))
     {
-        if (piece != Shatra)
-        {
-        	if(doneFort)
-        	{
-        		 if(!duplicate(to, fort))
-                    m_ml.add().genMove(at, to, piece, m_b);
-        	}
-        	else {
-                if (!prohibited(to, piece))
-                    m_ml.add().genMove(at, to, piece, m_b);
-            }
-        }
-        else // piece is shatra
+        if (piece == Shatra)
         {
             if (Rank(to) == sFinal[m_stm])
                 m_ml.add().genMove(at, to, Shatra, m_b | PROMO);
-            else 
+            else
             {
                 s2 ^= true; // for two-square moves
                 m_ml.add().genMove(at, to, Shatra, m_b);
             }
-        }
-        if (piece == Shatra)
-        {
             if (Rank(at) != sFirst[m_stm] || !s2) break; // 2-move
+        }
+        else // other piece types
+        {
+            if(doneFort)
+            {
+                 if(!duplicate(to, fort))
+                    m_ml.add().genMove(at, to, piece, m_b);
+            }
+            else {
+                if (!prohibited(to, piece))
+                    m_ml.add().genMove(at, to, piece, m_b);
+            }
         }
         if (piece == Biy) break;
     }
