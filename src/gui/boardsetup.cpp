@@ -397,7 +397,13 @@ void BoardSetupDialog::openSquarePopup(Square s)
 
     pa_defunkt->setEnabled(ispiece && piece != WhiteBiy && piece != BlackBiy);
 
-    m_popmenu->exec(QCursor::pos());
+    bool doexe = false;
+    for (int i=0; i<m_popmenu->actions().size(); ++i)
+        if (m_popmenu->actions()[i]->isEnabled())
+            { doexe = true; break; }
+
+    if (doexe)
+        m_popmenu->exec(QCursor::pos());
 }
 
 void BoardSetupDialog::slotSquareDefunkt()
@@ -478,7 +484,7 @@ void BoardSetupDialog::slotSquareTemdek()
     else
         qDebug() << "temdek failed";
     //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1
-    //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w - - - 1
+    // SQSSRSBRB/K/SSSS1SS/7/7/1sS4/7/2sssss/k/brbsrssqs w Tt - 40 - 5
 }
 
 void BoardSetupDialog::slotSquareEnPassant()

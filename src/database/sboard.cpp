@@ -345,7 +345,14 @@ bool SBoard::SPNToBoard(const QString& qspn)
         bt = j >= gateAt[Black]; wt = j <= gateAt[White];
         if (isNum(c)) { sp = c - '0'; continue; }
 
-        if (c == '!') urg = true;
+
+        if (c == '!')
+        {
+            urg = true;
+            c = spn[++i];
+        }
+        else urg = false;
+
         switch (c) // will return false if one too many of any
         {          // piece type is specified by the SPN string
         case 'Q':  // nb style borrowed from chessx
@@ -984,8 +991,8 @@ Move SBoard::parseMove(const QString& algebraic)
 bool SBoard::doMove(const Move& m)
 {
     ++m_halfMoves;
-                    if (m_halfMoves > 50)
-                        bool debug = true;
+    if (m_halfMoves > 50)
+        bool debug = true; // XXX
     m_from = m.from();
     m_to = m.to();
 
