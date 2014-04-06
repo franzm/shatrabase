@@ -132,6 +132,14 @@ void SBoard::setEnPassantSquare(const int at)
     m_epSquare = at;
 }
 
+void SBoard::setTransitAt(const Square at)
+{
+    if (at == NoSquare)
+        m_transit = at;
+    else
+        m_transit = NB[at];
+}
+
 void SBoard::fillOffboard()
 {
     m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 1;

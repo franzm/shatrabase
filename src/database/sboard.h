@@ -159,6 +159,8 @@ public:
     void setStandardPosition();
     /** Set the given piece on the board at the given square */
     bool setAt(const int at, const Piece p, bool urg);
+    /** Sets the transit piece (Piece currently executing capture sequence) */
+    void setTransitAt(const Square at = NoSquare);
     /** Remove any piece sitting on given square */
     void removeAt(const int at);
     /** Toggle urgent bit, set m_urgent data accordingly */

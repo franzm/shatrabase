@@ -82,6 +82,7 @@ private slots:
     void slotSquareTemdek();
     void slotSquareEnPassant();
     void slotSquareUrgent();
+    void slotSquareTransit();
 
 private:
 	Ui::BoardSetupDialog ui;
@@ -108,6 +109,7 @@ protected:
     Square m_popsquare;
     // popup actions
     QAction * pa_defunkt,
+            * pa_transit,
             * pa_temdek,
             * pa_enpassant,
             * pa_urgent;

@@ -55,12 +55,19 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     pa_temdek = new QAction(/* name will be set later */ m_popmenu);
     connect(pa_temdek, SIGNAL(triggered()), SLOT(slotSquareTemdek()));
     m_popmenu->addAction(pa_temdek);
-    pa_defunkt = new QAction(tr("Set defunkt"), m_popmenu);
-    connect(pa_defunkt, SIGNAL(triggered()), SLOT(slotSquareDefunkt()));
-    m_popmenu->addAction(pa_defunkt);
+
     pa_enpassant = new QAction(/* name will be set later */ m_popmenu);
     connect(pa_enpassant, SIGNAL(triggered()), SLOT(slotSquareDefunkt()));
     m_popmenu->addAction(pa_enpassant);
+
+    pa_defunkt = new QAction(tr("Set defunkt"), m_popmenu);
+    connect(pa_defunkt, SIGNAL(triggered()), SLOT(slotSquareDefunkt()));
+    m_popmenu->addAction(pa_defunkt);
+
+    pa_transit = new QAction(/* name will be set later */ m_popmenu);
+    connect(pa_transit, SIGNAL(triggered()), SLOT(slotSquareTransit()));
+    m_popmenu->addAction(pa_transit);
+
     pa_urgent = new QAction(/* name will be set later */ m_popmenu);
     connect(pa_urgent, SIGNAL(triggered()), SLOT(slotSquareUrgent()));
     m_popmenu->addAction(pa_urgent);
@@ -383,19 +390,23 @@ void BoardSetupDialog::openSquarePopup(Square s)
     m_popsquare = s;
     Piece piece = m_board.pieceAt(s);
 
-    bool ispiece = !(piece == Empty || piece == InvalidPiece)
-                     && piece < WasBatyr;
+    bool notempty = !(piece == Empty || piece == InvalidPiece),
+         ispiece = notempty && piece < WasBatyr;
 
     pa_temdek->setEnabled(s<=10 || s>=53);
     pa_temdek->setText( m_board.temdekOn(s>31)?
                             tr("Open temdek") : tr("Close temdek") );
-    pa_enpassant->setEnabled((s>=18 && s<=24) || (s>=39 && s<=45));
+    pa_enpassant->setEnabled(((s>=18 && s<=24) || (s>=39 && s<=45)) && !notempty);
     pa_enpassant->setText(m_board.enPassantSquare() == s?
                     tr("Clear en passant square") : tr("Set en passant square"));
     pa_urgent->setEnabled(ispiece && isInHomeFort(s, s<=31? White : Black));
     pa_urgent->setText(m_board.isUrgent(s)? tr("Clear urgent") : tr("Set urgent"));
 
     pa_defunkt->setEnabled(ispiece && piece != WhiteBiy && piece != BlackBiy);
+
+    pa_transit->setEnabled(ispiece && pieceColor(piece) == m_board.toMove());
+    pa_transit->setText( m_board.transitAt() == s ?
+                             tr("Clear transit") : tr("Set transit"));
 
     bool doexe = false;
     for (int i=0; i<m_popmenu->actions().size(); ++i)
@@ -452,7 +463,7 @@ void BoardSetupDialog::slotSquareTemdek()
                 spn.insert(i, "T");
             }
             else
-            // T after w/b
+            // T replaces first -
             {
                 const int i = spn.indexOf('-');
                 if (i<0) return;
@@ -469,7 +480,7 @@ void BoardSetupDialog::slotSquareTemdek()
                 spn.insert(i+1, "t");
             }
             else
-            // t replaces - after w/b
+            // t replaces first -
             {
                 const int i = spn.indexOf('-');
                 if (i<0) return;
@@ -483,8 +494,10 @@ void BoardSetupDialog::slotSquareTemdek()
         setBoard(b);
     else
         qDebug() << "temdek failed";
-    //SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1
+    // urgent
     // SQSSRSBRB/K/SSSS1SS/7/7/1sS4/7/2sssss/k/brbsrssqs w Tt - 40 - 5
+    // defunkt & transit
+    // SQSSRSBRB/K/SSS1SSS/3p3/3S3/3s3/7/ss2sss/k/brbsrssqs w Tt 28 - - 1
 }
 
 void BoardSetupDialog::slotSquareEnPassant()
@@ -514,4 +527,18 @@ void BoardSetupDialog::slotSquareUrgent()
         setBoard(b);
     else
         qDebug() << "urgent failed";
+}
+
+void BoardSetupDialog::slotSquareTransit()
+{
+    Board b(m_board);
+    if (b.transitAt() == NoSquare)
+        b.setTransitAt(m_popsquare);
+    else
+        b.setTransitAt(NoSquare);
+
+    if (b.fromSPN(b.toSPN()))
+        setBoard(b);
+    else
+        qDebug() << "transit failed";
 }
