@@ -448,6 +448,12 @@ void BoardPainter::createBoard_(const Board& board)
             s->overlay = &m_theme->towerEmboss();
         }
 
+        // XXX quick hack to see en passant
+        if (board.enPassantSquare() == i)
+        {
+            s->overlay = &m_theme->towerEmboss();
+        }
+
         // number display
         if (m_do_square_numbers)
         {
