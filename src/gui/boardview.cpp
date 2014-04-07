@@ -425,7 +425,7 @@ void BoardView::mousePressEvent(QMouseEvent* event)
     // right-click
     else if ((event->button() & Qt::RightButton)
              && (m_hoverSquare != InvalidSquare)
-             && !(m_flags && F_NoExecuteMoves))
+             && !(m_flags & F_NoExecuteMoves))
     {
         if (m_guessNextMove && m_board.isMovable(m_hoverSquare))
         {
