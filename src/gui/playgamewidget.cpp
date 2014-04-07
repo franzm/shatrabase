@@ -38,7 +38,9 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
     activeLed_      (0),
     play_           (new PlayGame(this)),
     playing_        (false),
-    ignoreAnswer_   (false)
+    ignoreAnswer_   (false),
+
+    totalTime_      (5*60)
 {
     setObjectName("PlayGameWidget");
     setWindowTitle(tr("Player selection"));
@@ -47,16 +49,15 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
     blinkTimer_.setInterval(blinkInterval_);
     connect(&blinkTimer_, SIGNAL(timeout()), SLOT(slotBlinkTimer_()));
 
-    // ----- setup PlayGame -----
-
-    connect(play_, SIGNAL(moveMade1(Move)), SLOT(moveFromEngine(Move)));
-    connect(play_, SIGNAL(moveMade2(Move)), SLOT(moveFromEngine(Move)));
-    connect(play_, SIGNAL(ready()), SLOT(enginesReady()));
-    connect(play_, SIGNAL(engineClueless()), SLOT(engineClueless()));
+    timer_.setSingleShot(false);
+    timer_.setInterval(1000);
+    connect(&timer_, SIGNAL(timeout()), SLOT(slotTimer_()));
 
     // ------- setup ui ------
 
     ui_->setupUi(this);
+
+    ui_->clock2->setColor(false);
 
     connect(ui_->nameEdit1, SIGNAL(textEdited(QString)), SLOT(slotName1Changed_(QString)));
     connect(ui_->nameEdit2, SIGNAL(textEdited(QString)), SLOT(slotName2Changed_(QString)));
@@ -72,6 +73,12 @@ PlayGameWidget::PlayGameWidget(QWidget *parent) :
     connect(ui_->b_pause, SIGNAL(clicked()), SLOT(pause_()));
     connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
 
+    // ----- setup PlayGame -----
+
+    connect(play_, SIGNAL(moveMade1(Move)), SLOT(moveFromEngine(Move)));
+    connect(play_, SIGNAL(moveMade2(Move)), SLOT(moveFromEngine(Move)));
+    connect(play_, SIGNAL(ready()), SLOT(enginesReady()));
+    connect(play_, SIGNAL(engineClueless()), SLOT(engineClueless()));
 
     setWidgetsPlaying_(false);
 
@@ -200,6 +207,9 @@ void PlayGameWidget::start_()
     emit startNewGame(tags);
 
     play_->activate();
+
+    initTiming_();
+    startTiming_(White);
 }
 
 void PlayGameWidget::continue_()
@@ -211,20 +221,23 @@ void PlayGameWidget::continue_()
     ignoreAnswer_ = false;
 
     play_->activate();
+    startTiming_(lastStm_);
 
     emit continueGame();
 
-    // ... wait for setPosition() from MainWindow from here
+    // ... wait for setPosition() from MainWindow
 }
 
 void PlayGameWidget::stop()
 {
+    stopTiming_();
     setWidgetsPlaying_(playing_ = false);
     play_->deactivate();
 }
 
 void PlayGameWidget::stopThinking()
 {
+    stopTiming_();
     ignoreAnswer_ = true;
     blinkTimer_.stop();
     play_->deactivate();
@@ -232,7 +245,9 @@ void PlayGameWidget::stopThinking()
 
 void PlayGameWidget::pause_()
 {
+    stopTiming_();
     setWidgetsPlaying_(playing_ = false);
+    play_->deactivate();
 
     emit pauseGame();
 }
@@ -332,6 +347,8 @@ void PlayGameWidget::setPosition(const Board& board)
             blinkTimer_.start();
             play_->setPosition(board);
         }
+
+        startTiming_(White);
     }
     // Black is next
     else
@@ -343,6 +360,8 @@ void PlayGameWidget::setPosition(const Board& board)
             blinkTimer_.start();
             play_->setPosition(board);
         }
+
+        startTiming_(Black);
     }
 }
 
@@ -351,6 +370,7 @@ void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
 
+    stopTiming_();
     blinkTimer_.stop();
 
     // Stopped playing while Engine was thinking?
@@ -391,11 +411,14 @@ void PlayGameWidget::animationFinished(const Board& board)
             return;
         }
 
+        // check if last engine move ended game
+        checkGameResult_(board, true, true);
+
+        // switch to other player
         setWidgetsPlayer_(oppositeColor(lastStm_));
+        startTiming_(oppositeColor(lastStm_));
     }
 
-    // check if last engine move ended game
-    checkGameResult_(board, true, true);
 }
 
 
@@ -436,4 +459,40 @@ void PlayGameWidget::slotBlinkTimer_()
 
     led->setOnColor(led->onColor() == colorEngine0_ ?
                           colorEngine1_ : colorEngine0_);
+}
+
+
+void PlayGameWidget::slotTimer_()
+{
+    if (timeStm_ == White)
+    {
+        moveTime1_++;
+        totalTime1_--;
+        ui_->clock1->setTime(totalTime1_, moveTime1_);
+    }
+    else if (timeStm_ == Black)
+    {
+        moveTime2_++;
+        totalTime2_--;
+        ui_->clock2->setTime(totalTime2_, moveTime2_);
+    }
+}
+
+void PlayGameWidget::initTiming_()
+{
+    totalTime1_ = totalTime2_ = totalTime_;
+    moveTime1_ = moveTime2_ = 0;
+    ui_->clock1->setTime(totalTime1_, moveTime1_);
+    ui_->clock2->setTime(totalTime2_, moveTime2_);
+}
+
+void PlayGameWidget::startTiming_(int stm)
+{
+    timeStm_ = stm;
+    timer_.start();
+}
+
+void PlayGameWidget::stopTiming_()
+{
+    timer_.stop();
 }

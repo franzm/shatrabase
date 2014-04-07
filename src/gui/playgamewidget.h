@@ -103,6 +103,7 @@ private slots:
     void slotConfig2Clicked_();
 
     void slotBlinkTimer_();
+    void slotTimer_();
 
     /** Starts new game */
     void start_();
@@ -114,6 +115,10 @@ private slots:
     void pause_();
 
 private:
+
+    void initTiming_();
+    void startTiming_(int stm);
+    void stopTiming_();
 
     /** Updates widgets */
     void setWidgetsPlayer_(int stm);
@@ -150,6 +155,16 @@ private:
         ignoreAnswer_,
     /** Flag used when first player is Engine */
         sendFreshBoardWhenReady_;
+
+    // ---- time control ----
+
+    QTimer timer_;
+
+    int timeStm_,
+        totalTime_,
+        totalTime1_, totalTime2_,
+        moveTime1_, moveTime2_;
+
 };
 
 #endif // PLAYERSELECT_H

@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QObject>
 #include <QString>
 #include <QProcess>
+#include <QTimer>
 
 #include "playgameengine.h"
 
@@ -110,6 +111,7 @@ protected slots:
 
     void engineClueless_();
 
+
 private:
 
     /** See if string is okay and engine is known */
@@ -127,6 +129,7 @@ private:
     /* used to check if both engines are ready, if they are engines,
        and to emit ready() when both are ready. */
     bool player1Ready_, player2Ready_, readySend_;
+
 };
 
 #endif // PLAYERSETUP_H

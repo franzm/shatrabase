@@ -189,8 +189,8 @@ bool PlayGame::setPosition(const Board& board)
         if (engine2_) return engine2_->setPosition(board);
     }
 
-    SB_PLAY_DEBUG("...did not care for the position, "
-                  "because there was no engine set up for this player.");
+    //SB_PLAY_DEBUG("...did not care for the position, "
+    //              "because there was no engine set up for this player.");
 
     return false;
 }
@@ -243,3 +243,4 @@ void PlayGame::engineClueless_()
 {
    emit engineClueless();
 }
+
