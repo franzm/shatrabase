@@ -16,74 +16,8 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <layout class="QHBoxLayout">
-     <property name="leftMargin">
-      <number>4</number>
-     </property>
-     <property name="topMargin">
-      <number>4</number>
-     </property>
-     <property name="rightMargin">
-      <number>4</number>
-     </property>
-     <property name="bottomMargin">
-      <number>4</number>
-     </property>
-     <item>
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Expanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>121</width>
-         <height>29</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="okButton">
-       <property name="text">
-        <string>&amp;Ok</string>
-       </property>
-       <property name="default">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="applyButton">
-       <property name="text">
-        <string>&amp;Apply</string>
-       </property>
-       <property name="default">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="resetButton">
-       <property name="text">
-        <string>&amp;Reset</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="cancelButton">
-       <property name="text">
-        <string>&amp;Cancel</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout_7">
+   <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="autoFillBackground">
       <bool>false</bool>
@@ -483,9 +417,305 @@
      </widget>
      <widget class="QWidget" name="tabAutoplay">
       <attribute name="title">
-       <string>Time Control</string>
+       <string>Game</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2"/>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <widget class="QRadioButton" name="radioButton">
+         <property name="text">
+          <string>Free play</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_4">
+         <property name="text">
+          <string>Average time per move</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_24">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="spacer_5" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_25">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_21">
+               <property name="text">
+                <string>seconds</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_4">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>36000</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_2">
+         <property name="text">
+          <string>Time / Nodes / Depth per Move</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="spacer" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="checkBox">
+               <property name="text">
+                <string>Limit Time (seconds)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>36000</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QCheckBox" name="checkBox_2">
+               <property name="text">
+                <string>Limit Nodes</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_2">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>1000000000</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <item>
+              <widget class="QCheckBox" name="checkBox_3">
+               <property name="text">
+                <string>Limit Depth</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_3">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_3">
+         <property name="text">
+          <string>Tournament</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <item>
+          <widget class="QWidget" name="spacer_2" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_13">
+             <item>
+              <widget class="QLabel" name="label_14">
+               <property name="text">
+                <string>Total time</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTimeEdit" name="timeEdit">
+               <property name="displayFormat">
+                <string>h:mm:ss</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_15">
+               <property name="text">
+                <string>per moves</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_7">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_14">
+             <item>
+              <widget class="QCheckBox" name="checkBox_5">
+               <property name="text">
+                <string>Additonal time</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTimeEdit" name="timeEdit_2">
+               <property name="displayFormat">
+                <string>h:mm:ss</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
+             <item>
+              <widget class="QCheckBox" name="checkBox_6">
+               <property name="text">
+                <string>Time increment (seconds)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_6">
+               <property name="minimum">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <number>3600</number>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+      <zorder>radioButton</zorder>
+      <zorder>radioButton_2</zorder>
+      <zorder>horizontalLayoutWidget_2</zorder>
+      <zorder>radioButton_3</zorder>
+      <zorder>horizontalLayoutWidget_5</zorder>
+      <zorder></zorder>
+      <zorder>verticalSpacer_2</zorder>
+      <zorder>radioButton_4</zorder>
+      <zorder>horizontalLayoutWidget_6</zorder>
      </widget>
      <widget class="QWidget" name="tabEngines">
       <attribute name="title">
@@ -1030,6 +1260,72 @@
       </layout>
      </widget>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>4</number>
+     </property>
+     <property name="rightMargin">
+      <number>4</number>
+     </property>
+     <property name="bottomMargin">
+      <number>4</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>121</width>
+         <height>29</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="okButton">
+       <property name="text">
+        <string>&amp;Ok</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="applyButton">
+       <property name="text">
+        <string>&amp;Apply</string>
+       </property>
+       <property name="default">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="resetButton">
+       <property name="text">
+        <string>&amp;Reset</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
+        <string>&amp;Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
