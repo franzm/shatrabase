@@ -138,7 +138,7 @@ void Engine::activate(bool do_wait)
         connect(m_process, SIGNAL(readyReadStandardOutput()), SLOT(pollProcess()));
         connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(processExited()));
         if (do_wait)
-            m_process->waitForStarted(2000);
+            m_process->waitForStarted(1000);
         else
             m_process->start(m_command);
         SB_ENGINE_DEBUG("Engine::activate: process started");
@@ -153,8 +153,16 @@ void Engine::deactivate()
     {
         protocolEnd();
         if (m_process)
-            m_process->waitForFinished(1000);
-        //deleteProcess_();
+        {
+            SB_ENGINE_DEBUG("Engine::deactivate(): m_process->waitForFinished(...)");
+            if (!m_process->waitForFinished(200))
+            {
+                SB_ENGINE_DEBUG("Engine::deactivate(): m_process->waitForFinished(...) timed out: KILLING NOW");
+                deleteProcess_();
+            }
+            else
+                SB_ENGINE_DEBUG("Engine::deactivate(): m_process->waitForFinished(...) ok");
+        }
     }
 }
 
@@ -178,7 +186,7 @@ void Engine::send(const QString& message)
     SB_ENGINE_DEBUG("Engine::send("<<message<<")");
 
     // debug out
-    commToEngine(message);
+    engineDebug(this, D_ToEngine, message);
 
 	QString out(message);
 	out.append('\n');
@@ -242,7 +250,7 @@ bool Engine::waitForResponse(int wait_ms)
         QThread::msleep(10);
         if (time.elapsed() > wait_ms)
         {
-            commError(tr("engine timeout after %1 ms").arg(wait_ms));
+            engineDebug(this, D_Error, tr("engine timeout after %1 ms").arg(wait_ms));
             return false;
         }
     }
@@ -259,8 +267,8 @@ void Engine::pollProcess()
         message = m_process->readLine().simplified();
 
         // debug out
-        SB_ENGINE_DEBUG("Engine::pollProcess():" << message);
-        commFromEngine(message);
+        //SB_ENGINE_DEBUG("Engine::pollProcess():" << message);
+        engineDebug(this, D_FromEngine, message);
 
         // send to derived class
         processMessage(message);
@@ -290,7 +298,7 @@ void Engine::processError(QProcess::ProcessError errMsg)
 {
     SB_ENGINE_DEBUG("Engine::processError("<<errMsg<<")");
 
-    commError(processErrorText(errMsg));
+    engineDebug(this, D_Error, processErrorText(errMsg));
 
     setActive(false);
     deleteProcess_();

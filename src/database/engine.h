@@ -27,8 +27,9 @@
 #include "engineoptiondata.h"
 
 
-#if 0
-#   define SB_ENGINE_DEBUG(stream_arg__) { qDebug() << (void*)this << stream_arg__; }
+#if 1
+#   define SB_ENGINE_DEBUG(stream_arg__) \
+    { QString str__; QDebug deb__(&str__); deb__ << stream_arg__; engineDebug(this, D_Debug, str__); }
 #else
 #   define SB_ENGINE_DEBUG(unused__) { }
 #endif
@@ -44,6 +45,14 @@ class Engine : public QObject
 	Q_OBJECT
 
 public:
+
+    enum DebugType
+    {
+        D_FromEngine,
+        D_ToEngine,
+        D_Error,
+        D_Debug
+    };
 
     /** Constructs an engine with a given path/command, and log stream */
 	Engine(const QString& name,
@@ -118,6 +127,9 @@ signals:
     /** Fired when a log item has been written to the log */
 	void logUpdated();
 
+    /** Sends debug info out */
+    void engineDebug(Engine * engine, Engine::DebugType t, const QString& str);
+#if (0)
     /** Sends the raw communication from the engine */
     void commFromEngine(const QString& msg);
 
@@ -126,7 +138,7 @@ signals:
 
     /** Sends error messages */
     void commError(const QString& msg);
-
+#endif
 protected:
     /** Waits the given milliseconds until an output of the engine.
         Returns false if timed-out. */

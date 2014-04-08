@@ -15,12 +15,13 @@
 #include "board.h"
 #include "analysiswidget.h"
 #include "enginelist.h"
+#include "enginedebugwidget.h"
 #include "messagedialog.h"
 
-AnalysisWidget::AnalysisWidget()
+AnalysisWidget::AnalysisWidget(EngineDebugWidget * debug)
         : QWidget(0),
           m_engine(0),
-          m_debug(true)
+          m_engineDebug(debug)
 {
     ui.setupUi(this);
     connect(ui.engineList, SIGNAL(activated(int)), SLOT(toggleAnalysis()));
@@ -61,9 +62,10 @@ void AnalysisWidget::startEngine()
         connect(m_engine, SIGNAL(deactivated()), SLOT(engineDeactivated()));
         connect(m_engine, SIGNAL(analysisUpdated(const Analysis&)),
                   SLOT(showAnalysis(const Analysis&)));
-        connect(m_engine, SIGNAL(commFromEngine(QString)), SLOT(slotCommFromEngine(QString)));
-        connect(m_engine, SIGNAL(commToEngine(QString)), SLOT(slotCommToEngine(QString)));
-        connect(m_engine, SIGNAL(commError(QString)), SLOT(slotCommEngineError(QString)));
+        if (m_engineDebug)
+            connect(m_engine, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
+                m_engineDebug, SLOT(slotEngineDebug(Engine*,Engine::DebugType,QString)));
+
         m_engine->activate();
         QString key = QString("/")+objectName()+"/Engine";
         AppSettings->setValue(key, ui.engineList->itemText(index));
@@ -203,32 +205,6 @@ void AnalysisWidget::slotMpvChanged(int mpv)
     }
 }
 
-void AnalysisWidget::slotCommToEngine(const QString& msg)
-{
-    if (m_debug)
-    {
-        ui.commText->setTextColor(Qt::black);
-        ui.commText->append("<-- " + msg);
-    }
-}
-
-void AnalysisWidget::slotCommFromEngine(const QString& msg)
-{
-    if (m_debug)
-    {
-        ui.commText->setTextColor(Qt::darkGreen);
-        ui.commText->append("--> " + msg);
-    }
-}
-
-void AnalysisWidget::slotCommEngineError(const QString& msg)
-{
-    if (m_debug)
-    {
-        ui.commText->setTextColor(Qt::darkRed);
-        ui.commText->append(msg);
-    }
-}
 
 
 bool AnalysisWidget::isAnalysisEnabled() const

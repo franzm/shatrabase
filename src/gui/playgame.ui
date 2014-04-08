@@ -175,7 +175,7 @@
      <item>
       <widget class="QPushButton" name="b_settings1">
        <property name="toolTip">
-        <string>Configutation / Settings</string>
+        <string>Engine configuration</string>
        </property>
        <property name="text">
         <string/>
@@ -226,7 +226,10 @@
      <item>
       <widget class="QPushButton" name="b_settings2">
        <property name="toolTip">
-        <string>Configutation / Settings</string>
+        <string>Engine configuration</string>
+       </property>
+       <property name="statusTip">
+        <string/>
        </property>
        <property name="text">
         <string/>

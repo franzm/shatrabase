@@ -24,10 +24,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "engine.h"
 
 
-PlayGame::PlayGame(QObject *parent)
+PlayGame::PlayGame(EngineDebugWidget * debug, QObject *parent)
     :   QObject         (parent),
-        engine1_        (new PlayGameEngine(this)),
-        engine2_        (new PlayGameEngine(this)),
+        engineDebug_    (debug),
+        engine1_        (new PlayGameEngine(engineDebug_, this)),
+        engine2_        (new PlayGameEngine(engineDebug_, this)),
         player1Ready_   (false),
         player2Ready_   (false),
         readySend_      (false)

@@ -18,7 +18,7 @@
 
 class Analysis;
 class Engine;
-
+class EngineDebugWidget;
 
 /** A class that wraps an Engine to play a game.
 */
@@ -26,7 +26,7 @@ class PlayGameEngine : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlayGameEngine(QObject *parent = 0);
+    explicit PlayGameEngine(EngineDebugWidget * debug, QObject *parent = 0);
 
     ~PlayGameEngine();
 
@@ -92,6 +92,8 @@ private:
     bool startAnalysis_(const Board&);
 
     // __________ PRIVATE MEMBER _____________
+
+    EngineDebugWidget * engineDebug_;
 
     Engine * engine_;
 

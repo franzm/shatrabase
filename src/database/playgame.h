@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include "playgameengine.h"
 
-
+class EngineDebugWidget;
 
 /** This class handles the setup of the two players (human or engine)
  *  and can be used to play a game. */
@@ -36,7 +36,7 @@ class PlayGame : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlayGame(QObject *parent = 0);
+    explicit PlayGame(EngineDebugWidget * debug, QObject *parent = 0);
     ~PlayGame();
 
     // ------- getter -----------
@@ -120,6 +120,10 @@ private:
     void createEngines_();
     /** Lazy destroy processes and engines. */
     void destroyEngines_();
+
+    // ------------ MEMBER -------------
+
+    EngineDebugWidget * engineDebug_;
 
     QString engineName1_, engineName2_,
             name1_, name2_;

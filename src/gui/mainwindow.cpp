@@ -20,6 +20,7 @@
 #include "databaselist.h"
 #include "dockwidgetex.h"
 #include "downloadmanager.h"
+#include "enginedebugwidget.h"
 #include "eventlistwidget.h"
 #include "filtermodel.h"
 #include "game.h"
@@ -197,10 +198,19 @@ MainWindow::MainWindow() : QMainWindow(),
     addDockWidget(Qt::RightDockWidgetArea, statsDock);
     m_menuView->addAction(statsDock->toggleViewAction());
 
+    /* Engine Debug Widget */
+    DockWidgetEx* engineDebugDock = new DockWidgetEx(tr("Engine Debugger"), this);
+    engineDebugDock->setObjectName("Engine Debugger");
+    m_engineDebug = new EngineDebugWidget(this);
+    m_engineDebug->setObjectName("Engine Debugger");
+    engineDebugDock->setWidget(m_engineDebug);
+    m_menuView->addAction(engineDebugDock->toggleViewAction());
+    addDockWidget(Qt::RightDockWidgetArea, engineDebugDock);
+
     /* Play Game */
     DockWidgetEx* playerSelDock = new DockWidgetEx(tr("Play Game"), this);
     playerSelDock->setObjectName("PlayGameDock");
-    m_playGame = new PlayGameWidget(this);
+    m_playGame = new PlayGameWidget(m_engineDebug, this);
     playerSelDock->setWidget(m_playGame);
     playerSelDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_P);
     m_menuView->addAction(playerSelDock->toggleViewAction());
@@ -296,7 +306,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Analysis Dock */
     DockWidgetEx* analysisDock = new DockWidgetEx(tr("Analysis 1"), this);
     analysisDock->setObjectName("AnalysisDock1");
-    AnalysisWidget* analysis = new AnalysisWidget;
+    AnalysisWidget* analysis = new AnalysisWidget(m_engineDebug);
     analysis->setObjectName("Analysis");
     analysisDock->setWidget(analysis);
     addDockWidget(Qt::RightDockWidgetArea, analysisDock);
@@ -318,7 +328,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Analysis Dock 2 */
     DockWidgetEx* analysisDock2 = new DockWidgetEx(tr("Analysis 2"), this);
 	analysisDock2->setObjectName("AnalysisDock2");
-    analysis = new AnalysisWidget;
+    analysis = new AnalysisWidget(m_engineDebug);
     analysis->setObjectName("Analysis2");
     analysisDock2->setWidget(analysis);
 	addDockWidget(Qt::RightDockWidgetArea, analysisDock2);
@@ -334,6 +344,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	m_menuView->addAction(analysisDock2->toggleViewAction());
     analysisDock2->toggleViewAction()->setShortcut(Qt::CTRL + Qt::Key_F3);
     analysisDock2->hide();
+
 
 	/* Randomize */
 	srand(time(0));

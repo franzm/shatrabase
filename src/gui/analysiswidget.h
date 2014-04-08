@@ -24,12 +24,13 @@
 
 class Analysis;
 class Board;
+class EngineDebugWidget;
 
 class AnalysisWidget : public QWidget
 {
     Q_OBJECT
 public:
-    AnalysisWidget();
+    AnalysisWidget(EngineDebugWidget * debug);
     ~AnalysisWidget();
 
     /** Get the main line */
@@ -47,13 +48,6 @@ public slots:
     void stopEngine();
     /** Stop game analysis when analysis dock is hidden. */
     void slotVisibilityChanged(bool);
-
-    /** Add text to debug output */
-    void slotCommToEngine(const QString&);
-    /** Add text to debug output */
-    void slotCommFromEngine(const QString&);
-    /** Add error text to debug output */
-    void slotCommEngineError(const QString&);
 
     /** Is any engine running. */
     bool isEngineRunning() const;
@@ -91,8 +85,7 @@ private:
 //  QString m_tablebaseEvaluation;
 //  Tablebase* m_tablebase;
 
-    /** Display debug/comm messages? */
-    bool m_debug;
+    EngineDebugWidget * m_engineDebug;
 };
 
 #endif // __ANALYSIS_WIDGET_H__

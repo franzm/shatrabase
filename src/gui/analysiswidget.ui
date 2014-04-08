@@ -112,73 +112,16 @@
       </layout>
      </item>
      <item>
-      <widget class="QTabWidget" name="tabWidget">
-       <property name="tabPosition">
-        <enum>QTabWidget::East</enum>
+      <widget class="QTextBrowser" name="variationText">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>60</height>
+        </size>
        </property>
-       <property name="currentIndex">
-        <number>0</number>
+       <property name="openLinks">
+        <bool>false</bool>
        </property>
-       <widget class="QWidget" name="tab">
-        <property name="toolTip">
-         <string>Displays the analysis output of the engine</string>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <attribute name="title">
-         <string>A</string>
-        </attribute>
-        <layout class="QGridLayout" name="gridLayout">
-         <property name="leftMargin">
-          <number>1</number>
-         </property>
-         <property name="topMargin">
-          <number>1</number>
-         </property>
-         <property name="rightMargin">
-          <number>1</number>
-         </property>
-         <property name="bottomMargin">
-          <number>1</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QTextBrowser" name="variationText">
-           <property name="minimumSize">
-            <size>
-             <width>100</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="openLinks">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="tab_2">
-        <attribute name="title">
-         <string>D</string>
-        </attribute>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <property name="leftMargin">
-          <number>1</number>
-         </property>
-         <property name="topMargin">
-          <number>1</number>
-         </property>
-         <property name="rightMargin">
-          <number>1</number>
-         </property>
-         <property name="bottomMargin">
-          <number>1</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QTextBrowser" name="commText"/>
-         </item>
-        </layout>
-       </widget>
       </widget>
      </item>
     </layout>

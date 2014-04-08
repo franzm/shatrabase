@@ -28,15 +28,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QMessageBox>
 #include <QDate>
 
-PlayGameWidget::PlayGameWidget(QWidget *parent) :
+PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     QWidget         (parent),
+    engineDebug_    (debug),
     colorPlayer_    (QLed::Green),
     colorEngine0_   (QLed::Green),
     colorEngine1_   (QLed::Blue),
     blinkInterval_  (500),
     ui_             (new Ui::PlayGame),
     activeLed_      (0),
-    play_           (new PlayGame(this)),
+    play_           (new PlayGame(engineDebug_, this)),
     playing_        (false),
     ignoreAnswer_   (false),
 

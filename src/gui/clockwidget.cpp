@@ -95,7 +95,7 @@ QString ClockWidget::timeString_(int seconds) const
     t.setHMS(h, m, s);
     if (h)
         return t.toString("h:mm:ss");
-    if (m>1)
+    if (m)
         return t.toString("m:ss");
     return t.toString("s");
 }

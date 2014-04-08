@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 class Board;
 class PlayGame;
+class EngineDebugWidget;
 
 namespace Ui { class PlayGame; }
 
@@ -38,7 +39,7 @@ class PlayGameWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit PlayGameWidget(QWidget *parent = 0);
+    explicit PlayGameWidget(EngineDebugWidget * debug, QWidget *parent = 0);
     ~PlayGameWidget();
 
     bool isPlaying() const { return playing_; }
@@ -141,6 +142,8 @@ private:
     // ___ MEMBER ___
 
     Ui::PlayGame * ui_;
+
+    EngineDebugWidget * engineDebug_;
 
     QTimer blinkTimer_;
     int activeLed_;

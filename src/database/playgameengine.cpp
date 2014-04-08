@@ -1,7 +1,9 @@
 #include "playgameengine.h"
+#include "enginedebugwidget.h"
 
-PlayGameEngine::PlayGameEngine(QObject *parent)
+PlayGameEngine::PlayGameEngine(EngineDebugWidget * debug, QObject *parent)
     :   QObject             (parent),
+        engineDebug_        (debug),
         engine_             (0),
         minWaitTime_        (2*1000),
         maxWaitTime_        (6*1000),
@@ -59,6 +61,12 @@ bool PlayGameEngine::createEngine_()
         connect(engine_, SIGNAL(deactivated()), SLOT(engineDeactivated_()));
         connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
                                     SLOT(engineAnalysis_(const Analysis&)));
+        if (engineDebug_)
+        {
+            connect(engine_, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
+                    engineDebug_, SLOT(slotEngineDebug(Engine*,Engine::DebugType,QString)));
+        }
+
         //if (!stopBetweenMoves_)
             engine_->activate();
 
@@ -110,7 +118,7 @@ void PlayGameEngine::engineDeactivated_()
 
 void PlayGameEngine::engineError_(QProcess::ProcessError e)
 {
-//    QT_UNUSED(e);
+    Q_UNUSED(e);
     SB_PLAY_DEBUG("PlayGameEngine::engineError()" << Engine::processErrorText(e));
     emit engineCrashed();
 }

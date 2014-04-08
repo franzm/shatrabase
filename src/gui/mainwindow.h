@@ -31,6 +31,7 @@ class Database;
 class DatabaseInfo;
 class DatabaseList;
 class EditAction;
+class EngineDebugWidget;
 class EventListWidget;
 class Game;
 class GameList;
@@ -378,6 +379,7 @@ private:
     TableView* m_openingTreeView;
 	QProgressBar* m_progressBar;
     ToolMainWindow* m_gameWindow;
+    EngineDebugWidget * m_engineDebug;
     QToolBar* m_gameToolBar;
 	/* Status */
 	QLabel* m_statusFilter;

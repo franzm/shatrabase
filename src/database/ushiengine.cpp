@@ -266,7 +266,7 @@ void USHIEngine::parseAnalysis(const QString& message)
                 Move move = board.parseMove(moveText);
 				if (!move.isLegal())
                 {
-                    commError(tr("illegal move '%1' from engine!").arg(moveText));
+                    engineDebug(this, D_Error, tr("illegal move '%1' from engine!").arg(moveText));
 					break;
                 }
 				board.doMove(move);
@@ -408,7 +408,7 @@ void USHIEngine::parseOptions(const QString& message)
     }
     if (!error.isEmpty())
     {
-        commError(tr(
+        engineDebug(this, D_Error, tr(
                  "Cannot parse Option string: '%1' "
                  "looking at token '%2'!")
                  .arg(message).arg(error));
@@ -429,7 +429,7 @@ void USHIEngine::parseOptions(const QString& message)
     }
     else
     {
-        commError(tr(
+        engineDebug(this, D_Error, tr(
                     "Incomplete syntax parsing Option string: '%1' !")
                     .arg(message));
         return;
