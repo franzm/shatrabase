@@ -62,10 +62,10 @@ public slots:
 
     void slotShowLanguageMessage();
 
-    void test();
-
-    /** Enable/Disable the time control widgets */
+    /** Enable/Disable the time control widget groups */
     void slotTCEnable();
+    /** update temp TimeControl settings */
+    void slotTCUpdate();
 
 protected:
 	/* Overridden to save size */

@@ -14,6 +14,7 @@
 #include "colorlist.h"
 #include "preferences.h"
 #include "settings.h"
+#include "timecontrol.h"
 #include "messagedialog.h"
 #include "engineoptiondialog.h"
 
@@ -31,6 +32,22 @@
 #include <QMessageBox>
 
 int PreferencesDialog::s_lastIndex = 0;
+
+// helper for timeedit <-> int
+
+void setTime(QTimeEdit& te, int msec)
+{
+    QTime t(msec/1000/60/60, (msec/1000/60)%60, (msec/1000)%60, msec%1000);
+    te.setTime(t);
+}
+
+int getMSecs(const QTimeEdit& te)
+{
+    QTime t = te.time();
+    return (((t.hour() * 60 + t.minute()) * 60 + t.second()) * 1000) + t.msec();
+}
+
+
 
 PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
 {
@@ -59,7 +76,6 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.notationAlgebraic, SIGNAL(clicked()), SLOT(slotAlgebraicNotation()));
 
     connect(ui.cbFree, SIGNAL(clicked()), SLOT(slotTCEnable()));
-    connect(ui.cbAverage, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimit, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimitDepth, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimitTime, SIGNAL(clicked()), SLOT(slotTCEnable()));
@@ -68,11 +84,21 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.cbTimeInc1, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTime2, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTimeInc2, SIGNAL(clicked()), SLOT(slotTCEnable()));
-    connect(ui.cbTime3, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTimeInc3, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbAllMoves1, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbAllMoves2, SIGNAL(clicked()), SLOT(slotTCEnable()));
 
-    ui.cbFree->setChecked(true);
-    slotTCEnable();
+    connect(ui.time1, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
+    connect(ui.time2, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
+    connect(ui.time3, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
+    connect(ui.timeInc1, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
+    connect(ui.timeInc2, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
+    connect(ui.timeInc3, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
+    connect(ui.moves1, SIGNAL(valueChanged(int)), SLOT(slotTCUpdate()));
+    connect(ui.moves2, SIGNAL(valueChanged(int)), SLOT(slotTCUpdate()));
+    connect(ui.limitTime, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
+    connect(ui.limitDepth, SIGNAL(valueChanged(int)), SLOT(slotTCUpdate()));
+    connect(ui.limitNodes, SIGNAL(valueChanged(int)), SLOT(slotTCUpdate()));
 
     const QMap<QString,QString> lang = AppSettings->languages();
     for (QMap<QString,QString>::const_iterator i=lang.begin(); i!=lang.end(); ++i)
@@ -92,12 +118,8 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
 
 void PreferencesDialog::slotTCEnable()
 {
-    // average
-    bool on = ui.cbAverage->isChecked();
-    ui.timeAv->setEnabled(on);
-
     // limit
-    on = ui.cbLimit->isChecked();
+    bool on = ui.cbLimit->isChecked();
     ui.cbLimitTime->setEnabled(on);
     ui.cbLimitDepth->setEnabled(on);
     ui.cbLimitNodes->setEnabled(on);
@@ -106,32 +128,66 @@ void PreferencesDialog::slotTCEnable()
     ui.limitNodes->setEnabled(on && ui.cbLimitNodes->isChecked());
 
     // tournament
+    bool all1 = ui.cbAllMoves1->isChecked();
+    bool all2 = ui.cbAllMoves2->isChecked();
+    // sanity
+    bool tc3 = (!all1 && (ui.cbTime2->isChecked() || !all2));
+    if (all1)
+        ui.cbTime2->setChecked(false);
+    // 1
     on = ui.cbTournament->isChecked();
-    ui.moves1->setEnabled(on);
+    ui.cbAllMoves1->setEnabled(on);
+    ui.moves1->setEnabled(on && !all1);
     ui.time1->setEnabled(on);
     ui.cbTimeInc1->setEnabled(on);
     ui.timeInc1->setEnabled(on && ui.cbTimeInc1->isChecked());
     // 2
-    ui.cbTime2->setEnabled(on);
-    bool on1 = on & ui.cbTime2->isChecked();
-    ui.moves2->setEnabled(on1);
+    ui.cbTime2->setEnabled(on & !all1);
+    bool on1 = on & ui.cbTime2->isChecked() & !all1;
+    ui.cbAllMoves2->setEnabled(on1);
+    ui.moves2->setEnabled(on1 && !all2);
     ui.time2->setEnabled(on1);
     ui.cbTimeInc2->setEnabled(on1);
     ui.timeInc2->setEnabled(on1 && ui.cbTimeInc2->isChecked());
     // 3
-    ui.cbTime3->setEnabled(on);
-    on1 = on & ui.cbTime3->isChecked();
+    on1 = on && tc3;
     ui.time3->setEnabled(on1);
     ui.cbTimeInc3->setEnabled(on1);
     ui.timeInc3->setEnabled(on1 && ui.cbTimeInc3->isChecked());
+
+    slotTCUpdate();
 }
 
-
-void PreferencesDialog::test()
+void PreferencesDialog::slotTCUpdate()
 {
-    //QTime t = ui.tc1Time->time();
-    //qDebug() << (((t.hour() * 60 + t.minute()) * 60 + t.second()) * 1000) + t.msec();
+    TimeControl tc;
+    if (ui.cbMatchTime->isChecked())
+        tc.setType(TimeControl::T_Match);
+    else if (ui.cbLimit->isChecked())
+        tc.setType(TimeControl::T_Limit);
+    else if (ui.cbTournament->isChecked())
+        tc.setType(TimeControl::T_Tournament);
+    else
+        tc.setType(TimeControl::T_None);
+
+    tc.setDepthLimit(ui.cbLimitDepth->isChecked()? ui.limitDepth->value() : TimeControl::Unlimited);
+    tc.setNodeLimit(ui.cbLimitNodes->isChecked()? ui.limitNodes->value() : TimeControl::Unlimited);
+    tc.setTimeLimit(ui.cbLimitTime->isChecked()? getMSecs(*ui.limitTime) : TimeControl::Unlimited);
+
+    bool all1 = ui.cbAllMoves1->isChecked(),
+         all2 = ui.cbTime2->isChecked() && ui.cbAllMoves2->isChecked();
+    tc.setNumMoves1(all1? TimeControl::Unlimited : ui.moves1->value());
+    tc.setNumMoves2(all2? TimeControl::Unlimited : ui.moves2->value());
+    tc.setTimeForMoves1(getMSecs(*ui.time1));
+    tc.setTimeForMoves2(getMSecs(*ui.time2));
+    tc.setTimeAdd((!all1 && !all2)? getMSecs(*ui.time3) : 0);
+    tc.setTimeInc1(ui.cbTimeInc1->isChecked()? getMSecs(*ui.timeInc1) : 0);
+    tc.setTimeInc2(ui.cbTimeInc2->isChecked()? getMSecs(*ui.timeInc2) : 0);
+    tc.setTimeInc3(ui.cbTimeInc3->isChecked()? getMSecs(*ui.timeInc3) : 0);
+
+    ui.labelTC->setText(tc.humanReadable());
 }
+
 
 PreferencesDialog::~PreferencesDialog()
 {
@@ -326,6 +382,7 @@ void PreferencesDialog::slotApply()
 	emit reconfigure();
 }
 
+
 void PreferencesDialog::restoreSettings()
 {
     // Restore size
@@ -422,6 +479,44 @@ void PreferencesDialog::restoreSettings()
     ui.gameTextFontSizeSpin->setValue(AppSettings->value("/GameText/FontSize", DEFAULT_FONTSIZE).toInt());
     ui.spinBoxListFontSize->setValue(AppSettings->value("/General/ListFontSize", DEFAULT_LISTFONTSIZE).toInt());
     ui.verticalTabs->setChecked(AppSettings->getValue("/MainWindow/VerticalTabs").toBool());
+
+    // Time Control
+    AppSettings->beginGroup("/TimeControl/");
+    QString mode = AppSettings->getValue("mode").toString();
+    if (mode == timeControlTypeName[TimeControl::T_Match])
+        ui.cbMatchTime->setChecked(true);
+    else
+    if (mode == timeControlTypeName[TimeControl::T_Limit])
+        ui.cbLimit->setChecked(true);
+    else
+    if (mode == timeControlTypeName[TimeControl::T_Tournament])
+        ui.cbTournament->setChecked(true);
+    else
+        ui.cbFree->setChecked(true);
+
+    ui.cbAllMoves1->setChecked(AppSettings->getValue("allMoves1").toBool());
+    ui.cbAllMoves2->setChecked(AppSettings->getValue("allMoves2").toBool());
+    ui.moves1->setValue(AppSettings->getValue("numMoves1").toInt());
+    ui.moves2->setValue(AppSettings->getValue("numMoves2").toInt());
+    setTime(*ui.time1, AppSettings->getValue("timeForMoves1").toInt());
+    setTime(*ui.time2, AppSettings->getValue("timeForMoves2").toInt());
+    setTime(*ui.time3, AppSettings->getValue("timeAdd").toInt());
+    setTime(*ui.timeInc1, AppSettings->getValue("timeInc1").toInt());
+    setTime(*ui.timeInc2, AppSettings->getValue("timeInc2").toInt());
+    setTime(*ui.timeInc3, AppSettings->getValue("timeInc3").toInt());
+    ui.cbTimeInc1->setChecked(AppSettings->getValue("doTimeInc1").toBool());
+    ui.cbTimeInc2->setChecked(AppSettings->getValue("doTimeInc2").toBool());
+    ui.cbTimeInc3->setChecked(AppSettings->getValue("doTimeInc3").toBool());
+    ui.cbTime2->setChecked(AppSettings->getValue("doTime2").toBool());
+    setTime(*ui.limitTime, AppSettings->getValue("timeLimit").toInt());
+    ui.limitNodes->setValue(AppSettings->getValue("nodeLimit").toInt());
+    ui.limitDepth->setValue(AppSettings->getValue("depthLimit").toInt());
+    ui.cbLimitTime->setChecked(AppSettings->getValue("doTimeLimit").toBool());
+    ui.cbLimitNodes->setChecked(AppSettings->getValue("doNodeLimit").toBool());
+    ui.cbLimitDepth->setChecked(AppSettings->getValue("doDepthLimit").toBool());
+    AppSettings->endGroup();
+
+    slotTCEnable();
 }
 
 void PreferencesDialog::saveSettings()
@@ -466,6 +561,40 @@ void PreferencesDialog::saveSettings()
                << "backgroundColor" << "backgroundColor2";
 	saveColorList(ui.boardColorsList, colorNames);
 	AppSettings->endGroup();
+
+    // time control
+    AppSettings->beginGroup("/TimeControl/");
+    if (ui.cbMatchTime->isChecked())
+        AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Match]));
+    else
+    if (ui.cbLimit->isChecked())
+        AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Limit]));
+    else
+    if (ui.cbTournament->isChecked())
+        AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Tournament]));
+    else
+        AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_None]));
+    AppSettings->setValue("allMoves1", ui.cbAllMoves1->isChecked());
+    AppSettings->setValue("allMoves2", ui.cbAllMoves2->isChecked());
+    AppSettings->setValue("numMoves1", ui.moves1->value());
+    AppSettings->setValue("numMoves2", ui.moves2->value());
+    AppSettings->setValue("timeForMoves1", getMSecs(*ui.time1));
+    AppSettings->setValue("timeForMoves2", getMSecs(*ui.time2));
+    AppSettings->setValue("timeAdd", getMSecs(*ui.time3));
+    AppSettings->setValue("timeInc1", getMSecs(*ui.timeInc1));
+    AppSettings->setValue("timeInc2", getMSecs(*ui.timeInc2));
+    AppSettings->setValue("timeInc3", getMSecs(*ui.timeInc3));
+    AppSettings->setValue("doTimeInc1", ui.cbTimeInc1->isChecked());
+    AppSettings->setValue("doTimeInc2", ui.cbTimeInc2->isChecked());
+    AppSettings->setValue("doTimeInc3", ui.cbTimeInc3->isChecked());
+    AppSettings->setValue("doTime2", ui.cbTime2->isChecked());
+    AppSettings->setValue("timeLimit", getMSecs(*ui.limitTime));
+    AppSettings->setValue("nodeLimit", ui.limitNodes->value());
+    AppSettings->setValue("depthLimit", ui.limitDepth->value());
+    AppSettings->setValue("doTimeLimit", ui.cbLimitTime->isChecked());
+    AppSettings->setValue("doDepthLimit", ui.cbLimitDepth->isChecked());
+    AppSettings->setValue("doNodeLimit", ui.cbLimitNodes->isChecked());
+    AppSettings->endGroup();
 
 	// Save engine settings
 	updateEngineData(ui.engineList->currentIndex().row());  // Make sure current edits are saved

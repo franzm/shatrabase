@@ -13,6 +13,7 @@
 #include "common.h"
 #include "settings.h"
 #include "boardtheme.h"
+#include "timecontrol.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -191,6 +192,31 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/MainWindow/FilterFollowsGame", false);
     map.insert("/History/MaxEntries", 4);
 
+    // Time Control (TM) settings
+    map.insert("/TimeControl/mode", timeControlTypeName[TimeControl::T_None]);
+    map.insert("/TimeControl/allMoves1", false);
+    map.insert("/TimeControl/allMoves2", false);
+    map.insert("/TimeControl/numMoves1", 40);
+    map.insert("/TimeControl/numMoves2", 20);
+    map.insert("/TimeControl/timeForMoves1", 30*60*1000);
+    map.insert("/TimeControl/timeForMoves2", 10*60*1000);
+    map.insert("/TimeControl/timeInc1", 0);
+    map.insert("/TimeControl/timeInc2", 0);
+    map.insert("/TimeControl/timeInc3", 0);
+    map.insert("/TimeControl/timeAdd", 5*60*1000);
+    map.insert("/TimeControl/doTimeInc1", false);
+    map.insert("/TimeControl/doTimeInc2", false);
+    map.insert("/TimeControl/doTimeInc3", false);
+    map.insert("/TimeControl/doTime2", false);
+    map.insert("/TimeControl/timeAverage", 20*1000);
+    map.insert("/TimeControl/timeLimit", 20*1000);
+    map.insert("/TimeControl/nodeLimit", 10000000);
+    map.insert("/TimeControl/depthLimit", 6);
+    map.insert("/TimeControl/doTimeLimit", true);
+    map.insert("/TimeControl/doNodeLimit", false);
+    map.insert("/TimeControl/doDepthLimit", false);
+
+    // game settings: each player
     for (int i=1; i<=2; ++i)
     {
         map.insert(QString("/PlayGame/Player%1/engine").arg(i), "");

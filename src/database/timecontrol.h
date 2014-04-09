@@ -21,6 +21,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #ifndef TIMECONTROL_H
 #define TIMECONTROL_H
 
+#include <QObject>
+#include <QString>
+
+/** Names of TimeControl::Type
+    used for (re-)storing settings. */
+extern const char * timeControlTypeName[];
+
 /** Simple container for play time settings.
 
 mail 20140504-4:39pm
@@ -39,49 +46,71 @@ millisecs)
 
 
 */
-class TimeControl
+class TimeControl : public QObject /* for tr() */
 {
 public:
 
+    /** Order has to follow timeControlTypeName[] !! */
     enum Type
     {
-        /** No time limit at all */
+        /** Free play */
         T_None,
-        /** Average time per move */
-        T_Average,
-        /** timeAll() for numMoves() + timeAdd() + timeInc() per move */
-        T_All,
         /** Match opponent's time */
         T_Match,
         /** Limit time/nodes/depth */
-        T_Limit
+        T_Limit,
+        /**   timeForMoves1() with timeInc1() for numMoves1()
+         *  + timeForMoves2() with timeInc2() for numMoves2()
+         *  + timeAdd() with timeInc3() */
+        T_Tournament,
+        /** no valid type */
+        MaxTypes
     };
 
     enum { Unlimited = -1 };
 
-    TimeControl();
+    TimeControl(QObject * parent = 0);
+
+    // ------- strings ---------
+
+    /** Return humand readable description of current settings */
+    QString humanReadable() const;
+
+    /** Nice readable string */
+    QString msecToString(int msec) const;
 
     // --------- getter -------------
 
     /** Type of time control */
     Type type() const { return type_; }
 
-    /** Number of moves to complete in timeAll() */
-    int numMoves() const { return numMoves_; }
+    /** Number of moves to complete in timeForMoves1().
+        If Unlimited, all moves have to be completed in time. */
+    int numMoves1() const { return numMoves1_; }
 
-    /** Time (sec) to complete numMoves() */
-    int timeAll() const { return timeAll_; }
+    /** Number of moves to complete in timeForMoves2().
+        If Unlimited, all moves have to be completed in time. */
+    int numMoves2() const { return numMoves2_; }
 
-    /** Time (sec) to add after numMoves() */
+    /** Time (msec) to complete numMoves1() */
+    int timeForMoves1() const { return timeForMoves1_; }
+
+    /** Time (msec) to complete numMoves2() */
+    int timeForMoves2() const { return timeForMoves2_; }
+
+    /** Time (msec) to add after each move */
+    int timeInc1() const { return timeInc1_; }
+
+    /** Time (msec) to add after each move */
+    int timeInc2() const { return timeInc2_; }
+
+    /** Time (msec) to add after each move */
+    int timeInc3() const { return timeInc3_; }
+
+    /** Time (msec) to add after numMoves2() */
     int timeAdd() const { return timeAdd_; }
 
-    /** Time (sec) to add after each move */
-    int timeInc() const { return timeInc_; }
-
-    /** Average time (sec) per move */
-    int timeAverage() const { return timeAv_; }
-
-    /** Maximum time (sec) per move, or Unlimited */
+    /** Maximum time (msec) per move, or Unlimited */
     int timeLimit() const { return timeLimit_; }
 
     /** Maximum nodes per move, or Unlimited */
@@ -92,25 +121,34 @@ public:
 
     // ------- setter ---------------
 
-    void type(Type type) { type_ = type; }
-    void numMoves(int moves) { numMoves_ = moves; }
-    void timeAll(int sec) { timeAll_ = sec; }
-    void timeAdd(int sec) { timeAdd_ = sec; }
-    void timeInc(int sec) { timeInc_ = sec; }
-    void timeAverage(int sec) { timeAv_ = sec; }
-    void timeLimit(int sec) { timeLimit_ = sec; }
-    void nodeLimit(int nodes) { nodeLimit_ = nodes; }
-    void depthLimit(int depth) { depthLimit_ = depth; }
+    void setType(Type type) { type_ = type; }
+    void setNumMoves1(int moves) { numMoves1_ = moves; }
+    void setNumMoves2(int moves) { numMoves2_ = moves; }
+    void setTimeForMoves1(int msec) { timeForMoves1_ = msec; }
+    void setTimeForMoves2(int msec) { timeForMoves2_ = msec; }
+    void setTimeInc1(int msec) { timeInc1_ = msec; }
+    void setTimeInc2(int msec) { timeInc2_ = msec; }
+    void setTimeInc3(int msec) { timeInc3_ = msec; }
+    void setTimeAdd(int msec) { timeAdd_ = msec; }
+    void setTimeLimit(int msec) { timeLimit_ = msec; }
+    void setNodeLimit(int nodes) { nodeLimit_ = nodes; }
+    void setDepthLimit(int depth) { depthLimit_ = depth; }
+
+    /** Read from AppSettings */
+    void configure();
 
 private:
 
     Type type_;
 
-    int numMoves_,
-        timeAll_,
+    int numMoves1_,
+        numMoves2_,
+        timeForMoves1_,
+        timeForMoves2_,
+        timeInc1_,
+        timeInc2_,
+        timeInc3_,
         timeAdd_,
-        timeInc_,
-        timeAv_,
         timeLimit_,
         nodeLimit_,
         depthLimit_;

@@ -415,11 +415,11 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabAutoplay">
+     <widget class="QWidget" name="tabTimeControl">
       <attribute name="title">
        <string>Game</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_9">
+      <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
         <widget class="QRadioButton" name="cbFree">
          <property name="text">
@@ -428,69 +428,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="cbAverage">
+        <widget class="QRadioButton" name="cbMatchTime">
          <property name="text">
-          <string>Average time per move</string>
+          <string>Match opponent's move time</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_24">
-         <property name="spacing">
-          <number>6</number>
-         </property>
-         <item>
-          <widget class="QWidget" name="spacer_5" native="true">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>16777215</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_25">
-             <property name="spacing">
-              <number>6</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label_21">
-               <property name="text">
-                <string>Time</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTimeEdit" name="timeAv">
-               <property name="currentSection">
-                <enum>QDateTimeEdit::HourSection</enum>
-               </property>
-               <property name="displayFormat">
-                <string>h:mm:ss.zzz</string>
-               </property>
-               <property name="time">
-                <time>
-                 <hour>0</hour>
-                 <minute>0</minute>
-                 <second>0</second>
-                </time>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-        </layout>
        </item>
        <item>
         <widget class="QRadioButton" name="cbLimit">
@@ -629,9 +571,25 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <item>
+              <widget class="QCheckBox" name="cbAllMoves1">
+               <property name="text">
+                <string>All</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QLabel" name="label_15">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Moves</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -649,6 +607,9 @@
               <widget class="QLabel" name="label_14">
                <property name="text">
                 <string>Time</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -673,6 +634,19 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_15">
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item>
               <widget class="QCheckBox" name="cbTimeInc1">
                <property name="text">
@@ -704,18 +678,31 @@
         </layout>
        </item>
        <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_14">
          <item>
-          <widget class="QWidget" name="spacer_3" native="true">
+          <widget class="QWidget" name="spacer_4" native="true">
            <property name="minimumSize">
             <size>
-             <width>40</width>
+             <width>19</width>
              <height>30</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>19</width>
              <height>16777215</height>
             </size>
            </property>
@@ -735,13 +722,39 @@
           </widget>
          </item>
          <item>
+          <widget class="QWidget" name="spacer_3" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>15</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>15</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_16">
              <item>
+              <widget class="QCheckBox" name="cbAllMoves2">
+               <property name="text">
+                <string>All</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QLabel" name="label_16">
                <property name="text">
                 <string>Moves</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -759,6 +772,9 @@
               <widget class="QLabel" name="label_18">
                <property name="text">
                 <string>Time</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -783,6 +799,19 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_17">
+             <item>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item>
               <widget class="QCheckBox" name="cbTimeInc2">
                <property name="text">
@@ -814,33 +843,33 @@
         </layout>
        </item>
        <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_18">
          <item>
-          <widget class="QWidget" name="spacer_4" native="true">
+          <widget class="QWidget" name="spacer_5" native="true">
            <property name="minimumSize">
             <size>
-             <width>40</width>
+             <width>59</width>
              <height>30</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>60</width>
              <height>16777215</height>
             </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="cbTime3">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string/>
            </property>
           </widget>
          </item>
@@ -848,6 +877,19 @@
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_19">
+             <item>
+              <spacer name="horizontalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item>
               <widget class="QLabel" name="label_20">
                <property name="text">
@@ -876,6 +918,19 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_20">
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item>
               <widget class="QCheckBox" name="cbTimeInc3">
                <property name="text">
@@ -906,11 +961,45 @@
          </item>
         </layout>
        </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelTC">
+         <property name="maximumSize">
+          <size>
+           <width>520</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::NoTextInteraction</set>
+         </property>
+        </widget>
+       </item>
       </layout>
-      <zorder>cbFree</zorder>
-      <zorder>cbLimit</zorder>
-      <zorder>cbTournament</zorder>
-      <zorder>cbAverage</zorder>
      </widget>
      <widget class="QWidget" name="tabEngines">
       <attribute name="title">
