@@ -76,11 +76,12 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.notationAlgebraic, SIGNAL(clicked()), SLOT(slotAlgebraicNotation()));
 
     connect(ui.cbFree, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbMatchTime, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimit, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbTournament, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimitDepth, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimitTime, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimitNodes, SIGNAL(clicked()), SLOT(slotTCEnable()));
-    connect(ui.cbTournament, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTimeInc1, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTime2, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTimeInc2, SIGNAL(clicked()), SLOT(slotTCEnable()));
@@ -131,7 +132,7 @@ void PreferencesDialog::slotTCEnable()
     bool all1 = ui.cbAllMoves1->isChecked();
     bool all2 = ui.cbAllMoves2->isChecked();
     // sanity
-    bool tc3 = (!all1 && (ui.cbTime2->isChecked() || !all2));
+    bool tc3 = (!all1 && (!ui.cbTime2->isChecked() || !all2));
     if (all1)
         ui.cbTime2->setChecked(false);
     // 1
@@ -161,11 +162,14 @@ void PreferencesDialog::slotTCEnable()
 void PreferencesDialog::slotTCUpdate()
 {
     TimeControl tc;
+
     if (ui.cbMatchTime->isChecked())
         tc.setType(TimeControl::T_Match);
-    else if (ui.cbLimit->isChecked())
+    else
+    if (ui.cbLimit->isChecked())
         tc.setType(TimeControl::T_Limit);
-    else if (ui.cbTournament->isChecked())
+    else
+    if (ui.cbTournament->isChecked())
         tc.setType(TimeControl::T_Tournament);
     else
         tc.setType(TimeControl::T_None);
@@ -174,16 +178,18 @@ void PreferencesDialog::slotTCUpdate()
     tc.setNodeLimit(ui.cbLimitNodes->isChecked()? ui.limitNodes->value() : TimeControl::Unlimited);
     tc.setTimeLimit(ui.cbLimitTime->isChecked()? getMSecs(*ui.limitTime) : TimeControl::Unlimited);
 
-    bool all1 = ui.cbAllMoves1->isChecked(),
-         all2 = ui.cbTime2->isChecked() && ui.cbAllMoves2->isChecked();
+    bool tc2 = ui.cbTime2->isChecked(),
+         all1 = ui.cbAllMoves1->isChecked(),
+         all2 = ui.cbAllMoves2->isChecked(),
+         tc3 = !all1 && (!all2 || !tc2);
     tc.setNumMoves1(all1? TimeControl::Unlimited : ui.moves1->value());
-    tc.setNumMoves2(all2? TimeControl::Unlimited : ui.moves2->value());
+    tc.setNumMoves2(tc2? (all2? TimeControl::Unlimited : ui.moves2->value()) : 0);
     tc.setTimeForMoves1(getMSecs(*ui.time1));
     tc.setTimeForMoves2(getMSecs(*ui.time2));
-    tc.setTimeAdd((!all1 && !all2)? getMSecs(*ui.time3) : 0);
+    tc.setTimeAdd(tc3? getMSecs(*ui.time3) : 0);
     tc.setTimeInc1(ui.cbTimeInc1->isChecked()? getMSecs(*ui.timeInc1) : 0);
-    tc.setTimeInc2(ui.cbTimeInc2->isChecked()? getMSecs(*ui.timeInc2) : 0);
-    tc.setTimeInc3(ui.cbTimeInc3->isChecked()? getMSecs(*ui.timeInc3) : 0);
+    tc.setTimeInc2(ui.cbTimeInc2->isChecked() && tc2? getMSecs(*ui.timeInc2) : 0);
+    tc.setTimeInc3(ui.cbTimeInc3->isChecked() && tc3? getMSecs(*ui.timeInc3) : 0);
 
     ui.labelTC->setText(tc.humanReadable());
 }

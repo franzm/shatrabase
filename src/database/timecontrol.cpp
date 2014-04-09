@@ -108,6 +108,9 @@ void TimeControl::configure()
 
 QString TimeControl::msecToString(int msec) const
 {
+    if (msec <= 0)
+        return tr("0 sec");
+
     const int h = msec/60/60/1000,
               m = (msec/60/1000) % 60,
               s = (msec/1000) % 60;
@@ -182,7 +185,7 @@ QString TimeControl::humanReadable() const
     {
         QString s;
         if (numMoves1_ == Unlimited)
-            s += tr("All moves in %1").arg(msecToString(timeForMoves1_));
+            s += tr("Game in %1").arg(msecToString(timeForMoves1_));
         else
             s += tr("%1 moves in %2").arg(numMoves1_).arg(msecToString(timeForMoves1_));
         if (timeInc1_)
@@ -190,16 +193,19 @@ QString TimeControl::humanReadable() const
         if (numMoves1_ == Unlimited)
             return s;
 
-        if (numMoves2_ == Unlimited)
-            s += tr(", remaining moves in %1").arg(msecToString(timeForMoves2_));
-        else
-            s += tr(", %1 moves in %2").arg(numMoves2_).arg(msecToString(timeForMoves2_));
-        if (timeInc2_)
-            s += tr(" + %1 per move").arg(msecToString(timeInc2_));
-        if (numMoves2_ == Unlimited)
-            return s;
+        if (numMoves2_ != 0)
+        {
+            if (numMoves2_ == Unlimited)
+                s += tr(", remaining game in %1").arg(msecToString(timeForMoves2_));
+            else
+                s += tr(", %1 moves in %2").arg(numMoves2_).arg(msecToString(timeForMoves2_));
+            if (timeInc2_)
+                s += tr(" + %1 per move").arg(msecToString(timeInc2_));
+            if (numMoves2_ == Unlimited)
+                return s;
+        }
 
-        s += tr(", remaining moves in %1").arg(msecToString(timeAdd_));
+        s += tr(", remaining game in %1").arg(msecToString(timeAdd_));
         if (timeInc3_)
             s += tr(" + %1 per move").arg(msecToString(timeInc3_));
 

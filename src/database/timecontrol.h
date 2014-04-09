@@ -89,7 +89,8 @@ public:
     int numMoves1() const { return numMoves1_; }
 
     /** Number of moves to complete in timeForMoves2().
-        If Unlimited, all moves have to be completed in time. */
+        If Unlimited, all moves have to be completed in time.
+        If 0, this is not used and TimeAdd() kicks in. */
     int numMoves2() const { return numMoves2_; }
 
     /** Time (msec) to complete numMoves1() */
