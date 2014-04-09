@@ -58,6 +58,22 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.notationNumeric, SIGNAL(clicked()), SLOT(slotNumericNotation()));
     connect(ui.notationAlgebraic, SIGNAL(clicked()), SLOT(slotAlgebraicNotation()));
 
+    connect(ui.cbFree, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbAverage, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbLimit, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbLimitDepth, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbLimitTime, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbLimitNodes, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbTournament, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbTimeInc1, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbTime2, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbTimeInc2, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbTime3, SIGNAL(clicked()), SLOT(slotTCEnable()));
+    connect(ui.cbTimeInc3, SIGNAL(clicked()), SLOT(slotTCEnable()));
+
+    ui.cbFree->setChecked(true);
+    slotTCEnable();
+
     const QMap<QString,QString> lang = AppSettings->languages();
     for (QMap<QString,QString>::const_iterator i=lang.begin(); i!=lang.end(); ++i)
     {
@@ -70,6 +86,51 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
 	// Start off with no Engine selected
 	ui.engineEditWidget->setEnabled(false);
     ui.tabWidget->setCurrentIndex(s_lastIndex);
+
+    //connect(ui.tc1Time, SIGNAL(timeChanged(QTime)), SLOT(test()));
+}
+
+void PreferencesDialog::slotTCEnable()
+{
+    // average
+    bool on = ui.cbAverage->isChecked();
+    ui.timeAv->setEnabled(on);
+
+    // limit
+    on = ui.cbLimit->isChecked();
+    ui.cbLimitTime->setEnabled(on);
+    ui.cbLimitDepth->setEnabled(on);
+    ui.cbLimitNodes->setEnabled(on);
+    ui.limitTime->setEnabled(on && ui.cbLimitTime->isChecked());
+    ui.limitDepth->setEnabled(on && ui.cbLimitDepth->isChecked());
+    ui.limitNodes->setEnabled(on && ui.cbLimitNodes->isChecked());
+
+    // tournament
+    on = ui.cbTournament->isChecked();
+    ui.moves1->setEnabled(on);
+    ui.time1->setEnabled(on);
+    ui.cbTimeInc1->setEnabled(on);
+    ui.timeInc1->setEnabled(on && ui.cbTimeInc1->isChecked());
+    // 2
+    ui.cbTime2->setEnabled(on);
+    bool on1 = on & ui.cbTime2->isChecked();
+    ui.moves2->setEnabled(on1);
+    ui.time2->setEnabled(on1);
+    ui.cbTimeInc2->setEnabled(on1);
+    ui.timeInc2->setEnabled(on1 && ui.cbTimeInc2->isChecked());
+    // 3
+    ui.cbTime3->setEnabled(on);
+    on1 = on & ui.cbTime3->isChecked();
+    ui.time3->setEnabled(on1);
+    ui.cbTimeInc3->setEnabled(on1);
+    ui.timeInc3->setEnabled(on1 && ui.cbTimeInc3->isChecked());
+}
+
+
+void PreferencesDialog::test()
+{
+    //QTime t = ui.tc1Time->time();
+    //qDebug() << (((t.hour() * 60 + t.minute()) * 60 + t.second()) * 1000) + t.msec();
 }
 
 PreferencesDialog::~PreferencesDialog()

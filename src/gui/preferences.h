@@ -61,6 +61,12 @@ public slots:
     void slotAlgebraicNotation();
 
     void slotShowLanguageMessage();
+
+    void test();
+
+    /** Enable/Disable the time control widgets */
+    void slotTCEnable();
+
 protected:
 	/* Overridden to save size */
     virtual void closeEvent(QCloseEvent* e);

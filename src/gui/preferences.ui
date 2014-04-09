@@ -421,14 +421,14 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="QRadioButton" name="radioButton">
+        <widget class="QRadioButton" name="cbFree">
          <property name="text">
           <string>Free play</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_4">
+        <widget class="QRadioButton" name="cbAverage">
          <property name="text">
           <string>Average time per move</string>
          </property>
@@ -465,17 +465,24 @@
              <item>
               <widget class="QLabel" name="label_21">
                <property name="text">
-                <string>seconds</string>
+                <string>Time</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_4">
-               <property name="minimum">
-                <number>1</number>
+              <widget class="QTimeEdit" name="timeAv">
+               <property name="currentSection">
+                <enum>QDateTimeEdit::HourSection</enum>
                </property>
-               <property name="maximum">
-                <number>36000</number>
+               <property name="displayFormat">
+                <string>h:mm:ss.zzz</string>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
                </property>
               </widget>
              </item>
@@ -486,7 +493,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_2">
+        <widget class="QRadioButton" name="cbLimit">
          <property name="text">
           <string>Time / Nodes / Depth per Move</string>
          </property>
@@ -521,19 +528,26 @@
               <number>6</number>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox">
+              <widget class="QCheckBox" name="cbLimitTime">
                <property name="text">
-                <string>Limit Time (seconds)</string>
+                <string>Limit Time</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox">
-               <property name="minimum">
-                <number>1</number>
+              <widget class="QTimeEdit" name="limitTime">
+               <property name="currentSection">
+                <enum>QDateTimeEdit::HourSection</enum>
                </property>
-               <property name="maximum">
-                <number>36000</number>
+               <property name="displayFormat">
+                <string>h:mm:ss.zzz</string>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
                </property>
               </widget>
              </item>
@@ -542,14 +556,14 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
-              <widget class="QCheckBox" name="checkBox_2">
+              <widget class="QCheckBox" name="cbLimitNodes">
                <property name="text">
                 <string>Limit Nodes</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_2">
+              <widget class="QSpinBox" name="limitNodes">
                <property name="minimum">
                 <number>1</number>
                </property>
@@ -563,14 +577,14 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_11">
              <item>
-              <widget class="QCheckBox" name="checkBox_3">
+              <widget class="QCheckBox" name="cbLimitDepth">
                <property name="text">
                 <string>Limit Depth</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_3">
+              <widget class="QSpinBox" name="limitDepth">
                <property name="minimum">
                 <number>1</number>
                </property>
@@ -586,7 +600,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_3">
+        <widget class="QRadioButton" name="cbTournament">
          <property name="text">
           <string>Tournament</string>
          </property>
@@ -615,28 +629,14 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <item>
-              <widget class="QLabel" name="label_14">
-               <property name="text">
-                <string>Total time</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTimeEdit" name="timeEdit">
-               <property name="displayFormat">
-                <string>h:mm:ss</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QLabel" name="label_15">
                <property name="text">
-                <string>per moves</string>
+                <string>Moves</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_7">
+              <widget class="QSpinBox" name="moves1">
                <property name="minimum">
                 <number>1</number>
                </property>
@@ -645,21 +645,27 @@
                </property>
               </widget>
              </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_14">
              <item>
-              <widget class="QCheckBox" name="checkBox_5">
+              <widget class="QLabel" name="label_14">
                <property name="text">
-                <string>Additonal time</string>
+                <string>Time</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QTimeEdit" name="timeEdit_2">
+              <widget class="QTimeEdit" name="time1">
+               <property name="currentSection">
+                <enum>QDateTimeEdit::HourSection</enum>
+               </property>
                <property name="displayFormat">
-                <string>h:mm:ss</string>
+                <string>h:mm:ss.zzz</string>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
                </property>
               </widget>
              </item>
@@ -668,22 +674,26 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_15">
              <item>
-              <widget class="QCheckBox" name="checkBox_6">
+              <widget class="QCheckBox" name="cbTimeInc1">
                <property name="text">
-                <string>Time increment (seconds)</string>
+                <string>Time increment</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_6">
-               <property name="minimum">
-                <number>0</number>
+              <widget class="QTimeEdit" name="timeInc1">
+               <property name="currentSection">
+                <enum>QDateTimeEdit::HourSection</enum>
                </property>
-               <property name="maximum">
-                <number>3600</number>
+               <property name="displayFormat">
+                <string>h:mm:ss.zzz</string>
                </property>
-               <property name="value">
-                <number>0</number>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
                </property>
               </widget>
              </item>
@@ -694,28 +704,213 @@
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+        <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <item>
+          <widget class="QWidget" name="spacer_3" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>40</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbTime2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_16">
+             <item>
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>Moves</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="moves2">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_18">
+               <property name="text">
+                <string>Time</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTimeEdit" name="time2">
+               <property name="currentSection">
+                <enum>QDateTimeEdit::HourSection</enum>
+               </property>
+               <property name="displayFormat">
+                <string>h:mm:ss.zzz</string>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_17">
+             <item>
+              <widget class="QCheckBox" name="cbTimeInc2">
+               <property name="text">
+                <string>Time increment</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTimeEdit" name="timeInc2">
+               <property name="currentSection">
+                <enum>QDateTimeEdit::HourSection</enum>
+               </property>
+               <property name="displayFormat">
+                <string>h:mm:ss.zzz</string>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_18">
+         <item>
+          <widget class="QWidget" name="spacer_4" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>40</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbTime3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_19">
+             <item>
+              <widget class="QLabel" name="label_20">
+               <property name="text">
+                <string>Additional time</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTimeEdit" name="time3">
+               <property name="currentSection">
+                <enum>QDateTimeEdit::HourSection</enum>
+               </property>
+               <property name="displayFormat">
+                <string>h:mm:ss.zzz</string>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_20">
+             <item>
+              <widget class="QCheckBox" name="cbTimeInc3">
+               <property name="text">
+                <string>Time increment</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTimeEdit" name="timeInc3">
+               <property name="currentSection">
+                <enum>QDateTimeEdit::HourSection</enum>
+               </property>
+               <property name="displayFormat">
+                <string>h:mm:ss.zzz</string>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
       </layout>
-      <zorder>radioButton</zorder>
-      <zorder>radioButton_2</zorder>
-      <zorder>horizontalLayoutWidget_2</zorder>
-      <zorder>radioButton_3</zorder>
-      <zorder>horizontalLayoutWidget_5</zorder>
-      <zorder></zorder>
-      <zorder>verticalSpacer_2</zorder>
-      <zorder>radioButton_4</zorder>
-      <zorder>horizontalLayoutWidget_6</zorder>
+      <zorder>cbFree</zorder>
+      <zorder>cbLimit</zorder>
+      <zorder>cbTournament</zorder>
+      <zorder>cbAverage</zorder>
      </widget>
      <widget class="QWidget" name="tabEngines">
       <attribute name="title">
