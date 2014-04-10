@@ -161,6 +161,8 @@ private:
     QList<Move> plyQue_;
 
     bool playing_,
+    /* Player is within a multi capture sequence */
+        //playerMultiPly_,
     /** Ignore the next answer from Engine */
         ignoreAnswer_,
     /** Flag used when first player is Engine */

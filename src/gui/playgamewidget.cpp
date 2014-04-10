@@ -199,6 +199,7 @@ void PlayGameWidget::start_()
 
     playing_ = true;
     ignoreAnswer_ = false;
+    //playerMultiPly_ = false;
 
     // first player is engine? - then go
     // XXX not really working right now
@@ -349,22 +350,30 @@ void PlayGameWidget::setPosition(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::setPosition() plyQue_.size()=" << plyQue_.size());
 
+    qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
+
     if (!playing_) return;
 
-    tc_.endMove();
+
+//    if (lastStm_ != board.toMove())
+    {
+        // player's move ended
+        tc_.endMove();
+    }
+
+    lastStm_ = board.toMove();
 
     // check if last player move ended game
     // (Win/Lose will be checked after move animation ended)
     if (checkGameResult_(board, false, false))
         return;
 
-    lastStm_ = board.toMove();
-
     // White is next
     if (board.toMove() == White)
     {
         setWidgetsPlayer_(White);
 
+        // start engine
         if (play_->player1IsEngine())
         {
             blinkTimer_.start();
@@ -372,13 +381,13 @@ void PlayGameWidget::setPosition(const Board& board)
             tc_.startMove();
         }
 
-        //startTiming_(White);
     }
     // Black is next
     else
     {
         setWidgetsPlayer_(Black);
 
+        // start engine
         if (play_->player2IsEngine())
         {
             blinkTimer_.start();
@@ -386,8 +395,8 @@ void PlayGameWidget::setPosition(const Board& board)
             tc_.startMove();
         }
 
-        //startTiming_(Black);
     }
+
 }
 
 
@@ -395,8 +404,12 @@ void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
 
+    qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
+
     if (plyQue_.empty())
+    {
         tc_.endMove();
+    }
 
     blinkTimer_.stop();
 
@@ -423,10 +436,12 @@ void PlayGameWidget::animationFinished(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
 
+    qDebug() << "PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size();
+
     if (!playing_)
         return;
 
-    // more plies in the que?
+    // more plies in the que? (means engine move last)
     if (!plyQue_.empty())
     {
         // we sent that one before
@@ -445,7 +460,10 @@ void PlayGameWidget::animationFinished(const Board& board)
         setWidgetsPlayer_(oppositeColor(lastStm_));
 
         if (!ended)
+        {
+            // start player
             tc_.startMove();
+        }
     }
 
 }

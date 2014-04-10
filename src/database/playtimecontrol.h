@@ -72,8 +72,9 @@ public slots:
     void startMove();
 
     /** The current stm has finished it's move.
-     *  Manages totalTime, stm and move count.
-     *  Also returns the move-time in millisecs.
+     *  Manages totalTime and moveTime.
+     *  Adds any time increment and manages stm and move count.
+     *  Returns the move-time in millisecs.
      *  timeOut() might be emitted. */
     int endMove();
 

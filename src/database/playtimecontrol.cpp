@@ -35,7 +35,8 @@ PlayTimeControl::PlayTimeControl(QObject *parent) :
 
 bool PlayTimeControl::isTimeout() const
 {
-    return totalTime_[stm_] <= 0;
+    return type() == T_Tournament
+        && totalTime_[stm_] <= 0;
 }
 
 
@@ -50,7 +51,7 @@ void PlayTimeControl::slotTimer_()
     emit timeUpdated();
 
     // timeout?
-    if (totalTime_[stm_] <= 0)
+    if (isTimeout())
     {
         didSendTimeOut_ = true;
         emit timeOut(stm_);
@@ -58,7 +59,10 @@ void PlayTimeControl::slotTimer_()
     }
 
     // restart timer
-    timer_.setInterval(std::min(1000, totalTime_[stm_]));
+    if (type() == T_Tournament)
+        timer_.setInterval(std::min(1000, totalTime_[stm_]));
+    else
+        timer_.setInterval(1000);
     timer_.start();
 }
 
@@ -79,7 +83,7 @@ void PlayTimeControl::startMove()
 {
     qDebug() << "StartMove(" << move_ << "): " << (stm_? "Black" : "White");
 
-    Q_ASSERT(!moving_);
+    //Q_ASSERT(!moving_);
 
     didSendTimeOut_ = false;
     moving_ = true;
@@ -89,9 +93,13 @@ void PlayTimeControl::startMove()
     emit timeUpdated();
 
     // init timer to total time left but at most every second
-    timer_.setInterval(std::min(1000, totalTime_[stm_]));
-    timer_.start();
+    if (type() == T_Tournament)
+        timer_.setInterval(std::min(1000, totalTime_[stm_]));
+    else
+    // simply update movetime, don't count total time
+        timer_.setInterval(1000);
 
+    timer_.start();
     messure_.start();
 }
 
