@@ -87,6 +87,8 @@ public:
     bool isFlipped() const { return m_flipped; }
     void setFlipped(bool flipped) { m_flipped = flipped; onFlip_(); }
 
+    bool isAnimating() const { return m_animating; }
+
     // --------- board/pieces --------
 
     /** Updates/creates the board pieces, and performs the animation if
@@ -216,6 +218,8 @@ protected:
         m_anim_length,
     /** current animation from 0 to 1 */
         m_anim_t;
+
+    bool m_animating;
 
     Decoration m_deco;
 

@@ -202,6 +202,9 @@ public:
 
 
 
+
+
+
 // ---------------------------- BoardPainter -----------------------
 
 
@@ -228,7 +231,8 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_fixed_anim_length(1),
     m_use_fixed_anim_length(0),
     m_anim_length   (1),
-    m_anim_t        (0)
+    m_anim_t        (0),
+    m_animating     (false)
 {    
 //    qDebug() << "BoardPainter" << this;
     setScene(m_scene);
@@ -744,11 +748,13 @@ void BoardPainter::startAnimation_(Square from, Square to)
     m_anim_length = length_from_speed * (1.0-t) + t * (m_fixed_anim_length);
 
     m_anim_t = 0;
+    m_animating = true;
     m_timer.start();
 }
 
 void BoardPainter::stopAnimation_()
 {
+    m_animating = false;
     m_timer.stop();
 
     // set pieces to final positions (to be safe)

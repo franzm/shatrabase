@@ -132,7 +132,8 @@ private:
     /** Updates widgets according to who's an Engine */
     void updateEngineWidgets_();
 
-    /** Checks Game result and talks with MainWindow */
+    /** Checks Game result and talks with MainWindow.
+        Returns if game ended. */
     bool checkGameResult_(const Board&, bool triggerWinSignals, bool doStop);
 
     // ---- config ---

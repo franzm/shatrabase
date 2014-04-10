@@ -794,6 +794,8 @@ QRect BoardView::squareRect(Square square)
 */
 bool BoardView::canDrag(Square s)
 {
+    if (m_view->isAnimating())
+        return false;
     //if (m_dragged != InvalidPiece) // already dragging
     //    return false;
     if ((m_flags & F_DisableWhite) && m_board.toMove() == White)

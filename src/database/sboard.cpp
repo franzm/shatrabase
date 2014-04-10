@@ -974,9 +974,9 @@ Move SBoard::parseMove(const QString& algebraic)
         if (c == '=' || c == '(') c = *s++; // allow for "=Q" & "(Q)"
         switch (c)
         {
-        case 'Q': type = Batyr; break;
-        case 'R': type = Tura; break;
-        case 'B': type = Yalkyn; break;
+        case 'q': case 'Q': type = Batyr; break;
+        case 'r': case 'R': type = Tura; break;
+        case 'b': case 'B': type = Yalkyn; break;
         default: return move;
         }
     }

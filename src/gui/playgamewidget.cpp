@@ -424,12 +424,13 @@ void PlayGameWidget::animationFinished(const Board& board)
         }
 
         // check if last engine move ended game
-        checkGameResult_(board, true, true);
+        const bool ended = checkGameResult_(board, true, true);
 
         // switch to other player
         setWidgetsPlayer_(oppositeColor(lastStm_));
-        tc_.startMove();
-        //startTiming_(oppositeColor(lastStm_));
+
+        if (!ended)
+            tc_.startMove();
     }
 
 }
