@@ -18,15 +18,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 ****************************************************************************/
 
+#include <QMessageBox>
+#include <QDate>
+
 #include "playgamewidget.h"
 #include "ui_playgame.h"
 #include "settings.h"
 #include "enginelist.h"
 #include "playgame.h"
 #include "playgameenginedialog.h"
-
-#include <QMessageBox>
-#include <QDate>
 
 PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     QWidget         (parent),
@@ -45,13 +45,14 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     setObjectName("PlayGameWidget");
     setWindowTitle(tr("Player selection"));
 
+    // blink timer
     blinkTimer_.setSingleShot(false);
     blinkTimer_.setInterval(blinkInterval_);
     connect(&blinkTimer_, SIGNAL(timeout()), SLOT(slotBlinkTimer_()));
 
-    timer_.setSingleShot(false);
-    timer_.setInterval(1000);
-    connect(&timer_, SIGNAL(timeout()), SLOT(slotTimer_()));
+    // Time Control (TM)
+    connect(&tc_, SIGNAL(timeUpdated()), SLOT(slotUpdateClocks_()));
+    connect(&tc_, SIGNAL(timeOut(int)), SLOT(slotTimeout_(int)));
 
     // ------- setup ui ------
 
@@ -138,6 +139,7 @@ void PlayGameWidget::slotReconfigure()
         ui_->engineCombo2->setCurrentIndex(0);
 
     updateEngineWidgets_();
+    initTiming_();
 }
 
 void PlayGameWidget::updateEngineWidgets_()
@@ -212,7 +214,7 @@ void PlayGameWidget::start_()
     play_->activate();
 
     initTiming_();
-    startTiming_(White);
+    tc_.startMove();
 }
 
 void PlayGameWidget::continue_()
@@ -224,7 +226,7 @@ void PlayGameWidget::continue_()
     ignoreAnswer_ = false;
 
     play_->activate();
-    startTiming_(lastStm_);
+    //XXX tc_.startMove();
 
     emit continueGame();
 
@@ -233,14 +235,15 @@ void PlayGameWidget::continue_()
 
 void PlayGameWidget::stop()
 {
-    stopTiming_();
+    if (tc_.isMoving())
+        tc_.endMove();
     setWidgetsPlaying_(playing_ = false);
     play_->deactivate();
 }
 
 void PlayGameWidget::stopThinking()
 {
-    stopTiming_();
+    tc_.endMove();
     ignoreAnswer_ = true;
     blinkTimer_.stop();
     play_->deactivate();
@@ -248,7 +251,7 @@ void PlayGameWidget::stopThinking()
 
 void PlayGameWidget::pause_()
 {
-    stopTiming_();
+    tc_.endMove();
     setWidgetsPlaying_(playing_ = false);
     play_->deactivate();
 
@@ -333,6 +336,8 @@ void PlayGameWidget::setPosition(const Board& board)
 
     if (!playing_) return;
 
+    tc_.endMove();
+
     // check if last player move ended game
     // (Win/Lose will be checked after move animation ended)
     if (checkGameResult_(board, false, false))
@@ -349,9 +354,10 @@ void PlayGameWidget::setPosition(const Board& board)
         {
             blinkTimer_.start();
             play_->setPosition(board);
+            tc_.startMove();
         }
 
-        startTiming_(White);
+        //startTiming_(White);
     }
     // Black is next
     else
@@ -362,9 +368,10 @@ void PlayGameWidget::setPosition(const Board& board)
         {
             blinkTimer_.start();
             play_->setPosition(board);
+            tc_.startMove();
         }
 
-        startTiming_(Black);
+        //startTiming_(Black);
     }
 }
 
@@ -373,7 +380,9 @@ void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
 
-    stopTiming_();
+    if (plyQue_.empty())
+        tc_.endMove();
+
     blinkTimer_.stop();
 
     // Stopped playing while Engine was thinking?
@@ -419,7 +428,8 @@ void PlayGameWidget::animationFinished(const Board& board)
 
         // switch to other player
         setWidgetsPlayer_(oppositeColor(lastStm_));
-        startTiming_(oppositeColor(lastStm_));
+        tc_.startMove();
+        //startTiming_(oppositeColor(lastStm_));
     }
 
 }
@@ -456,6 +466,8 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
     return end;
 }
 
+
+
 void PlayGameWidget::slotBlinkTimer_()
 {
     QLed * led = (activeLed_ == 0)? ui_->led1 : ui_->led2;
@@ -464,55 +476,42 @@ void PlayGameWidget::slotBlinkTimer_()
                           colorEngine1_ : colorEngine0_);
 }
 
-
-void PlayGameWidget::slotTimer_()
+void PlayGameWidget::slotTimeout_(int stm)
 {
-    /*
-    if (timeStm_ == White)
+    // XXX This is all crap (alles Quark)
+
+    if (stm == 0 && !play_->player1IsEngine())
     {
-        moveTime1_++;
-        totalTime1_--;
-        ui_->clock1->setTime(totalTime1_, moveTime1_);
+        stop();
+        emit playerLoses();
     }
-    else if (timeStm_ == Black)
+    else
+    if (stm == 1 && play_->player2IsEngine())
     {
-        moveTime2_++;
-        totalTime2_--;
-        ui_->clock2->setTime(totalTime2_, moveTime2_);
+        stop();
+        emit playerWins();
     }
-    */
+    else
+        Q_ASSERT(!"XXX engine/engine not supported");
+}
+
+void PlayGameWidget::slotUpdateClocks_()
+{
+    ui_->clock1->setTime(tc_.getTotalTime(White), tc_.getMoveTime(White));
+    ui_->clock2->setTime(tc_.getTotalTime(Black), tc_.getMoveTime(Black));
 }
 
 void PlayGameWidget::initTiming_()
 {
-    /*
-    timeMove_ = 1;
+    // clock visibility
+    bool
+        showTotal = tc_.totalTimeAtStart() != TimeControl::Unlimited,
+        showMove = tc_.type() == TimeControl::T_Match
+                || tc_.type() == TimeControl::T_Tournament;
 
-    if (tc_.totalTimeAtStart() == TimeControl::Unlimited)
-    {
-        ui_->clock1->setVisible(false, true);
-        ui_->clock2->setVisible(false, true);
-    }
-    else
-    {
-        ui_->clock1->setVisible(true, true);
-        ui_->clock2->setVisible(true, true);
-    }
+    ui_->clock1->setVisible(showTotal, showMove);
+    ui_->clock2->setVisible(showTotal, showMove);
 
-    totalTime1_ = totalTime2_ = tc_.totalTimeAtStart();
-    moveTime1_ = moveTime2_ = 0;
-    ui_->clock1->setTime(totalTime1_, moveTime1_);
-    ui_->clock2->setTime(totalTime2_, moveTime2_);
-    */
+    tc_.start();
 }
 
-void PlayGameWidget::startTiming_(int stm)
-{
-    timeStm_ = stm;
-    timer_.start();
-}
-
-void PlayGameWidget::stopTiming_()
-{
-    timer_.stop();
-}

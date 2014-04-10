@@ -33,13 +33,35 @@ class PlayTimeControl : public TimeControl
 public:
     explicit PlayTimeControl(QObject *parent = 0);
 
+    // ---- state getter ----
+
+    /** Return current side to move */
+    int toMove() const { return stm_; }
+
+    bool isMoving() const { return moving_; }
+
     /** Is current stm out of time? */
     bool isTimeout() const;
 
+    /** Current move number.
+     *  Starts at 1, increments when stm == startStm in endMove() */
+    int getMove() const { return move_; }
+
+    /** Returns total time (msec) left for either player.
+     *  Might be TimeControl::Unlimited */
+    int getTotalTime(int stm) const { return totalTime_[stm]; }
+
+    /** Returns last move's time (msec) for either player. */
+    int getMoveTime(int stm) const { return moveTime_[stm]; }
+
 signals:
 
-    /** The side to move has timed out */
+    /** Send when the side to move has timed out */
     void timeOut(int stm);
+
+    /** Send every second during move,
+     *  getTotalTime() and getMoveTime() will give the actual timings. */
+    void timeUpdated();
 
 public slots:
 
@@ -50,9 +72,15 @@ public slots:
     void startMove();
 
     /** The current stm has finished it's move.
-     *  Changes stm and move count */
-    void endMove();
+     *  Manages totalTime, stm and move count.
+     *  Also returns the move-time in millisecs.
+     *  timeOut() might be emitted. */
+    int endMove();
 
+private slots:
+
+    /** callback from timeout timer */
+    void slotTimer_();
 
 private:
 
@@ -67,8 +95,13 @@ private:
     /** current move time */
         moveTime_[2];
 
+    bool moving_,
+         didSendTimeOut_;
+
     QTime messure_;
     QTimer timer_;
+
+    int taken_;
 };
 
 #endif // PLAYTIMECONTROL_H

@@ -451,6 +451,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 	{
         Square s = squareAt(event->pos());
 
+        // status message on square
         if (s != InvalidSquare)
             displayMessage(squareToString_(s));
         else

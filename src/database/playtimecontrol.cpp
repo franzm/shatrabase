@@ -18,43 +18,108 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 ****************************************************************************/
 
+#include <algorithm>
+
+#include <QDebug>
+
 #include "playtimecontrol.h"
 
 PlayTimeControl::PlayTimeControl(QObject *parent) :
-    TimeControl(parent)
+    TimeControl     (parent),
+    moving_         (false),
+    didSendTimeOut_ (false)
 {
+    timer_.setSingleShot(true);
+    connect(&timer_, SIGNAL(timeout()), SLOT(slotTimer_()));
+}
 
+bool PlayTimeControl::isTimeout() const
+{
+    return totalTime_[stm_] <= 0;
+}
+
+
+void PlayTimeControl::slotTimer_()
+{
+    // update running state
+    totalTime_[stm_] -= timer_.interval();
+    moveTime_[stm_] += timer_.interval();
+    // remember how much is messure already
+    taken_ += timer_.interval();
+
+    emit timeUpdated();
+
+    // timeout?
+    if (totalTime_[stm_] <= 0)
+    {
+        didSendTimeOut_ = true;
+        emit timeOut(stm_);
+        return;
+    }
+
+    // restart timer
+    timer_.setInterval(std::min(1000, totalTime_[stm_]));
+    timer_.start();
 }
 
 void PlayTimeControl::start(int stm)
 {
+    // just init everything
+
     startStm_ = stm_ = stm;
     move_ = 1;
 
     totalTime_[0] = totalTime_[1] = totalTimeAtStart();
     moveTime_[0] = moveTime_[1] = 0;
+
+    emit timeUpdated();
 }
 
 void PlayTimeControl::startMove()
 {
-    // init timer to total time left
-    timer_.setInterval(totalTime_[stm_]);
+    qDebug() << "StartMove(" << move_ << "): " << (stm_? "Black" : "White");
+
+    Q_ASSERT(!moving_);
+
+    didSendTimeOut_ = false;
+    moving_ = true;
+    taken_ = 0;
+
+    moveTime_[stm_] = 0;
+    emit timeUpdated();
+
+    // init timer to total time left but at most every second
+    timer_.setInterval(std::min(1000, totalTime_[stm_]));
     timer_.start();
 
     messure_.start();
 }
 
-void PlayTimeControl::endMove()
+int PlayTimeControl::endMove()
 {
-    int e = messure_.elapsed();
+    int e = moveTime_[stm_] = messure_.elapsed();
+
+    qDebug() << "EndMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
+
+    Q_ASSERT(moving_);
+
+    timer_.stop();
+    moving_ = false;
 
     // remove time of move
-    totalTime_[stm_] -= e;
+    totalTime_[stm_] -= (e - taken_);
+    moveTime_[stm_] = e;
+    taken_ = 0;
 
-    if (totalTime_[stm_] < 0)
+    emit timeUpdated();
+
+    // check time-out
+    // (should have been handled by timer_ though)
+    if (isTimeout() && !didSendTimeOut_)
     {
+        didSendTimeOut_ = true;
         emit timeOut(stm_);
-        return;
+        return e;
     }
 
     // add bonus time
@@ -66,14 +131,7 @@ void PlayTimeControl::endMove()
 
     if (stm_ == startStm_)
         move_++;
+
+    return e;
 }
 
-/*
-    40 in 100
-
-*/
-
-bool PlayTimeControl::isTimeout() const
-{
-    return totalTime_[stm_] <= 0;
-}

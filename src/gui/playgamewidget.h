@@ -23,10 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <QWidget>
 #include <QList>
-#include <QTimer>
 
 #include "board.h"
-#include "timecontrol.h"
+#include "playtimecontrol.h"
 #include "qled.h"
 
 class Board;
@@ -110,7 +109,8 @@ private slots:
     void slotConfig2Clicked_();
 
     void slotBlinkTimer_();
-    void slotTimer_();
+    void slotUpdateClocks_();
+    void slotTimeout_(int stm);
 
     /** Starts new game */
     void start_();
@@ -124,8 +124,6 @@ private slots:
 private:
 
     void initTiming_();
-    void startTiming_(int stm);
-    void stopTiming_();
 
     /** Updates widgets */
     void setWidgetsPlayer_(int stm);
@@ -167,9 +165,7 @@ private:
 
     // ---- time control ----
 
-    QTimer timer_;
-
-    TimeControl tc_;
+    PlayTimeControl tc_;
 
     /** Move (incremented when White's turn) */
     int timeMove_,
