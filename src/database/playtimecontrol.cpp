@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 PlayTimeControl::PlayTimeControl(QObject *parent) :
     TimeControl(parent)
 {
+
 }
 
 void PlayTimeControl::start(int stm)
@@ -36,6 +37,10 @@ void PlayTimeControl::start(int stm)
 
 void PlayTimeControl::startMove()
 {
+    // init timer to total time left
+    timer_.setInterval(totalTime_[stm_]);
+    timer_.start();
+
     messure_.start();
 }
 

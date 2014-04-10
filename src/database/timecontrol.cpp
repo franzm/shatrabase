@@ -78,20 +78,17 @@ void TimeControl::configure()
     if (!AppSettings->getValue("doTimeInc1").toBool())
         timeInc1_ = 0;
     if (!AppSettings->getValue("doTimeInc2").toBool())
-        timeInc1_ = 0;
+        timeInc2_ = 0;
     if (!AppSettings->getValue("doTimeInc3").toBool())
-        timeInc1_ = 0;
+        timeInc3_ = 0;
     if (!AppSettings->getValue("doTime2").toBool())
     {
         numMoves2_ = 0;
         timeForMoves2_ = 0;
         timeInc2_ = 0;
     }
-    if (!AppSettings->getValue("doTime3").toBool())
-    {
+    if (numMoves1_ == Unlimited || numMoves2_ == Unlimited)
         timeAdd_ = 0;
-        timeInc3_ = 0;
-    }
 
     timeLimit_ = AppSettings->getValue("timeLimit").toInt();
     nodeLimit_ = AppSettings->getValue("nodeLimit").toInt();

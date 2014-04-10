@@ -25,7 +25,7 @@
   * save maximized state but keep default pos/size
 - OK fix board sometimes off (animation/autoplay)
 
-* win animation
+* AutoPlayerInterval should match Board animation
 
 -- gameplay --
 
@@ -39,6 +39,7 @@
   * draw
 * disable Engine thinking when jumping in gametext
 * add autoAddGameAndContinue option
+* win animation
 
 -- board setup --
 

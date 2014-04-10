@@ -30,12 +30,11 @@ extern const char * timeControlTypeName[];
 
 /** Simple container for play time settings.
 
-   start 50
-   move  -5
-
+   It's a QObject more or less for tr()
+   and because derived PlayTimeControl sends signals.
 
 */
-class TimeControl : public QObject /* for tr() */
+class TimeControl : public QObject
 {
     Q_OBJECT
 public:

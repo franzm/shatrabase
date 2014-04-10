@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #define PLAYTIMECONTROL_H
 
 #include <QTime>
+#include <QTimer>
 
 #include "timecontrol.h"
 
@@ -67,6 +68,7 @@ private:
         moveTime_[2];
 
     QTime messure_;
+    QTimer timer_;
 };
 
 #endif // PLAYTIMECONTROL_H
