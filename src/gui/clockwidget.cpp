@@ -48,13 +48,28 @@ QLCDNumber * ClockWidget::newLcd_()
     QLCDNumber * n = new QLCDNumber(this);
 
     const int s = 14;
-    n->setFixedSize(s*7,s*2);
+    n->setFixedSize(s*9,s*3);//s*7,s*2
     n->setDigitCount(7);
     n->setSegmentStyle(QLCDNumber::Filled);
     n->setMode(QLCDNumber::Dec);
     n->setAutoFillBackground(true);
 
     return n;
+}
+
+void ClockWidget::setVisible(bool total, bool move)
+{
+    if (!(total || move))
+    {
+        QWidget::setVisible(false);
+        return;
+    }
+
+    if (!isVisible())
+        QWidget::setVisible(true);
+
+    lcdTotal_->setVisible(total);
+    lcdMove_->setVisible(move);
 }
 
 void ClockWidget::setColor(bool white)
@@ -100,13 +115,13 @@ QString ClockWidget::timeString_(int seconds) const
     return t.toString("s");
 }
 
-void ClockWidget::setTotalTime(int seconds)
+void ClockWidget::setTotalTime(int msec)
 {
-    lcdTotal_->display(timeString_(seconds));
+    lcdTotal_->display(timeString_(msec/1000));
 }
 
-void ClockWidget::setMoveTime(int seconds)
+void ClockWidget::setMoveTime(int msec)
 {
 
-    lcdMove_->display(timeString_(seconds));
+    lcdMove_->display(timeString_(msec/1000));
 }

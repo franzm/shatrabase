@@ -37,6 +37,7 @@ extern const char * timeControlTypeName[];
 */
 class TimeControl : public QObject /* for tr() */
 {
+    Q_OBJECT
 public:
 
     /** Order has to follow timeControlTypeName[] !! */
@@ -72,6 +73,10 @@ public:
 
     /** Returns wheter the time is up. */
     //bool isTimeout(int last_move_number, int time_after_last_move_msec) const;
+
+    /** Returns the total time at start of game,
+        or Unlimited if not in tournament mode. */
+    int totalTimeAtStart() const;
 
     /** Returns the time increment after the move. */
     int getTimeInc(int last_move_number) const;

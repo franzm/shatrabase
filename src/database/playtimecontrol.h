@@ -18,41 +18,55 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 ****************************************************************************/
 
-#ifndef CLOCKWIDGET_H
-#define CLOCKWIDGET_H
+#ifndef PLAYTIMECONTROL_H
+#define PLAYTIMECONTROL_H
 
-#include <QWidget>
-#include <QLCDNumber>
+#include <QTime>
 
-class ClockWidget : public QWidget
+#include "timecontrol.h"
+
+/** TimeControl with added realtime game functionallity */
+class PlayTimeControl : public TimeControl
 {
     Q_OBJECT
 public:
-    explicit ClockWidget(QWidget *parent = 0);
+    explicit PlayTimeControl(QObject *parent = 0);
 
-    void setColor(bool white);
+    /** Is current stm out of time? */
+    bool isTimeout() const;
 
 signals:
 
+    /** The side to move has timed out */
+    void timeOut(int stm);
+
 public slots:
 
-    /** Set the visibility of each display.
-        If both are false, the visibilty of ClockWidget turned off. */
-    void setVisible(bool total, bool move);
+    /** Inititalize for a new game */
+    void start(int stm_0_or_1 = 0);
 
-    void setTotalTime(int milliseconds);
-    void setMoveTime(int milliseconds);
-    void setTime(int total_milliseconds, int move_milliseconds)
-        { setTotalTime(total_milliseconds); setMoveTime(move_milliseconds); }
+    /** Start counting the current stm */
+    void startMove();
 
-protected:
+    /** The current stm has finished it's move.
+     *  Changes stm and move count */
+    void endMove();
 
-    QString timeString_(int second) const;
 
-    QLCDNumber * newLcd_();
-    void updateDisplays_();
+private:
 
-    QLCDNumber * lcdTotal_, * lcdMove_;
+    /** Move starts at 1, incremented on startStm_'s turn */
+    int move_,
+    /** First side to move */
+        startStm_,
+    /** Current side to move */
+        stm_,
+    /** Total time left */
+        totalTime_[2],
+    /** current move time */
+        moveTime_[2];
+
+    QTime messure_;
 };
 
-#endif // CLOCKWIDGET_H
+#endif // PLAYTIMECONTROL_H

@@ -30,18 +30,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     QWidget         (parent),
-    engineDebug_    (debug),
     colorPlayer_    (QLed::Green),
     colorEngine0_   (QLed::Green),
     colorEngine1_   (QLed::Blue),
     blinkInterval_  (500),
     ui_             (new Ui::PlayGame),
+    engineDebug_    (debug),
     activeLed_      (0),
     play_           (new PlayGame(engineDebug_, this)),
     playing_        (false),
-    ignoreAnswer_   (false),
+    ignoreAnswer_   (false)
 
-    totalTime_      (5*60)
 {
     setObjectName("PlayGameWidget");
     setWindowTitle(tr("Player selection"));
@@ -106,7 +105,10 @@ void PlayGameWidget::slotReconfigure()
     if (playing_)
         stop();
 
-    // all settings are stored in PlayGame
+    // time control settings
+    tc_.configure();
+
+    // all player settings are stored in PlayGame
     play_->slotReconfigure();
 
     ui_->nameEdit1->setText(play_->playerName1());
@@ -465,6 +467,7 @@ void PlayGameWidget::slotBlinkTimer_()
 
 void PlayGameWidget::slotTimer_()
 {
+    /*
     if (timeStm_ == White)
     {
         moveTime1_++;
@@ -477,14 +480,30 @@ void PlayGameWidget::slotTimer_()
         totalTime2_--;
         ui_->clock2->setTime(totalTime2_, moveTime2_);
     }
+    */
 }
 
 void PlayGameWidget::initTiming_()
 {
-    totalTime1_ = totalTime2_ = totalTime_;
+    /*
+    timeMove_ = 1;
+
+    if (tc_.totalTimeAtStart() == TimeControl::Unlimited)
+    {
+        ui_->clock1->setVisible(false, true);
+        ui_->clock2->setVisible(false, true);
+    }
+    else
+    {
+        ui_->clock1->setVisible(true, true);
+        ui_->clock2->setVisible(true, true);
+    }
+
+    totalTime1_ = totalTime2_ = tc_.totalTimeAtStart();
     moveTime1_ = moveTime2_ = 0;
     ui_->clock1->setTime(totalTime1_, moveTime1_);
     ui_->clock2->setTime(totalTime2_, moveTime2_);
+    */
 }
 
 void PlayGameWidget::startTiming_(int stm)

@@ -215,6 +215,15 @@ QString TimeControl::humanReadable() const
     return "*misconfigured*";
 }
 
+
+int TimeControl::totalTimeAtStart() const
+{
+    if (type_ != T_Tournament)
+        return Unlimited;
+
+    return timeForMoves1_;
+}
+
 /*
 bool TimeControl::isTimeout(int move, int time) const
 {
@@ -252,9 +261,18 @@ int TimeControl::getTimeInc(int move) const
     }
 
     // within tc1
-    if (move <= numMoves1_)
+    if (move < numMoves1_)
     {
         return timeInc1_;
+    }
+
+    // final move in tc1
+    if (move == numMoves1_)
+    {
+        if (numMoves2_ == Unlimited)
+            return timeInc1_ + timeAdd_;
+        else
+            return timeInc1_ + timeForMoves2_;
     }
 
     // tc2
@@ -267,19 +285,20 @@ int TimeControl::getTimeInc(int move) const
     }
 
     // within tc2
-    if (numMoves2_ != 0 && move <= numMoves2_)
+    if (numMoves2_ != 0)
     {
-        return timeInc2_;
+        if (move < numMoves2_)
+        {
+            return timeInc2_;
+        }
+
+        // final move in tc2
+        if (move == numMoves2_)
+        {
+            return timeInc3_ + timeAdd_;
+        }
     }
 
     // tc3
-    move -= numMoves2_;
-
-    // additional time
-    if (move == 0)
-    {
-       return timeInc3_ + timeAdd_;
-    }
-
     return timeInc3_;
 }

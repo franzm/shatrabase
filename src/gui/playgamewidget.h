@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QTimer>
 
 #include "board.h"
+#include "timecontrol.h"
 #include "qled.h"
 
 class Board;
@@ -34,6 +35,11 @@ class EngineDebugWidget;
 
 namespace Ui { class PlayGame; }
 
+/** More than a GUI wrapper around PlayGame class.
+ *
+ *  Actually, this class handles all the gui integration of gaming
+ *  and the time control!.
+ */
 class PlayGameWidget : public QWidget
 {
     Q_OBJECT
@@ -163,10 +169,13 @@ private:
 
     QTimer timer_;
 
-    int timeStm_,
-        totalTime_,
-        totalTime1_, totalTime2_,
-        moveTime1_, moveTime2_;
+    TimeControl tc_;
+
+    /** Move (incremented when White's turn) */
+    int timeMove_,
+        timeStm_,
+        totalTime_[2],
+        moveTime_[2];
 
 };
 
