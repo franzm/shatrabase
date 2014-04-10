@@ -214,3 +214,72 @@ QString TimeControl::humanReadable() const
 
     return "*misconfigured*";
 }
+
+/*
+bool TimeControl::isTimeout(int move, int time) const
+{
+    // All in timeForMoves1
+    if (numMoves1_ == Unlimited)
+    {
+        return (time >= timeForMoves1_);
+    }
+
+    move -= numMoves1_;
+
+    // All in timeForMoves2
+    if (numMoves2_ == Unlimited)
+    {
+        return (time >= timeForMoves2_);
+    }
+    else
+    //
+    if (numMoves2_ > 0)
+    {
+       time -= timeForMoves2_;
+    }
+}
+*/
+
+int TimeControl::getTimeInc(int move) const
+{
+    if (type_ != T_Tournament)
+        return 0;
+
+    // All in timeForMoves1
+    if (numMoves1_ == Unlimited)
+    {
+        return timeInc1_;
+    }
+
+    // within tc1
+    if (move <= numMoves1_)
+    {
+        return timeInc1_;
+    }
+
+    // tc2
+    move -= numMoves1_;
+
+    // All remaining in timeForMoves2
+    if (numMoves2_ == Unlimited)
+    {
+        return timeInc2_;
+    }
+
+    // within tc2
+    if (numMoves2_ != 0 && move <= numMoves2_)
+    {
+        return timeInc2_;
+    }
+
+    // tc3
+    move -= numMoves2_;
+
+    // additional time
+    if (move == 0)
+    {
+       return timeInc3_ + timeAdd_;
+    }
+
+    return timeInc3_;
+}
