@@ -72,6 +72,7 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     connect(ui_->b_new, SIGNAL(clicked()), SLOT(start_()));
     connect(ui_->b_continue, SIGNAL(clicked()), SLOT(continue_()));
     connect(ui_->b_pause, SIGNAL(clicked()), SLOT(pause_()));
+    connect(ui_->b_resign, SIGNAL(clicked()), SLOT(resign_()));
     connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
 
     // ----- setup PlayGame -----
@@ -138,8 +139,8 @@ void PlayGameWidget::slotReconfigure()
     else
         ui_->engineCombo2->setCurrentIndex(0);
 
-    updateEngineWidgets_();
     initTiming_();
+    setWidgetsPlaying_(playing_);
 }
 
 void PlayGameWidget::updateEngineWidgets_()
@@ -258,6 +259,15 @@ void PlayGameWidget::pause_()
     emit pauseGame();
 }
 
+void PlayGameWidget::resign_()
+{
+    if (QMessageBox::question(this, tr("Resigning"), tr("Are you sure you want to resign?")))
+    {
+        stop();
+        emit playerLoses();
+    }
+}
+
 void PlayGameWidget::flipPlayers_()
 {
     play_->setPlayerName1(ui_->nameEdit2->text());
@@ -277,10 +287,15 @@ void PlayGameWidget::setWidgetsPlayer_(int stm)
 
 void PlayGameWidget::setWidgetsPlaying_(bool p)
 {    
+    const bool
+        tourn = tc_.type() == TimeControl::T_Tournament,
+        timeplay = tourn || tc_.type() == TimeControl::T_Match;
+
     ui_->b_new->setEnabled(!p);
-    ui_->b_continue->setEnabled(!p);
-    ui_->b_pause->setEnabled(p);
+    ui_->b_continue->setEnabled(!p && !timeplay);
+    ui_->b_pause->setEnabled(p && !timeplay);
     ui_->b_flip->setEnabled(/*!p*/false); // XXX Don't allow as long as first Player can't be Engine
+    ui_->b_resign->setEnabled(p);
     ui_->nameEdit1->setEnabled(!p);
     ui_->nameEdit2->setEnabled(!p);
     ui_->engineCombo1->setEnabled(/*!p*/false); // XXX Don't allow as long as first Player can't be Engine

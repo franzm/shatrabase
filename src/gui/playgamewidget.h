@@ -120,6 +120,8 @@ private slots:
     void flipPlayers_();
     /** haveit for now */
     void pause_();
+    /** Player hit resign */
+    void resign_();
 
 private:
 
