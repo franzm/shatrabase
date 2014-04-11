@@ -158,14 +158,21 @@ public:
     PieceItem(Piece piece, Square square, const QPixmap& pixmap,
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
-            piece  (piece),
-            square (square),
-            squareTo(InvalidSquare),
-            animate(false),
-            animateRemove(false),
-            anim_length(0),
+            piece           (piece),
+            square          (square),
+            squareTo        (InvalidSquare),
+            animate         (false),
+            animateRemove   (false),
+            anim_length     (0),
+            animatePixmap   (0),
             overlay(0)
     { }
+
+    ~PieceItem()
+    {
+        if (animatePixmap)
+            delete animatePixmap;
+    }
 
     /** associated Piece */
     Piece piece;
@@ -178,6 +185,8 @@ public:
          animateRemove;
     int anim_length;
 
+    /** if animate==true, this triggers a pixmap switch when != 0 */
+    QPixmap * animatePixmap;
     const QPixmap * overlay;
 
     /* Sets 180 rotation on/off */
@@ -422,9 +431,20 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
             continue;
 
         // became defunkt
-        if (isDefunkt(pnew) && !isDefunkt(pold))
+        if (isDefunkt(pnew) && pieceType(pold) != None
+            // only animate the last captured piece
+            && BN[move.capturedAt()] == i
+            // don't animate when user dragged
+            && to != ignore_to)
         {
-            qDebug() << "turned defunkt " << i;
+            //qDebug() << "turned defunkt " << i;
+
+            PieceItem * pinew = pieceItemAt(i);
+            addPixmapAnimation_(pinew,
+                // get previous pixmap (of real piece)
+                m_theme->piece(pold,
+                             (isFlipped() && pold == BlackBatyr)
+                          || (!isFlipped() && pold == WhiteBatyr) ) );
             continue;
         }
 
@@ -432,9 +452,9 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
         if (pnew == Empty && pold != Empty)
         {
             // removed defunkt
-            if (pieceType(pold) == None)
+            if (isDefunkt(pold))
             {
-                qDebug() << "removed defunkt" << i;
+                //qDebug() << "removed defunkt" << i;
                 addRemoveAnimation_(b, i, pold);
                 continue;
             }
@@ -443,7 +463,7 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
             int cap = BN[move.capturedAt()];
             if (cap == i)
             {
-                qDebug() << "capturedAt" << cap;
+                //qDebug() << "capturedAt" << cap;
                 addRemoveAnimation_(b, i, pold);
                 continue;
             }
@@ -857,6 +877,18 @@ void BoardPainter::addRemoveAnimation_(const Board& board, Square s, Piece p)
 
 }
 
+void BoardPainter::addPixmapAnimation_(PieceItem *pi, const QPixmap &oldpix)
+{
+    pi->animate = true;
+    pi->anim_length = animationLength_();
+    m_animations++;
+
+    // animate to current pixmap
+    pi->animatePixmap = new QPixmap(pi->pixmap());
+    // oldpix for start
+    pi->setPixmap( oldpix );
+}
+
 void BoardPainter::stopAnimation_()
 {
     m_anim_timer.stop();
@@ -877,7 +909,13 @@ void BoardPainter::endPieceAnimation_(PieceItem * p)
 {
     p->animate = false;
 
+    if (p->animatePixmap)
+    {
+        p->setPixmap(*p->animatePixmap);
+    }
+
     // XXX todo: remove
+    else
     if (p->animateRemove)
     {
 
@@ -937,6 +975,17 @@ void BoardPainter::animationStep_()
         // stop if anim time is over
         if (t>1)
         {
+            endPieceAnimation_(p);
+            m_animations--;
+            continue;
+        }
+
+        // pixmap animation
+        if (p->animatePixmap)
+        {
+            if (t<0.5) continue;
+            // simply switch and end animation
+            p->setPixmap( *p->animatePixmap );
             endPieceAnimation_(p);
             m_animations--;
             continue;

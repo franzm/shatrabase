@@ -187,6 +187,8 @@ protected:
     /** Ques an animation for removing a piece.
         PieceItem of removed piece may exist already or will be created. */
     void addRemoveAnimation_(const Board& board, Square s, Piece p);
+    /** Ques an animation from @p old_pixmap to current pixmap */
+    void addPixmapAnimation_(PieceItem * piece, const QPixmap& old_pixmap);
 
     // ----------- member ------------
 
