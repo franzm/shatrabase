@@ -83,7 +83,7 @@ void PlayTimeControl::startMove()
 {
     qDebug() << "StartMove(" << move_ << "): " << (stm_? "Black" : "White");
 
-    //Q_ASSERT(!moving_);
+    if (moving_) return; //Q_ASSERT(!moving_);
 
     didSendTimeOut_ = false;
     moving_ = true;
@@ -109,7 +109,7 @@ int PlayTimeControl::endMove()
 
     qDebug() << "EndMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
 
-    Q_ASSERT(moving_);
+    if (!moving_) return e; //Q_ASSERT(moving_);
 
     timer_.stop();
     moving_ = false;

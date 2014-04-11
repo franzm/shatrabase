@@ -197,6 +197,7 @@ void PlayGameWidget::start_()
     setWidgetsPlayer_(White);
     setWidgetsPlaying_(true);
 
+    lastStm_ = White;
     playing_ = true;
     ignoreAnswer_ = false;
     //playerMultiPly_ = false;
@@ -355,7 +356,7 @@ void PlayGameWidget::setPosition(const Board& board)
     if (!playing_) return;
 
 
-//    if (lastStm_ != board.toMove())
+    if (lastStm_ != board.toMove())
     {
         // player's move ended
         tc_.endMove();
@@ -453,15 +454,15 @@ void PlayGameWidget::animationFinished(const Board& board)
             return;
         }
 
+        tc_.endMove();
+
         // check if last engine move ended game
-        const bool ended = checkGameResult_(board, true, true);
-
-        // switch to other player
-        setWidgetsPlayer_(oppositeColor(lastStm_));
-
-        if (!ended)
+        if (!checkGameResult_(board, true, true))
         {
-            // start player
+            // switch to other player
+            setWidgetsPlayer_(oppositeColor(lastStm_));
+
+            // start move thinking
             tc_.startMove();
         }
     }
