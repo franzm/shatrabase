@@ -78,20 +78,17 @@ void TimeControl::configure()
     if (!AppSettings->getValue("doTimeInc1").toBool())
         timeInc1_ = 0;
     if (!AppSettings->getValue("doTimeInc2").toBool())
-        timeInc1_ = 0;
+        timeInc2_ = 0;
     if (!AppSettings->getValue("doTimeInc3").toBool())
-        timeInc1_ = 0;
+        timeInc3_ = 0;
     if (!AppSettings->getValue("doTime2").toBool())
     {
         numMoves2_ = 0;
         timeForMoves2_ = 0;
         timeInc2_ = 0;
     }
-    if (!AppSettings->getValue("doTime3").toBool())
-    {
+    if (numMoves1_ == Unlimited || numMoves2_ == Unlimited)
         timeAdd_ = 0;
-        timeInc3_ = 0;
-    }
 
     timeLimit_ = AppSettings->getValue("timeLimit").toInt();
     nodeLimit_ = AppSettings->getValue("nodeLimit").toInt();
@@ -213,4 +210,92 @@ QString TimeControl::humanReadable() const
     }
 
     return "*misconfigured*";
+}
+
+
+int TimeControl::totalTimeAtStart() const
+{
+    if (type_ != T_Tournament)
+        return Unlimited;
+
+    return timeForMoves1_;
+}
+
+/*
+bool TimeControl::isTimeout(int move, int time) const
+{
+    // All in timeForMoves1
+    if (numMoves1_ == Unlimited)
+    {
+        return (time >= timeForMoves1_);
+    }
+
+    move -= numMoves1_;
+
+    // All in timeForMoves2
+    if (numMoves2_ == Unlimited)
+    {
+        return (time >= timeForMoves2_);
+    }
+    else
+    //
+    if (numMoves2_ > 0)
+    {
+       time -= timeForMoves2_;
+    }
+}
+*/
+
+int TimeControl::getTimeInc(int move) const
+{
+    if (type_ != T_Tournament)
+        return 0;
+
+    // All in timeForMoves1
+    if (numMoves1_ == Unlimited)
+    {
+        return timeInc1_;
+    }
+
+    // within tc1
+    if (move < numMoves1_)
+    {
+        return timeInc1_;
+    }
+
+    // final move in tc1
+    if (move == numMoves1_)
+    {
+        if (numMoves2_ == Unlimited)
+            return timeInc1_ + timeAdd_;
+        else
+            return timeInc1_ + timeForMoves2_;
+    }
+
+    // tc2
+    move -= numMoves1_;
+
+    // All remaining in timeForMoves2
+    if (numMoves2_ == Unlimited)
+    {
+        return timeInc2_;
+    }
+
+    // within tc2
+    if (numMoves2_ != 0)
+    {
+        if (move < numMoves2_)
+        {
+            return timeInc2_;
+        }
+
+        // final move in tc2
+        if (move == numMoves2_)
+        {
+            return timeInc3_ + timeAdd_;
+        }
+    }
+
+    // tc3
+    return timeInc3_;
 }

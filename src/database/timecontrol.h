@@ -30,24 +30,13 @@ extern const char * timeControlTypeName[];
 
 /** Simple container for play time settings.
 
-mail 20140504-4:39pm
-
-1) Free (ie move only when 'move now' button is pressed (the latter
-something we definitely need anyway, only to be disabled during
-tournament play)
-2) Time/nodes/depth per move
-3) Average time per move
-4) Match opponent's move times
-5) Tournament settings
-eg tc1 (n moves - or 'all' - in x secs/millisecs, optional increment y
-millisecs)
-   tc2 (the same)
-   tc3 (the same) - which should cover everything...
-
+   It's a QObject more or less for tr()
+   and because derived PlayTimeControl sends signals.
 
 */
-class TimeControl : public QObject /* for tr() */
+class TimeControl : public QObject
 {
+    Q_OBJECT
 public:
 
     /** Order has to follow timeControlTypeName[] !! */
@@ -78,6 +67,19 @@ public:
 
     /** Nice readable string */
     QString msecToString(int msec) const;
+
+    // ------ game time info --------
+
+    /** Returns wheter the time is up. */
+    //bool isTimeout(int last_move_number, int time_after_last_move_msec) const;
+
+    /** Returns the total time at start of game,
+        or Unlimited if not in tournament mode. */
+    int totalTimeAtStart() const;
+
+    /** Returns the time increment after the move. */
+    int getTimeInc(int last_move_number) const;
+
 
     // --------- getter -------------
 

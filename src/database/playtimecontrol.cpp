@@ -18,41 +18,62 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 ****************************************************************************/
 
-#ifndef CLOCKWIDGET_H
-#define CLOCKWIDGET_H
+#include "playtimecontrol.h"
 
-#include <QWidget>
-#include <QLCDNumber>
-
-class ClockWidget : public QWidget
+PlayTimeControl::PlayTimeControl(QObject *parent) :
+    TimeControl(parent)
 {
-    Q_OBJECT
-public:
-    explicit ClockWidget(QWidget *parent = 0);
 
-    void setColor(bool white);
+}
 
-signals:
+void PlayTimeControl::start(int stm)
+{
+    startStm_ = stm_ = stm;
+    move_ = 1;
 
-public slots:
+    totalTime_[0] = totalTime_[1] = totalTimeAtStart();
+    moveTime_[0] = moveTime_[1] = 0;
+}
 
-    /** Set the visibility of each display.
-        If both are false, the visibilty of ClockWidget turned off. */
-    void setVisible(bool total, bool move);
+void PlayTimeControl::startMove()
+{
+    // init timer to total time left
+    timer_.setInterval(totalTime_[stm_]);
+    timer_.start();
 
-    void setTotalTime(int milliseconds);
-    void setMoveTime(int milliseconds);
-    void setTime(int total_milliseconds, int move_milliseconds)
-        { setTotalTime(total_milliseconds); setMoveTime(move_milliseconds); }
+    messure_.start();
+}
 
-protected:
+void PlayTimeControl::endMove()
+{
+    int e = messure_.elapsed();
 
-    QString timeString_(int second) const;
+    // remove time of move
+    totalTime_[stm_] -= e;
 
-    QLCDNumber * newLcd_();
-    void updateDisplays_();
+    if (totalTime_[stm_] < 0)
+    {
+        emit timeOut(stm_);
+        return;
+    }
 
-    QLCDNumber * lcdTotal_, * lcdMove_;
-};
+    // add bonus time
+    totalTime_[stm_] += getTimeInc(move_);
 
-#endif // CLOCKWIDGET_H
+    // switch stm and inc move
+
+    stm_ ^= 1;
+
+    if (stm_ == startStm_)
+        move_++;
+}
+
+/*
+    40 in 100
+
+*/
+
+bool PlayTimeControl::isTimeout() const
+{
+    return totalTime_[stm_] <= 0;
+}

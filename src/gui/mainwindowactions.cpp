@@ -967,7 +967,7 @@ void MainWindow::slotToggleAutoPlayer()
             QAction* otherAction = (autoPlayAction == m_autoPlay) ?
                         m_autoAnalysis : m_autoPlay;
             otherAction->setChecked(false);
-            int interval = AppSettings->getValue("/Board/AutoPlayerInterval").toInt();
+            int interval = 2000;//XXX AppSettings->getValue("/Board/AutoPlayerInterval").toInt();
             if (m_autoPlayTimer->interval() != interval)
             {
                 m_autoPlayTimer->setInterval(interval);

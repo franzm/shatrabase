@@ -121,7 +121,8 @@ HEADERS += src/database/board.h \
     src/gui/playgameenginedialog.h \
     src/gui/clockwidget.h \
     src/gui/enginedebugwidget.h \
-    src/database/timecontrol.h
+    src/database/timecontrol.h \
+    src/database/playtimecontrol.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -206,7 +207,8 @@ SOURCES += src/database/board.cpp \
     src/gui/playgameenginedialog.cpp \
     src/gui/clockwidget.cpp \
     src/gui/enginedebugwidget.cpp \
-    src/database/timecontrol.cpp
+    src/database/timecontrol.cpp \
+    src/database/playtimecontrol.cpp
 
 TEMPLATE = app
 INCLUDEPATH += src/database
