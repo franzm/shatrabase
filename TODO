@@ -30,6 +30,7 @@
 -- gameplay --
 
 * disable all of gui which would interfere with game!
+* engine captures biy is not animated during play
 * tournament mode
 * time control  
 - OK play game from set position
@@ -37,16 +38,21 @@
 - OK disable Engine thinking when game over
 - OK win/lose
   * draw
+  * engine resign
 * disable Engine thinking when jumping in gametext
 * add autoAddGameAndContinue option
-* win animation
+* win/lose animation
 * after a move: decide wether a time-increment will be given before or after a time-out check (in PlayTimeControl::endMove())
+* add option for movetime to gametext
+* add post info to gametext
+    * timecontrol settings
+    * resign
 
 -- board setup --
 
 * temdek recount
-* enpassant
-* urgent
+- OK enpassant
+- OK urgent
 
 -- IO --
 

@@ -186,9 +186,11 @@ public slots:
 	void slotGameViewToggle(bool source);
     /* Dump all node information to the console */
     void slotGameDumpMoveNodes();
-    /* Create new empty game (to be appended to the database).
+    /** Create new empty game (to be appended to the database).
         Returns false if the database is readonly or save-current-game was cancelled. */
     bool slotGameNew();
+    /** Enable/disable all mainwindow functions not related to gaming. */
+    void slotPlayEnableWidgets(bool enable);
     /** Connected to PlayGameWidget to signal start of new game */
     void slotPlayGameNew(const QMap<QString, QString>& tags);
     /** Connected to PlayGameWidget to signal continuation of current game */
@@ -385,8 +387,12 @@ private:
 	QLabel* m_statusFilter;
     QLabel* m_gameTitle;
 	/* Menus */
-	QMenu* m_menuDatabases;
-	QMenu* m_menuView;
+    QMenu * m_menuFile,
+          * m_menuEdit,
+          * m_menuDatabase,
+          * m_menuDatabases,
+          * m_menuView,
+          * m_menuGame;
 
 	/* Local variables */
 	HistoryList m_recentFiles;

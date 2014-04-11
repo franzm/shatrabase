@@ -1021,6 +1021,7 @@ void MainWindow::setupActions()
 {
 	/* File menu */
 	QMenu* file = menuBar()->addMenu(tr("&File"));
+    m_menuFile = file;
     file->addAction(createAction(tr("&New database..."), SLOT(slotFileNew())));
     file->addAction(createAction(tr("&Open..."), SLOT(slotFileOpen()), QKeySequence::Open));
     file->addAction(createAction(tr("&Open in UTF8..."), SLOT(slotFileOpenUtf8())));
@@ -1044,6 +1045,7 @@ void MainWindow::setupActions()
 
 	/* Edit menu */
 	QMenu* edit = menuBar()->addMenu(tr("&Edit"));
+    m_menuEdit = edit;
 	edit->addAction(createAction(tr("Comment"), SLOT(slotEditComment()),
 										  Qt::CTRL + Qt::Key_A));
     edit->addAction(createAction(tr("Comment Before"), SLOT(slotEditCommentBefore()),
@@ -1094,6 +1096,7 @@ void MainWindow::setupActions()
 
 	/* Game menu */
 	QMenu *gameMenu = menuBar()->addMenu(tr("&Game"));
+    m_menuGame = gameMenu;
 
     gameMenu->addAction(createAction(tr("&New"), SLOT(slotGameNew()), QKeySequence::New));
     QMenu* loadMenu = gameMenu->addMenu(tr("&Load"));
@@ -1152,6 +1155,7 @@ void MainWindow::setupActions()
 
 	/* Database menu */
 	QMenu* menuDatabase = menuBar()->addMenu(tr("&Database"));
+    m_menuDatabase = menuDatabase;
 	m_menuDatabases = menuDatabase->addMenu(tr("&Switch to"));
 	menuDatabase->addAction(createAction(tr("&Copy games..."), SLOT(slotDatabaseCopy()),
 						  Qt::Key_F5));

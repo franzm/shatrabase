@@ -659,10 +659,25 @@ bool MainWindow::slotGameNew()
     return false;
 }
 
+void MainWindow::slotPlayEnableWidgets(bool e)
+{
+    m_gameList->setEnabled(e);
+    m_databaseList->setEnabled(e);
+    m_openingTreeView->setEnabled(e);
+    m_autoPlay->setEnabled(e);
+    m_menuDatabase->setEnabled(e);
+    m_menuEdit->setEnabled(e);
+    m_menuFile->setEnabled(e);
+    m_menuGame->setEnabled(e);
+}
+
 void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
 {
     if (slotGameNew())
     {
+        // disable all non-related functions
+        slotPlayEnableWidgets(false);
+
         // set boardview flags
         m_boardView->setFlags(
                     (BoardView::F_DisableWhite * (!m_playGame->whiteCanMove()))
@@ -691,6 +706,9 @@ void MainWindow::slotPlayGameContinue()
 
 void MainWindow::slotPlayGameEnd()
 {
+    // restore functionallity
+    slotPlayEnableWidgets(true);
+
     // restore boardview flags
     m_boardView->setFlags(0);
 }
@@ -709,6 +727,7 @@ void MainWindow::slotPlayGameMove(Move m)
 
 void MainWindow::slotPlayPlayerWins()
 {
+    slotPlayGameEnd();
     QMessageBox::information(this,
                              tr("!!!"),
                              tr("You win!\n(XXX This should trigger an animation)")
@@ -717,6 +736,7 @@ void MainWindow::slotPlayPlayerWins()
 
 void MainWindow::slotPlayOtherWins()
 {
+    slotPlayGameEnd();
     QMessageBox::information(this,
                              tr("..."),
                              tr("You did not win!\n(XXX This should trigger an animation)")
