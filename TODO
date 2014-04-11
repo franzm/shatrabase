@@ -29,6 +29,7 @@
 
 -- gameplay --
 
+* SBoard::gameResult() always returns Draw during game
 * disable all of gui which would interfere with game!
 * engine captures biy is not animated during play
 * tournament mode

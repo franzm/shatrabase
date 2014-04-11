@@ -47,12 +47,18 @@ public:
     explicit PlayGameWidget(EngineDebugWidget * debug, QWidget *parent = 0);
     ~PlayGameWidget();
 
+    bool isTournament() const;
+
     bool isPlaying() const { return playing_; }
 
     /** Returns if White should be able to interact with board */
     bool whiteCanMove() const;
     /** Returns if Black should be able to interact with board */
     bool blackCanMove() const;
+
+    /** Return a spn tag style result.
+        Empty when unknown. */
+    QString resultString() const;
 
 signals:
     /** Emitted when a new game wants to be played */
@@ -158,6 +164,7 @@ private:
     PlayGame * play_;
 
     Color lastStm_;
+    int winStm_;
     QList<Move> plyQue_;
 
     bool playing_,

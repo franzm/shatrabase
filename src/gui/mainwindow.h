@@ -189,8 +189,9 @@ public slots:
     /** Create new empty game (to be appended to the database).
         Returns false if the database is readonly or save-current-game was cancelled. */
     bool slotGameNew();
-    /** Enable/disable all mainwindow functions not related to gaming. */
-    void slotPlayEnableWidgets(bool enable);
+    /** Enable/disable all mainwindow functions not related to gaming.
+        if strong is true, additional functionality is taken away. */
+    void slotPlayEnableWidgets(bool enable, bool strong = false);
     /** Connected to PlayGameWidget to signal start of new game */
     void slotPlayGameNew(const QMap<QString, QString>& tags);
     /** Connected to PlayGameWidget to signal continuation of current game */
@@ -415,7 +416,7 @@ private:
     bool m_bGameChange;
     int m_currentFrom;
     int m_currentTo;
-    AnalysisWidget* m_mainAnalysis;
+    AnalysisWidget* m_mainAnalysis, * m_analysis2;
     Board m_AutoInsertLastBoard;
     Square m_annotationSquare;
     QAction* m_autoPlay;

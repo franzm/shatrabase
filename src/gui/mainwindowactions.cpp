@@ -659,8 +659,9 @@ bool MainWindow::slotGameNew()
     return false;
 }
 
-void MainWindow::slotPlayEnableWidgets(bool e)
+void MainWindow::slotPlayEnableWidgets(bool e, bool strong)
 {
+    const bool e1 = e || !strong;
     m_gameList->setEnabled(e);
     m_databaseList->setEnabled(e);
     m_openingTreeView->setEnabled(e);
@@ -669,6 +670,8 @@ void MainWindow::slotPlayEnableWidgets(bool e)
     m_menuEdit->setEnabled(e);
     m_menuFile->setEnabled(e);
     m_menuGame->setEnabled(e);
+    m_mainAnalysis->setEnabled(e1);
+    m_analysis2->setEnabled(e1);
 }
 
 void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
@@ -676,7 +679,7 @@ void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
     if (slotGameNew())
     {
         // disable all non-related functions
-        slotPlayEnableWidgets(false);
+        slotPlayEnableWidgets(false, m_playGame->isTournament());
 
         // set boardview flags
         m_boardView->setFlags(
@@ -706,6 +709,9 @@ void MainWindow::slotPlayGameContinue()
 
 void MainWindow::slotPlayGameEnd()
 {
+    game().setTag("Result", m_playGame->resultString());
+    slotGameChanged();
+
     // restore functionallity
     slotPlayEnableWidgets(true);
 

@@ -328,7 +328,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Analysis Dock 2 */
     DockWidgetEx* analysisDock2 = new DockWidgetEx(tr("Analysis 2"), this);
 	analysisDock2->setObjectName("AnalysisDock2");
-    analysis = new AnalysisWidget(m_engineDebug);
+    m_analysis2 = analysis = new AnalysisWidget(m_engineDebug);
     analysis->setObjectName("Analysis2");
     analysisDock2->setWidget(analysis);
 	addDockWidget(Qt::RightDockWidgetArea, analysisDock2);
