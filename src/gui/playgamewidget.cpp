@@ -352,7 +352,7 @@ void PlayGameWidget::setPosition(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::setPosition() plyQue_.size()=" << plyQue_.size());
 
-    qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
+    //qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
 
     if (!playing_) return;
 
@@ -406,7 +406,7 @@ void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
 
-    qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
+    //qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
 
     if (plyQue_.empty())
     {
@@ -438,7 +438,7 @@ void PlayGameWidget::animationFinished(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
 
-    qDebug() << "PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size();
+    //qDebug() << "PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size();
 
     if (!playing_)
         return;
