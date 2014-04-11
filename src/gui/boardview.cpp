@@ -242,13 +242,16 @@ void BoardView::setBoard(const Board& value, const Move& move)
     {
         if (m_move.isLegal())
         {
-            m_view->setBoard(value,&m_move, m_lastDropped);
+            m_view->setBoard(value, &m_move, m_lastDropped);
             m_lastDropped = 0;
         }
         else
             m_view->setBoard(value,NULL);
     }
-    selectSquare_(m_move.from());
+
+    // select the moving start square
+    if (m_move.isLegal())
+        selectSquare_(BN[m_move.from()]);
 
     update();
 }
