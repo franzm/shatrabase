@@ -160,7 +160,10 @@ public:
         :   QGraphicsPixmapItem(pixmap, parent),
             piece  (piece),
             square (square),
+            squareTo(InvalidSquare),
             animate(false),
+            animateRemove(false),
+            anim_length(0),
             overlay(0)
     { }
 
@@ -171,12 +174,14 @@ public:
     /** Square to go to in animation */
         squareTo;
     /** should this piece be animated (square > squareTo) */
-    bool animate;
+    bool animate,
+         animateRemove;
+    int anim_length;
 
     const QPixmap * overlay;
 
-    /** Sets 180 rotation on/off */
-    void setRotate(bool doit)
+    /* Sets 180 rotation on/off */
+    /*void setRotate(bool doit)
     {
         QTransform t = transform();
         if (!doit)
@@ -186,6 +191,19 @@ public:
             t.translate(pixmap().width(), pixmap().height());
             t.rotate(180);
         }
+        setTransform(t);
+    }*/
+
+    void setScale(qreal scale)
+    {
+        QTransform t = transform();
+        t.reset();
+        t.scale(scale, scale);
+        //t.translate(0.5, 0.5);
+        qreal fak = (1.0-scale)/2.0;
+        if (scale != 0)
+            fak /= scale;
+        t.translate(fak * pixmap().width(), fak * pixmap().height());
         setTransform(t);
     }
 
@@ -198,6 +216,9 @@ public:
             painter->drawPixmap(0,0,*overlay);
     }
 };
+
+
+
 
 
 
@@ -227,8 +248,8 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_anim_speed    (10),
     m_fixed_anim_length(1),
     m_use_fixed_anim_length(0),
-    m_anim_length   (1),
-    m_anim_t        (0)
+    m_animations    (0),
+    m_anim_length   (0)
 {    
 //    qDebug() << "BoardPainter" << this;
     setScene(m_scene);
@@ -239,12 +260,13 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     // XXX need to do this although we don't want the events here...
     setMouseTracking(true);
 
-    // timer for animations
-    m_timer.setInterval(1000/30);
-    //connect(&m_timer, &QTimer::timeout, this, &BoardPainter::animationStep_);
-    connect(&m_timer, SIGNAL(timeout()), SLOT(animationStep_()));
+    connect(&m_anim_timer, SIGNAL(timeout()), SLOT(animationStep_()));
+    m_anim_timer.setSingleShot(false);
+    m_anim_timer.setInterval(1000 / 60);
 
     configure();
+
+
 
 #if (0) // XXX that basically works ;)
     QTransform t = transform();
@@ -317,9 +339,24 @@ void BoardPainter::resizeEvent(QResizeEvent *event)
     setBackgroundBrush(b);
 }
 
+void BoardPainter::paintEvent(QPaintEvent * e)
+{
+    QGraphicsView::paintEvent(e);
+
+    // start messure time
+    if (m_start_anim)
+    {
+        m_anim_time.start();
+        m_anim_timer.start();
+        m_start_anim = false;
+    }
+
+    // will call update() if there's something to do
+    //animationStep_();
+}
 
 
-void BoardPainter::setBoard(const Board& board, int from, int to)
+void BoardPainter::setBoard(const Board& board, const Move * move)
 {
     //qDebug() << "BoardPainter::setBoard(board," << from << ", " << to << ")";
 
@@ -333,14 +370,18 @@ void BoardPainter::setBoard(const Board& board, int from, int to)
     createPieces_(board);
     updateMoveIndicators_();
 
-    /*
-    if (m_do_animate && m_anim_speed > 0.0)
-        guessAnimations_(board);
+    if (m_animations)
+        stopAnimation_();
+    m_start_anim = true;
+
+    if (m_do_animate && m_anim_speed > 0.0
+        && move)
+        guessAnimations_(board, *move);
 
     oldBoard_ = board;
-    */
 
 
+    /*
     if (m_do_animate && m_anim_speed > 0.0)
     if (from != InvalidSquare && to != InvalidSquare)
     {
@@ -355,30 +396,56 @@ void BoardPainter::setBoard(const Board& board, int from, int to)
         // run an animation thread
         startAnimation_(from,to);
     }
+    */
 }
 
 
-void BoardPainter::guessAnimations_(const Board& b)
+void BoardPainter::guessAnimations_(const Board& b, const Move& move)
 {
     /* PieceItems are already placed at the new positions on entry. */
 
+    int from = BN[move.from()],
+        to = BN[move.to()];
+
+    // move animation
+    if (from != InvalidSquare || to != InvalidSquare)
+        addMoveAnimation_(from, to);
+
     for (int i=fsq; i<=lsq; ++i)
     {
-        Piece pold = oldBoard_->pieceAt(i),
+        Piece pold = oldBoard_.pieceAt(i),
               pnew = b.pieceAt(i);
 
         // nothing's changed on that square?
         if (pold == pnew)
             continue;
 
-        // XXX Todo
-        if (isDefunkt(pnew))
+        // became defunkt
+        if (isDefunkt(pnew) && !isDefunkt(pold))
+        {
+            qDebug() << "turned defunkt " << i;
             continue;
+        }
 
         // disappeared
-        if (pnew == InvalidPiece)
+        if (pnew == Empty && pold != Empty)
         {
-            // arghh.. can't decide if captured or moved....
+            // removed defunkt
+            if (pieceType(pold) == None)
+            {
+                qDebug() << "removed defunkt" << i;
+                addRemoveAnimation_(b, i, pold);
+                continue;
+            }
+
+            // captured?
+            int cap = BN[move.capturedAt()];
+            if (cap == i)
+            {
+                qDebug() << "capturedAt" << cap;
+                addRemoveAnimation_(b, i, pold);
+                continue;
+            }
         }
     }
 }
@@ -488,24 +555,31 @@ void BoardPainter::createPieces_(const Board& board)
         Piece p = board.pieceAt(i);
         if (p == InvalidPiece) continue;
 
-        // pixmap for piece
-        const QPixmap& pm = m_theme->piece(p,
-                    (isFlipped() && p == BlackBatyr)
-                || (!isFlipped() && p == WhiteBatyr) );
-
-        PieceItem * item = new PieceItem(p, i, pm);
-        item->setPos(squarePos(i));
-
-        // set urgent flag
-        if (board.isUrgent(i))
-        {
-            item->overlay = &m_theme->urgent();
-        }
-
-        // add to scene
-        m_scene->addItem(item);
-        m_pieces.push_back(item);
+        createPiece_(board, i, p);
     }
+}
+
+PieceItem * BoardPainter::createPiece_(const Board& board, Square sq, Piece p)
+{
+    // pixmap for piece
+    const QPixmap& pm = m_theme->piece(p,
+                (isFlipped() && p == BlackBatyr)
+            || (!isFlipped() && p == WhiteBatyr) );
+
+    PieceItem * item = new PieceItem(p, sq, pm);
+    item->setPos(squarePos(sq));
+
+    // set urgent flag
+    if (board.isUrgent(sq))
+    {
+        item->overlay = &m_theme->urgent();
+    }
+
+    // add to scene
+    m_scene->addItem(item);
+    m_pieces.push_back(item);
+
+    return item;
 }
 
 void BoardPainter::updateMoveIndicators_()
@@ -730,9 +804,18 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view, bool
 
 // --------------------- animation -------------------------
 
-void BoardPainter::startAnimation_(Square from, Square to)
+int BoardPainter::animationLength_(Square from, Square to) const
 {
-    // distance of move
+    // fixed?
+    if (from == InvalidSquare || to == InvalidSquare)
+    {
+        from = 1;
+        to = 3;
+    }
+        //return m_fixed_anim_length;
+
+    // or distance of move
+
     qreal dx = gBoard[from][0] - gBoard[to][0],
           dy = gBoard[from][1] - gBoard[to][1],
           dist = sqrt(dx*dx + dy*dy),
@@ -741,14 +824,77 @@ void BoardPainter::startAnimation_(Square from, Square to)
     // crossfade between speed & fixed length
           t = std::max(0.0,std::min(1.0, m_use_fixed_anim_length ));
     // resulting animation length
-    m_anim_length = length_from_speed * (1.0-t) + t * (m_fixed_anim_length);
+    return 1000 * (length_from_speed * (1.0-t) + t * (m_fixed_anim_length));
+}
 
-    m_anim_t = 0;
-    m_timer.start();
+void BoardPainter::addMoveAnimation_(Square from, Square to)
+{
+    PieceItem * p = pieceItemAt(to);
+    if (!p) return; // or throw a logic exception ;)
+
+    // setup the piece to animate
+    p->animate = true;
+    p->anim_length = animationLength_(from, to);
+    m_animations++;
+
+    p->square = from; // put back to start
+    p->setPos(squarePos(p->square));
+    p->squareTo = to; // say it's a move animation
+}
+
+void BoardPainter::addRemoveAnimation_(const Board& board, Square s, Piece p)
+{
+    PieceItem * pi = pieceItemAt(s);
+    //if (!pi)
+        pi = createPiece_(board, s, p);
+
+    pi->animate = true;
+    pi->anim_length = animationLength_();
+    m_animations++;
+
+    pi->animateRemove = true;
+
 }
 
 void BoardPainter::stopAnimation_()
 {
+    m_anim_timer.stop();
+    m_animations = 0;
+
+    // set all PieceItems to final position
+    // (to be sure)
+    for (size_t i=0; i<m_pieces.size(); ++i)
+    if (m_pieces[i]->animate && m_pieces[i]->anim_length>0)
+    {
+        PieceItem * p = m_pieces[i];
+
+        endPieceAnimation_(p);
+    }
+}
+
+void BoardPainter::endPieceAnimation_(PieceItem * p)
+{
+    p->animate = false;
+
+    // XXX todo: remove
+    if (p->animateRemove)
+    {
+
+    }
+
+    // a move animation
+    else
+    if (p->squareTo != InvalidSquare)
+    {
+        // set final position
+        p->square = p->squareTo;
+        p->setPos(squarePos(p->square));
+        p->setZValue(0);
+    }
+}
+
+/*
+    m_animating = false;
     m_timer.stop();
 
     // set pieces to final positions (to be safe)
@@ -766,9 +912,69 @@ void BoardPainter::stopAnimation_()
 
     emit animationFinished();
 }
-
+*/
 void BoardPainter::animationStep_()
 {
+    if (m_animations <= 0)
+        return;
+
+    int e = m_anim_time.elapsed();
+
+    // go through all pieces that need to be animated
+    // XXX This is the generalized approach to move
+    // more than one piece at a time (but why?)
+    for (size_t i=0; i<m_pieces.size(); ++i)
+    if (m_pieces[i]->animate && m_pieces[i]->anim_length>0)
+    {
+        PieceItem * p = m_pieces[i];
+
+        // current animation position [0,1]
+        qreal t = (qreal)e / p->anim_length;
+        // sigmoid fade [0,1]
+        qreal ts = (3.0 - 2.0*t) * t*t;
+
+        // stop if anim time is over
+        if (t>1)
+        {
+            endPieceAnimation_(p);
+            m_animations--;
+            continue;
+        }
+
+        // a remove animation
+        if (p->animateRemove)
+        {
+            p->setScale(1.0 - t);
+            continue;
+        }
+
+        // a move animation
+        if (p->squareTo != InvalidSquare)
+        {
+            QPointF
+                from = squarePos(p->square),
+                to = squarePos(p->squareTo);
+
+            from += ts * (to - from);
+
+            p->setPos(from);
+            p->setZValue(10); // always on top
+            continue;
+        }
+
+    }
+
+    update();
+
+    // done all animations?
+    if (m_animations <= 0)
+    {
+        stopAnimation_();
+        emit animationFinished();
+    }
+}
+
+    /*
     // update step
     const qreal step = (qreal)m_timer.interval() / 1000.0 / m_anim_length;
 
@@ -798,3 +1004,4 @@ void BoardPainter::animationStep_()
         m_pieces[i]->setZValue(10); // always on top
     }
 }
+    */

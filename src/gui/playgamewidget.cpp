@@ -18,15 +18,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 ****************************************************************************/
 
+#include <QMessageBox>
+#include <QDate>
+
 #include "playgamewidget.h"
 #include "ui_playgame.h"
 #include "settings.h"
 #include "enginelist.h"
 #include "playgame.h"
 #include "playgameenginedialog.h"
-
-#include <QMessageBox>
-#include <QDate>
 
 PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     QWidget         (parent),
@@ -45,13 +45,14 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     setObjectName("PlayGameWidget");
     setWindowTitle(tr("Player selection"));
 
+    // blink timer
     blinkTimer_.setSingleShot(false);
     blinkTimer_.setInterval(blinkInterval_);
     connect(&blinkTimer_, SIGNAL(timeout()), SLOT(slotBlinkTimer_()));
 
-    timer_.setSingleShot(false);
-    timer_.setInterval(1000);
-    connect(&timer_, SIGNAL(timeout()), SLOT(slotTimer_()));
+    // Time Control (TM)
+    connect(&tc_, SIGNAL(timeUpdated()), SLOT(slotUpdateClocks_()));
+    connect(&tc_, SIGNAL(timeOut(int)), SLOT(slotTimeout_(int)));
 
     // ------- setup ui ------
 
@@ -71,6 +72,7 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     connect(ui_->b_new, SIGNAL(clicked()), SLOT(start_()));
     connect(ui_->b_continue, SIGNAL(clicked()), SLOT(continue_()));
     connect(ui_->b_pause, SIGNAL(clicked()), SLOT(pause_()));
+    connect(ui_->b_resign, SIGNAL(clicked()), SLOT(resign_()));
     connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
 
     // ----- setup PlayGame -----
@@ -137,7 +139,8 @@ void PlayGameWidget::slotReconfigure()
     else
         ui_->engineCombo2->setCurrentIndex(0);
 
-    updateEngineWidgets_();
+    initTiming_();
+    setWidgetsPlaying_(playing_);
 }
 
 void PlayGameWidget::updateEngineWidgets_()
@@ -194,8 +197,10 @@ void PlayGameWidget::start_()
     setWidgetsPlayer_(White);
     setWidgetsPlaying_(true);
 
+    lastStm_ = White;
     playing_ = true;
     ignoreAnswer_ = false;
+    //playerMultiPly_ = false;
 
     // first player is engine? - then go
     // XXX not really working right now
@@ -212,7 +217,7 @@ void PlayGameWidget::start_()
     play_->activate();
 
     initTiming_();
-    startTiming_(White);
+    tc_.startMove();
 }
 
 void PlayGameWidget::continue_()
@@ -224,7 +229,7 @@ void PlayGameWidget::continue_()
     ignoreAnswer_ = false;
 
     play_->activate();
-    startTiming_(lastStm_);
+    //XXX tc_.startMove();
 
     emit continueGame();
 
@@ -233,14 +238,15 @@ void PlayGameWidget::continue_()
 
 void PlayGameWidget::stop()
 {
-    stopTiming_();
+    if (tc_.isMoving())
+        tc_.endMove();
     setWidgetsPlaying_(playing_ = false);
     play_->deactivate();
 }
 
 void PlayGameWidget::stopThinking()
 {
-    stopTiming_();
+    tc_.endMove();
     ignoreAnswer_ = true;
     blinkTimer_.stop();
     play_->deactivate();
@@ -248,11 +254,21 @@ void PlayGameWidget::stopThinking()
 
 void PlayGameWidget::pause_()
 {
-    stopTiming_();
+    tc_.endMove();
     setWidgetsPlaying_(playing_ = false);
     play_->deactivate();
 
     emit pauseGame();
+}
+
+void PlayGameWidget::resign_()
+{
+    if (QMessageBox::question(this, tr("Resigning"), tr("Are you sure you want to resign?"))
+        == QMessageBox::Yes)
+    {
+        stop();
+        emit playerLoses();
+    }
 }
 
 void PlayGameWidget::flipPlayers_()
@@ -274,10 +290,15 @@ void PlayGameWidget::setWidgetsPlayer_(int stm)
 
 void PlayGameWidget::setWidgetsPlaying_(bool p)
 {    
+    const bool
+        tourn = tc_.type() == TimeControl::T_Tournament,
+        timeplay = tourn || tc_.type() == TimeControl::T_Match;
+
     ui_->b_new->setEnabled(!p);
-    ui_->b_continue->setEnabled(!p);
-    ui_->b_pause->setEnabled(p);
+    ui_->b_continue->setEnabled(!p && !timeplay);
+    ui_->b_pause->setEnabled(p && !timeplay);
     ui_->b_flip->setEnabled(/*!p*/false); // XXX Don't allow as long as first Player can't be Engine
+    ui_->b_resign->setEnabled(p);
     ui_->nameEdit1->setEnabled(!p);
     ui_->nameEdit2->setEnabled(!p);
     ui_->engineCombo1->setEnabled(/*!p*/false); // XXX Don't allow as long as first Player can't be Engine
@@ -331,41 +352,53 @@ void PlayGameWidget::setPosition(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::setPosition() plyQue_.size()=" << plyQue_.size());
 
+    qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
+
     if (!playing_) return;
+
+
+    if (lastStm_ != board.toMove())
+    {
+        // player's move ended
+        tc_.endMove();
+    }
+
+    lastStm_ = board.toMove();
 
     // check if last player move ended game
     // (Win/Lose will be checked after move animation ended)
     if (checkGameResult_(board, false, false))
         return;
 
-    lastStm_ = board.toMove();
-
     // White is next
     if (board.toMove() == White)
     {
         setWidgetsPlayer_(White);
 
+        // start engine
         if (play_->player1IsEngine())
         {
             blinkTimer_.start();
             play_->setPosition(board);
+            tc_.startMove();
         }
 
-        startTiming_(White);
     }
     // Black is next
     else
     {
         setWidgetsPlayer_(Black);
 
+        // start engine
         if (play_->player2IsEngine())
         {
             blinkTimer_.start();
             play_->setPosition(board);
+            tc_.startMove();
         }
 
-        startTiming_(Black);
     }
+
 }
 
 
@@ -373,7 +406,13 @@ void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
 
-    stopTiming_();
+    qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
+
+    if (plyQue_.empty())
+    {
+        tc_.endMove();
+    }
+
     blinkTimer_.stop();
 
     // Stopped playing while Engine was thinking?
@@ -399,10 +438,12 @@ void PlayGameWidget::animationFinished(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
 
+    qDebug() << "PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size();
+
     if (!playing_)
         return;
 
-    // more plies in the que?
+    // more plies in the que? (means engine move last)
     if (!plyQue_.empty())
     {
         // we sent that one before
@@ -414,12 +455,17 @@ void PlayGameWidget::animationFinished(const Board& board)
             return;
         }
 
-        // check if last engine move ended game
-        checkGameResult_(board, true, true);
+        tc_.endMove();
 
-        // switch to other player
-        setWidgetsPlayer_(oppositeColor(lastStm_));
-        startTiming_(oppositeColor(lastStm_));
+        // check if last engine move ended game
+        if (!checkGameResult_(board, true, true))
+        {
+            // switch to other player
+            setWidgetsPlayer_(oppositeColor(lastStm_));
+
+            // start move thinking
+            tc_.startMove();
+        }
     }
 
 }
@@ -456,6 +502,8 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
     return end;
 }
 
+
+
 void PlayGameWidget::slotBlinkTimer_()
 {
     QLed * led = (activeLed_ == 0)? ui_->led1 : ui_->led2;
@@ -464,55 +512,42 @@ void PlayGameWidget::slotBlinkTimer_()
                           colorEngine1_ : colorEngine0_);
 }
 
-
-void PlayGameWidget::slotTimer_()
+void PlayGameWidget::slotTimeout_(int stm)
 {
-    /*
-    if (timeStm_ == White)
+    // XXX This is all crap (alles Quark)
+
+    if (stm == 0 && !play_->player1IsEngine())
     {
-        moveTime1_++;
-        totalTime1_--;
-        ui_->clock1->setTime(totalTime1_, moveTime1_);
+        stop();
+        emit playerLoses();
     }
-    else if (timeStm_ == Black)
+    else
+    if (stm == 1 && play_->player2IsEngine())
     {
-        moveTime2_++;
-        totalTime2_--;
-        ui_->clock2->setTime(totalTime2_, moveTime2_);
+        stop();
+        emit playerWins();
     }
-    */
+    else
+        Q_ASSERT(!"XXX engine/engine not supported");
+}
+
+void PlayGameWidget::slotUpdateClocks_()
+{
+    ui_->clock1->setTime(tc_.getTotalTime(White), tc_.getMoveTime(White));
+    ui_->clock2->setTime(tc_.getTotalTime(Black), tc_.getMoveTime(Black));
 }
 
 void PlayGameWidget::initTiming_()
 {
-    /*
-    timeMove_ = 1;
+    // clock visibility
+    bool
+        showTotal = tc_.totalTimeAtStart() != TimeControl::Unlimited,
+        showMove = tc_.type() == TimeControl::T_Match
+                || tc_.type() == TimeControl::T_Tournament;
 
-    if (tc_.totalTimeAtStart() == TimeControl::Unlimited)
-    {
-        ui_->clock1->setVisible(false, true);
-        ui_->clock2->setVisible(false, true);
-    }
-    else
-    {
-        ui_->clock1->setVisible(true, true);
-        ui_->clock2->setVisible(true, true);
-    }
+    ui_->clock1->setVisible(showTotal, showMove);
+    ui_->clock2->setVisible(showTotal, showMove);
 
-    totalTime1_ = totalTime2_ = tc_.totalTimeAtStart();
-    moveTime1_ = moveTime2_ = 0;
-    ui_->clock1->setTime(totalTime1_, moveTime1_);
-    ui_->clock2->setTime(totalTime2_, moveTime2_);
-    */
+    tc_.start();
 }
 
-void PlayGameWidget::startTiming_(int stm)
-{
-    timeStm_ = stm;
-    timer_.start();
-}
-
-void PlayGameWidget::stopTiming_()
-{
-    timer_.stop();
-}

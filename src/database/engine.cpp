@@ -106,7 +106,7 @@ void Engine::deleteProcess_()
     SB_ENGINE_DEBUG("Engine::deleteProcess_()");
     if (m_process)
     {
-        m_process->waitForFinished(1000);
+        m_process->waitForFinished(200);
         m_process->deleteLater();
         m_process = 0;
     }

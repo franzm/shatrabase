@@ -207,7 +207,7 @@ void BoardView::setBoard(const Board& value,int from, int to)
 
     // update painter
     if (m_view)
-        m_view->setBoard(value,from,to);
+        m_view->setBoard(value,NULL);
 
     // XXX need more than that to show all current moves
     // e.g. on mouse-click into game-list and such
@@ -215,6 +215,44 @@ void BoardView::setBoard(const Board& value,int from, int to)
 
 	update();
 }
+
+
+void BoardView::setBoard(const Board& value, const Move& move)
+{
+    // reset gui flags
+    m_selectedSquare
+        = m_dragStartSquare
+        = m_bestMoveFrom
+        = m_bestMoveTo
+            = InvalidSquare;
+    m_dragged = InvalidPiece;
+
+    // copy position
+    m_board = value;
+    m_move = move;
+
+    // get all possible moves
+    m_moves.clear();
+    m_board.getMoveSquares(m_moves);
+/*
+    // trigger own animation from last user action
+    if (from == InvalidSquare &&
+        m_own_from != InvalidSquare && m_own_to != InvalidSquare)
+    {
+        from = m_own_from;
+        to = m_own_to;
+        m_own_from = m_own_to = InvalidSquare;
+    }
+*/
+    // update painter
+    if (m_view)
+        m_view->setBoard(value,&m_move);
+
+    selectSquare_(m_move.from());
+
+    update();
+}
+
 
 Board BoardView::board() const
 {
@@ -451,6 +489,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 	{
         Square s = squareAt(event->pos());
 
+        // status message on square
         if (s != InvalidSquare)
             displayMessage(squareToString_(s));
         else
@@ -793,6 +832,8 @@ QRect BoardView::squareRect(Square square)
 */
 bool BoardView::canDrag(Square s)
 {
+    if (m_view->isAnimating())
+        return false;
     //if (m_dragged != InvalidPiece) // already dragging
     //    return false;
     if ((m_flags & F_DisableWhite) && m_board.toMove() == White)

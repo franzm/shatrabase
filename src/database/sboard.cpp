@@ -976,9 +976,9 @@ Move SBoard::parseMove(const QString& algebraic)
         if (c == '=' || c == '(') c = *s++; // allow for "=Q" & "(Q)"
         switch (toupper(c))
         {
-        case 'Q': type = Batyr; break;
-        case 'R': type = Tura; break;
-        case 'B': type = Yalkyn; break;
+        case 'q': case 'Q': type = Batyr; break;
+        case 'r': case 'R': type = Tura; break;
+        case 'b': case 'B': type = Yalkyn; break;
         default: return move;
         }
     }
@@ -1247,6 +1247,7 @@ SBoard getStandardPosition()
     SBoard b;
     b.fromSPN
         ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
+        //("SQSSRSBRB/K/SSSSSSS/1s3s1/4s2/7/7/2sss1s/k/brbsrssqs w Tt - - - 1");
     return b;
 }
 

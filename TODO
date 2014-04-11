@@ -40,6 +40,7 @@
 * disable Engine thinking when jumping in gametext
 * add autoAddGameAndContinue option
 * win animation
+* after a move: decide wether a time-increment will be given before or after a time-out check (in PlayTimeControl::endMove())
 
 -- board setup --
 

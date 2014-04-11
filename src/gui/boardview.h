@@ -61,6 +61,10 @@ public:
     /** Update and shows current position.
         @p to and @p from trigger an animation of the piece. */
     void setBoard(const Board& value, int from = InvalidSquare, int to = InvalidSquare);
+    /** Updates the board with animation */
+    void setBoard(const Board& board, const Move & move);
+
+
     /** @return displayed position. */
     Board board() const;
     /** @return current theme */
@@ -188,6 +192,8 @@ private:
     QWidget * m_parent;
     /** current position */
     Board m_board;
+    /** current move */
+    Move m_move;
     /** all current moves (as Square) */
     std::vector<SquareMove> m_moves;
 
