@@ -510,7 +510,7 @@ void MainWindow::slotMoveChanged()
     bool a = m_mainAnalysis->isEngineRunning();
     if (a) m_mainAnalysis->stopEngine();
 	// Set board first
-    m_boardView->setBoard(g.board(), m_currentFrom, m_currentTo);
+    m_boardView->setBoard(g.board(), g.move(g.currentMove()));// m_currentFrom, m_currentTo);
     m_currentFrom = InvalidSquare;
     m_currentTo = InvalidSquare;
 
