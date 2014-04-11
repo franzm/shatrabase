@@ -73,6 +73,9 @@ signals:
     /** The Engine has send a new position. */
     void moveMade(Move);
 
+    /** This class want's to add a comment at current position */
+    void gameComment(const QString&);
+
     void playerWins();
     void playerLoses();
 

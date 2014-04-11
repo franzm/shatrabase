@@ -217,6 +217,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_playGame, SIGNAL(continueGame()), SLOT(slotPlayGameContinue()));
     connect(m_playGame, SIGNAL(pauseGame()), SLOT(slotPlayGameEnd()));
     connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));
+    connect(m_playGame, SIGNAL(gameComment(QString)), SLOT(slotGameAddComment(QString)));
     connect(m_playGame, SIGNAL(playerWins()), SLOT(slotPlayPlayerWins()));
     connect(m_playGame, SIGNAL(playerLoses()), SLOT(slotPlayOtherWins()));
     connect(this, SIGNAL(reconfigure()), m_playGame, SLOT(slotReconfigure()));

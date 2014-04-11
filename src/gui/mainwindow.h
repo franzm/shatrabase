@@ -174,10 +174,13 @@ public slots:
 	void slotGameVarEnter();
     /* Exit variation. */
 	void slotGameVarExit();
+    /** Adds a comment after current move */
+    void slotGameAddComment(const QString&);
     /* Modify game on user's request. */
 	void slotGameModify(const EditAction& action);
-    /* Update GameView content when game changed. Also triggers @ref slotMoveChanged . */
-	void slotGameChanged();
+    /** Update GameView content when game changed.
+     * Also triggers @ref slotMoveChanged, when @p updateMove is true. */
+    void slotGameChanged(bool updateMove = true);
     /* Handle link click in Game View panel */
 	void slotGameViewLink(const QUrl& link);
     /* Handle link click in Game View panel */

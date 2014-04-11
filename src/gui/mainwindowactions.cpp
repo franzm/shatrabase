@@ -586,6 +586,12 @@ void MainWindow::slotGameVarExit()
 	}
 }
 
+void MainWindow::slotGameAddComment(const QString& s)
+{
+    game().setAnnotation(s);
+    slotGameChanged(false);
+}
+
 void MainWindow::slotGameLoadFirst()
 {
     gameLoad(0);
@@ -835,7 +841,7 @@ void MainWindow::slotGameModify(const EditAction& action)
 }
 
 
-void MainWindow::slotGameChanged()
+void MainWindow::slotGameChanged(bool updateMove)
 {
 	if (m_showSgnSource)
 		m_gameView->setPlainText(m_output->output(&game()));
@@ -882,7 +888,9 @@ void MainWindow::slotGameChanged()
 	if (header.length() > 8)
 		title.append(QString("<br>") + header);
     m_gameTitle->setText(QString("<qt>%1</qt>").arg(title));
-    slotMoveChanged();
+
+    if (updateMove)
+        slotMoveChanged();
 }
 
 void MainWindow::slotGameViewLink(const QUrl& url)

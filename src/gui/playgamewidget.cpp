@@ -285,6 +285,7 @@ void PlayGameWidget::resign_()
         == QMessageBox::Yes)
     {
         winStm_ = play_->player2IsEngine()? 1 : 0;
+        gameComment(winStm_==White? tr("Black resigned") : tr("White resigned"));
         stop();
         emit playerLoses();
     }
