@@ -897,9 +897,11 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                 m_b |= FLIP_URGENT;
                 do {
                     at = NB[usq = bitScanForward(au)];
+//                    if (m_urgent[m_stm] == NoSquare)
+//                        m_urgent[m_stm] = at;
                     getDrops(usq, PieceType(m_sb[at]));
                     
-                } while (au &= (au - 1));                
+                } while (au &= (au - 1));
                 return m_ml.count();
             }
         }
@@ -972,7 +974,7 @@ Move SBoard::parseMove(const QString& algebraic)
     if (temp >= 0 && c != 'x' && c != 'X')
     {
         if (c == '=' || c == '(') c = *s++; // allow for "=Q" & "(Q)"
-        switch (c)
+        switch (toupper(c))
         {
         case 'Q': type = Batyr; break;
         case 'R': type = Tura; break;
@@ -995,8 +997,8 @@ Move SBoard::parseMove(const QString& algebraic)
 bool SBoard::doMove(const Move& m)
 {
     ++m_halfMoves;
-    if (m_halfMoves > 50)
-        bool debug = true; // XXX
+ //   if (m_halfMoves > 50)
+//        bool debug = true; // XXX
     m_from = m.from();
     m_to = m.to();
 
