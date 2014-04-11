@@ -16,6 +16,7 @@
 #include <QGraphicsView>
 #include <QPoint>
 #include <QMouseEvent>
+#include <QTime>
 #include <QTimer>
 
 #include "../database/common.h"
@@ -87,7 +88,7 @@ public:
     bool isFlipped() const { return m_flipped; }
     void setFlipped(bool flipped) { m_flipped = flipped; onFlip_(); }
 
-    bool isAnimating() const { return m_animating; }
+    bool isAnimating() const { return m_animations > 0; }
 
     // --------- board/pieces --------
 
@@ -98,7 +99,10 @@ public:
         triggered for that piece and the moveFinished() signal is emitted
         when the animation is done.
         */
-    void setBoard(const Board& board, int from = InvalidSquare, int to = InvalidSquare);
+    //void setBoard(const Board& board, int from = InvalidSquare, int to = InvalidSquare);
+
+    /** Simply updates the board with or without animation */
+    void setBoard(const Board& board, const Move * move = 0);
 
     // --------- indicators ---------
 
@@ -131,6 +135,7 @@ protected slots:
     // ________ PROTECTED ____________
 protected:
     virtual void resizeEvent(QResizeEvent *event);
+    virtual void paintEvent(QPaintEvent *event);
 
     /* XXX The view is eating all mouse events, why? */
     virtual void mousePressEvent(QMouseEvent * e) { e->ignore(); };
@@ -157,18 +162,29 @@ protected:
     // --------- internal ------------
 
     /** Compares new board with old board and sets up animations */
-    void guessAnimations_(const Board& newBoard);
+    void guessAnimations_(const Board& newBoard, const Move& move);
 
     void createBoard_(const Board& board);
     void createPieces_(const Board& board);
+    PieceItem * createPiece_(const Board& board, Square sq, Piece p);
+
     void updateMoveIndicators_();
     /** Recalculates item positions after a board flip. */
     void onFlip_();
 
-    /** starts the animation thread and animates all
-        flagged pieces. @p from and @p to are only
-        used to derive the animation length */
-    void startAnimation_(Square from, Square to);
+    /** Returns msecs for an animation, optionally with distance influence */
+    int animationLength_(Square from = InvalidSquare, Square to = InvalidSquare) const;
+
+    /** Sets the PieceItem to final animation state and clears anim flags */
+    void endPieceAnimation_(PieceItem * p);
+
+    /** Ques a move animation.
+        PieceItems at @p from and @p to are supposed to represent the FINAL position
+        and must be set up already. */
+    void addMoveAnimation_(Square from, Square to);
+    /** Ques an animation for removing a piece.
+        PieceItem of removed piece may exist already or will be created. */
+    void addRemoveAnimation_(const Board& board, Square s, Piece p);
 
     // ----------- member ------------
 
@@ -178,8 +194,6 @@ protected:
     BoardTheme * m_theme;
 
     QGraphicsScene * m_scene;
-
-    QTimer m_timer;
 
     std::vector<SquareItem*> m_squares;
     std::vector<PieceItem*> m_pieces;
@@ -208,25 +222,30 @@ protected:
         m_do_show_frame;
 
     qreal
-    /** set piece move animation speed in squares per second */
+    // config
+    /** Piece move animation speed in squares per second */
         m_anim_speed,
-    /** set piece move animation length */
+    /** Piece animation fixed length */
         m_fixed_anim_length,
     /** set ratio between speed and fixed length [0,1] */
-        m_use_fixed_anim_length,
-    /** length of animations in seconds (calculated from above settings) */
-        m_anim_length,
-    /** current animation from 0 to 1 */
-        m_anim_t;
-
-    bool m_animating;
+        m_use_fixed_anim_length;
+    // state
+    /** number of animations currently running */
+    int m_animations,
+    /** maximum length of all animations in seconds */
+        m_anim_length;
+    /** first time after new board? */
+    bool m_start_anim;
+    /** messure screen update */
+    QTime m_anim_time;
+    QTimer m_anim_timer;
 
     Decoration m_deco;
 
     int m_own_from, m_own_to;
 
     /** used to automatically trigger animations */
-    Board * oldBoard_;
+    Board oldBoard_;
 };
 
 #endif // BOARDPAINTER_H
