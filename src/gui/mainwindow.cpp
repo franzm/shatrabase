@@ -64,9 +64,7 @@ MainWindow::MainWindow() : QMainWindow(),
     m_gameToolBar(0),
     m_showSgnSource(false),
     m_autoPlayTimer(0),
-    m_bGameChange(false),
-    m_currentFrom(InvalidSquare),
-    m_currentTo(InvalidSquare)
+    m_bGameChange(false)
 {
 	setObjectName("MainWindow");
 

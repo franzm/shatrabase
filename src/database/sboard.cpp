@@ -1231,6 +1231,7 @@ void SBoard::getMoveSquares(std::vector<SquareMove>& vec) const
 }
 
 
+
  // NB the following are not member functions
 /* Init board values before starting */
 void SBoardInit()

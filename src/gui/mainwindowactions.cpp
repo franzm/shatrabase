@@ -509,10 +509,13 @@ void MainWindow::slotMoveChanged()
     const Game& g = game();
     bool a = m_mainAnalysis->isEngineRunning();
     if (a) m_mainAnalysis->stopEngine();
-	// Set board first
-    m_boardView->setBoard(g.board(), g.move(g.currentMove()));// m_currentFrom, m_currentTo);
-    m_currentFrom = InvalidSquare;
-    m_currentTo = InvalidSquare;
+
+    // Set board first
+    if (m_lastSendBoard != g.board())
+        m_boardView->setBoard(g.board(), g.move(g.currentMove()));
+    else
+        m_boardView->setBoard(g.board());
+    m_lastSendBoard = g.board();
 
     emit displayTime(g.timeAnnotation(), g.board().toMove());
 
@@ -724,11 +727,6 @@ void MainWindow::slotPlayGameMove(Move m)
     game().addMove(m);
     game().forward();
     slotGameChanged();
-
-    // trigger animation
-    m_currentFrom = BN[m.from()];
-    m_currentTo = BN[m.to()];
-    slotMoveChanged();
 }
 
 void MainWindow::slotPlayPlayerWins()
@@ -1294,9 +1292,10 @@ void MainWindow::slotGetGameData(Game& g)
 
 bool MainWindow::slotGameMoveNext()
 {
-    Move m = game().move(game().nextMove());
+  /*Move m = game().move(game().nextMove());
     m_currentFrom = BN[m.from()];
     m_currentTo = BN[m.to()];
+    */
     return gameMoveBy(1);
 }
 

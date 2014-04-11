@@ -510,7 +510,7 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
         end = true;
 
         // determine winning side
-        winStm_ = draw? 2 : board.toMove();
+        winStm_ = draw? 2 : lastStm_;//board.toMove();
     }
 
     if (trigger)

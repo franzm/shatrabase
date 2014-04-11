@@ -389,6 +389,10 @@ void BoardPainter::setBoard(const Board& board, const Move * move, Square ignore
 
     oldBoard_ = board;
 
+    // ALWAYS EMIT THIS
+    // PlayGameWidget needs a feedback
+    if (m_animations <= 0)
+        emit animationFinished();
 
     /*
     if (m_do_animate && m_anim_speed > 0.0)
@@ -418,7 +422,11 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
 
     // move animation
     if (from != InvalidSquare && to != InvalidSquare
-        && to != ignore_to)
+        && to != ignore_to
+        // don't animate if did the same last time
+        // XXX not perfect for gamebrowsing (now checked in MainWindow::slotMoveChanged())
+        //oldBoard_.pieceAt(to) != b.pieceAt(to)
+            )
             addMoveAnimation_(from, to);
 
     for (int i=fsq; i<=lsq; ++i)

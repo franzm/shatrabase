@@ -414,8 +414,7 @@ private:
     QAction //* m_toggleFilter,
             * m_ExternalBoardAction;
     bool m_bGameChange;
-    int m_currentFrom;
-    int m_currentTo;
+    Board m_lastSendBoard;
     AnalysisWidget* m_mainAnalysis, * m_analysis2;
     Board m_AutoInsertLastBoard;
     Square m_annotationSquare;
