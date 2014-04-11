@@ -101,8 +101,9 @@ public:
         */
     //void setBoard(const Board& board, int from = InvalidSquare, int to = InvalidSquare);
 
-    /** Simply updates the board with or without animation */
-    void setBoard(const Board& board, const Move * move = 0);
+    /** Simply updates the board with or without animation.
+        A move with goal square @p ignore_move_to will not be animated. */
+    void setBoard(const Board& board, const Move * move = 0, Square ignore_move_to = 0);
 
     // --------- indicators ---------
 
@@ -161,8 +162,9 @@ protected:
 
     // --------- internal ------------
 
-    /** Compares new board with old board and sets up animations */
-    void guessAnimations_(const Board& newBoard, const Move& move);
+    /** Compares new board with old board and sets up animations.
+        A move with goal square @p ignore_move_to will not be animated. */
+    void guessAnimations_(const Board& newBoard, const Move& move, Square ignore_move_to = 0);
 
     void createBoard_(const Board& board);
     void createPieces_(const Board& board);

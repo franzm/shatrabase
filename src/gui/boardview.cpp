@@ -39,6 +39,7 @@ BoardView::BoardView(QWidget* parent, int flags)
     //m_own_to        (0),
     m_dragged       (InvalidPiece),
     m_dragStartSquare(InvalidSquare),
+    m_lastDropped   (0),
     //m_clickUsed(false),
     // m_wheelCurrentDelta(0),
     //m_minDeltaWheel(0),
@@ -240,7 +241,10 @@ void BoardView::setBoard(const Board& value, const Move& move)
     if (m_view)
     {
         if (m_move.isLegal())
-            m_view->setBoard(value,&m_move);
+        {
+            m_view->setBoard(value,&m_move, m_lastDropped);
+            m_lastDropped = 0;
+        }
         else
             m_view->setBoard(value,NULL);
     }
@@ -566,61 +570,6 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
 {
     Square s = squareAt(event->pos());
 
-    // always reset (could be smarter XXX)
-    //setCursor(QCursor(Qt::ArrowCursor));
-
-    //int button = event->button() + event->modifiers();
-    //m_clickUsed = false;
-
-    //if (m_showAllMoves && m_view)
-    //    m_view->clearReachableSquares();
-    /*
-    if (!(event->button() & Qt::LeftButton))
-    {
-        if (s != InvalidSquare)
-        {
-            emit clicked(s, button, mapToGlobal(event->pos()));
-        }
-        else
-        {
-            // XXX what means this?
-            // dragging with wrong mouse button is invalid move? sb
-            Square from = m_dragStartSquare;
-            emit invalidMove(from);
-        }
-        // reset drag (if any)
-        m_dragged = Empty;
-        if (m_view)
-            m_view->setDragPiece();
-        return;
-    }
-
-    // l-button
-    else
-    {
-        if (event->modifiers() & Qt::ShiftModifier)
-        {
-            if (s != InvalidSquare)
-            {
-                emit clicked(s, button, mapToGlobal(event->pos()));
-            }
-            return;
-        }
-    }
-    */
-
-
-    // --- remove piece in board setup ---
-
-    /*
-    if ((m_flags & F_AllowAllMoves) && (m_flags && F_NoExecuteMoves)
-        && !(event->button() & Qt::LeftButton))
-    {
-        if (s != InvalidSquare)
-            emit invalidMove(s);
-    }*/
-
-
     // ---- piece drop ----
 
     if (m_dragged != InvalidPiece)
@@ -647,7 +596,10 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             }
             // or move piece
             else
+            {
+                m_lastDropped = s;
                 emit moveMade(from, s, event->button() + event->modifiers());
+            }
         }
         else emit invalidMove(from);
 
@@ -690,18 +642,18 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
 
 }
 
+/*
 void BoardView::wheelEvent(QWheelEvent* e)
 {
-    /*
     m_wheelCurrentDelta += e->delta();
     if (abs(m_wheelCurrentDelta) > m_minDeltaWheel)
     {
         int change = m_wheelCurrentDelta < 0 ? WheelDown : WheelUp;
         emit wheelScrolled(change + e->modifiers());
         m_wheelCurrentDelta = 0;
-    }*/
+    }
 }
-
+*/
 bool BoardView::execBestMove()
 {
     if (m_bestMoveFrom && m_bestMoveTo)

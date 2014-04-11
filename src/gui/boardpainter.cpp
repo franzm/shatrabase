@@ -356,7 +356,7 @@ void BoardPainter::paintEvent(QPaintEvent * e)
 }
 
 
-void BoardPainter::setBoard(const Board& board, const Move * move)
+void BoardPainter::setBoard(const Board& board, const Move * move, Square ignore_to)
 {
     //qDebug() << "BoardPainter::setBoard(board," << from << ", " << to << ")";
 
@@ -376,7 +376,7 @@ void BoardPainter::setBoard(const Board& board, const Move * move)
 
     if (m_do_animate && m_anim_speed > 0.0
         && move)
-        guessAnimations_(board, *move);
+        guessAnimations_(board, *move, ignore_to);
 
     oldBoard_ = board;
 
@@ -400,7 +400,7 @@ void BoardPainter::setBoard(const Board& board, const Move * move)
 }
 
 
-void BoardPainter::guessAnimations_(const Board& b, const Move& move)
+void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ignore_to)
 {
     /* PieceItems are already placed at the new positions on entry. */
 
@@ -408,8 +408,9 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move)
         to = BN[move.to()];
 
     // move animation
-    if (from != InvalidSquare || to != InvalidSquare)
-        addMoveAnimation_(from, to);
+    if (from != InvalidSquare && to != InvalidSquare
+        && to != ignore_to)
+            addMoveAnimation_(from, to);
 
     for (int i=fsq; i<=lsq; ++i)
     {

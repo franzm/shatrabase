@@ -135,8 +135,8 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent* e);
     /** Handle mouse events */
     virtual void mouseReleaseEvent(QMouseEvent* e);
-    /** Handle mouse wheel events */
-    virtual void wheelEvent(QWheelEvent* e);
+    /* Handle mouse wheel events */
+    //virtual void wheelEvent(QWheelEvent* e);
 
     virtual void keyPressEvent(QKeyEvent *);
 
@@ -243,7 +243,8 @@ private:
     QPoint m_dragStart;
     /** current end of drag (window space) */
     QPoint m_dragPoint;
-
+    /** Last dragged-to square to turn off move animation */
+    Square m_lastDropped;
     /** flag for deleting the statusbar on leaveEvent() */
     bool m_messageSend;
 
