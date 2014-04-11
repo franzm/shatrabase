@@ -263,7 +263,8 @@ void PlayGameWidget::pause_()
 
 void PlayGameWidget::resign_()
 {
-    if (QMessageBox::question(this, tr("Resigning"), tr("Are you sure you want to resign?")))
+    if (QMessageBox::question(this, tr("Resigning"), tr("Are you sure you want to resign?"))
+        == QMessageBox::Yes)
     {
         stop();
         emit playerLoses();

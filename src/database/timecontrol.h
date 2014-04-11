@@ -24,6 +24,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QObject>
 #include <QString>
 
+// switch to turn off clocks atm
+#define SB_NO_CLOCKS
+
 /** Names of TimeControl::Type
     used for (re-)storing settings. */
 extern const char * timeControlTypeName[];

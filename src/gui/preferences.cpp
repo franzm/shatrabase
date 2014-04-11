@@ -114,7 +114,9 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
 	ui.engineEditWidget->setEnabled(false);
     ui.tabWidget->setCurrentIndex(s_lastIndex);
 
-    //connect(ui.tc1Time, SIGNAL(timeChanged(QTime)), SLOT(test()));
+#ifdef SB_NO_CLOCKS
+    ui.tabTimeControl->setEnabled(false);
+#endif
 }
 
 void PreferencesDialog::slotTCEnable()

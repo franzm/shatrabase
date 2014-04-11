@@ -50,6 +50,9 @@ TimeControl::TimeControl(QObject * p)
 
 void TimeControl::configure()
 {
+#ifdef SB_NO_CLOCKS
+    type_ = T_None;
+#else
     // Time Control
     AppSettings->beginGroup("/TimeControl/");
 
@@ -101,6 +104,7 @@ void TimeControl::configure()
         depthLimit_ = Unlimited;
 
     AppSettings->endGroup();
+#endif
 }
 
 QString TimeControl::msecToString(int msec) const
