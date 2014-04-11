@@ -58,12 +58,13 @@ public:
     /** Set flags for board interaction. @see BoardFlags enum */
     void setFlags(int flags);
 
-    /** Update and shows current position.
+    /* Update and shows current position.
         @p to and @p from trigger an animation of the piece. */
-    void setBoard(const Board& value, int from = InvalidSquare, int to = InvalidSquare);
+    //void setBoard(const Board& value, int from = InvalidSquare, int to = InvalidSquare);
     /** Updates the board with animation */
     void setBoard(const Board& board, const Move & move);
-
+    /** Updates the board without animation */
+    void setBoard(const Board& board) { setBoard(board, Move()); }
 
     /** @return displayed position. */
     Board board() const;
@@ -230,8 +231,8 @@ private:
         m_bestMoveTo;
     /** index into m_goals[] */
     unsigned int m_goal_index;
-    /** trigger for animation from own action */
-    int m_own_from, m_own_to;
+    /* trigger for animation from own action */
+    //int m_own_from, m_own_to;
     //int m_currentFrom;
     //int m_currentTo;
     /** piece currently dragged, or InvalidPiece */

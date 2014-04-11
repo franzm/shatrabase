@@ -35,8 +35,8 @@ BoardView::BoardView(QWidget* parent, int flags)
     m_bestMoveFrom  (InvalidSquare),
     m_bestMoveTo    (InvalidSquare),
     m_goal_index    (0),
-    m_own_from      (0),
-    m_own_to        (0),
+    //m_own_from      (0),
+    //m_own_to        (0),
     m_dragged       (InvalidPiece),
     m_dragStartSquare(InvalidSquare),
     //m_clickUsed(false),
@@ -171,6 +171,7 @@ void BoardView::setFlags(int flags)
     m_flags = flags;
 }
 
+/*
 void BoardView::setBoard(const Board& value,int from, int to)
 {
     //qDebug() << "setBoard(from=" << from << ", to=" << to << ")"
@@ -215,7 +216,7 @@ void BoardView::setBoard(const Board& value,int from, int to)
 
 	update();
 }
-
+*/
 
 void BoardView::setBoard(const Board& value, const Move& move)
 {
@@ -234,20 +235,15 @@ void BoardView::setBoard(const Board& value, const Move& move)
     // get all possible moves
     m_moves.clear();
     m_board.getMoveSquares(m_moves);
-/*
-    // trigger own animation from last user action
-    if (from == InvalidSquare &&
-        m_own_from != InvalidSquare && m_own_to != InvalidSquare)
-    {
-        from = m_own_from;
-        to = m_own_to;
-        m_own_from = m_own_to = InvalidSquare;
-    }
-*/
+
     // update painter
     if (m_view)
-        m_view->setBoard(value,&m_move);
-
+    {
+        if (m_move.isLegal())
+            m_view->setBoard(value,&m_move);
+        else
+            m_view->setBoard(value,NULL);
+    }
     selectSquare_(m_move.from());
 
     update();
@@ -674,9 +670,9 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             if (m_guessMove && v.size() && canDrag(m_selectedSquare)
                 && !(m_flags & F_NoExecuteMoves))
             {
-                m_own_from = from;
-                m_own_to = v[m_goal_index%v.size()];
-                emit moveMade(from, m_own_to,
+                //m_own_from = from;
+                //m_own_to = v[m_goal_index%v.size()];
+                emit moveMade(from, v[m_goal_index%v.size()],
                                 event->button() + event->modifiers());
                 event->accept();
                 return;
