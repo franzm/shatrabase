@@ -509,10 +509,13 @@ void MainWindow::slotMoveChanged()
     const Game& g = game();
     bool a = m_mainAnalysis->isEngineRunning();
     if (a) m_mainAnalysis->stopEngine();
-	// Set board first
-    m_boardView->setBoard(g.board(), g.move(g.currentMove()));// m_currentFrom, m_currentTo);
-    m_currentFrom = InvalidSquare;
-    m_currentTo = InvalidSquare;
+
+    // Set board first
+    if (m_lastSendBoard != g.board())
+        m_boardView->setBoard(g.board(), g.move(g.currentMove()));
+    else
+        m_boardView->setBoard(g.board());
+    m_lastSendBoard = g.board();
 
     emit displayTime(g.timeAnnotation(), g.board().toMove());
 
@@ -581,6 +584,12 @@ void MainWindow::slotGameVarExit()
 		game().backward();
 		slotMoveChanged();
 	}
+}
+
+void MainWindow::slotGameAddComment(const QString& s)
+{
+    game().setAnnotation(s);
+    slotGameChanged(false);
 }
 
 void MainWindow::slotGameLoadFirst()
@@ -659,10 +668,28 @@ bool MainWindow::slotGameNew()
     return false;
 }
 
+void MainWindow::slotPlayEnableWidgets(bool e, bool strong)
+{
+    const bool e1 = e || !strong;
+    m_gameList->setEnabled(e);
+    m_databaseList->setEnabled(e);
+    m_openingTreeView->setEnabled(e);
+    m_autoPlay->setEnabled(e);
+    m_menuDatabase->setEnabled(e);
+    m_menuEdit->setEnabled(e);
+    m_menuFile->setEnabled(e);
+    m_menuGame->setEnabled(e);
+    m_mainAnalysis->setEnabled(e1);
+    m_analysis2->setEnabled(e1);
+}
+
 void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
 {
     if (slotGameNew())
     {
+        // disable all non-related functions
+        slotPlayEnableWidgets(false, m_playGame->isTournament());
+
         // set boardview flags
         m_boardView->setFlags(
                     (BoardView::F_DisableWhite * (!m_playGame->whiteCanMove()))
@@ -691,6 +718,12 @@ void MainWindow::slotPlayGameContinue()
 
 void MainWindow::slotPlayGameEnd()
 {
+    game().setTag("Result", m_playGame->resultString());
+    slotGameChanged();
+
+    // restore functionallity
+    slotPlayEnableWidgets(true);
+
     // restore boardview flags
     m_boardView->setFlags(0);
 }
@@ -700,15 +733,11 @@ void MainWindow::slotPlayGameMove(Move m)
     game().addMove(m);
     game().forward();
     slotGameChanged();
-
-    // trigger animation
-    m_currentFrom = BN[m.from()];
-    m_currentTo = BN[m.to()];
-    slotMoveChanged();
 }
 
 void MainWindow::slotPlayPlayerWins()
 {
+    slotPlayGameEnd();
     QMessageBox::information(this,
                              tr("!!!"),
                              tr("You win!\n(XXX This should trigger an animation)")
@@ -717,6 +746,7 @@ void MainWindow::slotPlayPlayerWins()
 
 void MainWindow::slotPlayOtherWins()
 {
+    slotPlayGameEnd();
     QMessageBox::information(this,
                              tr("..."),
                              tr("You did not win!\n(XXX This should trigger an animation)")
@@ -811,7 +841,7 @@ void MainWindow::slotGameModify(const EditAction& action)
 }
 
 
-void MainWindow::slotGameChanged()
+void MainWindow::slotGameChanged(bool updateMove)
 {
 	if (m_showSgnSource)
 		m_gameView->setPlainText(m_output->output(&game()));
@@ -858,7 +888,9 @@ void MainWindow::slotGameChanged()
 	if (header.length() > 8)
 		title.append(QString("<br>") + header);
     m_gameTitle->setText(QString("<qt>%1</qt>").arg(title));
-    slotMoveChanged();
+
+    if (updateMove)
+        slotMoveChanged();
 }
 
 void MainWindow::slotGameViewLink(const QUrl& url)
@@ -1268,9 +1300,10 @@ void MainWindow::slotGetGameData(Game& g)
 
 bool MainWindow::slotGameMoveNext()
 {
-    Move m = game().move(game().nextMove());
+  /*Move m = game().move(game().nextMove());
     m_currentFrom = BN[m.from()];
     m_currentTo = BN[m.to()];
+    */
     return gameMoveBy(1);
 }
 

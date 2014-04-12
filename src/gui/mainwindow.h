@@ -174,10 +174,13 @@ public slots:
 	void slotGameVarEnter();
     /* Exit variation. */
 	void slotGameVarExit();
+    /** Adds a comment after current move */
+    void slotGameAddComment(const QString&);
     /* Modify game on user's request. */
 	void slotGameModify(const EditAction& action);
-    /* Update GameView content when game changed. Also triggers @ref slotMoveChanged . */
-	void slotGameChanged();
+    /** Update GameView content when game changed.
+     * Also triggers @ref slotMoveChanged, when @p updateMove is true. */
+    void slotGameChanged(bool updateMove = true);
     /* Handle link click in Game View panel */
 	void slotGameViewLink(const QUrl& link);
     /* Handle link click in Game View panel */
@@ -186,9 +189,12 @@ public slots:
 	void slotGameViewToggle(bool source);
     /* Dump all node information to the console */
     void slotGameDumpMoveNodes();
-    /* Create new empty game (to be appended to the database).
+    /** Create new empty game (to be appended to the database).
         Returns false if the database is readonly or save-current-game was cancelled. */
     bool slotGameNew();
+    /** Enable/disable all mainwindow functions not related to gaming.
+        if strong is true, additional functionality is taken away. */
+    void slotPlayEnableWidgets(bool enable, bool strong = false);
     /** Connected to PlayGameWidget to signal start of new game */
     void slotPlayGameNew(const QMap<QString, QString>& tags);
     /** Connected to PlayGameWidget to signal continuation of current game */
@@ -385,8 +391,12 @@ private:
 	QLabel* m_statusFilter;
     QLabel* m_gameTitle;
 	/* Menus */
-	QMenu* m_menuDatabases;
-	QMenu* m_menuView;
+    QMenu * m_menuFile,
+          * m_menuEdit,
+          * m_menuDatabase,
+          * m_menuDatabases,
+          * m_menuView,
+          * m_menuGame;
 
 	/* Local variables */
 	HistoryList m_recentFiles;
@@ -407,9 +417,8 @@ private:
     QAction //* m_toggleFilter,
             * m_ExternalBoardAction;
     bool m_bGameChange;
-    int m_currentFrom;
-    int m_currentTo;
-    AnalysisWidget* m_mainAnalysis;
+    Board m_lastSendBoard;
+    AnalysisWidget* m_mainAnalysis, * m_analysis2;
     Board m_AutoInsertLastBoard;
     Square m_annotationSquare;
     QAction* m_autoPlay;

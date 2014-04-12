@@ -210,6 +210,9 @@ SOURCES += src/database/board.cpp \
     src/database/timecontrol.cpp \
     src/database/playtimecontrol.cpp
 
+OTHER_FILES += \
+    TODO
+
 TEMPLATE = app
 INCLUDEPATH += src/database
 INCLUDEPATH += src/gui

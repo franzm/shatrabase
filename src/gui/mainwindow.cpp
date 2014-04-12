@@ -64,9 +64,7 @@ MainWindow::MainWindow() : QMainWindow(),
     m_gameToolBar(0),
     m_showSgnSource(false),
     m_autoPlayTimer(0),
-    m_bGameChange(false),
-    m_currentFrom(InvalidSquare),
-    m_currentTo(InvalidSquare)
+    m_bGameChange(false)
 {
 	setObjectName("MainWindow");
 
@@ -219,6 +217,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_playGame, SIGNAL(continueGame()), SLOT(slotPlayGameContinue()));
     connect(m_playGame, SIGNAL(pauseGame()), SLOT(slotPlayGameEnd()));
     connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));
+    connect(m_playGame, SIGNAL(gameComment(QString)), SLOT(slotGameAddComment(QString)));
     connect(m_playGame, SIGNAL(playerWins()), SLOT(slotPlayPlayerWins()));
     connect(m_playGame, SIGNAL(playerLoses()), SLOT(slotPlayOtherWins()));
     connect(this, SIGNAL(reconfigure()), m_playGame, SLOT(slotReconfigure()));
@@ -328,7 +327,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Analysis Dock 2 */
     DockWidgetEx* analysisDock2 = new DockWidgetEx(tr("Analysis 2"), this);
 	analysisDock2->setObjectName("AnalysisDock2");
-    analysis = new AnalysisWidget(m_engineDebug);
+    m_analysis2 = analysis = new AnalysisWidget(m_engineDebug);
     analysis->setObjectName("Analysis2");
     analysisDock2->setWidget(analysis);
 	addDockWidget(Qt::RightDockWidgetArea, analysisDock2);
@@ -1021,6 +1020,7 @@ void MainWindow::setupActions()
 {
 	/* File menu */
 	QMenu* file = menuBar()->addMenu(tr("&File"));
+    m_menuFile = file;
     file->addAction(createAction(tr("&New database..."), SLOT(slotFileNew())));
     file->addAction(createAction(tr("&Open..."), SLOT(slotFileOpen()), QKeySequence::Open));
     file->addAction(createAction(tr("&Open in UTF8..."), SLOT(slotFileOpenUtf8())));
@@ -1044,6 +1044,7 @@ void MainWindow::setupActions()
 
 	/* Edit menu */
 	QMenu* edit = menuBar()->addMenu(tr("&Edit"));
+    m_menuEdit = edit;
 	edit->addAction(createAction(tr("Comment"), SLOT(slotEditComment()),
 										  Qt::CTRL + Qt::Key_A));
     edit->addAction(createAction(tr("Comment Before"), SLOT(slotEditCommentBefore()),
@@ -1094,6 +1095,7 @@ void MainWindow::setupActions()
 
 	/* Game menu */
 	QMenu *gameMenu = menuBar()->addMenu(tr("&Game"));
+    m_menuGame = gameMenu;
 
     gameMenu->addAction(createAction(tr("&New"), SLOT(slotGameNew()), QKeySequence::New));
     QMenu* loadMenu = gameMenu->addMenu(tr("&Load"));
@@ -1152,6 +1154,7 @@ void MainWindow::setupActions()
 
 	/* Database menu */
 	QMenu* menuDatabase = menuBar()->addMenu(tr("&Database"));
+    m_menuDatabase = menuDatabase;
 	m_menuDatabases = menuDatabase->addMenu(tr("&Switch to"));
 	menuDatabase->addAction(createAction(tr("&Copy games..."), SLOT(slotDatabaseCopy()),
 						  Qt::Key_F5));

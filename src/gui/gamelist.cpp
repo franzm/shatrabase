@@ -99,6 +99,7 @@ void GameList::slotContextMenu(const QPoint& pos)
 
 void GameList::simpleSearch(int tagid)
 {
+    Q_UNUSED(tagid);
     /*
 	QuickSearchDialog dialog(this);
 
@@ -165,6 +166,7 @@ void GameList::simpleSearch(int tagid)
 /* Select and show current game in the list */
 void  GameList::slotFilterListByPlayer(QString s)
 {
+    Q_UNUSED(s);
     /*
     TagSearch ts(m_model->sourceFilter()->filter()->database(), "White", s);
     TagSearch ts2(m_model->sourceFilter()->filter()->database(), "Black", s);
@@ -178,6 +180,7 @@ void  GameList::slotFilterListByPlayer(QString s)
 
 void  GameList::slotFilterListByEvent(QString s)
 {
+    Q_UNUSED(s);
     /*
     TagSearch ts(m_model->sourceFilter()->filter()->database(), "Event", s);
     m_model->sourceFilter()->filter()->executeSearch(ts);
@@ -189,6 +192,8 @@ void  GameList::slotFilterListByEvent(QString s)
 
 void  GameList::slotFilterListByEventPlayer(QString event, QString player)
 {
+    Q_UNUSED(event);
+    Q_UNUSED(player);
     /*
     TagSearch ts(m_model->sourceFilter()->filter()->database(), "White", player);
     TagSearch ts2(m_model->sourceFilter()->filter()->database(), "Black", player);

@@ -28,6 +28,8 @@ EngineDebugWidget::EngineDebugWidget(QWidget *parent) :
 
 void EngineDebugWidget::slotEngineDebug(Engine * engine, Engine::DebugType t, const QString& str)
 {
+    Q_UNUSED(engine);
+
     QString prefix;
     switch (t)
     {

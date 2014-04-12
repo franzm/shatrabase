@@ -218,7 +218,6 @@ public:
     Result gameResult() const;
     /** Return number of pieces of given color */
     int pieceCount(Color) const;
-
     /** Return piece at given square number */
     Piece pieceAt(const int at) const;
     /** Return piece type at given square number */
@@ -243,8 +242,8 @@ public:
     Square urgentAt() const;
 //    /** Return square where piece *was* marked 'urgent' */
 //    Square oldUrgent() const;
-    /** Return square where piece was in transit */
-    Square oldTransit() const;
+//    /** Return square where piece was in transit */
+//    Square oldTransit() const;
     /** Return true if Biy on home square and Temdek on */
     bool isBiyOnTemdek(const Square s) const;
     /** Return true if given Temdek is on */

@@ -38,6 +38,7 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     engineDebug_    (debug),
     activeLed_      (0),
     play_           (new PlayGame(engineDebug_, this)),
+    winStm_         (-1),
     playing_        (false),
     ignoreAnswer_   (false)
 
@@ -100,6 +101,22 @@ bool PlayGameWidget::whiteCanMove() const
 bool PlayGameWidget::blackCanMove() const
 {
     return !play_->player2IsEngine();
+}
+
+bool PlayGameWidget::isTournament() const
+{
+    return tc_.type() == TimeControl::T_Tournament;
+}
+
+QString PlayGameWidget::resultString() const
+{
+    if (winStm_ < 0)
+        return "";
+    if (winStm_ == White)
+        return "1-0";
+    if (winStm_ == Black)
+        return "0-1";
+    return "1/2-1/2";
 }
 
 void PlayGameWidget::slotReconfigure()
@@ -197,6 +214,7 @@ void PlayGameWidget::start_()
     setWidgetsPlayer_(White);
     setWidgetsPlaying_(true);
 
+    winStm_ = -1;
     lastStm_ = White;
     playing_ = true;
     ignoreAnswer_ = false;
@@ -266,6 +284,8 @@ void PlayGameWidget::resign_()
     if (QMessageBox::question(this, tr("Resigning"), tr("Are you sure you want to resign?"))
         == QMessageBox::Yes)
     {
+        winStm_ = play_->player2IsEngine()? 1 : 0;
+        gameComment(winStm_==White? tr("Black resigned") : tr("White resigned"));
         stop();
         emit playerLoses();
     }
@@ -346,6 +366,7 @@ void PlayGameWidget::engineClueless()
                 "in the specified time... You win!"));
 
     setWidgetsPlaying_(playing_ = false);
+    stop();
 }
 
 void PlayGameWidget::setPosition(const Board& board)
@@ -355,7 +376,6 @@ void PlayGameWidget::setPosition(const Board& board)
     qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
 
     if (!playing_) return;
-
 
     if (lastStm_ != board.toMove())
     {
@@ -443,11 +463,12 @@ void PlayGameWidget::animationFinished(const Board& board)
     if (!playing_)
         return;
 
-    // more plies in the que? (means engine move last)
+    // more plies in the que? (means engine moved last)
     if (!plyQue_.empty())
     {
         // we sent that one before
         plyQue_.pop_front();
+
         // next ply?
         if (!plyQue_.empty())
         {
@@ -455,7 +476,7 @@ void PlayGameWidget::animationFinished(const Board& board)
             return;
         }
 
-        tc_.endMove();
+        //tc_.endMove();
 
         // check if last engine move ended game
         if (!checkGameResult_(board, true, true))
@@ -478,15 +499,19 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
     const bool
         wwin = board.gameResult() == WhiteWin,
         bwin = board.gameResult() == BlackWin,
+        draw = false, //XXX need to fix this-> board.gameResult() == Draw,
         e1 = play_->player1IsEngine(),
         e2 = play_->player2IsEngine();
 
     // stop playing
-    if ( wwin || bwin || board.hasNoMoves() )
+    if ( wwin || bwin || draw || board.hasNoMoves() )
     {
         if (dostop)
             stop();
         end = true;
+
+        // determine winning side
+        winStm_ = draw? 2 : lastStm_;//board.toMove();
     }
 
     if (trigger)
