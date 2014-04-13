@@ -13,12 +13,16 @@
 #include "enginelist.h"
 #include "settings.h"
 
+bool EngineList::m_wasEmpty = false;
+
 EngineList::EngineList()
 {
 }
 
 void EngineList::restoreEmptyFromPath(QString path, EngineData::EngineProtocol protocol)
 {
+    m_wasEmpty = true;
+
     if (path.isEmpty()) return;
 
     QStringList engines = QDir(path).entryList(QDir::Executable | QDir::Files | QDir::NoSymLinks);
@@ -32,11 +36,13 @@ void EngineList::restoreEmptyFromPath(QString path, EngineData::EngineProtocol p
         data.directory = path;
         data.protocol = protocol;
         append(data);
+        qDebug() << "automatically added Engine " << name;
     }
 }
 
 void EngineList::restoreEmpty()
 {
+    m_wasEmpty = true;
     restoreEmptyFromPath(AppSettings->enginePath(), EngineData::USHI);
 /*
     QString path(AppSettings->dataPath());
