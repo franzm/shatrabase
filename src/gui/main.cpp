@@ -26,6 +26,9 @@ int main(int argc, char** argv)
 	AppSettings = new Settings;
     QApplication a(argc, argv);
 
+    AppSettings->setValue("/General/executed",
+        AppSettings->getValue("/General/executed").toInt() + 1);
+
     a.setWindowIcon(QIcon(":/images/shatrabase.png"));
 
 #ifdef Q_OS_MAC
@@ -48,6 +51,7 @@ int main(int argc, char** argv)
 
     startFileLog();
 	int result = a.exec();
+
     stopFileLog();
 
 	delete AppSettings;

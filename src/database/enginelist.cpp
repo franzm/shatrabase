@@ -37,6 +37,8 @@ void EngineList::restoreEmptyFromPath(QString path, EngineData::EngineProtocol p
 
 void EngineList::restoreEmpty()
 {
+    restoreEmptyFromPath(AppSettings->enginePath(), EngineData::USHI);
+/*
     QString path(AppSettings->dataPath());
 
 #ifdef Q_OS_WIN
@@ -56,6 +58,7 @@ void EngineList::restoreEmpty()
 
     restoreEmptyFromPath(path1, EngineData::USHI);
 //    restoreEmptyFromPath(path2, EngineData::WinBoard);
+*/
 }
 
 void EngineList::restore()
