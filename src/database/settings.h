@@ -42,7 +42,14 @@ public:
 	Settings();
 	~Settings();
 
-    /** @return directory where data is stored. */
+    /** Returns path where engines are stored
+        (Engines that are provided with installation).
+        If the folder does not exist, it will be created,
+        if that fails, a null string will be returned. */
+    QString enginePath() const;
+
+    /** @return directory where data is stored.
+        XXX need to rework this */
     QString dataPath();
 
     /** Returns map of short locale (e.g. 'en') to language name */

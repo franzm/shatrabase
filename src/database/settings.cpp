@@ -80,6 +80,19 @@ void Settings::setLayout(const QWidget* w, int x, int y, int wi, int he)
 	endGroup();
 }
 
+QString Settings::enginePath() const
+{
+    // Engine path is ./engines in the executable folder
+
+    QDir dir(qApp->applicationDirPath());
+    if (!dir.cd("engines"))
+    {
+        if (!dir.mkdir("engines") && !dir.cd("engines"))
+            return QString();
+    }
+    return dir.absolutePath();
+}
+
 QString Settings::dataPath()
 {
     // TODO - alles Quark!
@@ -180,6 +193,8 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
 
     QString lang = language(QLocale::system().name().left(2));
     map.insert("/General/Language", lang);
+
+    map.insert("/General/executed", (int)0);
 
     map.insert("/General/EditLimit", 10);
     map.insert("/General/Notation", NUM);

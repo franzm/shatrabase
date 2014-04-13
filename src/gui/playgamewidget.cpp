@@ -137,6 +137,12 @@ void PlayGameWidget::slotReconfigure()
     EngineList enginesList;
     enginesList.restore();
     QStringList names = enginesList.names();
+
+    // set player 2 to the first engine when
+    // Engines have been auto-added to list
+    if (enginesList.wasEmpty() && !names.empty())
+        play_->setEngineName2(names[0]);
+
     names.insert(0, tr("human"));
 
     // setup combo boxes
