@@ -123,7 +123,7 @@
         <location filename="../src/gui/boardsetup.ui" line="64"/>
         <source>Side to move:</source>
         <translatorcomment>there may be a better word</translatorcomment>
-        <translation>ziehende Farbe</translation>
+        <translation>ziehende Farbe:</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.ui" line="166"/>
@@ -138,12 +138,12 @@
     <message>
         <location filename="../src/gui/boardsetup.ui" line="196"/>
         <source>Paste SPN</source>
-        <translation type="unfinished"></translation>
+        <translation>SPN einfügen</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.ui" line="203"/>
         <source>Copy SPN</source>
-        <translation type="unfinished"></translation>
+        <translation>SPN kopieren</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.ui" line="226"/>
@@ -191,7 +191,7 @@ hen auf der ersten oder achten Reihe</translation>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="63"/>
         <source>Set defunkt</source>
-        <translation type="unfinished"></translation>
+        <translation>Als geschlagen markieren</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="275"/>
@@ -216,47 +216,48 @@ hen auf der ersten oder achten Reihe</translation>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="283"/>
         <source>Incomplete</source>
-        <translation type="unfinished"></translation>
+        <translation>unbekannt</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="398"/>
         <source>Open temdek</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne temdek</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="398"/>
         <source>Close temdek</source>
-        <translation type="unfinished"></translation>
+        <translation>Schließe temdek</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="403"/>
         <source>Clear en passant square</source>
-        <translation type="unfinished"></translation>
+        <translation>Lösche en passant </translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="403"/>
         <source>Set en passant square</source>
-        <translation type="unfinished"></translation>
+        <translation>Setze en passant</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="405"/>
         <source>Clear urgent</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>best i could thing of</translatorcomment>
+        <translation>Lösche Zugzwang</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="405"/>
         <source>Set urgent</source>
-        <translation type="unfinished"></translation>
+        <translation>Setze Zugzwang</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="411"/>
         <source>Clear transit</source>
-        <translation type="unfinished"></translation>
+        <translation>Lösche schlagend</translation>
     </message>
     <message>
         <location filename="../src/gui/boardsetup.cpp" line="411"/>
         <source>Set transit</source>
-        <translation type="unfinished"></translation>
+        <translation>Setze schlagend</translation>
     </message>
     <message>
         <source>Unknown reason</source>
@@ -399,72 +400,72 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/boardview.cpp" line="114"/>
         <source>white batyr</source>
-        <translation type="unfinished"></translation>
+        <translation>weiße batyr</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="115"/>
         <source>white tura</source>
-        <translation type="unfinished"></translation>
+        <translation>weißer tura</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="116"/>
         <source>white yalkyn</source>
-        <translation type="unfinished"></translation>
+        <translation>weißer yalkyn</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="117"/>
         <source>white biy</source>
-        <translation type="unfinished"></translation>
+        <translation>weißer biy</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="118"/>
         <source>white shatra</source>
-        <translation type="unfinished"></translation>
+        <translation>weißer shatra</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="120"/>
         <source>black batyr</source>
-        <translation type="unfinished"></translation>
+        <translation>schwarze batyr</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="121"/>
         <source>black tura</source>
-        <translation type="unfinished"></translation>
+        <translation>schwarzer tura</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="122"/>
         <source>black yalkyn</source>
-        <translation type="unfinished"></translation>
+        <translation>schwarzer yalkyn</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="123"/>
         <source>black biy</source>
-        <translation type="unfinished"></translation>
+        <translation>schwarzer biy</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="124"/>
         <source>black shatra</source>
-        <translation type="unfinished"></translation>
+        <translation>schwarzer shatra</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="126"/>
         <source>captured batyr</source>
-        <translation type="unfinished"></translation>
+        <translation>geschlagene batyr</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="127"/>
         <source>captured tura</source>
-        <translation type="unfinished"></translation>
+        <translation>geschlagener tura</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="128"/>
         <source>captured yalkyn</source>
-        <translation type="unfinished"></translation>
+        <translation>geschlagener yalkyn</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="129"/>
         <source>captured shatra</source>
-        <translation type="unfinished"></translation>
+        <translation>geschlagener shatra</translation>
     </message>
 </context>
 <context>
@@ -472,62 +473,62 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="93"/>
         <source>Add start comment...</source>
-        <translation type="unfinished"></translation>
+        <translation>Füge Anfangskommentar ein...</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="95"/>
         <source>Add comment...</source>
-        <translation type="unfinished"></translation>
+        <translation>Füge Kommentar ein...</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="99"/>
         <source>Add move symbol</source>
-        <translation type="unfinished"></translation>
+        <translation>Füge Zugsymbol ein</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="103"/>
         <source>Add evaluation symbol</source>
-        <translation type="unfinished"></translation>
+        <translation>Füge Bewertungssymbol ein</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="108"/>
         <source>Add other symbol</source>
-        <translation type="unfinished"></translation>
+        <translation>Füge anderes Symbol ein</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="121"/>
         <source>Remove symbols</source>
-        <translation type="unfinished"></translation>
+        <translation>Entferne Symbole</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="124"/>
         <source>Promote to main line</source>
-        <translation type="unfinished"></translation>
+        <translation>Zur Hauptvariante machen</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="125"/>
         <source>Remove variation</source>
-        <translation type="unfinished"></translation>
+        <translation>Variante entfernen</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="126"/>
         <source>Move variation up</source>
-        <translation type="unfinished"></translation>
+        <translation>Variante nach oben</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="127"/>
         <source>Move variation down</source>
-        <translation type="unfinished"></translation>
+        <translation>Variante nach unten</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="128"/>
         <source>Remove previous moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorangehende Züge entfernen</translation>
     </message>
     <message>
         <location filename="../src/gui/chessbrowser.cpp" line="129"/>
         <source>Remove next moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Folgende Züge entfernen</translation>
     </message>
     <message>
         <source>Small font</source>
@@ -539,7 +540,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/colorlist.cpp" line="50"/>
         <source>Choose color for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbe für %1 wählen</translation>
     </message>
 </context>
 <context>
@@ -547,22 +548,22 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/commentdialog.ui" line="20"/>
         <source>Edit Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Kommentar bearbeiten</translation>
     </message>
     <message>
         <location filename="../src/gui/commentdialog.ui" line="57"/>
         <source>Elapsed Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Abgelaufene Zeit</translation>
     </message>
     <message>
         <location filename="../src/gui/commentdialog.ui" line="64"/>
         <source>Clock Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Restzeit</translation>
     </message>
     <message>
         <location filename="../src/gui/commentdialog.ui" line="77"/>
         <source>H:mm:ss</source>
-        <translation type="unfinished"></translation>
+        <translation>H:mm:ss</translation>
     </message>
 </context>
 <context>
@@ -595,7 +596,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/copydialog.ui" line="64"/>
         <source>&amp;To:</source>
-        <translation>&amp;Bis</translation>
+        <translation>&amp;Bis:</translation>
     </message>
 </context>
 <context>
@@ -603,27 +604,27 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="35"/>
         <source>failure removing </source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler beim Entfernen</translation>
     </message>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="42"/>
         <source>failure creating </source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler beim Erstellen</translation>
     </message>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="50"/>
         <source>failure opening output file</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler beim Schreiben der Datei</translation>
     </message>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="122"/>
         <source>processed: </source>
-        <translation type="unfinished"></translation>
+        <translation>fertig:</translation>
     </message>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="137"/>
         <source>failed adding player: </source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler beim Hinzufügen des Spielers:</translation>
     </message>
 </context>
 <context>
@@ -631,48 +632,48 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="22"/>
         <source>Databases</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenbanken</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="75"/>
         <source>Favorite</source>
-        <translation type="unfinished"></translation>
+        <translation>Favoriten</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="78"/>
         <location filename="../src/gui/databaselist.cpp" line="79"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffnen</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="79"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktivieren</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="81"/>
         <source>UTF8</source>
-        <translation type="unfinished"></translation>
+        <translation>UTF8</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="87"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Schließen</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="89"/>
         <source>Add to favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>Zu Favoriten hinzufügen</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="90"/>
         <source>Remove from Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>Aus Favoriten entfernen</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselist.cpp" line="93"/>
         <source>Show in Finder</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige im Sucher</translation>
     </message>
 </context>
 <context>
@@ -681,45 +682,45 @@ Please check your installation.</source>
         <location filename="../src/gui/databaselistmodel.cpp" line="16"/>
         <location filename="../src/gui/databaselistmodel.cpp" line="130"/>
         <source>Favorite</source>
-        <translation type="unfinished"></translation>
+        <translation>Favorit</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselistmodel.cpp" line="16"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselistmodel.cpp" line="16"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Größe</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselistmodel.cpp" line="16"/>
         <location filename="../src/gui/databaselistmodel.cpp" line="140"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Offen</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselistmodel.cpp" line="16"/>
         <source>Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Pfad</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselistmodel.cpp" line="16"/>
         <source>Format</source>
-        <translation type="unfinished"></translation>
+        <translation>Format</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselistmodel.cpp" line="83"/>
         <location filename="../src/gui/databaselistmodel.cpp" line="130"/>
         <location filename="../src/gui/databaselistmodel.cpp" line="149"/>
         <source>ClipBoard</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwischenablage</translation>
     </message>
     <message>
         <location filename="../src/gui/databaselistmodel.cpp" line="140"/>
         <source>Closed</source>
-        <translation type="unfinished"></translation>
+        <translation>Geschlossen</translation>
     </message>
 </context>
 <context>
@@ -727,77 +728,77 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="34"/>
         <source>Nr</source>
-        <translation type="unfinished"></translation>
+        <translation>Nr</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="35"/>
         <source>White</source>
-        <translation type="unfinished">Weiß</translation>
+        <translation>Weiß</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="36"/>
         <source>WhiteElo</source>
-        <translation type="unfinished"></translation>
+        <translation>WeißElo</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="37"/>
         <source>Black</source>
-        <translation type="unfinished">Schwarz</translation>
+        <translation>Schwarz</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="38"/>
         <source>BlackElo</source>
-        <translation type="unfinished"></translation>
+        <translation>SchwarzElo</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="39"/>
         <source>Event</source>
-        <translation type="unfinished">Turnier</translation>
+        <translation>Turnier</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="40"/>
         <source>Site</source>
-        <translation type="unfinished">Ort</translation>
+        <translation>Ort</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="41"/>
         <source>Round</source>
-        <translation type="unfinished">Runde</translation>
+        <translation>Runde</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="42"/>
         <source>Date</source>
-        <translation type="unfinished">Datum</translation>
+        <translation>Datum</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="43"/>
         <source>Result</source>
-        <translation type="unfinished">Ergebnis</translation>
+        <translation>Ergebnis</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="44"/>
         <source>ECO</source>
-        <translation type="unfinished">ECO</translation>
+        <translation>ECO</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="45"/>
         <source>Moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Züge</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="46"/>
         <source>Ply</source>
-        <translation type="unfinished"></translation>
+        <translation>Halbzüge</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="47"/>
         <source>Pieces White</source>
-        <translation type="unfinished"></translation>
+        <translation>Weiße Figuren</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="48"/>
         <source>Pieces Black</source>
-        <translation type="unfinished"></translation>
+        <translation>Schwarze Figuren</translation>
     </message>
 </context>
 <context>
@@ -805,32 +806,32 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="13"/>
         <source>property</source>
-        <translation type="unfinished"></translation>
+        <translation>Wert</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="14"/>
         <source>min</source>
-        <translation type="unfinished"></translation>
+        <translation>min</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="15"/>
         <source>max</source>
-        <translation type="unfinished"></translation>
+        <translation>max</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="16"/>
         <source>mean</source>
-        <translation type="unfinished"></translation>
+        <translation>Durchschnitt</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="17"/>
         <source>deviation</source>
-        <translation type="unfinished"></translation>
+        <translation>Abweichung</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="18"/>
         <source>unique values</source>
-        <translation type="unfinished"></translation>
+        <translation>unikate Werte</translation>
     </message>
 </context>
 <context>
@@ -838,37 +839,37 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/engine.cpp" line="253"/>
         <source>engine timeout after %1 ms</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitüberschreitung der Engine nach %1 ms</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="283"/>
         <source>failed to start engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler beim Starten der Engine</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="285"/>
         <source>the engine has crashed</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Engine ist abgestürtzt</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="287"/>
         <source>the engine timed out</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitüberschreitung der Engine</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="289"/>
         <source>could not speak to engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Konnte keine Verbindung zur Engine aufbauen</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="291"/>
         <source>could not read from engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Konnte keine Antwort von der Engine erhalten</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="293"/>
         <source>an unknown error occured with engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Ein unbekannter Enginefehler ist aufgetreten</translation>
     </message>
 </context>
 <context>
@@ -876,12 +877,12 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/engineoptiondialog.ui" line="14"/>
         <source>Engine Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Engine Optionen</translation>
     </message>
     <message>
         <location filename="../src/gui/engineoptiondialog.ui" line="25"/>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>Zurücksetzen</translation>
     </message>
 </context>
 <context>
@@ -889,7 +890,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/engineoptionlist.cpp" line="95"/>
         <source>Engine Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Engine Optionen</translation>
     </message>
 </context>
 <context>
@@ -897,27 +898,27 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/engineoptionmodel.cpp" line="14"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location filename="../src/gui/engineoptionmodel.cpp" line="14"/>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Standardwert</translation>
     </message>
     <message>
         <location filename="../src/gui/engineoptionmodel.cpp" line="14"/>
         <source>Min</source>
-        <translation type="unfinished"></translation>
+        <translation>Min</translation>
     </message>
     <message>
         <location filename="../src/gui/engineoptionmodel.cpp" line="14"/>
         <source>Max</source>
-        <translation type="unfinished"></translation>
+        <translation>Max</translation>
     </message>
     <message>
         <location filename="../src/gui/engineoptionmodel.cpp" line="14"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Wert</translation>
     </message>
 </context>
 <context>
@@ -925,42 +926,42 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="120"/>
         <source>&lt;i&gt;no games&lt;/i&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;i&gt;keine Spiele&lt;/i&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="137"/>
         <source>Total: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Gesammt: %1</translation>
     </message>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="160"/>
         <source>Games in database %1: %2&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiele in Datenbank %1: %2&lt;br&gt; </translation>
     </message>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="169"/>
         <source>Rating: &lt;b&gt;%1&lt;/b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Rating: &lt;b&gt;%1&lt;/b&gt;&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="171"/>
         <source>Rating: &lt;b&gt;%1-%2&lt;/b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Rating: &lt;b&gt;%1-%2&lt;/b&gt;&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="178"/>
         <source>Date: &lt;b&gt;????.??.??&lt;b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum: &lt;b&gt;????.??.??&lt;/b&gt;&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="182"/>
         <source>Date: &lt;b&gt;%1&lt;/b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum: &lt;b&gt;%1&lt;/b&gt;&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="188"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;th&gt;Participants&lt;th&gt;Score</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;table&gt;&lt;tr&gt;&lt;th&gt;Teilnehmer&lt;th&gt;Punkte</translation>
     </message>
 </context>
 <context>
@@ -969,7 +970,7 @@ Please check your installation.</source>
         <location filename="../src/gui/eventlistwidget.cpp" line="108"/>
         <location filename="../src/gui/eventlistwidget.cpp" line="133"/>
         <source>&lt;html&gt;&lt;i&gt;No event chosen.&lt;/i&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;i&gt;Kein Ort ausgewählt.&lt;/i&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -977,62 +978,62 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="25"/>
         <source>Nr</source>
-        <translation type="unfinished"></translation>
+        <translation>Nr</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="26"/>
         <source>White</source>
-        <translation type="unfinished">Weiß</translation>
+        <translation>Weiß</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="27"/>
         <source>WhiteElo</source>
-        <translation type="unfinished"></translation>
+        <translation>WeißElo</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="28"/>
         <source>Black</source>
-        <translation type="unfinished">Schwarz</translation>
+        <translation>Schwarz</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="29"/>
         <source>BlackElo</source>
-        <translation type="unfinished"></translation>
+        <translation>SchwarzElo</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="30"/>
         <source>Event</source>
-        <translation type="unfinished">Turnier</translation>
+        <translation>Turnier</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="31"/>
         <source>Site</source>
-        <translation type="unfinished">Ort</translation>
+        <translation>Ort</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="32"/>
         <source>Round</source>
-        <translation type="unfinished">Runde</translation>
+        <translation>Runde</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="33"/>
         <source>Date</source>
-        <translation type="unfinished">Datum</translation>
+        <translation>Datum</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="34"/>
         <source>Result</source>
-        <translation type="unfinished">Ergebnis</translation>
+        <translation>Ergebnis</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="35"/>
         <source>ECO</source>
-        <translation type="unfinished">ECO</translation>
+        <translation>ECO</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="36"/>
         <source>Moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Züge</translation>
     </message>
 </context>
 <context>
@@ -1045,12 +1046,12 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/gamelist.cpp" line="90"/>
         <source>Copy games...</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiere Spiele...</translation>
     </message>
     <message>
         <location filename="../src/gui/gamelist.cpp" line="92"/>
         <source>Delete game</source>
-        <translation type="unfinished"></translation>
+        <translation>Lösche Spiel</translation>
     </message>
 </context>
 <context>
@@ -1149,12 +1150,12 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/histogram.cpp" line="294"/>
         <source>Show all</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige alles</translation>
     </message>
     <message>
         <location filename="../src/gui/histogram.cpp" line="296"/>
         <source>Hide all</source>
-        <translation type="unfinished"></translation>
+        <translation>Verstecke alles</translation>
     </message>
 </context>
 <context>
@@ -1211,167 +1212,167 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="152"/>
         <source>&lt;html&gt;The database &lt;i&gt;%1&lt;/i&gt; is read-only and cannot be saved.&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;Die Datenbank &lt;i&gt;%1&lt;/i&gt; ist schreibgeschützt und kann nicht gespeichert werden.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="134"/>
         <location filename="../src/gui/mainwindowactions.cpp" line="157"/>
         <source>Saving %1...</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichere %1...</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="62"/>
         <source>SGN database (*.sgn)</source>
-        <translation type="unfinished"></translation>
+        <translation>SGN Datenbank (*.sgn)</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="69"/>
         <source>Cannot create Shatra database.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann Shatra-Datenbank nicht erstellen.</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="82"/>
         <location filename="../src/gui/mainwindowactions.cpp" line="96"/>
         <source>SGN databases (*.sgn)</source>
-        <translation type="unfinished"></translation>
+        <translation>SGN Datenbanken (*.sgn)</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="130"/>
         <source>The current database is modified!</source>
-        <translation type="unfinished"></translation>
+        <translation>Die momentane Datenbank ist verändert worden!</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="138"/>
         <location filename="../src/gui/mainwindowactions.cpp" line="161"/>
         <source>%1 saved</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 gespeichert</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="339"/>
         <source>Text in clipboard does not represent valid SPN:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;</source>
-        <translation type="unfinished">Der Text in der Zwischenablage ist keine SPN:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;</translation>
+        <translation>Der Text in der Zwischenablage ist keine SPN:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="346"/>
         <source>The clipboard contains SPN, but an illegal position. You can only paste such positions in &lt;b&gt;Setup position&lt;/b&gt; dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Zwischenablage enthält ein SPN aber eine nicht legale Stellung. Solche Stellungen können nur im &lt;b&gt;Stellung setzen&lt;/b&gt;-Dialog eingefügt werden.</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="370"/>
         <source>Text in clipboard does not represent valid SGN</source>
-        <translation type="unfinished"></translation>
+        <translation>Der Text in der Zwischenablage enthält kein ordentliches SGN</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="425"/>
         <source>You have the option not to move</source>
-        <translation type="unfinished"></translation>
+        <translation>Sie haben die Wahl, nicht zu ziehen</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="426"/>
         <source>Do you really want to pass?</source>
-        <translation type="unfinished"></translation>
+        <translation>Wollen Sie wirklich passen?</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="437"/>
         <source>Batyr</source>
-        <translation type="unfinished"></translation>
+        <translation>Batyr</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="439"/>
         <source>Tura</source>
-        <translation type="unfinished"></translation>
+        <translation>Tura</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="441"/>
         <source>Yalkyn</source>
-        <translation type="unfinished"></translation>
+        <translation>Yalkyn</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="490"/>
         <source>Red Square</source>
-        <translation type="unfinished"></translation>
+        <translation>Rotes Feld</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="492"/>
         <source>Yellow Square</source>
-        <translation type="unfinished"></translation>
+        <translation>Gelbes Feld</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="494"/>
         <source>Green Square</source>
-        <translation type="unfinished"></translation>
+        <translation>Grünes Feld</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="496"/>
         <source>Remove Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Entferne Farbe</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="498"/>
         <source>Red Arrow to here</source>
-        <translation type="unfinished"></translation>
+        <translation>Roter Pfeil nach hier</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="499"/>
         <source>Yellow Arrow to here</source>
-        <translation type="unfinished"></translation>
+        <translation>Gelber Pfeil nach hier</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="500"/>
         <source>Green Arrow to here</source>
-        <translation type="unfinished"></translation>
+        <translation>Grüner Pfeil nach hier</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="501"/>
         <source>Remove Arrow to here</source>
-        <translation type="unfinished"></translation>
+        <translation>Entferne Pfeil</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="742"/>
         <source>!!!</source>
-        <translation type="unfinished"></translation>
+        <translation>!!!</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="743"/>
         <source>You win!
 (XXX This should trigger an animation)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sie haben gewonnen!</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="751"/>
         <source>...</source>
-        <translation type="unfinished">...</translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="752"/>
         <source>You did not win!
 (XXX This should trigger an animation)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sie haben nicht gewonnen!</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="885"/>
         <source>&lt;b&gt;New game&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Neues Spiel&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="987"/>
         <source>Analysis Pane 1 is not running an engine for automatic analysis.</source>
-        <translation type="unfinished"></translation>
+        <translation>Analyse 1 hat keine Engine eingestellt</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="1164"/>
         <source>%1 - Shatrabase</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 - Shatrabase</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="1193"/>
         <source>Search ended</source>
-        <translation type="unfinished"></translation>
+        <translation>Suche beendet</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="1230"/>
         <source>Tree updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Baum erneuert.</translation>
     </message>
     <message>
         <source>Text in clipboard does not represent valid FEN:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;</source>
@@ -1412,7 +1413,7 @@ Please check your installation.</source>
         <location filename="../src/gui/mainwindowactions.cpp" line="1198"/>
         <location filename="../src/gui/mainwindowactions.cpp" line="1240"/>
         <source>Updating tree...</source>
-        <translation type="unfinished"></translation>
+        <translation>Erneuere Baum...</translation>
     </message>
     <message>
         <source>Add move</source>
@@ -1571,27 +1572,27 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1048"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Kommentar</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1052"/>
         <source>Variation</source>
-        <translation type="unfinished"></translation>
+        <translation>Variante</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1053"/>
         <source>Promote</source>
-        <translation type="unfinished"></translation>
+        <translation>Umwandeln</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1055"/>
         <source>Remove</source>
-        <translation type="unfinished">Löschen</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1063"/>
         <source>Setup &amp;position...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Stellung einstellen...</translation>
     </message>
     <message>
         <source>&amp;Copy FEN</source>
@@ -1648,13 +1649,13 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1114"/>
         <source>Auto Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisches Spiel</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1117"/>
         <location filename="../src/gui/mainwindowactions.cpp" line="988"/>
         <source>Auto Analysis</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatische Analyse</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1124"/>
@@ -1694,12 +1695,12 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1131"/>
         <source>Enter Variation</source>
-        <translation type="unfinished"></translation>
+        <translation>Variation eingeben</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1132"/>
         <source>Back to main line</source>
-        <translation type="unfinished"></translation>
+        <translation>Zurück zur Hauptvariante</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1110"/>
@@ -1729,38 +1730,38 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1167"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Hilfe</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1179"/>
         <source>&amp;About Shatrabase</source>
-        <translation type="unfinished"></translation>
+        <translation>Ü&amp;ber Shatrabase</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1211"/>
         <source>Following databases are modified:</source>
-        <translation type="unfinished"></translation>
+        <translation>Folgende Datenbanken wurden verändert:</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1212"/>
         <source>Save them?</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichern?</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1213"/>
         <source>Following database is modified:</source>
-        <translation type="unfinished"></translation>
+        <translation>Folgende Datenbank wurde verändert:</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1215"/>
         <location filename="../src/gui/mainwindowactions.cpp" line="131"/>
         <source>Save it?</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichern?</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1245"/>
         <source> (%1 s.)</source>
-        <translation type="unfinished"></translation>
+        <translation>(%1 s.)</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1083"/>
@@ -1770,22 +1771,22 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="131"/>
         <source>Game Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Spielzeit</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="190"/>
         <source>Database Statistics</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenbank Statistiken</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="200"/>
         <source>Engine Debugger</source>
-        <translation type="unfinished"></translation>
+        <translation>Engine Debugger</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="209"/>
         <source>Play Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Spielen</translation>
     </message>
     <message>
         <source>Players</source>
@@ -1794,83 +1795,83 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="256"/>
         <source>Databases</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenbanken</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="306"/>
         <source>Analysis 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Analyse 1</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="328"/>
         <source>Analysis 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Analyse 2</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="853"/>
         <location filename="../src/gui/mainwindow.cpp" line="879"/>
         <source>Database %1 cannot be accessed at the moment.</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenbank %1 kann im Moment nicht geöffnet werden</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="863"/>
         <source>Opening %1...</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne %1...</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="890"/>
         <source>Cannot open file</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann Datei nicht öffnen</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="901"/>
         <source>%1 opened</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 geöffnet</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="927"/>
         <source>SGN file (*.sgn)</source>
-        <translation type="unfinished"></translation>
+        <translation>SGN Datei (*.sgn)</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1026"/>
         <source>&amp;Open in UTF8...</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne in &amp;UTF8...</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1050"/>
         <source>Comment Before</source>
-        <translation type="unfinished"></translation>
+        <translation>Kommentar davor</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1065"/>
         <source>&amp;Copy SPN</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kopiere SPN</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1067"/>
         <source>&amp;Paste SPN</source>
-        <translation type="unfinished"></translation>
+        <translation>SPN &amp;Einfügen</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1070"/>
         <source>&amp;Copy SGN</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kopieren SGN</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1072"/>
         <source>&amp;Paste SGN</source>
-        <translation type="unfinished"></translation>
+        <translation>SGN &amp;Einfügen</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1075"/>
         <source>&amp;Copy Image</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kopiere Bild</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1078"/>
         <source>&amp;Preferences...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ein&amp;stellungen</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1156"/>
@@ -1975,7 +1976,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1086"/>
         <source>&amp;External board window</source>
-        <translation type="unfinished"></translation>
+        <translation>Spielbrett in neuem &amp;Fenster</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1100"/>
@@ -2045,17 +2046,17 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1136"/>
         <source>Refactor</source>
-        <translation type="unfinished"></translation>
+        <translation>Entferne</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1137"/>
         <source>Uncomment</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle Kommentare</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1138"/>
         <source>Remove Variations</source>
-        <translation type="unfinished"></translation>
+        <translation>Variationen entfernen</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1158"/>
@@ -2075,12 +2076,12 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindowabout.cpp" line="22"/>
         <source>About Shatrabase</source>
-        <translation type="unfinished"></translation>
+        <translation>Über Shatrabase</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowabout.cpp" line="22"/>
         <source>&lt;h1&gt;Shatrabase&lt;/h1&gt;&lt;p&gt;Free Shatra database Version %1&lt;/p&gt;&lt;p&gt;Derived from Chessx Version %1&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h1&gt;Shatrabase&lt;/h1&gt;&lt;p&gt;Freie Shatra Datenbank, Version %1&lt;/p&gt;&lt;p&gt;Abgeleitet von ChessX Version %1&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -2088,47 +2089,47 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/messagedialog.h" line="30"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <location filename="../src/gui/messagedialog.h" line="32"/>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnung</translation>
     </message>
     <message>
         <location filename="../src/gui/messagedialog.h" line="34"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Information</translation>
     </message>
     <message>
         <location filename="../src/gui/messagedialog.h" line="36"/>
         <location filename="../src/gui/messagedialog.h" line="39"/>
         <location filename="../src/gui/messagedialog.h" line="41"/>
         <source>Question</source>
-        <translation type="unfinished"></translation>
+        <translation>Frage</translation>
     </message>
     <message>
         <location filename="../src/gui/messagedialog.h" line="37"/>
         <location filename="../src/gui/messagedialog.h" line="42"/>
         <source>&amp;Yes</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ja</translation>
     </message>
     <message>
         <location filename="../src/gui/messagedialog.h" line="37"/>
         <location filename="../src/gui/messagedialog.h" line="42"/>
         <source>&amp;No</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nein</translation>
     </message>
     <message>
         <location filename="../src/gui/messagedialog.h" line="40"/>
         <source>&amp;OK</source>
-        <translation type="unfinished">&amp;OK</translation>
+        <translation>&amp;OK</translation>
     </message>
     <message>
         <location filename="../src/gui/messagedialog.h" line="40"/>
         <location filename="../src/gui/messagedialog.h" line="43"/>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;Abbrechen</translation>
+        <translation>&amp;Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -2136,7 +2137,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/openingtree.cpp" line="36"/>
         <source>[end]</source>
-        <translation type="unfinished"></translation>
+        <translation>[Ende]</translation>
     </message>
 </context>
 <context>
@@ -2145,31 +2146,31 @@ Please check your installation.</source>
         <location filename="../src/database/openingtree.cpp" line="256"/>
         <location filename="../src/database/openingtree.cpp" line="263"/>
         <source>Move</source>
-        <translation type="unfinished"></translation>
+        <translation>Zug</translation>
     </message>
     <message>
         <location filename="../src/database/openingtree.cpp" line="256"/>
         <location filename="../src/database/openingtree.cpp" line="263"/>
         <source>Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzahl</translation>
     </message>
     <message>
         <location filename="../src/database/openingtree.cpp" line="256"/>
         <location filename="../src/database/openingtree.cpp" line="263"/>
         <source>Score</source>
-        <translation type="unfinished"></translation>
+        <translation>Punkte</translation>
     </message>
     <message>
         <location filename="../src/database/openingtree.cpp" line="256"/>
         <location filename="../src/database/openingtree.cpp" line="263"/>
         <source>Rating</source>
-        <translation type="unfinished"></translation>
+        <translation>Rating</translation>
     </message>
     <message>
         <location filename="../src/database/openingtree.cpp" line="256"/>
         <location filename="../src/database/openingtree.cpp" line="263"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Jahr</translation>
     </message>
 </context>
 <context>
@@ -2178,12 +2179,12 @@ Please check your installation.</source>
         <location filename="../src/database/output.cpp" line="89"/>
         <source>Could not create option. Ignoring line %d in file %s :
 %s</source>
-        <translation type="unfinished"></translation>
+        <translation>Konnte Option nicht erstellen. Ignoriere Zeile %d in Datei %s :\n%s</translation>
     </message>
     <message>
         <location filename="../src/database/output.cpp" line="96"/>
         <source>Invalid option or value in file %s line %d. Ignoring : %s</source>
-        <translation type="unfinished"></translation>
+        <translation>Unültige Option oder Wert in Datei %s, Zeile %d. Ignoriere: %s</translation>
     </message>
 </context>
 <context>
@@ -2191,12 +2192,12 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/outputoptions.cpp" line="63"/>
         <source>Option &apos;%s&apos; could not be created</source>
-        <translation type="unfinished"></translation>
+        <translation>Option &apos;%s&apos; konnte nicht erstellt werden</translation>
     </message>
     <message>
         <location filename="../src/database/outputoptions.cpp" line="81"/>
         <source>Option &apos;%s&apos; could not be set</source>
-        <translation type="unfinished"></translation>
+        <translation>Option &apos;%s&apos; konnte nicht gesetzt werden</translation>
     </message>
 </context>
 <context>
@@ -2204,48 +2205,48 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/playgame.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../src/gui/playgame.ui" line="34"/>
         <source>Start a new game</source>
-        <translation type="unfinished"></translation>
+        <translation>Starte neues Spiel</translation>
     </message>
     <message>
         <location filename="../src/gui/playgame.ui" line="57"/>
         <source>Continue current game</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiel fortsetzen</translation>
     </message>
     <message>
         <location filename="../src/gui/playgame.ui" line="71"/>
         <source>Pause the current game</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiel pausieren</translation>
     </message>
     <message>
         <location filename="../src/gui/playgame.ui" line="81"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="../src/gui/playgame.ui" line="145"/>
         <source>Swap players</source>
-        <translation type="unfinished"></translation>
+        <translation>Spieler tauschen</translation>
     </message>
     <message>
         <location filename="../src/gui/playgame.ui" line="165"/>
         <source>White</source>
-        <translation type="unfinished">Weiß</translation>
+        <translation>Weiß</translation>
     </message>
     <message>
         <location filename="../src/gui/playgame.ui" line="189"/>
         <location filename="../src/gui/playgame.ui" line="240"/>
         <source>Engine configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Engine Einstellungen</translation>
     </message>
     <message>
         <location filename="../src/gui/playgame.ui" line="216"/>
         <source>Black</source>
-        <translation type="unfinished">Schwarz</translation>
+        <translation>Schwarz</translation>
     </message>
 </context>
 <context>
@@ -2253,33 +2254,33 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/playgameenginedialog.ui" line="29"/>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Spieler</translation>
     </message>
     <message>
         <location filename="../src/gui/playgameenginedialog.ui" line="59"/>
         <source>Minimum thinking time</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimale Bedenkzeit</translation>
     </message>
     <message>
         <location filename="../src/gui/playgameenginedialog.ui" line="66"/>
         <location filename="../src/gui/playgameenginedialog.ui" line="93"/>
         <source> seconds</source>
-        <translation type="unfinished"></translation>
+        <translation> Sekunden</translation>
     </message>
     <message>
         <location filename="../src/gui/playgameenginedialog.ui" line="86"/>
         <source>Maximum thinking time</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximale Bedenkzeit</translation>
     </message>
     <message>
         <location filename="../src/gui/playgameenginedialog.ui" line="113"/>
         <source>Search ply depth (0 to disable)</source>
-        <translation type="unfinished"></translation>
+        <translation>Suchtiefe (0 für endlos)</translation>
     </message>
     <message>
         <location filename="../src/gui/playgameenginedialog.cpp" line="55"/>
         <source>Player %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Spieler %1</translation>
     </message>
 </context>
 <context>
@@ -2287,43 +2288,43 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/playgamewidget.cpp" line="47"/>
         <source>Player selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Spielen</translation>
     </message>
     <message>
         <location filename="../src/gui/playgamewidget.cpp" line="140"/>
         <source>human</source>
-        <translation type="unfinished"></translation>
+        <translation>Mensch</translation>
     </message>
     <message>
         <location filename="../src/gui/playgamewidget.cpp" line="284"/>
         <source>Resigning</source>
-        <translation type="unfinished"></translation>
+        <translation>Aufgeben</translation>
     </message>
     <message>
         <location filename="../src/gui/playgamewidget.cpp" line="284"/>
         <source>Are you sure you want to resign?</source>
-        <translation type="unfinished"></translation>
+        <translation>Wollen Sie wirklich aufgeben?</translation>
     </message>
     <message>
         <location filename="../src/gui/playgamewidget.cpp" line="288"/>
         <source>Black resigned</source>
-        <translation type="unfinished"></translation>
+        <translation>Schwarz gab auf</translation>
     </message>
     <message>
         <location filename="../src/gui/playgamewidget.cpp" line="288"/>
         <source>White resigned</source>
-        <translation type="unfinished"></translation>
+        <translation>Weiß gab auf</translation>
     </message>
     <message>
         <location filename="../src/gui/playgamewidget.cpp" line="364"/>
         <source>Shatra Engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Shatra Engine</translation>
     </message>
     <message>
         <location filename="../src/gui/playgamewidget.cpp" line="365"/>
         <source>Sorry, but the Engine did not respond
 in the specified time... You win!</source>
-        <translation type="unfinished"></translation>
+        <translation>Entschuldigung, aber die Engine hat nicht rechtzeitig geantwortet... Sie gewinnen!</translation>
     </message>
 </context>
 <context>
@@ -2409,37 +2410,37 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="123"/>
         <source>&lt;i&gt;no games&lt;/i&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;i&gt;keine Spiele&lt;/i&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="144"/>
         <source>Total: %1&lt;br&gt;White: %2&lt;br&gt;Black: %3&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Gesammt: %1&lt;br&gt;Weiß: %2&lt;br&gt;Schwarz: %3&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="167"/>
         <source>Games in database &lt;i&gt;%1&lt;/i&gt;: &lt;b&gt;%2&lt;/b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiele in Datenbank &lt;i&gt;%1&lt;i&gt;:&lt;b&gt;%2&lt;/b&gt;&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="176"/>
         <source>Rating: &lt;b&gt;%1&lt;/b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Rating: &lt;b&gt;%1&lt;/b&gt;&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="178"/>
         <source>Rating: &lt;b&gt;%1-%2&lt;/b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Rating: &lt;b&gt;%1-%2&lt;/b&gt;&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="185"/>
         <source>Date: &lt;b&gt;????.??.??&lt;b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum: &lt;b&gt;????.??.??&lt;/b&gt;&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="189"/>
         <source>Date: &lt;b&gt;%1&lt;/b&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum: &lt;b&gt;%1&lt;/b&gt;&lt;br&gt;</translation>
     </message>
 </context>
 <context>
@@ -2448,7 +2449,7 @@ in the specified time... You win!</source>
         <location filename="../src/gui/playerlistwidget.cpp" line="109"/>
         <location filename="../src/gui/playerlistwidget.cpp" line="134"/>
         <source>&lt;html&gt;&lt;i&gt;No player chosen.&lt;/i&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;i&gt;Kein Spieler ausgewählt.&lt;/i&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -2476,42 +2477,42 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.cpp" line="216"/>
         <source>Select engine directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie das Verzeichnis für die Engine</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="225"/>
         <source>Select databases folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie das Verzeichnis für Datenbanken</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="339"/>
         <source>Select engine executable</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie die Engine</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="379"/>
         <source>Clear all application settings?</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle Einstellungen löschen???</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="379"/>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnung</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="438"/>
         <source>Current move</source>
-        <translation type="unfinished"></translation>
+        <translation>momentaner Zug</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="439"/>
         <source>Background1</source>
-        <translation type="unfinished"></translation>
+        <translation>Hintergrund 1</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="440"/>
         <source>Background2</source>
-        <translation type="unfinished"></translation>
+        <translation>Hintergrund 2</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="465"/>
@@ -2521,12 +2522,12 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.cpp" line="647"/>
         <source>Language change</source>
-        <translation type="unfinished"></translation>
+        <translation>Sprache wechseln</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.cpp" line="648"/>
         <source>You need to restart Shatrabase, to apply the language change.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sie müssen Shatrabase neu starten damit die Sprache geändert wird.</translation>
     </message>
     <message>
         <source>ChessX Preferences</source>
@@ -2587,27 +2588,27 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="14"/>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="426"/>
         <source>Free play</source>
-        <translation type="unfinished"></translation>
+        <translation>freies Spiel</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="433"/>
         <source>Match opponent&apos;s move time</source>
-        <translation type="unfinished"></translation>
+        <translation>Anpassen an die gegnerische Zugzeit</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="440"/>
         <source>Time / Nodes / Depth per Move</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeit / Nodes / Tiefe pro Zug</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="475"/>
         <source>Limit Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitlimit</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="485"/>
@@ -2618,132 +2619,132 @@ in the specified time... You win!</source>
         <location filename="../src/gui/preferences.ui" line="906"/>
         <location filename="../src/gui/preferences.ui" line="947"/>
         <source>h:mm:ss.zzz</source>
-        <translation type="unfinished"></translation>
+        <translation>h:mm:ss.zzz</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="503"/>
         <source>Limit Nodes</source>
-        <translation type="unfinished"></translation>
+        <translation>maximale Nodes</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="524"/>
         <source>Limit Depth</source>
-        <translation type="unfinished"></translation>
+        <translation>maximale Tiefe</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="547"/>
         <source>Tournament</source>
-        <translation type="unfinished">Turnier</translation>
+        <translation>Turnier</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="576"/>
         <location filename="../src/gui/preferences.ui" line="747"/>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle Züge</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="589"/>
         <location filename="../src/gui/preferences.ui" line="754"/>
         <source>Moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Züge</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="609"/>
         <location filename="../src/gui/preferences.ui" line="774"/>
         <source>Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeit</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="653"/>
         <location filename="../src/gui/preferences.ui" line="818"/>
         <location filename="../src/gui/preferences.ui" line="937"/>
         <source>Time increment</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitgewinn</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="896"/>
         <source>Additional time</source>
-        <translation type="unfinished"></translation>
+        <translation>Zusätzliche Zeit</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1167"/>
         <source>USHI</source>
-        <translation type="unfinished"></translation>
+        <translation>USHI</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1239"/>
         <source>Database</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenbank</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1252"/>
         <source>Automatic classification with ECO Codes</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatische Klassifizierung mit ECO Codes</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1259"/>
         <source>Build index file</source>
-        <translation type="unfinished"></translation>
+        <translation>Generiere Indexdatei</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1266"/>
         <source>Commit Database after saving Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenbank auf Festplatte speichern nach Anwenden von Partie-Änderungen</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1301"/>
         <source>Number of recent files:</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzahl der letzten Dateien:</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1327"/>
         <source>Default Database Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard Datenbank-Verzeichnis:</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1345"/>
         <source>Default path for storing files</source>
-        <translation type="unfinished"></translation>
+        <translation>Standardverzeichnis um Dateien zu speichern</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1377"/>
         <source>Appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>Aussehen</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1385"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Sprache</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1415"/>
         <source>&amp;Game Text Font Size</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Buchstabengöße der Notation</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1442"/>
         <source>List Font Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Buchstabengröße der Listen</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1467"/>
         <source>Use vertical Tabs</source>
-        <translation type="unfinished"></translation>
+        <translation>benutze vertikale Tabs</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1480"/>
         <source>Notation</source>
-        <translation type="unfinished"></translation>
+        <translation>Notation</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1504"/>
         <source>Numeric</source>
-        <translation type="unfinished"></translation>
+        <translation>Numerisch</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1526"/>
         <source>Algebraic</source>
-        <translation type="unfinished"></translation>
+        <translation>Algebraisch</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1591"/>
@@ -2753,7 +2754,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="1601"/>
         <source>&amp;Reset</source>
-        <translation type="unfinished">&amp;Zurücksetzen</translation>
+        <translation>&amp;Zurücksetzen</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1608"/>
@@ -2775,7 +2776,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.cpp" line="237"/>
         <source>New Engine</source>
-        <translation type="unfinished">Neues Schachprogramm</translation>
+        <translation>Neue Engine</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="218"/>
@@ -2825,138 +2826,138 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="321"/>
         <source>Mouse Behaviour</source>
-        <translation type="unfinished"></translation>
+        <translation>Mausverhalten</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="346"/>
         <source>Next guess on right click</source>
-        <translation type="unfinished"></translation>
+        <translation>Nächster Vorschlag bei Rechtsklick</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="355"/>
         <source>Wheel sensitivity</source>
-        <translation type="unfinished"></translation>
+        <translation>Mausrad Empfindlichkeit</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="375"/>
         <source>Fast</source>
-        <translation type="unfinished"></translation>
+        <translation>Schnell</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="407"/>
         <source>Slow</source>
-        <translation type="unfinished"></translation>
+        <translation>Langsam</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="302"/>
         <source>Colors:</source>
-        <translation type="unfinished"></translation>
+        <translation>Farben:</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="44"/>
         <source>&amp;Draw frame around squares</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Zeichne Rand um die Felder</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="51"/>
         <source>size</source>
-        <translation type="unfinished"></translation>
+        <translation>Breite</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="75"/>
         <source>Show piece animations when replaying moves?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zuganimationen wenn Züge nachgespielt werden?</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="78"/>
         <source>&amp;Animate moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Animierte Züge</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="88"/>
         <source>Spped of movement is squares per second</source>
-        <translation type="unfinished"></translation>
+        <translation>Geschwindigkeit in Feldern pro Sekunde</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="91"/>
         <source>speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Geschwindikeit</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="101"/>
         <source>Speed of piece movement in squares per second</source>
-        <translation type="unfinished"></translation>
+        <translation>Geschwindigkeit in Feldern pro Sekunde</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="132"/>
         <source>This determines the length of a move animation in terms of speed (left) or a fixed length (right)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestimmt die Dauer einer Zuganimation. Frei wählbar zwischen Geschwindikeit (links) und einer festen Dauer (rechts) </translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="145"/>
         <location filename="../src/gui/preferences.ui" line="155"/>
         <source>The length of a move animation in seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>Dauer eine Zuganimation in Sekunden</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="148"/>
         <source>length</source>
-        <translation type="unfinished"></translation>
+        <translation>Dauer</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="173"/>
         <source>Chess set:</source>
-        <translation type="unfinished"></translation>
+        <translation>Figuren:</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="241"/>
         <source>Board style:</source>
-        <translation type="unfinished"></translation>
+        <translation>Brettstil:</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="271"/>
         <source>When selected, all possible moves will be hilighted for a piece when the mouse is moved over it</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeigt alle möglichen Züge eine Figur, wenn die Maus darüber bewegt wird</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="274"/>
         <source>Highlight all possible moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige alle möglichen Züge</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="254"/>
         <source>Highlight current move</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige letzten Zug</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="295"/>
         <source>Ditch in board</source>
-        <translation type="unfinished"></translation>
+        <translation>Graben zwischen den Bretthälften</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="281"/>
         <source>Accentuate tower squares</source>
-        <translation type="unfinished"></translation>
+        <translation>Hebe Turmfelder hervor</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="288"/>
         <source>Show square numbers</source>
-        <translation type="unfinished"></translation>
+        <translation>Beschrifte die Felder</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="420"/>
         <source>Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiel</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1027"/>
         <source>Path to executable</source>
-        <translation type="unfinished"></translation>
+        <translation>Pfad zur Engine</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1040"/>
         <source>Path where engine is started - usually place of books</source>
-        <translation type="unfinished"></translation>
+        <translation>Verzeichnis in dem die Engine gestartet wird</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1047"/>
@@ -2971,22 +2972,22 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="1101"/>
         <source>Command Line Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Kommandozeilenparameter</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1111"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Unbekannt</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1124"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Optionen</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1160"/>
         <source>Arbitrary name to identify engine </source>
-        <translation type="unfinished"></translation>
+        <translation>Irgendein Name um die Engine zu identifizieren</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1179"/>
@@ -3001,7 +3002,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="1209"/>
         <source>Add...</source>
-        <translation type="unfinished"></translation>
+        <translation>Neu...</translation>
     </message>
     <message>
         <source>&amp;Advanced</source>
@@ -3010,12 +3011,12 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="1291"/>
         <source>&amp;Edit PGN files smaller than:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Editiere PGN Dateien die kleiner sind als:</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="1275"/>
         <source> MB</source>
-        <translation type="unfinished"></translation>
+        <translation>MB</translation>
     </message>
     <message>
         <source>New</source>
@@ -3747,12 +3748,12 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/quicksearch.ui" line="79"/>
         <source>Number of Moves</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzahl der Züge</translation>
     </message>
     <message>
         <location filename="../src/gui/quicksearch.ui" line="121"/>
         <source>Value or Range like 2000-2300</source>
-        <translation type="unfinished"></translation>
+        <translation>Wert oder Wertebereich (z.B. 2000-2300)</translation>
     </message>
     <message>
         <source>Length</source>
@@ -3806,7 +3807,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/quicksearch.ui" line="24"/>
         <source>Game Number</source>
-        <translation type="unfinished"></translation>
+        <translation>Spielnummer</translation>
     </message>
     <message>
         <location filename="../src/gui/quicksearch.ui" line="44"/>
@@ -3874,7 +3875,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/savedialog.ui" line="41"/>
         <source>Discard Changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Werwirf alle Änderungen</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.ui" line="73"/>
@@ -3885,28 +3886,28 @@ in the specified time... You win!</source>
         <location filename="../src/gui/savedialog.ui" line="181"/>
         <location filename="../src/gui/savedialog.ui" line="246"/>
         <source>Time Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitkontrolle</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.ui" line="192"/>
         <source>White Start Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Weiß Startzeit</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.ui" line="202"/>
         <location filename="../src/gui/savedialog.ui" line="225"/>
         <source>H:mm:ss</source>
-        <translation type="unfinished"></translation>
+        <translation>H:mm:ss</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.ui" line="232"/>
         <source>Black Start Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Schwarz Startzeit</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.ui" line="253"/>
         <source>e.g. 40/7200:3600 for 2h/40 moves + 1h</source>
-        <translation type="unfinished"></translation>
+        <translation>z.B. 40/7200:3600 für 2h/40 Züge + 1h</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.ui" line="265"/>
@@ -3951,13 +3952,13 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/savedialog.cpp" line="53"/>
         <source>ClipBoard</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwischenablage</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.cpp" line="147"/>
         <source>Dates are not properly formatted!</source>
         <comment>Invalid Data</comment>
-        <translation type="unfinished"></translation>
+        <translation>Daten sind nicht im richtigen Format! </translation>
     </message>
 </context>
 <context>
@@ -3967,24 +3968,24 @@ in the specified time... You win!</source>
         <location filename="../src/database/settings.cpp" line="31"/>
         <source>English</source>
         <extracomment>language name</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Englisch</translation>
     </message>
     <message>
         <location filename="../src/database/settings.cpp" line="33"/>
         <source>German</source>
         <extracomment>language name</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="../src/database/settings.cpp" line="35"/>
         <source>Russian</source>
         <extracomment>language name</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Russisch</translation>
     </message>
     <message>
         <location filename="../src/database/settings.cpp" line="223"/>
         <source>Player %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Spieler %1</translation>
     </message>
 </context>
 <context>
@@ -3992,22 +3993,22 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/statistics.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../src/gui/statistics.ui" line="36"/>
         <source>Statistics</source>
-        <translation type="unfinished"></translation>
+        <translation>Statistiken</translation>
     </message>
     <message>
         <location filename="../src/gui/statistics.ui" line="55"/>
         <source>Histogram</source>
-        <translation type="unfinished"></translation>
+        <translation>Histogramm</translation>
     </message>
     <message>
         <location filename="../src/gui/statistics.cpp" line="22"/>
         <source>Database Statistics</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenbank Statistiken</translation>
     </message>
 </context>
 <context>
@@ -4019,12 +4020,12 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/tableview.cpp" line="85"/>
         <source>Hide Column</source>
-        <translation type="unfinished"></translation>
+        <translation>Verstecke Spalte</translation>
     </message>
     <message>
         <location filename="../src/gui/tableview.cpp" line="88"/>
         <source>Show all Columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige alle Spalten</translation>
     </message>
 </context>
 <context>
@@ -4032,17 +4033,17 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/tagdetailwidget.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../src/gui/tagdetailwidget.ui" line="24"/>
         <source>&amp;Filter:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Filter:</translation>
     </message>
     <message>
         <location filename="../src/gui/tagdetailwidget.ui" line="52"/>
         <source>Filter Game List!</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtere Spielliste</translation>
     </message>
 </context>
 <context>
@@ -4050,85 +4051,85 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="113"/>
         <source>0 sec</source>
-        <translation type="unfinished"></translation>
+        <translation>0 sec</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="121"/>
         <source>%1 h</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 h</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="127"/>
         <source>%1 min</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 min</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="134"/>
         <source>%1 sec</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 sec</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="141"/>
         <source>%1 ms</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ms</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="151"/>
         <source>Free play</source>
-        <translation type="unfinished"></translation>
+        <translation>Freies Spiel</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="156"/>
         <source>Match opponent&apos;s move time</source>
-        <translation type="unfinished"></translation>
+        <translation>Gleiche die Zugzeit dem Gegner an</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="161"/>
         <source>Limits: </source>
-        <translation type="unfinished"></translation>
+        <translation>Limits:</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="165"/>
         <source>time %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeit %1</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="171"/>
         <source>depth %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiefe %1</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="177"/>
         <source>nodes %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nodes %1</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="189"/>
         <source>Game in %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiel in %1</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="191"/>
         <source>%1 moves in %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Züge in %2</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="193"/>
         <location filename="../src/database/timecontrol.cpp" line="204"/>
         <location filename="../src/database/timecontrol.cpp" line="211"/>
         <source> + %1 per move</source>
-        <translation type="unfinished"></translation>
+        <translation>+ %1 pro Zug</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="200"/>
         <location filename="../src/database/timecontrol.cpp" line="209"/>
         <source>, remaining game in %1</source>
-        <translation type="unfinished"></translation>
+        <translation>, restliches Spiel in %1</translation>
     </message>
     <message>
         <location filename="../src/database/timecontrol.cpp" line="202"/>
         <source>, %1 moves in %2</source>
-        <translation type="unfinished"></translation>
+        <translation>, %1 Züge in %2</translation>
     </message>
 </context>
 <context>
@@ -4163,17 +4164,17 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/database/ushiengine.cpp" line="269"/>
         <source>illegal move &apos;%1&apos; from engine!</source>
-        <translation type="unfinished"></translation>
+        <translation>Ungültiger Zug &apos;%1&apos; von Engine!</translation>
     </message>
     <message>
         <location filename="../src/database/ushiengine.cpp" line="411"/>
         <source>Cannot parse Option string: &apos;%1&apos; looking at token &apos;%2&apos;!</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann Option nicht parsen: &apos;%1&apos; beim Betrachten von Token &apos;%2&apos;!</translation>
     </message>
     <message>
         <location filename="../src/database/ushiengine.cpp" line="432"/>
         <source>Incomplete syntax parsing Option string: &apos;%1&apos; !</source>
-        <translation type="unfinished"></translation>
+        <translation>Unvollständige Syntax beim Parsen der Option: &apos;%1&apos;!</translation>
     </message>
 </context>
 </TS>
