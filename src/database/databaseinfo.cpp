@@ -108,7 +108,8 @@ bool DatabaseInfo::loadGame(int index, bool reload)
 	if (!m_database->loadGame(index, m_game))
 		return false;
 	m_index = index;
-    m_game.moveToId(index);
+    //m_game.moveToId(index); // XXX Why is that?
+    m_game.moveToEnd();
 	m_game.setModified(false);
 	return true;
 }
