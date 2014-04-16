@@ -69,7 +69,7 @@ public:
     QString humanReadable() const;
 
     /** Nice readable string */
-    QString msecToString(int msec) const;
+    static QString msecToString(int msec);
 
     // ------ game time info --------
 

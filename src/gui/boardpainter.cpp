@@ -380,9 +380,13 @@ void BoardPainter::setBoard(const Board& board, const Move * move, Square ignore
     updateMoveIndicators_();
 
     if (m_animations)
+    {
         stopAnimation_();
+        emit animationFinished(oldBoard_);
+    }
     m_start_anim = true;
 
+    // add animations to que (and count m_animations)
     if (m_do_animate && m_anim_speed > 0.0
         && move)
         guessAnimations_(board, *move, ignore_to);
@@ -392,24 +396,8 @@ void BoardPainter::setBoard(const Board& board, const Move * move, Square ignore
     // ALWAYS EMIT THIS
     // PlayGameWidget needs a feedback
     if (m_animations <= 0)
-        emit animationFinished();
+        emit animationFinished(board);
 
-    /*
-    if (m_do_animate && m_anim_speed > 0.0)
-    if (from != InvalidSquare && to != InvalidSquare)
-    {
-        PieceItem * p = pieceItemAt(to);
-        if (!p) return; // or throw a logic exception ;)
-
-        // setup the piece to animate
-        p->square = from; // put back to start
-        p->squareTo = to;
-        p->animate = true;
-        p->setPos(squarePos(p->square));
-        // run an animation thread
-        startAnimation_(from,to);
-    }
-    */
 }
 
 
@@ -1028,7 +1016,7 @@ void BoardPainter::animationStep_()
     if (m_animations <= 0)
     {
         stopAnimation_();
-        emit animationFinished();
+        emit animationFinished(oldBoard_);
     }
 }
 

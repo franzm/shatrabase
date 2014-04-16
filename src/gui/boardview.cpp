@@ -91,7 +91,7 @@ void BoardView::configure()
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
     connect(m_view, SIGNAL(displayMessage(QString)), SLOT(slotDisplayMessage(QString)));
-    connect(m_view, SIGNAL(animationFinished()), SLOT(slotAnimationFinished()));
+    connect(m_view, SIGNAL(animationFinished(Board)), SLOT(slotAnimationFinished(Board)));
 
     setFlipped(flipped);
 
@@ -221,6 +221,8 @@ void BoardView::setBoard(const Board& value,int from, int to)
 
 void BoardView::setBoard(const Board& value, const Move& move)
 {
+    if (m_view->isAnimating())
+
     // reset gui flags
     m_selectedSquare
         = m_dragStartSquare

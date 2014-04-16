@@ -107,7 +107,7 @@ void TimeControl::configure()
 #endif
 }
 
-QString TimeControl::msecToString(int msec) const
+QString TimeControl::msecToString(int msec)
 {
     if (msec <= 0)
         return tr("0 sec");

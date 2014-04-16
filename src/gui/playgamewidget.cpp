@@ -409,7 +409,7 @@ void PlayGameWidget::setPosition(const Board& board)
 
     qDebug() << "PLAYER MOVED";
 
-    // player's move ended (or at least a ply)
+    // player's move ended (or at least one ply)
     tc_.stopMove();
 
     // when move ended, !stm == side that made last move
@@ -431,7 +431,7 @@ void PlayGameWidget::moveFromEngine(Move m)
     // (potential multi-capture is already generated so don't count further)
     if (plyQue_.empty())
     {
-        tc_.endMove();
+        int mt = tc_.endMove();
     }
 
     blinkTimer_.stop();
@@ -487,7 +487,8 @@ void PlayGameWidget::animationFinished(const Board& board)
         }
 
         // only switches sides, tc_.stopMove() was called in setPosition()
-        tc_.endMove();
+        int mt = tc_.endMove();
+        gameComment(TimeControl::msecToString(mt));
         startNewMove_(board);
         return;
     }
@@ -504,6 +505,8 @@ void PlayGameWidget::animationFinished(const Board& board)
             emit moveMade(plyQue_.first());
             return;
         }
+
+        gameComment(TimeControl::msecToString(tc_.getMoveTime(curStm_)));
 
         // check if last engine move ended game
         if (!checkGameResult_(board, true, true))

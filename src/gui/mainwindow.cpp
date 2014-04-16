@@ -109,7 +109,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));
     connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
     connect(m_boardView, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
-    connect(m_boardView, SIGNAL(animationFinished()), SLOT(slotBoardAnimationFinished()));
+    connect(m_boardView, SIGNAL(animationFinished(Board)), SLOT(slotBoardAnimationFinished(Board)));
 //    DockWidgetEx* boardDock = new DockWidgetEx(tr("Board"), this);
 //    boardDock->setObjectName("BoardDock");
 //    boardDock->setWidget(m_boardView);
