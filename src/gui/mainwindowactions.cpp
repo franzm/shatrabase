@@ -704,9 +704,9 @@ void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
         }
         g.setModified(true);
         slotGameChanged();
+
+        m_playGame->startNewGame();
     }
-    else
-        m_playGame->stop();
 }
 
 void MainWindow::slotPlayGameContinue()

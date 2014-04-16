@@ -183,7 +183,7 @@ bool Engine::isAnalyzing() const
 
 void Engine::send(const QString& message)
 {
-    SB_ENGINE_DEBUG("Engine::send("<<message<<")");
+    //SB_ENGINE_DEBUG("Engine::send("<<message<<")");
 
     // debug out
     engineDebug(this, D_ToEngine, message);

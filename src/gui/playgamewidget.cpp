@@ -223,6 +223,18 @@ void PlayGameWidget::slotConfig2Clicked_()
 
 void PlayGameWidget::start_()
 {
+    // predefine the known game tags
+    QMap<QString, QString> tags;
+    tags.insert(TagNameWhite, play_->playerName1());
+    tags.insert(TagNameBlack, play_->playerName2());
+    tags.insert(TagNameDate, QDate::currentDate().toString(Qt::ISODate));
+    tags.insert(TagNameTimeControl, tc_.humanReadable());
+
+    emit startNewGameRequest(tags);
+}
+
+void PlayGameWidget::startNewGame()
+{
     // update widget Spaß
     setWidgetsPlayer_(White);
     setWidgetsPlaying_(true);
@@ -232,22 +244,15 @@ void PlayGameWidget::start_()
     playing_ = true;
     userMoved_ = false;
     ignoreAnswer_ = false;
-    //playerMultiPly_ = false;
 
     // first player is engine? - then go
     // XXX not really working right now
     sendFreshBoardWhenReady_ = play_->player1IsEngine();
 
-    // predefine the known game tags
-    QMap<QString, QString> tags;
-    tags.insert("White", play_->playerName1());
-    tags.insert("Black", play_->playerName2());
-    tags.insert("Date", QDate::currentDate().toString(Qt::ISODate));
-
-    emit startNewGame(tags);
-
+    // run engines
     play_->activate();
 
+    // start counting player 1
     initTiming_();
     tc_.startMove();
 }
@@ -460,6 +465,10 @@ void PlayGameWidget::animationFinished(const Board& board)
     if (!playing_)
         return;
 
+    // don't restart an ended game
+    if (checkGameResult_(board, false, false))
+        return;
+
     const bool transit = board.transitAt() != 0;
     const Color stm = transit? board.toMove() : (Color)(!board.toMove());
 
@@ -510,6 +519,7 @@ void PlayGameWidget::startNewMove_(const Board& board)
 {
     const Color stm = board.toMove();
 
+    // update widets
     setWidgetsPlayer_(stm);
 
     // start engine
@@ -519,39 +529,8 @@ void PlayGameWidget::startNewMove_(const Board& board)
         play_->setPosition(board);
     }
 
+    // start timing
     tc_.startMove();
-
-    /*
-    // White is next
-    if (board.toMove() == White && !isUser(White))
-    {
-        setWidgetsPlayer_(White);
-
-        // start engine
-        if (play_->player1IsEngine())
-        {
-            blinkTimer_.start();
-            play_->setPosition(board);
-        }
-
-        tc_.startMove();
-        return;
-    }
-
-    // Black is next
-    if (board.toMove() == Black && !isUser(Black))
-    {
-        setWidgetsPlayer_(Black);
-
-        // start engine
-        if (play_->player2IsEngine())
-        {
-            blinkTimer_.start();
-            play_->setPosition(board);
-        }
-
-        tc_.startMove();
-    }*/
 }
 
 

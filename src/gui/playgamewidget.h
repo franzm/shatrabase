@@ -65,7 +65,7 @@ public:
 
 signals:
     /** Emitted when a new game wants to be played */
-    void startNewGame(const QMap<QString, QString>& tags);
+    void startNewGameRequest(const QMap<QString, QString>& tags);
 
     /** Emitted when the current game in Chessbrowser should be continued. */
     void continueGame();
@@ -86,6 +86,9 @@ public slots:
 
     /** Applies app settings */
     void slotReconfigure();
+
+    /** Send this as an answer to setNewGameRequest(). */
+    void startNewGame();
 
     /** Stops play mode. E.g. when save current game was cancelled. */
     void stop();
