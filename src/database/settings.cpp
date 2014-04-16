@@ -211,6 +211,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
 
     // Time Control (TM) settings
     map.insert("/TimeControl/mode", timeControlTypeName[TimeControl::T_None]);
+    map.insert("/TimeControl/format", TimeControl::formatName(TimeControl::F_Long));
     map.insert("/TimeControl/allMoves1", false);
     map.insert("/TimeControl/allMoves2", false);
     map.insert("/TimeControl/numMoves1", 40);
@@ -242,6 +243,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
         map.insert(QString("/PlayGame/Player%1/maxTime").arg(i), 6000);
         map.insert(QString("/PlayGame/Player%1/maxDepth").arg(i), 0);
     }
+    map.insert(QString("/PlayGame/saveMoveTime"), false);
 
     // custom colors (colordialog)
     for (int i=0; i<QColorDialog::customCount(); ++i)

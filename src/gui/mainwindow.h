@@ -207,8 +207,8 @@ public slots:
     void slotPlayPlayerWins();
     /** Not the player has won. */
     void slotPlayOtherWins();
-    /** The piece move animation has finished. */
-    void slotBoardAnimationFinished();
+    /** A piece move animation has finished. */
+    void slotBoardAnimationFinished(const Board&);
     /* Save game, replacing old one if modified, appending if new
         @return false if cancelled, true if changes are to be saved or discarded. */
     bool slotGameSave();

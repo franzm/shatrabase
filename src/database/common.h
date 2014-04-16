@@ -180,6 +180,7 @@ static const QString TagNameDate     = "Date";
 static const QString TagNamePlyCount = "PlyCount";
 static const QString TagNameWhiteElo = "WhiteElo";
 static const QString TagNameBlackElo = "BlackElo";
+static const QString TagNameTimeControl = "TimeControl";
 
 const QString StandardTags[7] = {"Event", "Site", "Date", "Round", "White", "Black", "Result"};
 

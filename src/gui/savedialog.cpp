@@ -78,6 +78,7 @@ int SaveDialog::exec(Database* database, Game& game)
 	ui.roundEdit->setText(game.tag("Round"));
 	ui.dateEdit->setText(game.tag("Date"));
 	ui.eventDateEdit->setText(game.tag("EventDate"));
+    ui.timeControl->setText(game.tag(TagNameTimeControl));
 	QList<QAbstractButton*> buttons = ui.result1Button->group()->buttons();
     for (int i = 0; i < buttons.count(); ++i)
 		if (buttons[i]->text() == game.tag("Result"))
@@ -87,7 +88,9 @@ int SaveDialog::exec(Database* database, Game& game)
     setLineEdit(ui.blackEdit, database, TagNameBlack);
     setLineEdit(ui.siteEdit,  database, TagNameSite);
     setLineEdit(ui.eventEdit, database, TagNameEvent);
-	int result = QDialog::exec();
+
+    int result = QDialog::exec();
+
     if (result == Accepted) {
 		game.setTag("White", formatTagValue(ui.whiteEdit->text()));
 		game.setTag("Black", formatTagValue(ui.blackEdit->text()));

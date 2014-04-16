@@ -109,7 +109,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));
     connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
     connect(m_boardView, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
-    connect(m_boardView, SIGNAL(animationFinished()), SLOT(slotBoardAnimationFinished()));
+    connect(m_boardView, SIGNAL(animationFinished(Board)), SLOT(slotBoardAnimationFinished(Board)));
 //    DockWidgetEx* boardDock = new DockWidgetEx(tr("Board"), this);
 //    boardDock->setObjectName("BoardDock");
 //    boardDock->setWidget(m_boardView);
@@ -213,7 +213,7 @@ MainWindow::MainWindow() : QMainWindow(),
     playerSelDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_P);
     m_menuView->addAction(playerSelDock->toggleViewAction());
     addDockWidget(Qt::RightDockWidgetArea, playerSelDock);
-    connect(m_playGame, SIGNAL(startNewGame(QMap<QString,QString>)), SLOT(slotPlayGameNew(QMap<QString,QString>)));
+    connect(m_playGame, SIGNAL(startNewGameRequest(QMap<QString,QString>)), SLOT(slotPlayGameNew(QMap<QString,QString>)));
     connect(m_playGame, SIGNAL(continueGame()), SLOT(slotPlayGameContinue()));
     connect(m_playGame, SIGNAL(pauseGame()), SLOT(slotPlayGameEnd()));
     connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));

@@ -93,6 +93,7 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.cbAllMoves1, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbAllMoves2, SIGNAL(clicked()), SLOT(slotTCEnable()));
 
+    connect(ui.comboTimeFormat, SIGNAL(currentIndexChanged(int)), SLOT(slotTCUpdate()));
     connect(ui.time1, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
     connect(ui.time2, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
     connect(ui.time3, SIGNAL(timeChanged(QTime)), SLOT(slotTCUpdate()));
@@ -105,12 +106,17 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.limitDepth, SIGNAL(valueChanged(int)), SLOT(slotTCUpdate()));
     connect(ui.limitNodes, SIGNAL(valueChanged(int)), SLOT(slotTCUpdate()));
 
+    // language combo
     const QMap<QString,QString> lang = AppSettings->languages();
     for (QMap<QString,QString>::const_iterator i=lang.begin(); i!=lang.end(); ++i)
     {
         ui.languageCombo->addItem(i.value(), QVariant(i.key()));
     }
     connect(ui.languageCombo, SIGNAL(activated(int)), SLOT(slotShowLanguageMessage()));
+
+    // timeformat combo
+    for (int i=0; i<TimeControl::MaxFormat; ++i)
+        ui.comboTimeFormat->addItem(TimeControl::formatNameTr((TimeControl::Format)i));
 
 	restoreSettings();
 
@@ -179,6 +185,11 @@ void PreferencesDialog::slotTCUpdate()
         tc.setType(TimeControl::T_Tournament);
     else
         tc.setType(TimeControl::T_None);
+
+    if (ui.comboTimeFormat->currentIndex()>=0)
+        tc.setFormat((TimeControl::Format)ui.comboTimeFormat->currentIndex());
+    else
+        tc.setFormat(TimeControl::F_Long);
 
     tc.setDepthLimit(ui.cbLimitDepth->isChecked()? ui.limitDepth->value() : TimeControl::Unlimited);
     tc.setNodeLimit(ui.cbLimitNodes->isChecked()? ui.limitNodes->value() : TimeControl::Unlimited);
@@ -495,6 +506,9 @@ void PreferencesDialog::restoreSettings()
     ui.spinBoxListFontSize->setValue(AppSettings->value("/General/ListFontSize", DEFAULT_LISTFONTSIZE).toInt());
     ui.verticalTabs->setChecked(AppSettings->getValue("/MainWindow/VerticalTabs").toBool());
 
+    // Play Game
+    ui.cbSaveMoveTime->setChecked( AppSettings->getValue("/PlayGame/saveMoveTime").toBool() );
+
     // Time Control
     AppSettings->beginGroup("/TimeControl/");
     QString mode = AppSettings->getValue("mode").toString();
@@ -509,6 +523,7 @@ void PreferencesDialog::restoreSettings()
     else
         ui.cbFree->setChecked(true);
 
+    ui.comboTimeFormat->setCurrentIndex(TimeControl::formatFromName(AppSettings->getValue("format").toString()));
     ui.cbAllMoves1->setChecked(AppSettings->getValue("allMoves1").toBool());
     ui.cbAllMoves2->setChecked(AppSettings->getValue("allMoves2").toBool());
     ui.moves1->setValue(AppSettings->getValue("numMoves1").toInt());
@@ -575,10 +590,14 @@ void PreferencesDialog::saveSettings()
     colorNames << "lightColor" << "darkColor" << "highlightColor" << "frameColor" << "currentMoveColor"
                << "backgroundColor" << "backgroundColor2";
 	saveColorList(ui.boardColorsList, colorNames);
-	AppSettings->endGroup();
+    AppSettings->endGroup();
+
+    // play game
+    AppSettings->setValue("/PlayGame/saveMoveTime", ui.cbSaveMoveTime->isChecked());
 
     // time control
     AppSettings->beginGroup("/TimeControl/");
+
     if (ui.cbMatchTime->isChecked())
         AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Match]));
     else
@@ -589,6 +608,8 @@ void PreferencesDialog::saveSettings()
         AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Tournament]));
     else
         AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_None]));
+
+    AppSettings->setValue("format", TimeControl::formatName((TimeControl::Format)ui.comboTimeFormat->currentIndex()));
     AppSettings->setValue("allMoves1", ui.cbAllMoves1->isChecked());
     AppSettings->setValue("allMoves2", ui.cbAllMoves2->isChecked());
     AppSettings->setValue("numMoves1", ui.moves1->value());

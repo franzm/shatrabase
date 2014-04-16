@@ -95,7 +95,7 @@ protected slots:
     /** Weiterleitung from BoardPainter */
     void slotDisplayMessage(const QString& msg) { emit displayMessage(msg); }
     /** Weiterleitung from BoardPainter */
-    void slotAnimationFinished() { emit animationFinished(); }
+    void slotAnimationFinished(const Board& b) { emit animationFinished(b); }
 
 signals:
     /** User clicked source and destination squares */
@@ -116,7 +116,7 @@ signals:
     void signalDisplayMessage(const QString& msg);
 
     /** A piece move animation has been finished */
-    void animationFinished();
+    void animationFinished(const Board& b);
 
 protected:
     /** Calls signalDisplayMessage and keeps a flag that

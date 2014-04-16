@@ -45,7 +45,7 @@ void PlayTimeControl::slotTimer_()
     // update running state
     totalTime_[stm_] -= timer_.interval();
     moveTime_[stm_] += timer_.interval();
-    // remember how much is messure already
+    // remember how much is messured already
     taken_ += timer_.interval();
 
     emit timeUpdated();
@@ -81,7 +81,7 @@ void PlayTimeControl::start(int stm)
 
 void PlayTimeControl::startMove()
 {
-    qDebug() << "StartMove(" << move_ << "): " << (stm_? "Black" : "White");
+    qDebug() << "startMove(" << move_ << "): " << (stm_? "Black" : "White");
 
     if (moving_) return; //Q_ASSERT(!moving_);
 
@@ -105,18 +105,81 @@ void PlayTimeControl::startMove()
 
 int PlayTimeControl::endMove()
 {
-    int e = moveTime_[stm_] = messure_.elapsed();
+    int e = messure_.elapsed();
 
-    qDebug() << "EndMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
+    qDebug() << "endMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
 
-    if (!moving_) return e; //Q_ASSERT(moving_);
+    if (moving_)
+    {
+        timer_.stop();
+        moving_ = false;
+
+        // remove time of move
+        totalTime_[stm_] -= (e - taken_);
+        moveTime_[stm_] += (e - taken_);
+        taken_ = 0;
+
+        emit timeUpdated();
+
+        // check time-out
+        // (should have been handled by timer_ though)
+        if (isTimeout() && !didSendTimeOut_)
+        {
+            didSendTimeOut_ = true;
+            emit timeOut(stm_);
+            return moveTime_[stm_];
+        }
+    }
+
+    // add bonus time
+    totalTime_[stm_] += getTimeInc(move_);
+    emit timeUpdated();
+
+    // switch stm and inc move
+
+    stm_ ^= 1;
+
+    if (stm_ == startStm_)
+        move_++;
+
+    return moveTime_[!stm_];
+}
+
+
+void PlayTimeControl::continueMove()
+{
+    qDebug() << "continueMove(" << move_ << "): " << (stm_? "Black" : "White");
+
+    if (moving_) return; //Q_ASSERT(!moving_);
+
+    didSendTimeOut_ = false;
+    moving_ = true;
+
+    // init timer to total time left but at most every second
+    if (type() == T_Tournament)
+        timer_.setInterval(std::min(1000, totalTime_[stm_]));
+    else
+    // simply update movetime, don't count total time
+        timer_.setInterval(1000);
+
+    timer_.start();
+    messure_.start();
+}
+
+int PlayTimeControl::stopMove()
+{
+    int e = messure_.elapsed();
+
+    qDebug() << "stopMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
+
+    if (!moving_) return moveTime_[stm_]; //Q_ASSERT(moving_);
 
     timer_.stop();
     moving_ = false;
 
     // remove time of move
     totalTime_[stm_] -= (e - taken_);
-    moveTime_[stm_] = e;
+    moveTime_[stm_] += (e - taken_);
     taken_ = 0;
 
     emit timeUpdated();
@@ -127,19 +190,8 @@ int PlayTimeControl::endMove()
     {
         didSendTimeOut_ = true;
         emit timeOut(stm_);
-        return e;
+        return moveTime_[stm_];
     }
 
-    // add bonus time
-    totalTime_[stm_] += getTimeInc(move_);
-
-    // switch stm and inc move
-
-    stm_ ^= 1;
-
-    if (stm_ == startStm_)
-        move_++;
-
-    return e;
+    return moveTime_[stm_];
 }
-

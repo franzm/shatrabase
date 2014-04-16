@@ -122,7 +122,7 @@ public:
 signals:
 
     /** Emitted when a move animation has ended. */
-    void animationFinished();
+    void animationFinished(const Board& b);
 
     /** Signal to display a message, e.g. on hover. */
     void displayMessage(const QString& msg);

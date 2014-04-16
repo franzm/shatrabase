@@ -74,9 +74,23 @@ public slots:
     /** The current stm has finished it's move.
      *  Manages totalTime and moveTime.
      *  Adds any time increment and manages stm and move count.
-     *  Returns the move-time in millisecs.
+     *  Only to be called once per side!
+     *  @returns the move-time in millisecs.
      *  timeOut() might be emitted. */
     int endMove();
+
+    /** Continue counting the current stm.
+     *  This can be called multiple times in conjunction with stopMove().
+     *  Manages totalTime and moveTime.
+     *  timeOut() might be emitted. */
+    void continueMove();
+
+    /** Stop counting the current stm.
+     *  This can be called multiple times in conjunction with continueMove().
+     *  Manages totalTime and moveTime.
+     *  @returns the move-time in millisecs.
+     *  timeOut() might be emitted. */
+    int stopMove();
 
 private slots:
 

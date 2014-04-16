@@ -51,6 +51,9 @@ public:
 
     bool isPlaying() const { return playing_; }
 
+    /** Returns whether the given side to move is controlled by the user. */
+    bool isUser(Color stm) const;
+
     /** Returns if White should be able to interact with board */
     bool whiteCanMove() const;
     /** Returns if Black should be able to interact with board */
@@ -62,7 +65,7 @@ public:
 
 signals:
     /** Emitted when a new game wants to be played */
-    void startNewGame(const QMap<QString, QString>& tags);
+    void startNewGameRequest(const QMap<QString, QString>& tags);
 
     /** Emitted when the current game in Chessbrowser should be continued. */
     void continueGame();
@@ -83,6 +86,9 @@ public slots:
 
     /** Applies app settings */
     void slotReconfigure();
+
+    /** Send this as an answer to setNewGameRequest(). */
+    void startNewGame();
 
     /** Stops play mode. E.g. when save current game was cancelled. */
     void stop();
@@ -136,6 +142,15 @@ private:
 
     void initTiming_();
 
+    /** Start playing board.toMove().
+     *  Sets widgets and starts timing.
+     *  Sends board to Engine if necessary. */
+    void startNewMove_(const Board& board);
+
+    /* Sets the playing side, updates widgets,
+     *  optionally starts counting move time */
+    //void setSidePlaying_(Color stm, bool do_start_timer);
+
     /** Updates widgets */
     void setWidgetsPlayer_(int stm);
     /** Updates widgets */
@@ -146,6 +161,9 @@ private:
     /** Checks Game result and talks with MainWindow.
         Returns if game ended. */
     bool checkGameResult_(const Board&, bool triggerWinSignals, bool doStop);
+
+    /** Sends a comment to gametext with the given movetime (according to properties) */
+    void setMoveTimeComment_(int movetime_msec);
 
     // ---- config ---
     QLed::ledColor colorPlayer_;
@@ -166,7 +184,8 @@ private:
 
     PlayGame * play_;
 
-    Color lastStm_;
+    Color curStm_;
+    bool userMoved_;
     int winStm_;
     QList<Move> plyQue_;
 
