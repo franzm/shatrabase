@@ -131,6 +131,11 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
 
 void PreferencesDialog::slotTCEnable()
 {
+    // keep one of limits on
+    if (!(ui.cbLimitTime->isChecked() || ui.cbLimitDepth->isChecked() ||
+          ui.cbLimitNodes->isChecked()))
+        ui.cbLimitTime->setChecked(true);
+
     // limit
     bool on = ui.cbLimit->isChecked();
     ui.cbLimitTime->setEnabled(on);

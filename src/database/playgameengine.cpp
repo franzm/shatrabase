@@ -57,8 +57,9 @@ bool PlayGameEngine::createEngine_()
         connect(engine_, SIGNAL(activated()), SLOT(engineActivated_()));
         connect(engine_, SIGNAL(error(QProcess::ProcessError)), SLOT(engineError_(QProcess::ProcessError)));
         connect(engine_, SIGNAL(deactivated()), SLOT(engineDeactivated_()));
-        connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
-                                    SLOT(engineAnalysis_(const Analysis&)));
+        /*connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
+                                    SLOT(engineAnalysis_(const Analysis&)));*/
+        connect(engine_, SIGNAL(bestMoveSend(Move)), SLOT(engineBestMove_(Move)));
         if (engineDebug_)
         {
             connect(engine_, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
@@ -121,6 +122,21 @@ void PlayGameEngine::engineError_(QProcess::ProcessError e)
     emit engineCrashed();
 }
 
+void PlayGameEngine::engineBestMove_(const Move& m)
+{
+    SB_PLAY_DEBUG("PlayGameEngine::engineBestMove_()");
+
+    if (!listening_)
+        return;
+
+    terminateTimer_.stop();
+
+    bestMove_ = m;
+    gotBestMove_ = true;
+
+    sendMoves_();
+}
+
 void PlayGameEngine::engineAnalysis_(const Analysis& a)
 {
     SB_PLAY_DEBUG("PlayGameEngine::engineAnalysis_()");
@@ -130,12 +146,12 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
         return;
 
     // keep the mainline
-    bestMove_ = a.variation();
+    bestMoves_ = a.variation();
     gotMove_ = true;
 
     // leave the Engine some time
-//    if (waitTimer_.elapsed() < minWaitTime_)
-//        return;
+    if (waitTimer_.elapsed() < minWaitTime_)
+        return;
 
     // send best move (and stop engine)
     sendMoves_();
@@ -156,21 +172,30 @@ void PlayGameEngine::sendMoves_()
             engine_->stopAnalysis();
     }
 
-    if (gotMove_ && !bestMove_.empty())
-    {
-        emit moveMade(bestMove_[0]);
-
-        // multi-ply?
-        int stm = bestMove_[0].sideMoving();
-        int i = 1;
-        while (i < bestMove_.size() && bestMove_[i].sideMoving() == stm)
-        {
-            emit moveMade(bestMove_[i]);
-            ++i;
-        }
-    }
-    else
+    if (!(gotMove_ || gotBestMove_))
         emit engineClueless();
+    else
+    {
+        if (gotBestMove_)
+            emit moveMade(bestMove_);
+        else
+        if (!bestMoves_.empty())
+        {
+            emit moveMade(bestMoves_[0]);
+
+            // multi-ply?
+            int stm = bestMoves_[0].sideMoving();
+            int i = 1;
+            while (i < bestMoves_.size() && bestMoves_[i].sideMoving() == stm)
+            {
+                emit moveMade(bestMoves_[i]);
+                ++i;
+            }
+        }
+        else
+            emit engineClueless();
+    }
+
 }
 
 bool PlayGameEngine::setPosition(const Board &b, const Engine::SearchSettings& settings)
@@ -202,10 +227,16 @@ bool PlayGameEngine::startAnalysis_(const Board& b)
     if (!engine_) return false;
 
     listening_ = true;
-    gotMove_ = false;
+    gotMove_ = gotBestMove_ = false;
     waitTimer_.start();
+
+    /*
     if (settings_.maxTime != Engine::SearchSettings::Unlimited)
-        terminateTimer_.start(settings_.maxTime);
+    {
+        minWaitTime_ = settings_.maxTime;
+        //terminateTimer_.start(minWaitTime_+200);
+    }*/
+
     return engine_->startAnalysis(b, 1, settings_);
 }
 

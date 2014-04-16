@@ -144,6 +144,9 @@ signals:
     /** Fired when the engine has produced some analysis */
 	void analysisUpdated(const Analysis& analysis);
 
+    /** Engine has sent bestmove */
+    void bestMoveSend(const Move& move);
+
     /** Fired when a log item has been written to the log */
 	void logUpdated();
 

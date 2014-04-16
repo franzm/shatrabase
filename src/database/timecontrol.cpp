@@ -69,6 +69,7 @@ TimeControl::TimeControl(QObject * p)
         nodeLimit_      (Unlimited),
         depthLimit_     (Unlimited)
 {
+
 }
 
 const QString& TimeControl::formatName(Format f)
@@ -149,9 +150,11 @@ void TimeControl::configure()
     if (!AppSettings->getValue("doTimeLimit").toBool())
         timeLimit_ = Unlimited;
     if (!AppSettings->getValue("doDepthLimit").toBool())
-        nodeLimit_ = Unlimited;
-    if (!AppSettings->getValue("doNodeLimit").toBool())
         depthLimit_ = Unlimited;
+    if (!AppSettings->getValue("doNodeLimit").toBool())
+        nodeLimit_ = Unlimited;
+
+    qDebug() << "depth" << depthLimit_ << "time" << timeLimit_ << "nodes" << nodeLimit_;
 
     AppSettings->endGroup();
 #endif

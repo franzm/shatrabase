@@ -69,6 +69,7 @@ private slots:
     void engineDeactivated_();
     void engineError_(QProcess::ProcessError);
     void engineAnalysis_(const Analysis&);
+    void engineBestMove_(const Move&);
 
     // ---- other callbacks ----------
 
@@ -102,8 +103,10 @@ private:
     /** Settings used for search */
     Engine::SearchSettings settings_;
 
-    /** Best move so far */
-    MoveList bestMove_;
+    /** Best moves so far (MoveList from variation) */
+    MoveList bestMoves_;
+    /** Best move */
+    Move bestMove_;
 
     /** For leaving the Engine some time to think */
     QTime waitTimer_;
@@ -120,6 +123,8 @@ private:
     bool
     /** Already got a move from Engine (for maxWaitTime_) */
         gotMove_,
+    /** engineBestMove_() was called. */
+        gotBestMove_,
     /** Stop the engine between each move?
         This flag should probably NOT be changed after the engine was activated! */
         stopBetweenMoves_,

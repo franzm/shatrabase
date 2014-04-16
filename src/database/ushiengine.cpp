@@ -189,7 +189,10 @@ void USHIEngine::parseBestmove(const QString& message)
         engineDebug(this, D_Error, tr("illegal bestmove '%1' from engine!").arg(moveText));
         return;
     }
-    board.doMove(move);
+
+    emit bestMoveSend(move);
+
+    /*board.doMove(move);
 
     MoveList moves;
     moves.append(move);
@@ -197,6 +200,7 @@ void USHIEngine::parseBestmove(const QString& message)
     Analysis analysis;
     analysis.setVariation(moves);
     sendAnalysis(analysis);
+    */
 }
 
 void USHIEngine::parseAnalysis(const QString& message)
