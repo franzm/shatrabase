@@ -63,6 +63,10 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
 
     ui_->setupUi(this);
 
+    // XXX not needed anymore
+    ui_->b_settings1->setVisible(false);
+    ui_->b_settings2->setVisible(false);
+
     ui_->clock2->setColor(false);
 
     connect(ui_->nameEdit1, SIGNAL(textEdited(QString)), SLOT(slotName1Changed_(QString)));
@@ -449,7 +453,7 @@ void PlayGameWidget::moveFromEngine(Move m)
 #else
     if (tc_.isMoving())
     {
-        if (m.isCapture())
+        if (m.willContinue())
             tc_.stopMove();
         else
             tc_.endMove();
@@ -623,6 +627,7 @@ Engine::SearchSettings PlayGameWidget::settings_(int stm) const
     {
         s.wtime = tc_.getTotalTime(White);
         s.btime = tc_.getTotalTime(Black);
+        s.movestogo = tc_.movesToGo();
         return s;
     }
 

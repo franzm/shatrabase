@@ -155,6 +155,8 @@ void USHIEngine::processMessage(const QString& message)
                 cmd += QString(" wtime %1").arg(m_settings.wtime);
             if (m_settings.maxTime != SearchSettings::Unlimited)
                 cmd += QString(" movetime %1").arg(m_settings.maxTime);
+            if (m_settings.movestogo != SearchSettings::Unlimited)
+                cmd += QString(" movestogo %1").arg(m_settings.movestogo);
             if (!m_settings.isTimeLimit())
                 cmd += " infinite";
             send(cmd);

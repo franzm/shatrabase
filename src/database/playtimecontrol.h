@@ -43,6 +43,9 @@ public:
     /** Is current stm out of time? */
     bool isTimeout() const;
 
+    /** Returns number of moves until next tc, or Unlimited */
+    int movesToGo() const;
+
     /** Current move number.
      *  Starts at 1, increments when stm == startStm in endMove() */
     int getMove() const { return move_; }

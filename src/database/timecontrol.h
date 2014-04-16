@@ -96,7 +96,6 @@ public:
     /** Returns the time increment after the move. */
     int getTimeInc(int last_move_number) const;
 
-
     // --------- getter -------------
 
     /** Type of time control */

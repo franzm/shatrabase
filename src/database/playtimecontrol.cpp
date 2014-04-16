@@ -39,6 +39,37 @@ bool PlayTimeControl::isTimeout() const
         && totalTime_[stm_] <= 0;
 }
 
+int PlayTimeControl::movesToGo() const
+{
+    if (type() != T_Tournament)
+        return Unlimited;
+
+    // All in timeForMoves1
+    if (numMoves1() == Unlimited)
+    {
+        return Unlimited;
+    }
+
+    // within tc1
+    if (move_ < numMoves1())
+    {
+        return numMoves1() - move_;
+    }
+
+    // tc2
+    int move = move_ - numMoves1();
+
+    // All remaining in timeForMoves2
+    if (numMoves2() == 0 || numMoves2() == Unlimited)
+    {
+        return Unlimited;
+    }
+
+    // within tc2
+    return std::max(0, numMoves2() - move);
+}
+
+
 
 void PlayTimeControl::slotTimer_()
 {

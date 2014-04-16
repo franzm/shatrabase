@@ -61,14 +61,17 @@ public:
             maxTime,
             maxNodes,
             btime,
-            wtime;
+            wtime,
+            movestogo;
 
         SearchSettings()
             : maxDepth(Unlimited),
               maxTime(Unlimited),
               maxNodes(Unlimited),
               btime(Unlimited),
-              wtime(Unlimited) { }
+              wtime(Unlimited),
+              movestogo(Unlimited)
+        { }
 
         bool isTimeLimit() const
             { return maxTime != Unlimited || btime != Unlimited || wtime != Unlimited; }
