@@ -23,7 +23,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -1241,6 +1241,9 @@
       <layout class="QVBoxLayout" name="verticalLayout1">
        <item>
         <widget class="QCheckBox" name="tablebaseCheck">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Use online tablebase servers</string>
          </property>
@@ -1354,6 +1357,20 @@
             </widget>
            </item>
           </layout>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_19">
+           <property name="text">
+            <string>On game load</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QComboBox" name="cbMoveOnLoad">
+           <property name="currentIndex">
+            <number>-1</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

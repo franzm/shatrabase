@@ -57,6 +57,10 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
 	ui.engineProtocolWinBoard->setText(tr("XBoard"));
 #endif
 */
+    ui.cbMoveOnLoad->addItem(tr("go to beginning of game"));
+    ui.cbMoveOnLoad->addItem(tr("go to first move of game"));
+    ui.cbMoveOnLoad->addItem(tr("go to last move of game"));
+
 	connect(ui.okButton, SIGNAL(clicked()), SLOT(accept()));
     connect(ui.resetButton, SIGNAL(clicked()), SLOT(slotReset()));
 	connect(ui.cancelButton, SIGNAL(clicked()), SLOT(reject()));
@@ -483,6 +487,9 @@ void PreferencesDialog::restoreSettings()
 #endif
     ui.defaultDataBasePath->setText(AppSettings->value("/General/DefaultDataPath", dataPath).toString());
 
+    int k = AppSettings->getValue("/General/gameStartPosition").toInt();
+    ui.cbMoveOnLoad->setCurrentIndex(k==1? 1 : (k==-1? 2 : 0));
+
     // Read Game List settings
     ui.gameTextFontSizeSpin->setValue(AppSettings->value("/GameText/FontSize", DEFAULT_FONTSIZE).toInt());
     ui.spinBoxListFontSize->setValue(AppSettings->value("/General/ListFontSize", DEFAULT_LISTFONTSIZE).toInt());
@@ -614,7 +621,9 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("/GameText/FontSize", ui.gameTextFontSizeSpin->value());
     AppSettings->setValue("/General/ListFontSize", ui.spinBoxListFontSize->value());
     AppSettings->setValue("/MainWindow/VerticalTabs", ui.verticalTabs->isChecked());
-
+    AppSettings->setValue("/General/gameStartPosition",
+                          ui.cbMoveOnLoad->currentIndex() == 1 ?
+                              1 : (ui.cbMoveOnLoad->currentIndex() == 2 ? -1 : 0));
     QDir().mkpath(ui.defaultDataBasePath->text());
 }
 

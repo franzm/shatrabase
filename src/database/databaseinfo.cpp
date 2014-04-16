@@ -23,6 +23,7 @@ DatabaseInfo::DatabaseInfo()
     m_database = new MemoryDatabase;
     m_bLoaded = true;
     m_utf8 = false;
+
     newGame();
 }
 
@@ -32,6 +33,7 @@ DatabaseInfo::DatabaseInfo(const QString& fname)
 	m_filename = fname;
     m_bLoaded = false;
     m_utf8 = false;
+
 	QFile file(fname);
     if (file.size() < 1024 * 1024 * AppSettings->getValue("/General/EditLimit").toInt())
         m_database = new MemoryDatabase;
@@ -108,8 +110,15 @@ bool DatabaseInfo::loadGame(int index, bool reload)
 	if (!m_database->loadGame(index, m_game))
 		return false;
 	m_index = index;
-    //m_game.moveToId(index); // XXX Why is that?
-    m_game.moveToEnd();
+
+    int startpos = AppSettings->getValue("/General/gameStartPosition").toInt();
+    if (startpos == -1)
+        m_game.moveToEnd();
+    else
+    {
+        m_game.moveToId(startpos);
+    }
+
 	m_game.setModified(false);
 	return true;
 }
