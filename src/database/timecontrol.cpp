@@ -34,6 +34,8 @@ static const QString tc_formatNames[] =
 {
     "long",
     "seconds",
+    "hms",
+    "hmsms",
     "*unknown*"
 };
 
@@ -42,7 +44,11 @@ static const QString tc_formatNamesTr[] =
     //: this means 'long' text format for time
     TimeControl::tr("long"),
     //: this means 'seconds' text format for time
-    TimeControl::tr("seconds"),
+    TimeControl::tr("seconds only"),
+    //: this means 'hours/minutes/seconds' text format for time
+    TimeControl::tr("h:m:s"),
+    //: this means 'hours/minutes/seconds/millisecs' text format for time
+    TimeControl::tr("h:m:s.ms"),
 
     "*unknown*"
 };
@@ -156,6 +162,50 @@ QString TimeControl::msecToString(int msec) const
     if (format_ == F_Seconds)
     {
         return QString("%1s").arg(msec/1000);
+    }
+
+    if (format_ == F_HMS)
+    {
+        if (msec <= 0)
+            return "0";
+
+        const int h = msec/60/60/1000,
+                  m = msec/60/1000,
+                  s = msec/1000;
+
+        if (!m)
+            return QString("%1s").arg(s);
+
+        QTime t;
+        t.setHMS(h,m%60,s%60);
+        if (!h)
+            return (m<10)? t.toString("m:ss") : t.toString("mm:ss");
+
+        return h<10? t.toString("h:mm:ss") : t.toString("hh:mm:ss");
+    }
+
+    if (format_ == F_HMSMS)
+    {
+        if (msec <= 0)
+            return "0";
+
+        const int h = msec/60/60/1000,
+                  m = msec/60/1000,
+                  s = msec/1000;
+
+        if (!s)
+            return QString("0.%1s").arg(msec);
+
+        QTime t;
+        t.setHMS(h,m%60,s%60,msec%1000);
+
+        if (!m)
+            return (s<10? t.toString("s.zzz") : t.toString("ss.zzz")) + "s";
+
+        if (!h)
+            return m<10? t.toString("m:ss.zzz") : t.toString("mm:ss.zzz");
+
+        return h<10? t.toString("h:mm:ss.zzz") : t.toString("hh:mm:ss.zzz");
     }
 
     // F_Long

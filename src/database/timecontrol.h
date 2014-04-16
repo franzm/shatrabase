@@ -63,6 +63,8 @@ public:
     {
         F_Long,
         F_Seconds,
+        F_HMS,
+        F_HMSMS,
         /** no valid format */
         MaxFormat
     };
