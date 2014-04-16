@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include <QList>
 
 #include "board.h"
+#include "engine.h"
 #include "playtimecontrol.h"
 #include "qled.h"
 
@@ -140,6 +141,11 @@ private slots:
 
 private:
 
+    /** Return an Engine::SearchSettings struct matching the
+        current properties and time. */
+    Engine::SearchSettings settings_(int stm) const;
+
+    /** initialize TimeControl at beginning of game */
     void initTiming_();
 
     /** Start playing board.toMove().

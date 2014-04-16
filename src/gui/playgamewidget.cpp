@@ -537,7 +537,7 @@ void PlayGameWidget::startNewMove_(const Board& board)
     if (!isUser(stm))
     {
         blinkTimer_.start();
-        play_->setPosition(board);
+        play_->setPosition(board, settings_(stm));
     }
 
     // start timing
@@ -580,6 +580,33 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
     return end;
 }
 
+Engine::SearchSettings PlayGameWidget::settings_(int stm) const
+{
+    Engine::SearchSettings s;
+
+    if (tc_.type() == TimeControl::T_Limit)
+    {
+        s.maxDepth = tc_.depthLimit();
+        s.maxTime = tc_.timeLimit();
+        s.maxNodes = tc_.nodeLimit();
+        return s;
+    }
+
+    if (tc_.type() == TimeControl::T_Tournament)
+    {
+        s.wtime = tc_.getTotalTime(White);
+        s.btime = tc_.getTotalTime(Black);
+        return s;
+    }
+
+    if (tc_.type() == TimeControl::T_Match)
+    {
+        s.maxTime = tc_.getMoveTime(!stm);
+        return s;
+    }
+
+    return s;
+}
 
 
 void PlayGameWidget::slotBlinkTimer_()

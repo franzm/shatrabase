@@ -26,8 +26,17 @@ USHIEngine::USHIEngine(const QString& name,
 
 }
 
-bool USHIEngine::startAnalysis(const Board& board, int nv, int movetime, int max_ply)
+bool USHIEngine::startAnalysis(const Board& board, int nv,
+                               const SearchSettings & settings)
 {
+    SB_ENGINE_DEBUG("USHIEngine::startAnalysis("
+                    << nv << ","
+                    << settings.maxTime << ", "
+                    << settings.maxNodes << ", "
+                    << settings.maxDepth << ", "
+                    << settings.wtime << ", "
+                    << settings.btime << ")");
+
 	m_mpv = nv;
 	if (!isActive()) {
 		return false;
@@ -39,8 +48,7 @@ bool USHIEngine::startAnalysis(const Board& board, int nv, int movetime, int max
 
 	m_position = board.toSPN();
 	m_waitingOn = "ushinewgame";
-    m_movetime = movetime;
-    m_max_ply = max_ply;
+    m_settings = settings;
 	send("stop");
     send("ushinewgame");
     send("isready");
@@ -58,7 +66,8 @@ void USHIEngine::stopAnalysis()
 void USHIEngine::setMpv(int mpv)
 {
 	m_mpv = mpv;
-	if (isAnalyzing()) {
+    if (isAnalyzing())
+    {
 		send("stop");
 		send(QString("setoption name MultiPV value %1").arg(m_mpv));
 		send("go infinite");
@@ -128,36 +137,66 @@ void USHIEngine::processMessage(const QString& message)
 			send("setoption name USHI_AnalyseMode value true");
 		}
 
-        if (m_waitingOn == "ushinewgame") {
+        if (m_waitingOn == "ushinewgame")
+        {
             //engine is now ready to analyse a new position
 			m_waitingOn = "";
 			send(QString("setoption name MultiPV value %1").arg(m_mpv));
 			send("position spn " + m_position);
 
-            // construct go command
+            // -- construct go command --
 
             QString cmd("go");
-            if (m_max_ply > 0)
-                cmd += QString(" depth %1").arg(m_max_ply);
-            if (m_movetime <= 0)
+            if (m_settings.maxDepth != SearchSettings::Unlimited)
+                cmd += QString(" depth %1").arg(m_settings.maxDepth);
+            if (m_settings.btime != SearchSettings::Unlimited)
+                cmd += QString(" btime %1").arg(m_settings.btime);
+            if (m_settings.btime != SearchSettings::Unlimited)
+                cmd += QString(" wtime %1").arg(m_settings.wtime);
+            if (m_settings.maxTime != SearchSettings::Unlimited)
+                cmd += QString(" movetime %1").arg(m_settings.maxTime);
+            if (!m_settings.isTimeLimit())
                 cmd += " infinite";
-            else
-                cmd += QString(" movetime %1").arg(m_movetime);
-
             send(cmd);
         }
 	}
 
     QString command = message.section(' ', 0, 0);
 
-    if (command == "info" && isAnalyzing())
+    if (isAnalyzing())
     {
-		parseAnalysis(message);
-	}
-    else if (command == "option" && !isAnalyzing())
-    {
-        parseOptions(message);
+        if (command == "info")
+            parseAnalysis(message);
+        else if (command == "bestmove")
+            parseBestmove(message);
     }
+    else
+    {
+        if (command == "option")
+            parseOptions(message);
+    }
+}
+
+void USHIEngine::parseBestmove(const QString& message)
+{
+    QString info = message.section(' ', 1, -1, QString::SectionSkipEmpty);
+    QString moveText = info.section(' ', 0, 0, QString::SectionSkipEmpty);
+
+    Board board(m_board);
+    Move move = board.parseMove(moveText);
+    if (!move.isLegal())
+    {
+        engineDebug(this, D_Error, tr("illegal bestmove '%1' from engine!").arg(moveText));
+        return;
+    }
+    board.doMove(move);
+
+    MoveList moves;
+    moves.append(move);
+
+    Analysis analysis;
+    analysis.setVariation(moves);
+    sendAnalysis(analysis);
 }
 
 void USHIEngine::parseAnalysis(const QString& message)

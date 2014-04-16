@@ -231,6 +231,8 @@ void Engine::setAnalyzing(bool analyzing)
 
 void Engine::sendAnalysis(const Analysis& analysis)
 {
+    SB_ENGINE_DEBUG("Engine::sendAnalysis() variation.size()=" << analysis.variation().size());
+
 	emit analysisUpdated(analysis);
 }
 

@@ -93,11 +93,7 @@ void PlayGame::activate()
         player1Ready_ = false;
         engine1_->startEngine(engineName1_);
         engine1_->setWaitTime(
-                    AppSettings->getValue("/PlayGame/Player1/minTime").toInt(),
                     AppSettings->getValue("/PlayGame/Player1/minTime").toInt()
-                    );
-        engine1_->setMaxDepth(
-                    AppSettings->getValue("/PlayGame/Player1/maxDepth").toInt()
                     );
     }
     else player1Ready_ = true;
@@ -107,11 +103,7 @@ void PlayGame::activate()
         player2Ready_ = false;
         engine2_->startEngine(engineName2_);
         engine2_->setWaitTime(
-                    AppSettings->getValue("/PlayGame/Player2/minTime").toInt(),
                     AppSettings->getValue("/PlayGame/Player2/minTime").toInt()
-                    );
-        engine2_->setMaxDepth(
-                    AppSettings->getValue("/PlayGame/Player2/maxDepth").toInt()
                     );
     }
     else player2Ready_ = true;
@@ -177,17 +169,17 @@ void PlayGame::setEngineName2(const QString &s)
 }
 
 
-bool PlayGame::setPosition(const Board& board)
+bool PlayGame::setPosition(const Board& board, const Engine::SearchSettings& settings)
 {
     SB_PLAY_DEBUG("PlayGame::setPosition(Board) stm = " << board.toMove());
 
     if (board.toMove() == White)
     {
-        if (engine1_) return engine1_->setPosition(board);
+        if (engine1_) return engine1_->setPosition(board, settings);
     }
     else
     {
-        if (engine2_) return engine2_->setPosition(board);
+        if (engine2_) return engine2_->setPosition(board, settings);
     }
 
     //SB_PLAY_DEBUG("...did not care for the position, "

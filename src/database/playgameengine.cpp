@@ -5,9 +5,7 @@ PlayGameEngine::PlayGameEngine(EngineDebugWidget * debug, QObject *parent)
     :   QObject             (parent),
         engineDebug_        (debug),
         engine_             (0),
-        minWaitTime_        (2*1000),
-        maxWaitTime_        (6*1000),
-        maxDepth_           (0),
+        minWaitTime_        (500),
         stopBetweenMoves_   (true),
         listening_          (false),
         sendPositionOnActivate_(false)
@@ -136,12 +134,11 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
     gotMove_ = true;
 
     // leave the Engine some time
-    if (waitTimer_.elapsed() < minWaitTime_)
-        return;
+//    if (waitTimer_.elapsed() < minWaitTime_)
+//        return;
 
     // send best move (and stop engine)
     sendMoves_();
-
 }
 
 void PlayGameEngine::sendMoves_()
@@ -176,11 +173,13 @@ void PlayGameEngine::sendMoves_()
         emit engineClueless();
 }
 
-bool PlayGameEngine::setPosition(const Board &b)
+bool PlayGameEngine::setPosition(const Board &b, const Engine::SearchSettings& settings)
 {
     SB_PLAY_DEBUG("PlayGameEngine::setPosition() stopBetweenMoves_=" << stopBetweenMoves_);
 
     if (!engine_) return false;
+
+    settings_ = settings;
 
     if (stopBetweenMoves_)
     {
@@ -205,8 +204,8 @@ bool PlayGameEngine::startAnalysis_(const Board& b)
     listening_ = true;
     gotMove_ = false;
     waitTimer_.start();
-    terminateTimer_.start(maxWaitTime_);
-
-    return engine_->startAnalysis(b, 1, maxWaitTime_, maxDepth_);
+    if (settings_.maxTime != Engine::SearchSettings::Unlimited)
+        terminateTimer_.start(settings_.maxTime);
+    return engine_->startAnalysis(b, 1, settings_);
 }
 
