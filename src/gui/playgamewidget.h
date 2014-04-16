@@ -51,6 +51,9 @@ public:
 
     bool isPlaying() const { return playing_; }
 
+    /** Returns whether the given side to move is controlled by the user. */
+    bool isUser(Color stm) const;
+
     /** Returns if White should be able to interact with board */
     bool whiteCanMove() const;
     /** Returns if Black should be able to interact with board */
@@ -135,6 +138,10 @@ private slots:
 private:
 
     void initTiming_();
+
+    /* Sets the playing side, updates widgets,
+     *  optionally starts counting move time */
+    //void setSidePlaying_(Color stm, bool do_start_timer);
 
     /** Updates widgets */
     void setWidgetsPlayer_(int stm);

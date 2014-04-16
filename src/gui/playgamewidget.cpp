@@ -93,6 +93,13 @@ PlayGameWidget::~PlayGameWidget()
     delete ui_;
 }
 
+bool PlayGameWidget::isUser(Color stm) const
+{
+    return (stm == White && !play_->player1IsEngine())
+            ||
+           (stm == Black && !play_->player2IsEngine());
+}
+
 bool PlayGameWidget::whiteCanMove() const
 {
     return !play_->player1IsEngine();
@@ -306,7 +313,15 @@ void PlayGameWidget::flipPlayers_()
 
     slotReconfigure();
 }
-
+/*
+void PlayGameWidget::setSidePlaying_(Color stm, bool dotime)
+{
+    setWidgetsPlayer_(stm);
+    lastStm_ = stm;
+    if (dotime)
+        tc_.startMove(stm);
+}
+*/
 void PlayGameWidget::setWidgetsPlayer_(int stm)
 {
     activeLed_ = stm;
@@ -364,6 +379,9 @@ void PlayGameWidget::engineClueless()
     if (!playing_)
         return;
 
+    if (tc_.isMoving())
+        tc_.endMove();
+
     // XXX what to do here?
     QMessageBox::warning(
              this,
@@ -383,13 +401,13 @@ void PlayGameWidget::setPosition(const Board& board)
 
     if (!playing_) return;
 
-    if (lastStm_ != board.toMove())
-    {
-        // player's move ended
-        tc_.endMove();
-    }
+    qDebug() << "PLAYER MOVED";
 
-    lastStm_ = board.toMove();
+    // player's move ended (or at least a ply)
+    tc_.stopMove();
+
+    // !stm == side that made last move on board
+    lastStm_ = (Color)(!board.toMove());
 
     // check if last player move ended game
     // (Win/Lose will be checked after move animation ended)
@@ -406,9 +424,9 @@ void PlayGameWidget::setPosition(const Board& board)
         {
             blinkTimer_.start();
             play_->setPosition(board);
-            tc_.startMove();
         }
 
+        tc_.startMove();
     }
     // Black is next
     else
@@ -420,9 +438,9 @@ void PlayGameWidget::setPosition(const Board& board)
         {
             blinkTimer_.start();
             play_->setPosition(board);
-            tc_.startMove();
         }
 
+        tc_.startMove();
     }
 
 }
@@ -434,6 +452,8 @@ void PlayGameWidget::moveFromEngine(Move m)
 
     qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
 
+    // stop counter on first engine move
+    // (potential multi-capture is already generated so don't count further)
     if (plyQue_.empty())
     {
         tc_.endMove();
@@ -454,6 +474,7 @@ void PlayGameWidget::moveFromEngine(Move m)
     // first ply of a sequence can be send right away
     if (plyQue_.size() == 1)
     {
+        qDebug() << "ENGINE MOVED";
         lastStm_ = (Color)m.sideMoving();
         emit moveMade(m);
         return;
@@ -464,13 +485,29 @@ void PlayGameWidget::animationFinished(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
 
-    qDebug() << "PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size();
+    qDebug() << "PlayGameWidget::animationFinished() stm="<<board.toMove() << "plyQue_.size()=" << plyQue_.size();
 
     if (!playing_)
         return;
 
+    // not a move from engine (means from user)
+    // XXX not working for engine vs. engine
+    if (plyQue_.empty())
+    {
+        // this is a multiply move?
+        if (board.transitAt() != 0)
+        {
+            tc_.continueMove();
+            return;
+        }
+
+        // only switch sides, tc_.stopMove() was called in setPosition()
+        tc_.endMove();
+        return;
+    }
+
     // more plies in the que? (means engine moved last)
-    if (!plyQue_.empty())
+    else
     {
         // we sent that one before
         plyQue_.pop_front();
@@ -482,15 +519,14 @@ void PlayGameWidget::animationFinished(const Board& board)
             return;
         }
 
-        //tc_.endMove();
-
         // check if last engine move ended game
         if (!checkGameResult_(board, true, true))
         {
             // switch to other player
             setWidgetsPlayer_(oppositeColor(lastStm_));
 
-            // start move thinking
+            // start move counter for other player
+            // tc_.endMove() was called before
             tc_.startMove();
         }
     }
@@ -505,7 +541,7 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
     const bool
         wwin = board.gameResult() == WhiteWin,
         bwin = board.gameResult() == BlackWin,
-        draw = false, //XXX need to fix this-> board.gameResult() == Draw,
+        draw = false, //XXX need to fix this// board.gameResult() == Draw,
         e1 = play_->player1IsEngine(),
         e2 = play_->player2IsEngine();
 
