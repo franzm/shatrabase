@@ -110,14 +110,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
     connect(m_boardView, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
     connect(m_boardView, SIGNAL(animationFinished(Board)), SLOT(slotBoardAnimationFinished(Board)));
-//    DockWidgetEx* boardDock = new DockWidgetEx(tr("Board"), this);
-//    boardDock->setObjectName("BoardDock");
-//    boardDock->setWidget(m_boardView);
-	/* Board layout */
-//    m_boardLayout->hasHeightForWidth();
-    //m_boardSplitter->addWidget(m_boardView);
 
-//    m_boardSplitter->setStretchFactor(m_boardSplitter->indexOf(m_boardView), 1);
 
 	/* Game view */
     DockWidgetEx* gameTextDock = new DockWidgetEx(tr("Game Text"), this);
@@ -132,7 +125,7 @@ MainWindow::MainWindow() : QMainWindow(),
     m_gameToolBar->setObjectName("GameToolBar");
     m_gameToolBar->setMovable(false);
     m_gameWindow->addToolBar(Qt::BottomToolBarArea, m_gameToolBar);
-    for (int i = 0; i < 2; ++i)
+    /*for (int i = 0; i < 2; ++i)
     {
         QLCDNumber* annotatedTime = new QLCDNumber(m_gameToolBar);
         annotatedTime->setObjectName(QString("Clock") + QString::number(i));
@@ -145,10 +138,11 @@ MainWindow::MainWindow() : QMainWindow(),
             spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
             m_gameToolBar->addWidget(spacer);
         }
-    }
+    }*/
 
-    m_menuView->addAction(m_gameToolBar->toggleViewAction());
-    m_gameToolBar->setVisible(AppSettings->getValue("/MainWindow/GameToolBar").toBool());
+    //m_menuView->addAction(m_gameToolBar->toggleViewAction());
+    m_gameToolBar->setVisible(false);//AppSettings->getValue("/MainWindow/GameToolBar").toBool());
+
     m_gameView = new ChessBrowser(m_gameWindow, true);
     m_gameView->toolBar = m_gameToolBar;
     m_gameView->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -169,6 +163,7 @@ MainWindow::MainWindow() : QMainWindow(),
     //m_menuView->addAction(gameTextDock->toggleViewAction());
     //gameTextDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_T);
 
+
 	/* Game List */
     DockWidgetEx* gameListDock = new DockWidgetEx(tr("Game List"), this);
 	gameListDock->setObjectName("GameList");
@@ -186,6 +181,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	gameListDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::Key_L);
     connect(m_gameList, SIGNAL(raiseRequest()), gameListDock, SLOT(raise()));
 
+
     /* Database stats */
     DockWidgetEx* statsDock = new DockWidgetEx(tr("Database Statistics"), this);
     statsDock->setObjectName("DatabaseStats");
@@ -196,6 +192,7 @@ MainWindow::MainWindow() : QMainWindow(),
     addDockWidget(Qt::RightDockWidgetArea, statsDock);
     m_menuView->addAction(statsDock->toggleViewAction());
 
+
     /* Engine Debug Widget */
     DockWidgetEx* engineDebugDock = new DockWidgetEx(tr("Engine Debugger"), this);
     engineDebugDock->setObjectName("Engine Debugger");
@@ -204,6 +201,7 @@ MainWindow::MainWindow() : QMainWindow(),
     engineDebugDock->setWidget(m_engineDebug);
     m_menuView->addAction(engineDebugDock->toggleViewAction());
     addDockWidget(Qt::RightDockWidgetArea, engineDebugDock);
+
 
     /* Play Game */
     DockWidgetEx* playerSelDock = new DockWidgetEx(tr("Play Game"), this);
@@ -221,6 +219,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_playGame, SIGNAL(playerWins()), SLOT(slotPlayPlayerWins()));
     connect(m_playGame, SIGNAL(playerLoses()), SLOT(slotPlayOtherWins()));
     connect(this, SIGNAL(reconfigure()), m_playGame, SLOT(slotReconfigure()));
+
 
     /* Player List */
 /*    DockWidgetEx* playerListDock = new DockWidgetEx(tr("Players"), this);
@@ -252,7 +251,8 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(this, SIGNAL(reconfigure()), m_eventList, SLOT(slotReconfigure()));
     eventListDock->hide();
 */
-    // Database List
+
+    /* Database List */
     DockWidgetEx* dbListDock = new DockWidgetEx(tr("Databases"), this);
     dbListDock->setObjectName("Databases");
     m_databaseList = new DatabaseList(this);
@@ -279,6 +279,7 @@ MainWindow::MainWindow() : QMainWindow(),
     m_recentFiles.removeMissingFiles();
     updateMenuRecent();
 
+
     /* Opening Tree */
     DockWidgetEx* openingDock = new DockWidgetEx(tr("Opening Tree"), this);
 	openingDock->setObjectName("OpeningTreeDock");
@@ -301,7 +302,8 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(this, SIGNAL(reconfigure()), m_openingTreeView, SLOT(slotReconfigure()));
 	openingDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::Key_T);
     openingDock->hide();
-	
+
+
 	/* Analysis Dock */
     DockWidgetEx* analysisDock = new DockWidgetEx(tr("Analysis 1"), this);
     analysisDock->setObjectName("AnalysisDock1");
@@ -323,6 +325,7 @@ MainWindow::MainWindow() : QMainWindow(),
     analysisDock->hide();
 
     m_mainAnalysis = analysis;
+
 
 	/* Analysis Dock 2 */
     DockWidgetEx* analysisDock2 = new DockWidgetEx(tr("Analysis 2"), this);
