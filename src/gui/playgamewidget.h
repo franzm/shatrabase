@@ -139,6 +139,11 @@ private:
 
     void initTiming_();
 
+    /** Start playing board.toMove().
+     *  Sets widgets and starts timing.
+     *  Sends board to Engine if necessary. */
+    void startNewMove_(const Board& board);
+
     /* Sets the playing side, updates widgets,
      *  optionally starts counting move time */
     //void setSidePlaying_(Color stm, bool do_start_timer);
@@ -173,7 +178,8 @@ private:
 
     PlayGame * play_;
 
-    Color lastStm_;
+    Color curStm_;
+    bool userMoved_;
     int winStm_;
     QList<Move> plyQue_;
 

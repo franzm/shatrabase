@@ -228,8 +228,9 @@ void PlayGameWidget::start_()
     setWidgetsPlaying_(true);
 
     winStm_ = -1;
-    lastStm_ = White;
+    curStm_ = White;
     playing_ = true;
+    userMoved_ = false;
     ignoreAnswer_ = false;
     //playerMultiPly_ = false;
 
@@ -406,43 +407,12 @@ void PlayGameWidget::setPosition(const Board& board)
     // player's move ended (or at least a ply)
     tc_.stopMove();
 
-    // !stm == side that made last move on board
-    lastStm_ = (Color)(!board.toMove());
+    // when move ended, !stm == side that made last move
+    curStm_ = board.transitAt() == 0?
+                (Color)(!board.toMove())
+              : board.toMove();
 
-    // check if last player move ended game
-    // (Win/Lose will be checked after move animation ended)
-    if (checkGameResult_(board, false, false))
-        return;
-
-    // White is next
-    if (board.toMove() == White)
-    {
-        setWidgetsPlayer_(White);
-
-        // start engine
-        if (play_->player1IsEngine())
-        {
-            blinkTimer_.start();
-            play_->setPosition(board);
-        }
-
-        tc_.startMove();
-    }
-    // Black is next
-    else
-    {
-        setWidgetsPlayer_(Black);
-
-        // start engine
-        if (play_->player2IsEngine())
-        {
-            blinkTimer_.start();
-            play_->setPosition(board);
-        }
-
-        tc_.startMove();
-    }
-
+    userMoved_ = true;
 }
 
 
@@ -475,7 +445,7 @@ void PlayGameWidget::moveFromEngine(Move m)
     if (plyQue_.size() == 1)
     {
         qDebug() << "ENGINE MOVED";
-        lastStm_ = (Color)m.sideMoving();
+        curStm_ = (Color)m.sideMoving();
         emit moveMade(m);
         return;
     }
@@ -490,29 +460,36 @@ void PlayGameWidget::animationFinished(const Board& board)
     if (!playing_)
         return;
 
-    // not a move from engine (means from user)
-    // XXX not working for engine vs. engine
-    if (plyQue_.empty())
+    const bool transit = board.transitAt() != 0;
+    const Color stm = transit? board.toMove() : (Color)(!board.toMove());
+
+    // user move
+    if (isUser(stm))
     {
+        // make sure no duplicate animation has occured
+        if (!userMoved_) return;
+        userMoved_ = false;
+
         // this is a multiply move?
-        if (board.transitAt() != 0)
+        if (transit != 0)
         {
             tc_.continueMove();
             return;
         }
 
-        // only switch sides, tc_.stopMove() was called in setPosition()
+        // only switches sides, tc_.stopMove() was called in setPosition()
         tc_.endMove();
+        startNewMove_(board);
         return;
     }
 
-    // more plies in the que? (means engine moved last)
-    else
+    // engine moved last
+    else if (!plyQue_.empty())
     {
         // we sent that one before
         plyQue_.pop_front();
 
-        // next ply?
+        // more plies in the que?
         if (!plyQue_.empty())
         {
             emit moveMade(plyQue_.first());
@@ -522,15 +499,59 @@ void PlayGameWidget::animationFinished(const Board& board)
         // check if last engine move ended game
         if (!checkGameResult_(board, true, true))
         {
-            // switch to other player
-            setWidgetsPlayer_(oppositeColor(lastStm_));
-
-            // start move counter for other player
+            // switch to other player and start move counter
             // tc_.endMove() was called before
-            tc_.startMove();
+            startNewMove_(board);
         }
     }
+}
 
+void PlayGameWidget::startNewMove_(const Board& board)
+{
+    const Color stm = board.toMove();
+
+    setWidgetsPlayer_(stm);
+
+    // start engine
+    if (!isUser(stm))
+    {
+        blinkTimer_.start();
+        play_->setPosition(board);
+    }
+
+    tc_.startMove();
+
+    /*
+    // White is next
+    if (board.toMove() == White && !isUser(White))
+    {
+        setWidgetsPlayer_(White);
+
+        // start engine
+        if (play_->player1IsEngine())
+        {
+            blinkTimer_.start();
+            play_->setPosition(board);
+        }
+
+        tc_.startMove();
+        return;
+    }
+
+    // Black is next
+    if (board.toMove() == Black && !isUser(Black))
+    {
+        setWidgetsPlayer_(Black);
+
+        // start engine
+        if (play_->player2IsEngine())
+        {
+            blinkTimer_.start();
+            play_->setPosition(board);
+        }
+
+        tc_.startMove();
+    }*/
 }
 
 
@@ -553,7 +574,7 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
         end = true;
 
         // determine winning side
-        winStm_ = draw? 2 : lastStm_;//board.toMove();
+        winStm_ = draw? 2 : curStm_;//board.toMove();
     }
 
     if (trigger)

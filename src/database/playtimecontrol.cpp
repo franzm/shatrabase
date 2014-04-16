@@ -116,7 +116,7 @@ int PlayTimeControl::endMove()
 
         // remove time of move
         totalTime_[stm_] -= (e - taken_);
-        moveTime_[stm_] = (e - taken_);
+        moveTime_[stm_] += (e - taken_);
         taken_ = 0;
 
         emit timeUpdated();
