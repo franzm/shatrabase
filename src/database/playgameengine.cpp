@@ -5,9 +5,7 @@ PlayGameEngine::PlayGameEngine(EngineDebugWidget * debug, QObject *parent)
     :   QObject             (parent),
         engineDebug_        (debug),
         engine_             (0),
-        minWaitTime_        (2*1000),
-        maxWaitTime_        (6*1000),
-        maxDepth_           (0),
+        minWaitTime_        (500),
         stopBetweenMoves_   (true),
         listening_          (false),
         sendPositionOnActivate_(false)
@@ -59,8 +57,9 @@ bool PlayGameEngine::createEngine_()
         connect(engine_, SIGNAL(activated()), SLOT(engineActivated_()));
         connect(engine_, SIGNAL(error(QProcess::ProcessError)), SLOT(engineError_(QProcess::ProcessError)));
         connect(engine_, SIGNAL(deactivated()), SLOT(engineDeactivated_()));
-        connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
-                                    SLOT(engineAnalysis_(const Analysis&)));
+        /*connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
+                                    SLOT(engineAnalysis_(const Analysis&)));*/
+        connect(engine_, SIGNAL(bestMoveSend(Move)), SLOT(engineBestMove_(Move)));
         if (engineDebug_)
         {
             connect(engine_, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
@@ -123,6 +122,21 @@ void PlayGameEngine::engineError_(QProcess::ProcessError e)
     emit engineCrashed();
 }
 
+void PlayGameEngine::engineBestMove_(const Move& m)
+{
+    SB_PLAY_DEBUG("PlayGameEngine::engineBestMove_()");
+
+    if (!listening_)
+        return;
+
+    terminateTimer_.stop();
+
+    bestMove_ = m;
+    gotBestMove_ = true;
+
+    sendMoves_();
+}
+
 void PlayGameEngine::engineAnalysis_(const Analysis& a)
 {
     SB_PLAY_DEBUG("PlayGameEngine::engineAnalysis_()");
@@ -132,7 +146,7 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
         return;
 
     // keep the mainline
-    bestMove_ = a.variation();
+    bestMoves_ = a.variation();
     gotMove_ = true;
 
     // leave the Engine some time
@@ -141,7 +155,6 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
 
     // send best move (and stop engine)
     sendMoves_();
-
 }
 
 void PlayGameEngine::sendMoves_()
@@ -159,28 +172,39 @@ void PlayGameEngine::sendMoves_()
             engine_->stopAnalysis();
     }
 
-    if (gotMove_ && !bestMove_.empty())
-    {
-        emit moveMade(bestMove_[0]);
-
-        // multi-ply?
-        int stm = bestMove_[0].sideMoving();
-        int i = 1;
-        while (i < bestMove_.size() && bestMove_[i].sideMoving() == stm)
-        {
-            emit moveMade(bestMove_[i]);
-            ++i;
-        }
-    }
-    else
+    if (!(gotMove_ || gotBestMove_))
         emit engineClueless();
+    else
+    {
+        if (gotBestMove_)
+            emit moveMade(bestMove_);
+        else
+        if (!bestMoves_.empty())
+        {
+            emit moveMade(bestMoves_[0]);
+
+            // multi-ply?
+            int stm = bestMoves_[0].sideMoving();
+            int i = 1;
+            while (i < bestMoves_.size() && bestMoves_[i].sideMoving() == stm)
+            {
+                emit moveMade(bestMoves_[i]);
+                ++i;
+            }
+        }
+        else
+            emit engineClueless();
+    }
+
 }
 
-bool PlayGameEngine::setPosition(const Board &b)
+bool PlayGameEngine::setPosition(const Board &b, const Engine::SearchSettings& settings)
 {
     SB_PLAY_DEBUG("PlayGameEngine::setPosition() stopBetweenMoves_=" << stopBetweenMoves_);
 
     if (!engine_) return false;
+
+    settings_ = settings;
 
     if (stopBetweenMoves_)
     {
@@ -203,10 +227,16 @@ bool PlayGameEngine::startAnalysis_(const Board& b)
     if (!engine_) return false;
 
     listening_ = true;
-    gotMove_ = false;
+    gotMove_ = gotBestMove_ = false;
     waitTimer_.start();
-    terminateTimer_.start(maxWaitTime_);
 
-    return engine_->startAnalysis(b, 1, maxWaitTime_, maxDepth_);
+    /*
+    if (settings_.maxTime != Engine::SearchSettings::Unlimited)
+    {
+        minWaitTime_ = settings_.maxTime;
+        //terminateTimer_.start(minWaitTime_+200);
+    }*/
+
+    return engine_->startAnalysis(b, 1, settings_);
 }
 

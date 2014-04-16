@@ -97,7 +97,7 @@ public slots:
     /** Sets new position. Signals, that a move has been performed.
         If required, the Engine will be queried.
         Returns true when the Engine is (at least) requested to analyse. */
-    bool setPosition(const Board& board);
+    bool setPosition(const Board& board, const Engine::SearchSettings& settings);
 
 protected slots:
 

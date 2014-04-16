@@ -54,6 +54,29 @@ public:
         D_Debug
     };
 
+    struct SearchSettings
+    {
+        enum { Unlimited = -1 };
+        int maxDepth,
+            maxTime,
+            maxNodes,
+            btime,
+            wtime,
+            movestogo;
+
+        SearchSettings()
+            : maxDepth(Unlimited),
+              maxTime(Unlimited),
+              maxNodes(Unlimited),
+              btime(Unlimited),
+              wtime(Unlimited),
+              movestogo(Unlimited)
+        { }
+
+        bool isTimeLimit() const
+            { return maxTime != Unlimited || btime != Unlimited || wtime != Unlimited; }
+    };
+
     /** Constructs an engine with a given path/command, and log stream */
 	Engine(const QString& name,
 		const QString& command,
@@ -84,7 +107,7 @@ public:
         If @p movetime_ms > 0, limit the analysis time to given millisecs.
         If @p max_ply > 0, only the specified number of plies will be searched. */
     virtual bool startAnalysis(const Board& board, int nv = 1,
-                               int movetime_ms = 0, int max_ply = 0) = 0;
+                               const SearchSettings & settings = SearchSettings()) = 0;
 
     /** Stops any analysis */
 	virtual void stopAnalysis() = 0;
@@ -123,6 +146,9 @@ signals:
 
     /** Fired when the engine has produced some analysis */
 	void analysisUpdated(const Analysis& analysis);
+
+    /** Engine has sent bestmove */
+    void bestMoveSend(const Move& move);
 
     /** Fired when a log item has been written to the log */
 	void logUpdated();

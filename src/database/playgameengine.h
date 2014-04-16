@@ -38,11 +38,8 @@ public:
 
     // --- proerties ---
 
-    /** Set minimum at maximum wait time in millisecs */
-    void setWaitTime(int min_ms, int max_ms) { minWaitTime_ = min_ms; maxWaitTime_ = max_ms; }
-
-    /** Set's the maximum search depth in (moves or ply?) */
-    void setMaxDepth(int max_search_depth_in_ply_questionmark) { maxDepth_ = max_search_depth_in_ply_questionmark; }
+    /** Set minimum wait time in millisecs */
+    void setWaitTime(int min_ms) { minWaitTime_ = min_ms; }
 
 signals:
 
@@ -62,7 +59,7 @@ public slots:
 
     /** Sets new position and queries the Engine.
         Returns true when the Engine is (at least) requested to analyze. */
-    bool setPosition(const Board&);
+    bool setPosition(const Board&, const Engine::SearchSettings& settings);
 
 private slots:
 
@@ -72,6 +69,7 @@ private slots:
     void engineDeactivated_();
     void engineError_(QProcess::ProcessError);
     void engineAnalysis_(const Analysis&);
+    void engineBestMove_(const Move&);
 
     // ---- other callbacks ----------
 
@@ -102,9 +100,13 @@ private:
 
     /** current board to send */
     Board board_;
+    /** Settings used for search */
+    Engine::SearchSettings settings_;
 
-    /** Best move so far */
-    MoveList bestMove_;
+    /** Best moves so far (MoveList from variation) */
+    MoveList bestMoves_;
+    /** Best move */
+    Move bestMove_;
 
     /** For leaving the Engine some time to think */
     QTime waitTimer_;
@@ -114,17 +116,15 @@ private:
     // --- properties ---
 
     /** Time to wait in millisecs for the Engine answer */
-    int minWaitTime_,
-    /** Time after which the Engine gets stopped and the last move is returned. */
-        maxWaitTime_,
-    /** Searchdepth */
-        maxDepth_;
+    int minWaitTime_;
 
     // -- state logic --
 
     bool
     /** Already got a move from Engine (for maxWaitTime_) */
         gotMove_,
+    /** engineBestMove_() was called. */
+        gotBestMove_,
     /** Stop the engine between each move?
         This flag should probably NOT be changed after the engine was activated! */
         stopBetweenMoves_,

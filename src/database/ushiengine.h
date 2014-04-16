@@ -35,7 +35,8 @@ public:
     /** Analyses the the given position.
         If @p movetime_ms > 0, limit the analysis time to given millisecs.
         If @p max_ply > 0, only the specified number of plies will be searched. */
-    bool startAnalysis(const Board& board, int nv, int movetime_ms = 0, int max_ply = 0);
+    bool startAnalysis(const Board& board, int nv,
+                       const SearchSettings & settings = SearchSettings());
 
 	/** Stops any analysis */
 	void stopAnalysis();
@@ -64,6 +65,9 @@ private:
 	/** Parses analysis */
 	void parseAnalysis(const QString& message);
 
+    /** Parse bestmove output */
+    void parseBestmove(const QString& message);
+
     /** Parse option string */
     void parseOptions(const QString &message);
 
@@ -71,7 +75,7 @@ private:
 
 	QString m_position;
 	QString m_waitingOn;
-    int m_movetime, m_max_ply;
+    SearchSettings m_settings;
 	bool m_quitAfterAnalysis;
 };
 

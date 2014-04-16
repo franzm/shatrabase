@@ -28,6 +28,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "playgame.h"
 #include "playgameenginedialog.h"
 
+// no multicaptures are given by PlayGameEngine
+// currently a workaround
+#define SB_SINGLE_CAPTURE
+
 PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     QWidget         (parent),
     colorPlayer_    (QLed::Green),
@@ -58,6 +62,10 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     // ------- setup ui ------
 
     ui_->setupUi(this);
+
+    // XXX not needed anymore
+    ui_->b_settings1->setVisible(false);
+    ui_->b_settings2->setVisible(false);
 
     ui_->clock2->setColor(false);
 
@@ -435,12 +443,22 @@ void PlayGameWidget::moveFromEngine(Move m)
 
     qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
 
+#ifndef SB_SINGLE_CAPTURE
     // stop counter on first engine move
     // (potential multi-capture is already generated so don't count further)
     if (plyQue_.empty())
     {
         tc_.endMove();
     }
+#else
+    if (tc_.isMoving())
+    {
+        if (m.willContinue())
+            tc_.stopMove();
+        else
+            tc_.endMove();
+    }
+#endif
 
     blinkTimer_.stop();
 
@@ -514,11 +532,24 @@ void PlayGameWidget::animationFinished(const Board& board)
             return;
         }
 
+#ifdef SB_SINGLE_CAPTURE
+        if (!transit)
+#endif
         setMoveTimeComment_( tc_.getMoveTime(curStm_) );
 
         // check if last engine move ended game
         if (!checkGameResult_(board, true, true))
         {
+#ifdef SB_SINGLE_CAPTURE
+            if (transit)
+            {
+                // get next move from engine
+                tc_.continueMove();
+                play_->setPosition(board, settings_(stm));
+                blinkTimer_.start();
+                return;
+            }
+#endif
             // switch to other player and start move counter
             // tc_.endMove() was called before
             startNewMove_(board);
@@ -537,7 +568,7 @@ void PlayGameWidget::startNewMove_(const Board& board)
     if (!isUser(stm))
     {
         blinkTimer_.start();
-        play_->setPosition(board);
+        play_->setPosition(board, settings_(stm));
     }
 
     // start timing
@@ -580,6 +611,34 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
     return end;
 }
 
+Engine::SearchSettings PlayGameWidget::settings_(int stm) const
+{
+    Engine::SearchSettings s;
+
+    if (tc_.type() == TimeControl::T_Limit)
+    {
+        s.maxDepth = tc_.depthLimit();
+        s.maxTime = tc_.timeLimit();
+        s.maxNodes = tc_.nodeLimit();
+        return s;
+    }
+
+    if (tc_.type() == TimeControl::T_Tournament)
+    {
+        s.wtime = tc_.getTotalTime(White);
+        s.btime = tc_.getTotalTime(Black);
+        s.movestogo = tc_.movesToGo();
+        return s;
+    }
+
+    if (tc_.type() == TimeControl::T_Match)
+    {
+        s.maxTime = tc_.getMoveTime(!stm);
+        return s;
+    }
+
+    return s;
+}
 
 
 void PlayGameWidget::slotBlinkTimer_()
