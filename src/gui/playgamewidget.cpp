@@ -362,6 +362,14 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
     updateEngineWidgets_();
 }
 
+void PlayGameWidget::setMoveTimeComment_(int mt)
+{
+    if (AppSettings->getValue("/PlayGame/saveMoveTime").toBool())
+    {
+        const QString s = tc_.msecToString(mt);
+        emit gameComment(s);
+    }
+}
 
 void PlayGameWidget::enginesReady()
 {
@@ -431,7 +439,7 @@ void PlayGameWidget::moveFromEngine(Move m)
     // (potential multi-capture is already generated so don't count further)
     if (plyQue_.empty())
     {
-        int mt = tc_.endMove();
+        tc_.endMove();
     }
 
     blinkTimer_.stop();
@@ -488,7 +496,7 @@ void PlayGameWidget::animationFinished(const Board& board)
 
         // only switches sides, tc_.stopMove() was called in setPosition()
         int mt = tc_.endMove();
-        gameComment(TimeControl::msecToString(mt));
+        setMoveTimeComment_(mt);
         startNewMove_(board);
         return;
     }
@@ -506,7 +514,7 @@ void PlayGameWidget::animationFinished(const Board& board)
             return;
         }
 
-        gameComment(TimeControl::msecToString(tc_.getMoveTime(curStm_)));
+        setMoveTimeComment_( tc_.getMoveTime(curStm_) );
 
         // check if last engine move ended game
         if (!checkGameResult_(board, true, true))

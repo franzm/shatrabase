@@ -162,6 +162,9 @@ private:
         Returns if game ended. */
     bool checkGameResult_(const Board&, bool triggerWinSignals, bool doStop);
 
+    /** Sends a comment to gametext with the given movetime (according to properties) */
+    void setMoveTimeComment_(int movetime_msec);
+
     // ---- config ---
     QLed::ledColor colorPlayer_;
     // for blinking when engine thinks

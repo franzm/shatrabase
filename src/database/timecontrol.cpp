@@ -30,6 +30,24 @@ const char * timeControlTypeName[] =
     "tournament"
 };
 
+static const QString tc_formatNames[] =
+{
+    "long",
+    "seconds",
+    "*unknown*"
+};
+
+static const QString tc_formatNamesTr[] =
+{
+    //: this means 'long' text format for time
+    TimeControl::tr("long"),
+    //: this means 'seconds' text format for time
+    TimeControl::tr("seconds"),
+
+    "*unknown*"
+};
+
+
 TimeControl::TimeControl(QObject * p)
     :   QObject         (p),
         type_           (T_None),
@@ -45,6 +63,30 @@ TimeControl::TimeControl(QObject * p)
         nodeLimit_      (Unlimited),
         depthLimit_     (Unlimited)
 {
+}
+
+const QString& TimeControl::formatName(Format f)
+{
+    if (f < MaxFormat)
+        return tc_formatNames[f];
+    else
+        return tc_formatNames[MaxFormat];
+}
+
+const QString& TimeControl::formatNameTr(Format f)
+{
+    if (f < MaxFormat)
+        return tc_formatNamesTr[f];
+    else
+        return tc_formatNamesTr[MaxFormat];
+}
+
+TimeControl::Format TimeControl::formatFromName(const QString& str)
+{
+    for (int i=0; i<MaxFormat; ++i)
+        if (tc_formatNames[i] == str)
+            return (Format)i;
+    return F_Long;
 }
 
 
@@ -64,6 +106,8 @@ void TimeControl::configure()
         type_ = (Type)i;
         break;
     }
+
+    format_ = formatFromName(AppSettings->getValue("format").toString());
 
     numMoves1_ = AppSettings->getValue("numMoves1").toInt();
     numMoves2_ = AppSettings->getValue("numMoves2").toInt();
@@ -107,41 +151,49 @@ void TimeControl::configure()
 #endif
 }
 
-QString TimeControl::msecToString(int msec)
+QString TimeControl::msecToString(int msec) const
 {
-    if (msec <= 0)
-        return tr("0 sec");
-
-    const int h = msec/60/60/1000,
-              m = (msec/60/1000) % 60,
-              s = (msec/1000) % 60;
-
-    QString r;
-    if (h)
-        r += tr("%1 h").arg(h);
-
-    if (m)
+    if (format_ == F_Seconds)
     {
-        if (!r.isEmpty())
-            r += ", ";
-        r += tr("%1 min").arg(m);
+        return QString("%1s").arg(msec/1000);
     }
 
-    if (s)
+    // F_Long
     {
-        if (!r.isEmpty())
-            r += ", ";
-        r += tr("%1 sec").arg(s);
-    }
+        if (msec <= 0)
+            return tr("0 sec");
 
-    if (msec % 1000)
-    {
-        if (!r.isEmpty())
-            r += ", ";
-        r += tr("%1 ms").arg(msec%1000);
-    }
+        const int h = msec/60/60/1000,
+                  m = (msec/60/1000) % 60,
+                  s = (msec/1000) % 60;
 
-    return r;
+        QString r;
+        if (h)
+            r += tr("%1 h").arg(h);
+
+        if (m)
+        {
+            if (!r.isEmpty())
+                r += ", ";
+            r += tr("%1 min").arg(m);
+        }
+
+        if (s)
+        {
+            if (!r.isEmpty())
+                r += ", ";
+            r += tr("%1 sec").arg(s);
+        }
+
+        if (msec % 1000)
+        {
+            if (!r.isEmpty())
+                r += ", ";
+            r += tr("%1 ms").arg(msec%1000);
+        }
+
+        return r;
+    }
 }
 
 QString TimeControl::humanReadable() const
@@ -270,7 +322,7 @@ int TimeControl::getTimeInc(int move) const
     // final move in tc1
     if (move == numMoves1_)
     {
-        if (numMoves2_ == Unlimited)
+        if (numMoves2_ == 0)
             return timeInc1_ + timeAdd_;
         else
             return timeInc1_ + timeForMoves2_;

@@ -59,6 +59,17 @@ public:
         MaxTypes
     };
 
+    enum Format
+    {
+        F_Long,
+        F_Seconds,
+        /** no valid format */
+        MaxFormat
+    };
+    static const QString& formatName(Format f);
+    static const QString& formatNameTr(Format f);
+    static Format formatFromName(const QString& );
+
     enum { Unlimited = -1 };
 
     TimeControl(QObject * parent = 0);
@@ -68,8 +79,8 @@ public:
     /** Return humand readable description of current settings */
     QString humanReadable() const;
 
-    /** Nice readable string */
-    static QString msecToString(int msec);
+    /** Nice readable string according to AppSettings */
+    QString msecToString(int msec) const;
 
     // ------ game time info --------
 
@@ -88,6 +99,8 @@ public:
 
     /** Type of time control */
     Type type() const { return type_; }
+
+    Format format() const { return format_; }
 
     /** Number of moves to complete in timeForMoves1().
         If Unlimited, all moves have to be completed in time. */
@@ -128,6 +141,8 @@ public:
     // ------- setter ---------------
 
     void setType(Type type) { type_ = type; }
+    void setFormat(Format f) { format_ = f; }
+
     void setNumMoves1(int moves) { numMoves1_ = moves; }
     void setNumMoves2(int moves) { numMoves2_ = moves; }
     void setTimeForMoves1(int msec) { timeForMoves1_ = msec; }
@@ -146,6 +161,7 @@ public:
 private:
 
     Type type_;
+    Format format_;
 
     int numMoves1_,
         numMoves2_,
