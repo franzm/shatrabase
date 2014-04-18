@@ -433,6 +433,9 @@
            </item>
            <item>
             <widget class="QRadioButton" name="cbMatchTime">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Match opponent's move time</string>
              </property>

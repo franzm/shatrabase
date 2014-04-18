@@ -286,12 +286,12 @@ TRANSLATIONS = \
 #
 # comment-out the below code (until PRE_TARGETDEPS..) to
 # disable rebuild of .qm files
-#
+
 #isEmpty(QMAKE_LRELEASE) {
 #     win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\\lrelease.exe
 #     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 #}
-#
+
 #isEmpty(TS_DIR):TS_DIR = translation
 #TSQM.name = lrelease ${QMAKE_FILE_IN}
 #TSQM.input = TRANSLATIONS
