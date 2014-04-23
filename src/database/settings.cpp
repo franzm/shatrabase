@@ -260,7 +260,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/guessMove", true);
     map.insert("/Board/guessNextMove", true);
     // board style
-    map.insert("/Board/flipped", true);
+    map.insert("/Board/flipped", false);
     map.insert("/Board/showMoat", true);
     map.insert("/Board/showTower", true);
     map.insert("/Board/showFrame", true);
