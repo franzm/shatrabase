@@ -3,6 +3,8 @@
 CONFIG += uic warn_on
 QT += xml network svg
 
+#LIBS += +LQt5PlatformSupport.lib
+
 greaterThan(QT_MAJOR_VERSION, 4) {
    QT += printsupport
    QT += widgets

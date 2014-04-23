@@ -495,6 +495,7 @@ void PlayGameWidget::animationFinished(const Board& board)
     if (checkGameResult_(board, false, false))
         return;
 
+    // get last moving side on board
     const bool transit = board.transitAt() != 0;
     const Color stm = transit? board.toMove() : (Color)(!board.toMove());
 
