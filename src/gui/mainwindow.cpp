@@ -180,7 +180,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	m_menuView->addAction(gameListDock->toggleViewAction());
 	gameListDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::Key_L);
     connect(m_gameList, SIGNAL(raiseRequest()), gameListDock, SLOT(raise()));
-
+    gameListDock->hide();
 
     /* Database stats */
     DockWidgetEx* statsDock = new DockWidgetEx(tr("Database Statistics"), this);
@@ -191,7 +191,7 @@ MainWindow::MainWindow() : QMainWindow(),
     statsDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_D);
     addDockWidget(Qt::RightDockWidgetArea, statsDock);
     m_menuView->addAction(statsDock->toggleViewAction());
-
+    statsDock->hide();
 
     /* Engine Debug Widget */
     DockWidgetEx* engineDebugDock = new DockWidgetEx(tr("Engine Debugger"), this);
@@ -201,7 +201,7 @@ MainWindow::MainWindow() : QMainWindow(),
     engineDebugDock->setWidget(m_engineDebug);
     m_menuView->addAction(engineDebugDock->toggleViewAction());
     addDockWidget(Qt::RightDockWidgetArea, engineDebugDock);
-
+    engineDebugDock->hide();
 
     /* Play Game */
     DockWidgetEx* playerSelDock = new DockWidgetEx(tr("Play Game"), this);
@@ -261,6 +261,7 @@ MainWindow::MainWindow() : QMainWindow(),
     addDockWidget(Qt::RightDockWidgetArea, dbListDock);
     m_menuView->addAction(dbListDock->toggleViewAction());
     dbListDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::Key_D);
+    dbListDock->hide();
     connect(m_databaseList, SIGNAL(requestOpenDatabase(QString,bool)),
             this, SLOT(openDatabaseUrl(QString,bool)));
     connect(m_databaseList, SIGNAL(requestCloseDatabase(QString)),
