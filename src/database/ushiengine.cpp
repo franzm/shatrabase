@@ -134,7 +134,8 @@ void USHIEngine::processMessage(const QString& message)
                 }
             }
 
-			send("setoption name USHI_AnalyseMode value true");
+            // XXX below now
+            //send("setoption name USHI_AnalyseMode value true");
 		}
 
         if (m_waitingOn == "ushinewgame")
@@ -158,7 +159,12 @@ void USHIEngine::processMessage(const QString& message)
             if (m_settings.movestogo != SearchSettings::Unlimited)
                 cmd += QString(" movestogo %1").arg(m_settings.movestogo);
             if (!m_settings.isTimeLimit())
+            {
                 cmd += " infinite";
+                send("setoption name USHI_AnalyseMode value true");
+            }
+            else
+                send("setoption name USHI_AnalyseMode value false");
             send(cmd);
         }
 	}

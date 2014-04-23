@@ -45,8 +45,6 @@ public:
     /** Order has to follow timeControlTypeName[] !! */
     enum Type
     {
-        /** Free play */
-        T_None,
         /** Match opponent's time */
         T_Match,
         /** Limit time/nodes/depth */

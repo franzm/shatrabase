@@ -419,11 +419,11 @@ void PlayGameWidget::setPosition(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::setPosition() plyQue_.size()=" << plyQue_.size());
 
-    qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
+    //qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
 
     if (!playing_) return;
 
-    qDebug() << "PLAYER MOVED";
+    //qDebug() << "PLAYER MOVED";
 
     // player's move ended (or at least one ply)
     tc_.stopMove();
@@ -475,7 +475,7 @@ void PlayGameWidget::moveFromEngine(Move m)
     // first ply of a sequence can be send right away
     if (plyQue_.size() == 1)
     {
-        qDebug() << "ENGINE MOVED";
+//        qDebug() << "ENGINE MOVED";
         curStm_ = (Color)m.sideMoving();
         emit moveMade(m);
         return;
@@ -486,7 +486,7 @@ void PlayGameWidget::animationFinished(const Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
 
-    qDebug() << "PlayGameWidget::animationFinished() stm="<<board.toMove() << "plyQue_.size()=" << plyQue_.size();
+//    qDebug() << "PlayGameWidget::animationFinished() stm="<<board.toMove() << "plyQue_.size()=" << plyQue_.size();
 
     if (!playing_)
         return;
@@ -495,6 +495,7 @@ void PlayGameWidget::animationFinished(const Board& board)
     if (checkGameResult_(board, false, false))
         return;
 
+    // get last moving side on board
     const bool transit = board.transitAt() != 0;
     const Color stm = transit? board.toMove() : (Color)(!board.toMove());
 

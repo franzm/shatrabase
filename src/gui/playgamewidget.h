@@ -38,7 +38,7 @@ namespace Ui { class PlayGame; }
 /** More than a GUI wrapper around PlayGame class.
  *
  *  Actually, this class handles all the gui integration of gaming
- *  and the time control!.
+ *  and the time control!
  */
 class PlayGameWidget : public QWidget
 {

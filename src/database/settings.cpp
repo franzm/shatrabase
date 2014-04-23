@@ -210,7 +210,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/History/MaxEntries", 4);
 
     // Time Control (TM) settings
-    map.insert("/TimeControl/mode", timeControlTypeName[TimeControl::T_None]);
+    map.insert("/TimeControl/mode", timeControlTypeName[TimeControl::T_Limit]);
     map.insert("/TimeControl/format", TimeControl::formatName(TimeControl::F_Long));
     map.insert("/TimeControl/allMoves1", false);
     map.insert("/TimeControl/allMoves2", false);
@@ -260,7 +260,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/guessMove", true);
     map.insert("/Board/guessNextMove", true);
     // board style
-    map.insert("/Board/flipped", true);
+    map.insert("/Board/flipped", false);
     map.insert("/Board/showMoat", true);
     map.insert("/Board/showTower", true);
     map.insert("/Board/showFrame", true);

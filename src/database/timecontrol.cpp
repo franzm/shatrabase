@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 const char * timeControlTypeName[] =
 {
-    "free",
     "match",
     "limit",
     "tournament"
@@ -56,7 +55,7 @@ static const QString tc_formatNamesTr[] =
 
 TimeControl::TimeControl(QObject * p)
     :   QObject         (p),
-        type_           (T_None),
+        type_           (T_Limit),
         numMoves1_      (40),
         numMoves2_      (20),
         timeForMoves1_  (30*60*1000),
@@ -105,7 +104,7 @@ void TimeControl::configure()
     // Time Control
     AppSettings->beginGroup("/TimeControl/");
 
-    type_ = T_None;
+    type_ = T_Limit;
     QString mode = AppSettings->getValue("mode").toString();
     for (int i=0; i<MaxTypes; ++i)
     if (mode == timeControlTypeName[i])
@@ -251,11 +250,6 @@ QString TimeControl::msecToString(int msec) const
 
 QString TimeControl::humanReadable() const
 {
-    if (type_ == T_None)
-    {
-        return tr("Free play");
-    }
-
     if (type_ == T_Match)
     {
         return tr("Match opponent's move time");

@@ -1,7 +1,7 @@
 -- general --
 
-* installer (maybe http://www.installjammer.com and innosetup for win)
-* setup default sdev engine on installation
+- OK installer (maybe http://www.installjammer.com and innosetup for win)
+- OK setup default sdev engine on installation
 * remove all chessx / chesssettings references
 
 
@@ -10,7 +10,7 @@
 * piece graphics
   * shadow and outline versions
 - OK tower squares
-* capture / defunkt animations
+- OK capture / defunkt animations
 
 
 -- gui --
@@ -33,24 +33,26 @@
 -- gameplay --
 
 * SBoard::gameResult() always returns Draw during game
-* disable all of gui which would interfere with game!
-* engine captures biy is not animated during play
-* tournament mode
-* time control  
+- OK disable all of gui which would interfere with game!
+    * disable Gametext browsing!
+- OK engine captures biy is not animated during play
+- OK tournament mode
+- OK time control
 - OK play game from set position
 * rationalize: change game text instead of insert variation
 - OK disable Engine thinking when game over
 - OK win/lose
-  * draw
-  * engine resign
+    * draw
+    * engine resign
+    * bug: sometimes engine-win is not captured
 * disable Engine thinking when jumping in gametext
 * add autoAddGameAndContinue option
 * win/lose animation
-* after a move: decide wether a time-increment will be given before or after a time-out check (in PlayTimeControl::endMove())
-* add option for movetime to gametext
-* add post info to gametext
-    * timecontrol settings
-    * resign
+- OK after a move: decide wether a time-increment will be given before or after a time-out check (in PlayTimeControl::endMove())
+- OK add option for movetime to gametext
+- OK add post info to gametext
+    - OK timecontrol settings
+    - OK resign
 
 -- board setup --
 

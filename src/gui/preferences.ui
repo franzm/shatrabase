@@ -425,14 +425,10 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
-            <widget class="QRadioButton" name="cbFree">
-             <property name="text">
-              <string>Free play</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QRadioButton" name="cbMatchTime">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
              <property name="text">
               <string>Match opponent's move time</string>
              </property>
