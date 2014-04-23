@@ -210,7 +210,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/History/MaxEntries", 4);
 
     // Time Control (TM) settings
-    map.insert("/TimeControl/mode", timeControlTypeName[TimeControl::T_None]);
+    map.insert("/TimeControl/mode", timeControlTypeName[TimeControl::T_Limit]);
     map.insert("/TimeControl/format", TimeControl::formatName(TimeControl::F_Long));
     map.insert("/TimeControl/allMoves1", false);
     map.insert("/TimeControl/allMoves2", false);

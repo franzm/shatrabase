@@ -79,7 +79,6 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.notationNumeric, SIGNAL(clicked()), SLOT(slotNumericNotation()));
     connect(ui.notationAlgebraic, SIGNAL(clicked()), SLOT(slotAlgebraicNotation()));
 
-    connect(ui.cbFree, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbMatchTime, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimit, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTournament, SIGNAL(clicked()), SLOT(slotTCEnable()));
@@ -183,13 +182,11 @@ void PreferencesDialog::slotTCUpdate()
     if (ui.cbMatchTime->isChecked())
         tc.setType(TimeControl::T_Match);
     else
-    if (ui.cbLimit->isChecked())
-        tc.setType(TimeControl::T_Limit);
-    else
     if (ui.cbTournament->isChecked())
         tc.setType(TimeControl::T_Tournament);
     else
-        tc.setType(TimeControl::T_None);
+//    if (ui.cbLimit->isChecked())
+        tc.setType(TimeControl::T_Limit);
 
     if (ui.comboTimeFormat->currentIndex()>=0)
         tc.setFormat((TimeControl::Format)ui.comboTimeFormat->currentIndex());
@@ -520,13 +517,11 @@ void PreferencesDialog::restoreSettings()
     if (mode == timeControlTypeName[TimeControl::T_Match])
         ui.cbMatchTime->setChecked(true);
     else
-    if (mode == timeControlTypeName[TimeControl::T_Limit])
-        ui.cbLimit->setChecked(true);
-    else
     if (mode == timeControlTypeName[TimeControl::T_Tournament])
         ui.cbTournament->setChecked(true);
     else
-        ui.cbFree->setChecked(true);
+//    if (mode == timeControlTypeName[TimeControl::T_Limit])
+        ui.cbLimit->setChecked(true);
 
     ui.comboTimeFormat->setCurrentIndex(TimeControl::formatFromName(AppSettings->getValue("format").toString()));
     ui.cbAllMoves1->setChecked(AppSettings->getValue("allMoves1").toBool());
@@ -606,13 +601,11 @@ void PreferencesDialog::saveSettings()
     if (ui.cbMatchTime->isChecked())
         AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Match]));
     else
-    if (ui.cbLimit->isChecked())
-        AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Limit]));
-    else
     if (ui.cbTournament->isChecked())
         AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Tournament]));
     else
-        AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_None]));
+//    if (ui.cbLimit->isChecked())
+        AppSettings->setValue("mode", QString(timeControlTypeName[TimeControl::T_Limit]));
 
     AppSettings->setValue("format", TimeControl::formatName((TimeControl::Format)ui.comboTimeFormat->currentIndex()));
     AppSettings->setValue("allMoves1", ui.cbAllMoves1->isChecked());
