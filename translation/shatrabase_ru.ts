@@ -6,12 +6,12 @@
     <message>
         <location filename="../src/database/analysis.cpp" line="147"/>
         <source>Win in</source>
-        <translation>Выиграть в</translation>
+        <translation>Выиграл в</translation>
     </message>
     <message>
         <location filename="../src/database/analysis.cpp" line="147"/>
         <source>Loss in</source>
-        <translation>Проиграть в</translation>
+        <translation>Проиграл в</translation>
     </message>
     <message>
         <location filename="../src/database/analysis.cpp" line="174"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../src/database/analysis.cpp" line="175"/>
         <source> (depth %1, %2)</source>
-        <translation>(глубина %1,%2)</translation>
+        <translation>(Глубина %1,%2)</translation>
     </message>
 </context>
 <context>
@@ -277,72 +277,72 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/boardview.cpp" line="111"/>
         <source>white batyr</source>
-        <translation>белый батыр</translation>
+        <translation>Белый батыр</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="112"/>
         <source>white tura</source>
-        <translation>белая тура</translation>
+        <translation>Белая тура</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="113"/>
         <source>white yalkyn</source>
-        <translation>белый ялкын</translation>
+        <translation>Белый ялкын</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="114"/>
         <source>white biy</source>
-        <translation>белый бий</translation>
+        <translation>Белый бий</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="115"/>
         <source>white shatra</source>
-        <translation>белая шатра</translation>
+        <translation>Белая шатра</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="117"/>
         <source>black batyr</source>
-        <translation>чёрный батыр</translation>
+        <translation>Чёрный батыр</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="118"/>
         <source>black tura</source>
-        <translation>чёрная тура</translation>
+        <translation>Чёрная тура</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="119"/>
         <source>black yalkyn</source>
-        <translation>чёрный ялкын</translation>
+        <translation>Чёрный ялкын</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="120"/>
         <source>black biy</source>
-        <translation>чёрный бий</translation>
+        <translation>Чёрный бий</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="121"/>
         <source>black shatra</source>
-        <translation></translation>
+        <translation>Чёрная шатра</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="123"/>
         <source>captured batyr</source>
-        <translation>взятый батыр</translation>
+        <translation>Взятый батыр</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="124"/>
         <source>captured tura</source>
-        <translation>взятая тура</translation>
+        <translation>Взятая тура</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="125"/>
         <source>captured yalkyn</source>
-        <translation>взятый ялкын</translation>
+        <translation>Взятый ялкын</translation>
     </message>
     <message>
         <location filename="../src/gui/boardview.cpp" line="126"/>
         <source>captured shatra</source>
-        <translation>взятая шатра</translation>
+        <translation>Взятая шатра</translation>
     </message>
 </context>
 <context>
@@ -413,7 +413,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/commentdialog.ui" line="20"/>
         <source>Edit Comment</source>
-        <translation>редактировать комментарий</translation>
+        <translation>Редактировать комментарий</translation>
     </message>
     <message>
         <location filename="../src/gui/commentdialog.ui" line="57"/>
@@ -469,27 +469,27 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="35"/>
         <source>failure removing </source>
-        <translation>ошибка удаления</translation>
+        <translation>Ошибка удаления</translation>
     </message>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="42"/>
         <source>failure creating </source>
-        <translation>ошибка создания</translation>
+        <translation>Ошибка создания</translation>
     </message>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="50"/>
         <source>failure opening output file</source>
-        <translation>ошибка открытия файла вывода</translation>
+        <translation>Ошибка открытия файла вывода</translation>
     </message>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="122"/>
         <source>processed: </source>
-        <translation>обработано:</translation>
+        <translation>Обработано:</translation>
     </message>
     <message>
         <location filename="../src/database/databaseconversion.cpp" line="137"/>
         <source>failed adding player: </source>
-        <translation>ошибка добавления игрока:</translation>
+        <translation>Ошибка добавления игрока:</translation>
     </message>
 </context>
 <context>
@@ -603,7 +603,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="36"/>
         <source>WhiteElo</source>
-        <translation>Белые Elo</translation>
+        <translation>Рейтинг белых</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="37"/>
@@ -613,7 +613,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="38"/>
         <source>BlackElo</source>
-        <translation>Чёрные Elo</translation>
+        <translation>Рейтинг чёрных</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="39"/>
@@ -676,27 +676,27 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="14"/>
         <source>min</source>
-        <translation>минимальный</translation>
+        <translation>Мин</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="15"/>
         <source>max</source>
-        <translation>максимальный</translation>
+        <translation>Макс</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="16"/>
         <source>mean</source>
-        <translation>значение</translation>
+        <translation>Значение</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="17"/>
         <source>deviation</source>
-        <translation>отклонение</translation>
+        <translation>Отклонение</translation>
     </message>
     <message>
         <location filename="../src/database/databasestatsmodel.cpp" line="18"/>
         <source>unique values</source>
-        <translation>уникальная цена</translation>
+        <translation>Уникальная цена</translation>
     </message>
 </context>
 <context>
@@ -704,37 +704,37 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/engine.cpp" line="240"/>
         <source>engine timeout after %1 ms</source>
-        <translation>ожидание движка после %1 мс</translation>
+        <translation>Ожидание движка после %1 мс</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="270"/>
         <source>failed to start engine</source>
-        <translation>ошибка запуска движка</translation>
+        <translation>Ошибка запуска движка</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="272"/>
         <source>the engine has crashed</source>
-        <translation>крах движка</translation>
+        <translation>Крах движка</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="274"/>
         <source>the engine timed out</source>
-        <translation>превышено время ожидания движка</translation>
+        <translation>Превышено время ожидания движка</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="276"/>
         <source>could not speak to engine</source>
-        <translation>невозможно связаться с движком</translation>
+        <translation>Невозможно связаться с движком</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="278"/>
         <source>could not read from engine</source>
-        <translation>невозможно чтение из движка</translation>
+        <translation>Невозможно чтение из движка</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="280"/>
         <source>an unknown error occured with engine</source>
-        <translation>произошла неизвестная ошибка движка</translation>
+        <translation>Произошла неизвестная ошибка движка</translation>
     </message>
 </context>
 <context>
@@ -773,12 +773,12 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/engineoptionmodel.cpp" line="14"/>
         <source>Min</source>
-        <translation>Минимальный</translation>
+        <translation>Мин</translation>
     </message>
     <message>
         <location filename="../src/gui/engineoptionmodel.cpp" line="14"/>
         <source>Max</source>
-        <translation>Максимальный</translation>
+        <translation>Макс</translation>
     </message>
     <message>
         <location filename="../src/gui/engineoptionmodel.cpp" line="14"/>
@@ -791,7 +791,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="120"/>
         <source>&lt;i&gt;no games&lt;/i&gt;</source>
-        <translation>&lt;i&gt;нет игр&lt;/&gt;</translation>
+        <translation>&lt;i&gt;Нет игр&lt;/&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/eventinfo.cpp" line="137"/>
@@ -853,7 +853,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="27"/>
         <source>WhiteElo</source>
-        <translation>Белые Elo</translation>
+        <translation>Рейтинг белых</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="28"/>
@@ -863,7 +863,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="29"/>
         <source>BlackElo</source>
-        <translation>Чёрные Elo</translation>
+        <translation>Рейтинг чёрных</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="30"/>
@@ -972,7 +972,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="244"/>
         <source>Databases</source>
-        <translation>Базы</translation>
+        <translation>Базы данных</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="271"/>
@@ -1013,7 +1013,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="888"/>
         <source>%1 opened</source>
-        <translation>%1 открыто</translation>
+        <translation>%1 Открыто</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="910"/>
@@ -1088,7 +1088,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1029"/>
         <source>&amp;Quit</source>
-        <translation>&amp;выйти</translation>
+        <translation>&amp;Выйти</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1032"/>
@@ -1218,7 +1218,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1091"/>
         <source>&amp;Previous</source>
-        <translation>&amp;предыдущая</translation>
+        <translation>&amp;Предыдущая</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1092"/>
@@ -1455,7 +1455,7 @@ Please check your installation.</source>
         <location filename="../src/gui/mainwindowactions.cpp" line="138"/>
         <location filename="../src/gui/mainwindowactions.cpp" line="159"/>
         <source>%1 saved</source>
-        <translation>%1 сохранено</translation>
+        <translation>%1 Сохранено</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="152"/>
@@ -1565,7 +1565,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="636"/>
         <source>Game number:</source>
-        <translation>Игра номер:</translation>
+        <translation>Номер игры:</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="646"/>
@@ -1591,7 +1591,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="1062"/>
         <source>%1. %2 (%3 games)</source>
-        <translation>%1. %2 (%3 игр)</translation>
+        <translation>%1. %2 (%3 Игр)</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="1101"/>
@@ -1668,7 +1668,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/openingtree.cpp" line="36"/>
         <source>[end]</source>
-        <translation>[завершение]</translation>
+        <translation>[Завершение]</translation>
     </message>
 </context>
 <context>
@@ -1803,7 +1803,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="123"/>
         <source>&lt;i&gt;no games&lt;/i&gt;</source>
-        <translation>&lt;i&gt;нет игр&lt;/&gt;</translation>
+        <translation>&lt;i&gt;Нет игр&lt;/&gt;</translation>
     </message>
     <message>
         <location filename="../src/database/playerinfo.cpp" line="144"/>
@@ -1897,27 +1897,27 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="172"/>
         <source>plain</source>
-        <translation>простой</translation>
+        <translation>Простой</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="177"/>
         <source>outline</source>
-        <translation>контур</translation>
+        <translation>Контур</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="182"/>
         <source>outline+shadow</source>
-        <translation>контур+тень</translation>
+        <translation>Контур+тень</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="200"/>
         <source>&amp;Draw frame around squares</source>
-        <translation>&amp;нарисовать рамку вокруг полей</translation>
+        <translation>&amp;Нарисовать рамку вокруг полей</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="207"/>
         <source>size</source>
-        <translation>размер</translation>
+        <translation>Размер</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="231"/>
@@ -1927,7 +1927,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="234"/>
         <source>&amp;Animate moves</source>
-        <translation>&amp;анимировать ходы</translation>
+        <translation>&amp;Анимировать ходы</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="244"/>
@@ -1937,7 +1937,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="247"/>
         <source>speed</source>
-        <translation>скорость</translation>
+        <translation>Скорость</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="257"/>
@@ -1958,7 +1958,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="304"/>
         <source>length</source>
-        <translation>длительность</translation>
+        <translation>Длительность</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="329"/>
@@ -2023,7 +2023,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="525"/>
         <source>&amp;Engines</source>
-        <translation>&amp;движки</translation>
+        <translation>&amp;Движки</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="546"/>
@@ -2043,7 +2043,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.ui" line="579"/>
         <source>Protocol:</source>
-        <translation></translation>
+        <translation>Протокол:</translation>
     </message>
     <message>
         <location filename="../src/gui/preferences.ui" line="586"/>
@@ -2285,7 +2285,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/preferences.cpp" line="327"/>
         <source>[plain colors]</source>
-        <translation>[обычные цвета]</translation>
+        <translation>[Обычные цвета]</translation>
     </message>
 </context>
 <context>
@@ -2742,7 +2742,7 @@ in the specified time... You win!</source>
         <location filename="../src/database/nag.cpp" line="216"/>
         <location filename="../src/database/nag.cpp" line="374"/>
         <source>aimed against</source>
-        <translation>направленный против</translation>
+        <translation>Направленный против</translation>
     </message>
     <message>
         <location filename="../src/database/nag.cpp" line="219"/>
@@ -2915,22 +2915,22 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/database/nag.cpp" line="380"/>
         <source>weak point</source>
-        <translation>слабый пункт</translation>
+        <translation>Слабый пункт</translation>
     </message>
     <message>
         <location filename="../src/database/nag.cpp" line="381"/>
         <source>endgame</source>
-        <translation>эндшпиль</translation>
+        <translation>Эндшпиль</translation>
     </message>
     <message>
         <location filename="../src/database/nag.cpp" line="382"/>
         <source>line</source>
-        <translation>линия</translation>
+        <translation>Линия</translation>
     </message>
     <message>
         <location filename="../src/database/nag.cpp" line="383"/>
         <source>diagonal</source>
-        <translation>диагональ</translation>
+        <translation>Диагональ</translation>
     </message>
     <message>
         <location filename="../src/database/nag.cpp" line="384"/>
@@ -2941,18 +2941,18 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/database/nag.cpp" line="386"/>
         <source>bishops of opposite color</source>
-        <translation>слоны противоположного цвета</translation>
+        <translation>Слоны противоположного цвета</translation>
     </message>
     <message>
         <location filename="../src/database/nag.cpp" line="387"/>
         <source>bishops of the same color</source>
-        <translation>слоны одинакового цвета</translation>
+        <translation>Слоны одинакового цвета</translation>
     </message>
     <message>
         <location filename="../src/database/sboard.cpp" line="76"/>
         <location filename="../src/database/sboard.cpp" line="840"/>
         <source>pass</source>
-        <translation>пройти</translation>
+        <translation>Пройти</translation>
     </message>
 </context>
 <context>
@@ -3045,7 +3045,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/gui/quicksearch.ui" line="138"/>
         <source>&amp;Tag:</source>
-        <translation>&amp;Тег:</translation>
+        <translation>&amp;Тэг:</translation>
     </message>
     <message>
         <location filename="../src/gui/quicksearch.ui" line="148"/>
@@ -3099,7 +3099,7 @@ in the specified time... You win!</source>
         <location filename="../src/gui/savedialog.ui" line="95"/>
         <location filename="../src/gui/savedialog.ui" line="102"/>
         <source>Elo:</source>
-        <translation>Elo:</translation>
+        <translation>Рейтинг:</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.ui" line="125"/>
@@ -3282,7 +3282,7 @@ in the specified time... You win!</source>
     <message>
         <location filename="../src/database/ushiengine.cpp" line="256"/>
         <source>illegal move &apos;%1&apos; from engine!</source>
-        <translation>запрещённый ход &apos;%1&apos; движка!</translation>
+        <translation>Запрещённый ход &apos;%1&apos; движка!</translation>
     </message>
     <message>
         <location filename="../src/database/ushiengine.cpp" line="398"/>
