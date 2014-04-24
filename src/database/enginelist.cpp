@@ -21,6 +21,7 @@ EngineList::EngineList()
 
 void EngineList::restoreEmptyFromPath(QString path, EngineData::EngineProtocol protocol)
 {
+    qDebug() << "enginelist: " << path;
     m_wasEmpty = true;
 
     if (path.isEmpty()) return;

@@ -3,6 +3,8 @@
 CONFIG += uic warn_on
 QT += xml network svg
 
+#LIBS += +LQt5PlatformSupport.lib
+
 greaterThan(QT_MAJOR_VERSION, 4) {
    QT += printsupport
    QT += widgets
@@ -80,7 +82,7 @@ HEADERS += src/database/board.h \
     src/gui/mainwindow.h \
     src/gui/preferences.h \
     src/gui/boardview.h \
-    src/gui/boardtheme.h \
+#    src/gui/boardtheme.h \
     src/gui/boardsetup.h \
     src/gui/colorlist.h \
     src/gui/savedialog.h \
@@ -167,7 +169,7 @@ SOURCES += src/database/board.cpp \
     src/gui/colorlist.cpp \
     src/gui/preferences.cpp \
     src/gui/boardview.cpp \
-    src/gui/boardtheme.cpp \
+#    src/gui/boardtheme.cpp \
     src/gui/boardsetup.cpp \
     src/gui/savedialog.cpp \
     src/gui/gamelist.cpp \

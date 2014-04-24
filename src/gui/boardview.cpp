@@ -221,7 +221,8 @@ void BoardView::setBoard(const Board& value,int from, int to)
 
 void BoardView::setBoard(const Board& value, const Move& move)
 {
-    if (m_view->isAnimating())
+    //if (m_view->isAnimating())
+    //    m_view->stopAnimation_();
 
     // reset gui flags
     m_selectedSquare
@@ -604,6 +605,11 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
             {
                 m_lastDropped = s;
                 emit moveMade(from, s, event->button() + event->modifiers());
+
+                // need to send an animationFinished for PlayGameWidget
+                /*Move m = m_board.prepareMove(from, s);
+                m_board.doMove(m);
+                emit animationFinished(m_board);*/
             }
         }
         else emit invalidMove(from);

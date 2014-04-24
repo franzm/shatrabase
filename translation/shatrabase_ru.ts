@@ -593,7 +593,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="34"/>
         <source>Nr</source>
-        <translation>Номер</translation>
+        <translation>Нр</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="35"/>

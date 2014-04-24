@@ -14,6 +14,8 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <QtPlugin>
+
 #include "mainwindow.h"
 #include "settings.h"
 #include "logstream.h"
