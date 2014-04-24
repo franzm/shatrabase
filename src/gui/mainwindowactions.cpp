@@ -1042,14 +1042,13 @@ void MainWindow::slotAutoPlayTimeout()
 
 void MainWindow::slotFilterChanged()
 {
-    /*
 	if (gameIndex() >= 0)
 		m_gameList->selectGame(gameIndex());
-	int count = databaseInfo()->filter()->count();
-	QString f = count == database()->count() ? "all" : QString::number(count);
-	m_statusFilter->setText(tr(" %1: %2/%3 ").arg(databaseName())
-				.arg(f).arg(database()->count()));
-    */
+    //int count = databaseInfo()->database()->count();
+    //QString f = count == database()->count() ? "all" : QString::number(count);
+    m_statusFilter->setText(QString(" %1: %2 ")
+                .arg(databaseName())
+                .arg(database()->count()));
 }
 
 void MainWindow::slotFilterLoad(int index)
