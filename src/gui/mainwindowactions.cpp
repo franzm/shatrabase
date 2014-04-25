@@ -1081,8 +1081,13 @@ void MainWindow::slotDatabaseChange()
 
 void MainWindow::slotDatabaseFindDuplicates()
 {
+    bool do_sym = QMessageBox::question(this, database()->name(),
+                                tr("Also look for symmetric/mirrored duplicates?"))
+                    == QMessageBox::Yes;
+
     QVector<int> v;
-    database()->findDuplicates(v);
+    database()->findDuplicates(v, do_sym);
+
     if (v.empty())
     {
         QMessageBox::information(this, database()->name(),
@@ -1092,7 +1097,7 @@ void MainWindow::slotDatabaseFindDuplicates()
     {
         if (QMessageBox::question(this, database()->name(),
                               tr("There are %1 duplicate games in this Database, "
-                                 "do you want to delete them?").arg(v.count()))
+                                 "do you want to flag them as deleted?").arg(v.count()))
             == QMessageBox::Yes)
         {
             for (int i=0; i<v.count(); ++i)

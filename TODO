@@ -3,7 +3,7 @@
 - OK installer (maybe http://www.installjammer.com and innosetup for win)
 - OK setup default sdev engine on installation
 * remove all chessx / chesssettings references
-
+* smooth the desktop icon
 
 -- graphics --
 
@@ -53,6 +53,7 @@
 - OK add post info to gametext
     - OK timecontrol settings
     - OK resign
+    * date is discarded (PartialDate class to strict in parsing)
 * test/fix restartBetweenMoves in PlayGameEngine
 * engine vs. engine
     * turn off board for fast games
