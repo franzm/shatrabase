@@ -1079,6 +1079,13 @@ void MainWindow::slotDatabaseChange()
 	}
 }
 
+void MainWindow::slotDatabaseFindDuplicates()
+{
+    QVector<int> v;
+    database()->findDuplicates(v);
+}
+
+
 void MainWindow::copyGame(int target, const Game& game)
 {
     if (m_databases[target]->isValid())
