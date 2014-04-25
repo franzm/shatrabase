@@ -472,7 +472,11 @@ void Output::output(QTextStream& out, Filter& filter)
 {
     int percentDone = 0;
     Game game;
-    for (int i = 0; i < filter.count(); ++i) {
+    for (int i = 0; i < filter.count(); ++i)
+    {
+        if (database.index()->deleted(filter.indexToGame(i)))
+            continue;
+
         if (filter.database()->loadGame(filter.indexToGame(i), game))
         {
             out << output(&game);
@@ -501,6 +505,9 @@ void Output::output(QTextStream& out, Database& database)
     Game game;
     for (int i = 0; i < database.count(); ++i)
     {
+        if (database.index()->deleted(i))
+            continue;
+
         if (database.loadGame(i, game))
         {
             out << output(&game);
