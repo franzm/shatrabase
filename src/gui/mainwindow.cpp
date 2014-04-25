@@ -1158,6 +1158,7 @@ void MainWindow::setupActions()
 
 	/* Database menu */
 	QMenu* menuDatabase = menuBar()->addMenu(tr("&Database"));
+    menuDatabase->addAction(createAction(tr("&Find duplicate games"), SLOT(slotDatabaseFindDuplicates())));
     m_menuDatabase = menuDatabase;
 	m_menuDatabases = menuDatabase->addMenu(tr("&Switch to"));
 	menuDatabase->addAction(createAction(tr("&Copy games..."), SLOT(slotDatabaseCopy()),

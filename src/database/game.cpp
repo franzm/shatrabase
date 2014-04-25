@@ -160,6 +160,17 @@ bool Game::findNextMove(Square from, Square to, PieceType promotionPiece)
     return false;
 }
 
+void Game::getAllPlies(MoveList& moves)
+{
+    moves.clear();
+    for (int i=0; i<plyCount(); ++i)
+    {
+        Move m = move(i+1);
+        if (m.isLegal())
+            moves.append(m);
+    }
+}
+
 bool Game::replaceMove(const Move& move, const QString& annotation, NagSet nags)
 {
     int node;

@@ -6,12 +6,12 @@
     <message>
         <location filename="../src/database/analysis.cpp" line="147"/>
         <source>Win in</source>
-        <translation>Выиграть в</translation>
+        <translation>Выиграл в</translation>
     </message>
     <message>
         <location filename="../src/database/analysis.cpp" line="147"/>
         <source>Loss in</source>
-        <translation>Проиграть в</translation>
+        <translation>Проиграл в</translation>
     </message>
     <message>
         <location filename="../src/database/analysis.cpp" line="174"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../src/database/analysis.cpp" line="175"/>
         <source> (depth %1, %2)</source>
-        <translation>(глубина %1,%2)</translation>
+        <translation>(Глубина %1,%2)</translation>
     </message>
 </context>
 <context>
@@ -593,7 +593,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="34"/>
         <source>Nr</source>
-        <translation>Нр</translation>
+        <translation>Номер</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="35"/>
@@ -603,7 +603,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="36"/>
         <source>WhiteElo</source>
-        <translation>Белые Elo</translation>
+        <translation>Рейтинг белых</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="37"/>
@@ -613,7 +613,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="38"/>
         <source>BlackElo</source>
-        <translation>Чёрные Elo</translation>
+        <translation>Рейтинг чёрных</translation>
     </message>
     <message>
         <location filename="../src/database/databasemodel.cpp" line="39"/>
@@ -704,37 +704,37 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/engine.cpp" line="240"/>
         <source>engine timeout after %1 ms</source>
-        <translation>ожидание движка после %1 мс</translation>
+        <translation>Ожидание движка после %1 мс</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="270"/>
         <source>failed to start engine</source>
-        <translation>ошибка запуска движка</translation>
+        <translation>Ошибка запуска движка</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="272"/>
         <source>the engine has crashed</source>
-        <translation>крах движка</translation>
+        <translation>Крах движка</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="274"/>
         <source>the engine timed out</source>
-        <translation>превышено время ожидания движка</translation>
+        <translation>Превышено время ожидания движка</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="276"/>
         <source>could not speak to engine</source>
-        <translation>невозможно связаться с движком</translation>
+        <translation>Невозможно связаться с движком</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="278"/>
         <source>could not read from engine</source>
-        <translation>невозможно чтение из движка</translation>
+        <translation>Невозможно чтение из движка</translation>
     </message>
     <message>
         <location filename="../src/database/engine.cpp" line="280"/>
         <source>an unknown error occured with engine</source>
-        <translation>произошла неизвестная ошибка движка</translation>
+        <translation>Произошла неизвестная ошибка движка</translation>
     </message>
 </context>
 <context>
@@ -853,7 +853,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="27"/>
         <source>WhiteElo</source>
-        <translation>Белые Elo</translation>
+        <translation>Рейтинг белых</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="28"/>
@@ -863,7 +863,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="29"/>
         <source>BlackElo</source>
-        <translation>Чёрные Elo</translation>
+        <translation>Рейтинг чёрных</translation>
     </message>
     <message>
         <location filename="../src/database/filtermodel.cpp" line="30"/>
@@ -1565,7 +1565,7 @@ Please check your installation.</source>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="636"/>
         <source>Game number:</source>
-        <translation>Игра номер:</translation>
+        <translation>Номер игры:</translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindowactions.cpp" line="646"/>
@@ -3099,7 +3099,7 @@ in the specified time... You win!</source>
         <location filename="../src/gui/savedialog.ui" line="95"/>
         <location filename="../src/gui/savedialog.ui" line="102"/>
         <source>Elo:</source>
-        <translation>Elo:</translation>
+        <translation>Рейтинг:</translation>
     </message>
     <message>
         <location filename="../src/gui/savedialog.ui" line="125"/>

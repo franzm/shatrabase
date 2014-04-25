@@ -1042,14 +1042,13 @@ void MainWindow::slotAutoPlayTimeout()
 
 void MainWindow::slotFilterChanged()
 {
-    /*
 	if (gameIndex() >= 0)
 		m_gameList->selectGame(gameIndex());
-	int count = databaseInfo()->filter()->count();
-	QString f = count == database()->count() ? "all" : QString::number(count);
-	m_statusFilter->setText(tr(" %1: %2/%3 ").arg(databaseName())
-				.arg(f).arg(database()->count()));
-    */
+    //int count = databaseInfo()->database()->count();
+    //QString f = count == database()->count() ? "all" : QString::number(count);
+    m_statusFilter->setText(QString(" %1: %2 ")
+                .arg(databaseName())
+                .arg(database()->count()));
 }
 
 void MainWindow::slotFilterLoad(int index)
@@ -1079,6 +1078,29 @@ void MainWindow::slotDatabaseChange()
 		slotDatabaseChanged();
 	}
 }
+
+void MainWindow::slotDatabaseFindDuplicates()
+{
+    QVector<int> v;
+    database()->findDuplicates(v);
+    if (v.empty())
+    {
+        QMessageBox::information(this, database()->name(),
+                                 tr("No duplicate games found in database."));
+    }
+    else
+    {
+        if (QMessageBox::question(this, database()->name(),
+                              tr("There are %1 duplicate games in this Database, "
+                                 "do you want to delete them?").arg(v.count()))
+            == QMessageBox::Yes)
+        {
+            for (int i=0; i<v.count(); ++i)
+                database()->remove(v[i]);
+        }
+    }
+}
+
 
 void MainWindow::copyGame(int target, const Game& game)
 {

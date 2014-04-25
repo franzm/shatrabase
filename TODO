@@ -53,6 +53,9 @@
 - OK add post info to gametext
     - OK timecontrol settings
     - OK resign
+* test/fix restartBetweenMoves in PlayGameEngine
+* engine vs. engine
+    * turn off board for fast games
 
 -- board setup --
 

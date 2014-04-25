@@ -309,6 +309,8 @@ public slots:
 	void slotDatabaseCompact();
     /* Slot that updates internal info upon loading a complete db */
     void slotDataBaseLoaded(DatabaseInfo* db);
+    /** Find duplicate games in current database */
+    void slotDatabaseFindDuplicates();
     /* Fill up the current game (drag request from game list) */
     void slotGetGameData(Game& g);
     /* Copy game from other database by drag'n'drop */
