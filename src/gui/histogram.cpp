@@ -43,6 +43,7 @@ Histogram::Histogram(QWidget *parent) :
     visible_.insert(("Ply"), true);
     visible_.insert(("Pieces White"), true);
     visible_.insert(("Pieces Black"), true);
+    visible_.insert(("Opening move"), true);
 
     /*
     QHBoxLayout * l0 = new QHBoxLayout(this);
@@ -238,6 +239,7 @@ void Histogram::mouseMoveEvent(QMouseEvent * e)
         float x = (float)(e->pos().x() - 1) / (width()-2);
 
         for (Iter i=map_.begin(); i!=map_.end(); ++i)
+        if (visible_[i.value().key])
         {
             int j = x * i.value().v.size();
             if (j >= 0 && j < i.value().v.size() &&
