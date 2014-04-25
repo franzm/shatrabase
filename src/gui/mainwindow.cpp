@@ -714,7 +714,13 @@ void MainWindow::updateMenuRecent()
 
 void MainWindow::updateMenuDatabases()
 {
-	while (m_databases.count() > m_databaseActions.count()) {
+    // enable saving
+    bool cansave = m_currentDatabase && qobject_cast<MemoryDatabase*>(database());
+    m_saveAction->setEnabled(cansave);
+    m_saveAsAction->setEnabled(cansave);
+
+    while (m_databases.count() > m_databaseActions.count())
+    {
 		QAction* action = new QAction(this);
 		connect(action, SIGNAL(triggered()), SLOT(slotDatabaseChange()));
 		m_databaseActions.append(action);
@@ -735,7 +741,8 @@ void MainWindow::updateMenuDatabases()
             }
         }
 	}
-	for (int i = m_databases.count(); i < m_databaseActions.count(); i++) {
+    for (int i = m_databases.count(); i < m_databaseActions.count(); i++)
+    {
 		m_databaseActions[i]->setVisible(false);
 		m_databaseActions[i]->setShortcut(0);
 	}
@@ -767,6 +774,8 @@ void MainWindow::openDatabaseUrl(QString fname, bool utf8)
         }
 */
         openDatabaseArchive(url.toLocalFile(), utf8);
+
+        updateMenuDatabases();
     }
 }
 
@@ -1044,8 +1053,8 @@ void MainWindow::setupActions()
 		menuRecent->addAction(action);
 	}
     file->addSeparator();
-    file->addAction(createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::Key_S));
-    file->addAction(createAction(tr("&Save as ..."), SLOT(slotFileSaveAs()), Qt::CTRL + Qt::SHIFT + Qt::Key_S));
+    file->addAction(m_saveAction = createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::Key_S));
+    file->addAction(m_saveAsAction = createAction(tr("&Save as ..."), SLOT(slotFileSaveAs()), Qt::CTRL + Qt::SHIFT + Qt::Key_S));
 
     /*QMenu* exportMenu = file->addMenu(tr("&Export..."));
 	exportMenu->addAction(createAction(tr("&Games in filter"), SLOT(slotFileExportFilter())));

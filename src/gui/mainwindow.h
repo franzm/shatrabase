@@ -419,7 +419,9 @@ private:
 	QString m_nagText;
     QTimer* m_autoPlayTimer;
     QAction //* m_toggleFilter,
-            * m_ExternalBoardAction;
+            * m_ExternalBoardAction,
+            * m_saveAction,
+            * m_saveAsAction;
     bool m_bGameChange;
     Board m_lastSendBoard;
     AnalysisWidget* m_mainAnalysis, * m_analysis2;
