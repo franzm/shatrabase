@@ -158,6 +158,9 @@ void Database::findDuplicates(QVector<int>& indices, bool do_symmetric)
         }
     }
 
+#undef SB_MIRROR
+#undef SB_TO_ONE_SIDE
+
     if (!numsym)
         qDebug() << "found" << dups.count() << "duplicates";
     else

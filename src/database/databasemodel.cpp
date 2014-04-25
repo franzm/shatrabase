@@ -45,7 +45,8 @@ DatabaseModel::DatabaseModel(Database * db, QObject *parent) :
     << tr("Moves")
     << tr("Ply")
     << tr("Pieces White")
-    << tr("Pieces Black");
+    << tr("Pieces Black")
+    << tr("Opening move");
 
     columnTags_
     << "Nr"
@@ -62,7 +63,8 @@ DatabaseModel::DatabaseModel(Database * db, QObject *parent) :
     << "Length"
     << "Ply"
     << "Pieces White"
-    << "Pieces Black";
+    << "Pieces Black"
+    << "First move";
 
 }
 /*

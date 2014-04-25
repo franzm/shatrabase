@@ -103,12 +103,11 @@ void MemoryDatabase::parseGame()
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
     m_index.setValidFlag(n, parseMoves(game));
-    //qDebug() << "mcount " << game->plyCount() << " " << n;
-    //exit(-1);
     m_index.setTag("Length", QString::number(game->moveCount()), n);
     m_index.setTag("Ply", QString::number(game->plyCount()), n);
     m_index.setTag("Pieces White", QString::number(game->board().pieceCount(White)), n);
     m_index.setTag("Pieces Black", QString::number(game->board().pieceCount(Black)), n);
+    m_index.setTag("First move", QString::number(BN[game->move(1).from()]), n);
     if (g_autoResult0nLoad && game->result() == ResultUnknown)
     {
         m_index.setTag("Result", resultString(game->board().gameResult()), n);
