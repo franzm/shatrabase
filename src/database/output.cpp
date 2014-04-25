@@ -474,7 +474,7 @@ void Output::output(QTextStream& out, Filter& filter)
     Game game;
     for (int i = 0; i < filter.count(); ++i)
     {
-        if (database.index()->deleted(filter.indexToGame(i)))
+        if (filter.database()->index()->deleted(filter.indexToGame(i)))
             continue;
 
         if (filter.database()->loadGame(filter.indexToGame(i), game))
