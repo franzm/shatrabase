@@ -1083,6 +1083,22 @@ void MainWindow::slotDatabaseFindDuplicates()
 {
     QVector<int> v;
     database()->findDuplicates(v);
+    if (v.empty())
+    {
+        QMessageBox::information(this, database()->name(),
+                                 tr("No duplicate games found in database."));
+    }
+    else
+    {
+        if (QMessageBox::question(this, database()->name(),
+                              tr("There are %1 duplicate games in this Database, "
+                                 "do you want to delete them?").arg(v.count()))
+            == QMessageBox::Yes)
+        {
+            for (int i=0; i<v.count(); ++i)
+                database()->remove(v[i]);
+        }
+    }
 }
 
 
