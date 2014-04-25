@@ -926,8 +926,10 @@ QString MainWindow::exportFileName(int& format)
 	fd.setFileMode(QFileDialog::AnyFile);
 	fd.setWindowTitle(tr("Export games"));
 	fd.setViewMode(QFileDialog::Detail);
-	fd.setDirectory(QDir::homePath());
-	QStringList filters;
+    fd.setDirectory(AppSettings->getValue("/Path/databaseExportPath").toString());
+
+    // set file filters
+    QStringList filters;
 	filters << tr("SGN file (*.sgn)")
 	<< tr("HTML page (*.html)")
 	<< tr("LaTeX document (*.tex)");
@@ -936,8 +938,12 @@ QString MainWindow::exportFileName(int& format)
 #else
     fd.setNameFilters(filters);
 #endif
+    // run dialog
 	if (fd.exec() != QDialog::Accepted)
 		return QString();
+    AppSettings->setValue("/Path/databaseExportPath", fd.directory().absolutePath());
+
+    // determine format
 #if QT_VERSION < 0x050000
     if (fd.selectedFilter().contains("*.tex"))
 		format = Output::Latex;
@@ -1039,9 +1045,13 @@ void MainWindow::setupActions()
 	}
     file->addSeparator();
 	file->addAction(createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::SHIFT + Qt::Key_S));
-	QMenu* exportMenu = file->addMenu(tr("&Export..."));
+
+    /*QMenu* exportMenu = file->addMenu(tr("&Export..."));
 	exportMenu->addAction(createAction(tr("&Games in filter"), SLOT(slotFileExportFilter())));
 	exportMenu->addAction(createAction(tr("&All games"), SLOT(slotFileExportAll())));
+    */
+    file->addAction(createAction(tr("&Export"), SLOT(slotFileExportAll())));
+
     file->addSeparator();
 	file->addAction(createAction(tr("&Close"), SLOT(slotFileClose()), QKeySequence::Close));
 	file->addAction(createAction(tr("&Quit"), SLOT(slotFileQuit()), QKeySequence(), QString(), QAction::QuitRole));

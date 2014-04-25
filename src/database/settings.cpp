@@ -195,7 +195,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/General/Language", lang);
 
     map.insert("/General/executed", (int)0);
-
+    map.insert("/Path/databaseExportPath", QDir::homePath());
     map.insert("/General/EditLimit", 10);
     map.insert("/General/Notation", NUM);
     map.insert("/General/useIndexFile", true);
