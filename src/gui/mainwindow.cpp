@@ -1044,7 +1044,8 @@ void MainWindow::setupActions()
 		menuRecent->addAction(action);
 	}
     file->addSeparator();
-	file->addAction(createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::SHIFT + Qt::Key_S));
+    file->addAction(createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::Key_S));
+    file->addAction(createAction(tr("&Save as ..."), SLOT(slotFileSaveAs()), Qt::CTRL + Qt::SHIFT + Qt::Key_S));
 
     /*QMenu* exportMenu = file->addMenu(tr("&Export..."));
 	exportMenu->addAction(createAction(tr("&Games in filter"), SLOT(slotFileExportFilter())));

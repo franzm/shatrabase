@@ -42,6 +42,7 @@ public:
     virtual bool open(const QString& filename, bool utf8);
 	/** File-based database name */
 	virtual QString filename() const;
+    virtual void setFilename(const QString & f) { m_filename = f; }
 	/** Closes the database */
 	virtual void close();
 

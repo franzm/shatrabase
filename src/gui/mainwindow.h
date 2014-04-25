@@ -238,6 +238,8 @@ public slots:
     void slotFileOpenUtf8();
     /* Save database to current file. */
 	void slotFileSave();
+    /* Save database to new file. */
+    void slotFileSaveAs();
     /* Open given database from Recent files list. */
 	void slotFileOpenRecent();
     /* Exports games in filter to SGN file. */
