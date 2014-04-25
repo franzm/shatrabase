@@ -501,6 +501,9 @@ void Output::output(QTextStream& out, Database& database)
     Game game;
     for (int i = 0; i < database.count(); ++i)
     {
+        if (database.index()->deleted(i))
+            continue;
+
         if (database.loadGame(i, game))
         {
             out << output(&game);
