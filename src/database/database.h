@@ -59,6 +59,7 @@ public:
     virtual bool parseFile() = 0;
     /** File-based database name */
 	virtual QString filename() const = 0;
+    virtual void setFilename(const QString&) = 0;
     /** File-based database name for displayng (no path and extension. */
 	virtual QString name() const;
     /** Closes the database */

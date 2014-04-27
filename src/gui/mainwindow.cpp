@@ -714,7 +714,13 @@ void MainWindow::updateMenuRecent()
 
 void MainWindow::updateMenuDatabases()
 {
-	while (m_databases.count() > m_databaseActions.count()) {
+    // enable saving
+    bool cansave = m_currentDatabase && qobject_cast<MemoryDatabase*>(database());
+    m_saveAction->setEnabled(cansave);
+    m_saveAsAction->setEnabled(cansave);
+
+    while (m_databases.count() > m_databaseActions.count())
+    {
 		QAction* action = new QAction(this);
 		connect(action, SIGNAL(triggered()), SLOT(slotDatabaseChange()));
 		m_databaseActions.append(action);
@@ -735,7 +741,8 @@ void MainWindow::updateMenuDatabases()
             }
         }
 	}
-	for (int i = m_databases.count(); i < m_databaseActions.count(); i++) {
+    for (int i = m_databases.count(); i < m_databaseActions.count(); i++)
+    {
 		m_databaseActions[i]->setVisible(false);
 		m_databaseActions[i]->setShortcut(0);
 	}
@@ -767,6 +774,8 @@ void MainWindow::openDatabaseUrl(QString fname, bool utf8)
         }
 */
         openDatabaseArchive(url.toLocalFile(), utf8);
+
+        updateMenuDatabases();
     }
 }
 
@@ -926,8 +935,10 @@ QString MainWindow::exportFileName(int& format)
 	fd.setFileMode(QFileDialog::AnyFile);
 	fd.setWindowTitle(tr("Export games"));
 	fd.setViewMode(QFileDialog::Detail);
-	fd.setDirectory(QDir::homePath());
-	QStringList filters;
+    fd.setDirectory(AppSettings->getValue("/Path/databaseExportPath").toString());
+
+    // set file filters
+    QStringList filters;
 	filters << tr("SGN file (*.sgn)")
 	<< tr("HTML page (*.html)")
 	<< tr("LaTeX document (*.tex)");
@@ -936,8 +947,12 @@ QString MainWindow::exportFileName(int& format)
 #else
     fd.setNameFilters(filters);
 #endif
+    // run dialog
 	if (fd.exec() != QDialog::Accepted)
 		return QString();
+    AppSettings->setValue("/Path/databaseExportPath", fd.directory().absolutePath());
+
+    // determine format
 #if QT_VERSION < 0x050000
     if (fd.selectedFilter().contains("*.tex"))
 		format = Output::Latex;
@@ -1038,10 +1053,15 @@ void MainWindow::setupActions()
 		menuRecent->addAction(action);
 	}
     file->addSeparator();
-	file->addAction(createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::SHIFT + Qt::Key_S));
-	QMenu* exportMenu = file->addMenu(tr("&Export..."));
+    file->addAction(m_saveAction = createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::Key_S));
+    file->addAction(m_saveAsAction = createAction(tr("&Save as ..."), SLOT(slotFileSaveAs()), Qt::CTRL + Qt::SHIFT + Qt::Key_S));
+
+    /*QMenu* exportMenu = file->addMenu(tr("&Export..."));
 	exportMenu->addAction(createAction(tr("&Games in filter"), SLOT(slotFileExportFilter())));
 	exportMenu->addAction(createAction(tr("&All games"), SLOT(slotFileExportAll())));
+    */
+    file->addAction(createAction(tr("&Export"), SLOT(slotFileExportAll())));
+
     file->addSeparator();
 	file->addAction(createAction(tr("&Close"), SLOT(slotFileClose()), QKeySequence::Close));
 	file->addAction(createAction(tr("&Quit"), SLOT(slotFileQuit()), QKeySequence(), QString(), QAction::QuitRole));

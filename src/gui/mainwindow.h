@@ -238,6 +238,8 @@ public slots:
     void slotFileOpenUtf8();
     /* Save database to current file. */
 	void slotFileSave();
+    /* Save database to new file. */
+    void slotFileSaveAs();
     /* Open given database from Recent files list. */
 	void slotFileOpenRecent();
     /* Exports games in filter to SGN file. */
@@ -417,7 +419,9 @@ private:
 	QString m_nagText;
     QTimer* m_autoPlayTimer;
     QAction //* m_toggleFilter,
-            * m_ExternalBoardAction;
+            * m_ExternalBoardAction,
+            * m_saveAction,
+            * m_saveAsAction;
     bool m_bGameChange;
     Board m_lastSendBoard;
     AnalysisWidget* m_mainAnalysis, * m_analysis2;

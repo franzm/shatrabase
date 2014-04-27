@@ -162,6 +162,36 @@ void MainWindow::slotFileSave()
 	}
 }
 
+void MainWindow::slotFileSaveAs()
+{
+    if (database()->isReadOnly())
+    {
+        MessageDialog::warning(tr("<html>The database <i>%1</i> is read-only and cannot be saved.</html>")
+                .arg(database()->name()));
+        return;
+    }
+    if (!(m_currentDatabase && qobject_cast<MemoryDatabase*>(database())))
+        return;
+
+    // get filename
+    QString fn = QFileDialog::getSaveFileName(
+            this, tr("Save database as"),
+                //AppSettings->value("/General/databasePath").toString() + "/",
+                database()->filename(),
+            tr("SGN databases (*.sgn)"));
+
+    if (fn.isEmpty())
+        return;
+
+    // save
+    startOperation(tr("Saving %1...").arg(database()->name()));
+    Output output(Output::Sgn);
+    connect(&output, SIGNAL(progress(int)), SLOT(slotOperationProgress(int)));
+    output.output(fn, *database());
+    database()->setFilename(fn);
+    finishOperation(tr("%1 saved").arg(database()->name()));
+}
+
 void MainWindow::slotFileClose()
 {
     if (m_currentDatabase)
