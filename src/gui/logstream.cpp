@@ -40,14 +40,15 @@ void SimpleLoggingHandler(QtMsgType type, const char *msg)
 void startFileLog()
 {
 #ifdef _DEBUG
+/*
     QString currentPath = QDir::currentPath()+ "/shatrabase.log";
     qDebug() << currentPath;
     logfile.open(currentPath.toLatin1().data(),ios::app);
     bDoLog = true;
     qInstallMsgHandler(SimpleLoggingHandler);
+*/
 #endif
 }
-
 void stopFileLog()
 {
     if (bDoLog)
