@@ -296,7 +296,7 @@ QString TimeControl::humanReadable() const
         if (numMoves2_ != 0)
         {
             if (numMoves2_ == Unlimited)
-                s += tr(", remaining game in %1").arg(msecToString(timeForMoves2_));
+                s += tr(", remainder of game in %1").arg(msecToString(timeForMoves2_));
             else
                 s += tr(", %1 moves in %2").arg(numMoves2_).arg(msecToString(timeForMoves2_));
             if (timeInc2_)
@@ -305,7 +305,7 @@ QString TimeControl::humanReadable() const
                 return s;
         }
 
-        s += tr(", remaining game in %1").arg(msecToString(timeAdd_));
+        s += tr(", remainder of game in %1").arg(msecToString(timeAdd_));
         if (timeInc3_)
             s += tr(" + %1 per move").arg(msecToString(timeInc3_));
 

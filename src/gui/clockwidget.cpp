@@ -48,11 +48,7 @@ QLCDNumber * ClockWidget::newLcd_()
     QLCDNumber * n = new QLCDNumber(this);
 
     const int s = 14;
-<<<<<<< HEAD
     n->setFixedSize(s*9,s*3);
-=======
-    n->setFixedSize(s*9,s*3);//s*7,s*2
->>>>>>> 0b63a16179940f3f08ea1f718a2b7afa4315315e
     n->setDigitCount(7);
     n->setSegmentStyle(QLCDNumber::Filled);
     n->setMode(QLCDNumber::Dec);
