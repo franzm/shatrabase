@@ -82,6 +82,14 @@ protected:
     bool parseFileIntern();
     virtual void parseGame();
 
+    /** This will
+        create a Game from the current spn (found in indextags),
+        parse the moves from the current database game,
+        and populate the index tags with useful information.
+        Ownership of the game is on caller.
+        Game is always created, even if spn is invalid. */
+    Game * parseGameIntern();
+
     bool readIndexFile(QDataStream& in, volatile  bool *breakFlag);
     bool writeIndexFile(QDataStream& out) const;
     QString offsetFilename(const QString& filename) const;
