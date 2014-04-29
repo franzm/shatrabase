@@ -81,9 +81,9 @@ public:
     /** Adds a game to the database */
     virtual bool appendGame(const Game&) { return false; }
     /** Removes a game from the database */
-	virtual bool remove(int) { return false; };
+    virtual bool remove(int) { return false; }
     /** Undelete a game from the database */
-    virtual bool undelete(int) { return false; };
+    virtual bool undelete(int) { return false; }
     /** Removes multiple games from the database as specified by the filter */
 	virtual bool remove(const Filter&) { return false; }
     /** Compacts the database */

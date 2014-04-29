@@ -45,7 +45,7 @@ void startFileLog()
     qDebug() << currentPath;
     logfile.open(currentPath.toLatin1().data(),ios::app);
     bDoLog = true;
-    qInstallMsgHandler(SimpleLoggingHandler);
+    qInstallMessageHandler(SimpleLoggingHandler);
 */
 #endif
 }
