@@ -492,8 +492,8 @@ void PlayGameWidget::animationFinished(const Board& board)
         return;
 
     // don't restart an ended game
-    if (checkGameResult_(board, false, false))
-        return;
+    //if (checkGameResult_(board, false, false))
+    //    return;
 
     // get last moving side on board
     const bool transit = board.transitAt() != 0;
@@ -516,7 +516,11 @@ void PlayGameWidget::animationFinished(const Board& board)
         // only switches sides, tc_.stopMove() was called in setPosition()
         int mt = tc_.endMove();
         setMoveTimeComment_(mt);
-        startNewMove_(board);
+
+        // switch sides if game not ended
+        if (!checkGameResult_(board, true, true))
+            startNewMove_(board);
+
         return;
     }
 
