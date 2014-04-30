@@ -424,6 +424,7 @@ void PreferencesDialog::restoreSettings()
     g_notation = AppSettings->getValue("Notation").toBool();
     ui.useIndexFile->setChecked(AppSettings->getValue("useIndexFile").toBool());
     ui.cbAutoCommitDB->setChecked(AppSettings->getValue("autoCommitDB").toBool());
+    ui.cbAutoResult->setChecked(AppSettings->getValue("autoGameResult").toBool());
     ui.engineRestartCheck->setChecked(AppSettings->getValue("restartAnalysisOnMpv").toBool());
     AppSettings->endGroup();
 
@@ -565,6 +566,8 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("Notation",QVariant(ui.notationAlgebraic->isChecked()));
     AppSettings->setValue("useIndexFile",QVariant(ui.useIndexFile->isChecked()));
     AppSettings->setValue("autoCommitDB",QVariant(ui.cbAutoCommitDB->isChecked()));
+    AppSettings->setValue("autoGameResult",QVariant(ui.cbAutoResult->isChecked()));
+    g_autoResultOnLoad = ui.cbAutoResult->isChecked();
     AppSettings->setValue("restartAnalysisOnMpv",QVariant(ui.engineRestartCheck->isChecked()));
     AppSettings->endGroup();
 

@@ -60,6 +60,8 @@ void SgnDatabase::parseGame()
 
 Game * SgnDatabase::parseGameIntern()
 {
+    g_autoResultOnLoad = AppSettings->getValue("/General/autoGameResult").toBool();
+
     Game* game = new Game;
     // indextags index
     IndexBaseType n = m_count - 1;
@@ -74,7 +76,7 @@ Game * SgnDatabase::parseGameIntern()
     m_index.setTag("Pieces White", QString::number(game->board().pieceCount(White)), n);
     m_index.setTag("Pieces Black", QString::number(game->board().pieceCount(Black)), n);
     m_index.setTag("First move", QString::number(BN[game->move(1).from()]), n);
-    if (g_autoResult0nLoad && game->result() == ResultUnknown)
+    if (g_autoResultOnLoad && game->result() == ResultUnknown)
     {
         m_index.setTag(TagNameResult, resultString(game->board().gameResult()), n);
         g_resModified = true;
@@ -86,11 +88,13 @@ Game * SgnDatabase::parseGameIntern()
 
 bool SgnDatabase::readIndexFile(QDataStream &in, volatile bool* breakFlag)
 {
+    qDebug() << "reading index file";
     return (index()->read(in, breakFlag));
 }
 
 bool SgnDatabase::writeIndexFile(QDataStream& out) const
 {
+    qDebug() << "writing index file";
     return (index()->write(out));
 }
 

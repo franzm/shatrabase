@@ -23,7 +23,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -1311,9 +1311,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="automaticECO">
+        <widget class="QCheckBox" name="cbAutoResult">
          <property name="text">
-          <string>Automatic classification with ECO Codes</string>
+          <string>Add result of games if unknown</string>
          </property>
         </widget>
        </item>

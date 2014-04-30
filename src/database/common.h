@@ -64,7 +64,7 @@ extern bool g_loading;
 extern bool g_searching;
 extern bool g_notation;
 extern bool g_nChanged;
-extern bool g_autoResult0nLoad;
+extern bool g_autoResultOnLoad;
 extern bool g_resModified;
 extern int  g_nErrors;
 extern int  g_aveNodes;
