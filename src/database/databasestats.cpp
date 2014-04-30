@@ -154,7 +154,7 @@ void DatabaseStats::calculateData_(Data &d) const
         d.deviation += (d.v[i] - d.mean) * (d.v[i] - d.mean);
     }
     d.deviation = std::sqrt(d.deviation / d.v.size());
-    d.deviation_ratio = range? (d.deviation - d.min_value) / range : 0;
+    d.deviation_ratio = range? d.deviation / range : 0;
 
     // ----- histogram -----
 
