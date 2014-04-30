@@ -1053,7 +1053,7 @@ void MainWindow::setupActions()
 		menuRecent->addAction(action);
 	}
     file->addSeparator();
-    file->addAction(m_saveAction = createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::Key_S));
+    file->addAction(m_saveAction = createAction(tr("&Save"), SLOT(slotFileSave()), Qt::CTRL + Qt::ALT + Qt::Key_S));
     file->addAction(m_saveAsAction = createAction(tr("&Save as ..."), SLOT(slotFileSaveAs()), Qt::CTRL + Qt::SHIFT + Qt::Key_S));
 
     /*QMenu* exportMenu = file->addMenu(tr("&Export..."));
