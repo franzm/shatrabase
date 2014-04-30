@@ -20,15 +20,13 @@
 Engine::Engine(const QString& name,
 			 const QString& command,
              bool bTestMode,
-			 const QString& directory,
-			 QTextStream* logStream)
+             const QString& directory)
 {
     SB_ENGINE_DEBUG("Engine::Engine("<<name<<","<<command<<","<<bTestMode<<","<<directory<<")");
 
 	m_name = name;
 	m_command = command;
     m_bTestMode = bTestMode;
-	m_logStream = logStream;
 	m_process = 0;
 	m_active = false;
 	m_analyzing = false;
@@ -113,10 +111,6 @@ void Engine::deleteProcess_()
     m_active = false;
 }
 
-void Engine::setLogStream(QTextStream* logStream)
-{
-	m_logStream = logStream;
-}
 
 void Engine::activate(bool do_wait)
 {

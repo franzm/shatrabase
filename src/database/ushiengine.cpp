@@ -17,9 +17,8 @@
 USHIEngine::USHIEngine(const QString& name,
 			  const QString& command,
               bool bTestMode,
-			  const QString& directory,
-              QTextStream* logStream)
-    : Engine(name, command, bTestMode, directory, logStream)
+              const QString& directory)
+    : Engine(name, command, bTestMode, directory)
 {
 	m_quitAfterAnalysis = false;
 	m_invertBlack = true;
@@ -70,7 +69,8 @@ void USHIEngine::setMpv(int mpv)
     {
 		send("stop");
 		send(QString("setoption name MultiPV value %1").arg(m_mpv));
-		send("go infinite");
+        send("position spn " + m_position);
+        send("go infinite");
 	}
 }
 
@@ -158,7 +158,7 @@ void USHIEngine::processMessage(const QString& message)
                 cmd += QString(" movetime %1").arg(m_settings.maxTime);
             if (m_settings.movestogo != SearchSettings::Unlimited)
                 cmd += QString(" movestogo %1").arg(m_settings.movestogo);
-            if (!m_settings.isTimeLimit())
+            if (m_settings.isUnlimited())
             {
                 cmd += " infinite";
                 send("setoption name USHI_AnalyseMode value true");

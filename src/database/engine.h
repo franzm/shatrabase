@@ -16,7 +16,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QTextStream>
 #include <QProcess>
 
 #include "analysis.h"
@@ -56,7 +55,8 @@ public:
 
     struct SearchSettings
     {
-        enum { Unlimited = -1 };
+        enum { /** Needs to match TimeControl::Unlimited */
+                Unlimited = -1 };
         int maxDepth,
             maxTime,
             maxNodes,
@@ -64,6 +64,7 @@ public:
             wtime,
             movestogo;
 
+        /** Default ctor creates unlimited (e.g. analyze) settings */
         SearchSettings()
             : maxDepth(Unlimited),
               maxTime(Unlimited),
@@ -73,16 +74,22 @@ public:
               movestogo(Unlimited)
         { }
 
+        /** Is there a time limit in the settings */
         bool isTimeLimit() const
             { return maxTime != Unlimited || btime != Unlimited || wtime != Unlimited; }
+
+        /** Returns true of no limits apply */
+        bool isUnlimited() const
+        {
+            return !(isTimeLimit() || maxDepth != Unlimited || maxNodes != Unlimited);
+        }
     };
 
     /** Constructs an engine with a given path/command, and log stream */
 	Engine(const QString& name,
 		const QString& command,
         bool  bTestMode,
-		const QString& directory = QString(),
-		QTextStream* logStream = NULL);
+        const QString& directory = QString());
 
     /** Virtual destructor */
 	virtual ~Engine();
@@ -150,21 +157,9 @@ signals:
     /** Engine has sent bestmove */
     void bestMoveSend(const Move& move);
 
-    /** Fired when a log item has been written to the log */
-	void logUpdated();
-
     /** Sends debug info out */
     void engineDebug(Engine * engine, Engine::DebugType t, const QString& str);
-#if (0)
-    /** Sends the raw communication from the engine */
-    void commFromEngine(const QString& msg);
 
-    /** Sends the raw communication that was issued to the engine */
-    void commToEngine(const QString& msg);
-
-    /** Sends error messages */
-    void commError(const QString& msg);
-#endif
 protected:
     /** Waits the given milliseconds until an output of the engine.
         Returns false if timed-out. */
@@ -215,7 +210,6 @@ protected://rivate:
     QString m_name;
 	QString	m_command;
 	QString	m_directory;
-	QTextStream* m_logStream;
 	QProcess* m_process;
 	QTextStream* m_processStream;
 	bool m_active;

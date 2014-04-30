@@ -15,7 +15,6 @@
 #define __USHIENGINE_H__
 
 #include <QString>
-#include <QTextStream>
 
 #include "engine.h"
 
@@ -29,8 +28,7 @@ public:
 	USHIEngine(const QString& name,
 		const QString& command,
         bool bTestMode,
-		const QString& directory = QString(),
-		QTextStream* logStream = NULL);
+        const QString& directory = QString());
 
     /** Analyses the the given position.
         If @p movetime_ms > 0, limit the analysis time to given millisecs.
