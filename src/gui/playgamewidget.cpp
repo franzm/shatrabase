@@ -235,7 +235,7 @@ void PlayGameWidget::start_()
     QMap<QString, QString> tags;
     tags.insert(TagNameWhite, play_->playerName1());
     tags.insert(TagNameBlack, play_->playerName2());
-    tags.insert(TagNameDate, QDate::currentDate().toString(Qt::ISODate));
+    tags.insert(TagNameDate, QDate::currentDate().toString(Qt::ISODate).replace('-',"."));
     tags.insert(TagNameTimeControl, tc_.humanReadable());
 
     emit startNewGameRequest(tags);
@@ -484,9 +484,8 @@ void PlayGameWidget::moveFromEngine(Move m)
 
 void PlayGameWidget::animationFinished(const Board& board)
 {
-    SB_PLAY_DEBUG("PlayGameWidget::animationFinished() plyQue_.size()=" << plyQue_.size());
-
-//    qDebug() << "PlayGameWidget::animationFinished() stm="<<board.toMove() << "plyQue_.size()=" << plyQue_.size();
+    SB_PLAY_DEBUG("PlayGameWidget::animationFinished() stm="<<board.toMove()
+                  << " plyQue_.size()=" << plyQue_.size());
 
     if (!playing_)
         return;

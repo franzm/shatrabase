@@ -6,7 +6,7 @@ PlayGameEngine::PlayGameEngine(EngineDebugWidget * debug, QObject *parent)
         engineDebug_        (debug),
         engine_             (0),
         minWaitTime_        (500),
-        stopBetweenMoves_   (true),
+        stopBetweenMoves_   (false),
         listening_          (false),
         sendPositionOnActivate_(false)
 {
