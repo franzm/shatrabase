@@ -202,6 +202,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/General/ListFontSize", DEFAULT_LISTFONTSIZE);
     map.insert("/General/autoCommitDB", false);
     map.insert("/General/gameStartPosition", 0);
+    map.insert("/General/restartAnalysisOnMpv", false);
 
     map.insert("/GameText/FontSize",DEFAULT_FONTSIZE);
     map.insert("/MainWindow/GameToolBar", false);

@@ -23,7 +23,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -1079,26 +1079,6 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1" colspan="3">
-           <widget class="QLineEdit" name="engineDirectory">
-            <property name="minimumSize">
-             <size>
-              <width>300</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="placeholderText">
-             <string>Path where engine is started - usually place of books</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Directory:</string>
-            </property>
-           </widget>
-          </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_4">
             <property name="sizePolicy">
@@ -1112,17 +1092,10 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_6">
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Name:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Options:</string>
+             <string>Command:</string>
             </property>
            </widget>
           </item>
@@ -1139,10 +1112,10 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_3">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>Command:</string>
+             <string>Options:</string>
             </property>
            </widget>
           </item>
@@ -1192,6 +1165,13 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="1" colspan="4">
+           <widget class="QLineEdit" name="engineName">
+            <property name="placeholderText">
+             <string>Arbitrary name to identify engine </string>
+            </property>
+           </widget>
+          </item>
           <item row="4" column="3">
            <spacer>
             <property name="orientation">
@@ -1205,17 +1185,37 @@
             </property>
            </spacer>
           </item>
-          <item row="0" column="1" colspan="4">
-           <widget class="QLineEdit" name="engineName">
-            <property name="placeholderText">
-             <string>Arbitrary name to identify engine </string>
-            </property>
-           </widget>
-          </item>
           <item row="4" column="1">
            <widget class="QRadioButton" name="engineProtocolUSHI">
             <property name="text">
              <string>USHI</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Name:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="3">
+           <widget class="QLineEdit" name="engineDirectory">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Path where engine is started - usually place of books</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Directory:</string>
             </property>
            </widget>
           </item>
@@ -1282,6 +1282,16 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="engineRestartCheck">
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>Restart analysis on variation change</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

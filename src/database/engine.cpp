@@ -22,6 +22,7 @@ Engine::Engine(const QString& name,
              bool bTestMode,
              const QString& directory)
 {
+    // this actually doesn't print, the debugsignal is not connected yet...
     SB_ENGINE_DEBUG("Engine::Engine("<<name<<","<<command<<","<<bTestMode<<","<<directory<<")");
 
 	m_name = name;
@@ -31,6 +32,13 @@ Engine::Engine(const QString& name,
 	m_active = false;
 	m_analyzing = false;
 	m_directory = directory;
+
+    // XXX a bit hacky
+    // Engine should actually have a reconfigure slot!!
+    QString oldGroup = AppSettings->group();
+    AppSettings->endGroup();
+    m_restartOnMpvChange = AppSettings->getValue("/General/restartAnalysisOnMpv").toBool();
+    AppSettings->beginGroup(oldGroup);
 }
 
 Engine* Engine::newEngine(int index)
@@ -40,6 +48,7 @@ Engine* Engine::newEngine(int index)
 
 Engine* Engine::newEngine(EngineList& engineList, int index, bool bTestMode)
 {
+    // can't debug here, it's a static function
     //SB_ENGINE_DEBUG("Engine::newEngine("<<index<<","<<bTestMode<<")");
 
     Engine *engine = 0;
@@ -65,6 +74,7 @@ Engine* Engine::newEngine(EngineList& engineList, int index, bool bTestMode)
 
 Engine* Engine::newEngine(int index, bool bTestMode)
 {
+    // can't debug here, it's a static function
     //SB_ENGINE_DEBUG("Engine::newEngine("<<index<<","<<bTestMode<<")");
 
 	Engine *engine = 0;

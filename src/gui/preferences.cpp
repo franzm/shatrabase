@@ -413,7 +413,7 @@ void PreferencesDialog::restoreSettings()
     // Restore size
 	AppSettings->layout(this);
 
-	// Read Board settings
+    // Read general settings
     AppSettings->beginGroup("/General/");
     QString locale = AppSettings->getValue("Language").toString();
     for (int i=0; i<ui.languageCombo->count(); ++i)
@@ -424,7 +424,10 @@ void PreferencesDialog::restoreSettings()
     g_notation = AppSettings->getValue("Notation").toBool();
     ui.useIndexFile->setChecked(AppSettings->getValue("useIndexFile").toBool());
     ui.cbAutoCommitDB->setChecked(AppSettings->getValue("autoCommitDB").toBool());
+    ui.engineRestartCheck->setChecked(AppSettings->getValue("restartAnalysisOnMpv").toBool());
     AppSettings->endGroup();
+
+    // Read Board settings
     AppSettings->beginGroup("/Board/");
     ui.guessMoveCheck->setChecked(AppSettings->getValue("guessMove").toBool());
     ui.guessNextMoveCheck->setChecked(AppSettings->getValue("guessNextMove").toBool());
@@ -562,7 +565,9 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("Notation",QVariant(ui.notationAlgebraic->isChecked()));
     AppSettings->setValue("useIndexFile",QVariant(ui.useIndexFile->isChecked()));
     AppSettings->setValue("autoCommitDB",QVariant(ui.cbAutoCommitDB->isChecked()));
+    AppSettings->setValue("restartAnalysisOnMpv",QVariant(ui.engineRestartCheck->isChecked()));
     AppSettings->endGroup();
+
     AppSettings->beginGroup("/Board/");
     AppSettings->setValue("guessMove", QVariant(ui.guessMoveCheck->isChecked()));
     AppSettings->setValue("guessNextMove", QVariant(ui.guessNextMoveCheck->isChecked()));

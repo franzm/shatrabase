@@ -41,8 +41,8 @@ bool USHIEngine::startAnalysis(const Board& board, int nv,
 		return false;
 	}
 
-	if (m_board == board)
-		return true;
+    //if (m_board == board)
+    //	return true;
 	m_board = board;
 
 	m_position = board.toSPN();
@@ -64,13 +64,22 @@ void USHIEngine::stopAnalysis()
 
 void USHIEngine::setMpv(int mpv)
 {
-	m_mpv = mpv;
+    Engine::setMpv(mpv);
+
     if (isAnalyzing())
     {
 		send("stop");
-		send(QString("setoption name MultiPV value %1").arg(m_mpv));
-        send("position spn " + m_position);
-        send("go infinite");
+
+        if (!m_restartOnMpvChange)
+        {
+            send(QString("setoption name MultiPV value %1").arg(m_mpv));
+            send("position spn " + m_position);
+            send("go infinite");
+        }
+        else
+        {
+            startAnalysis(m_board, m_mpv, m_settings);
+        }
 	}
 }
 

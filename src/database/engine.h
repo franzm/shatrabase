@@ -213,7 +213,8 @@ protected://rivate:
 	QProcess* m_process;
 	QTextStream* m_processStream;
 	bool m_active;
-	bool m_analyzing;
+    bool m_analyzing,
+         m_restartOnMpvChange;
 };
 
 
