@@ -104,11 +104,12 @@ int DatabaseModel::columnCount(const QModelIndex &parent) const
 
 QVariant DatabaseModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role != Qt::DisplayRole)
+    if (role != Qt::DisplayRole &&
+        role != Qt::UserRole)
         return QVariant();
 
     if (orientation == Qt::Horizontal)
-        return columnNames_[section];
+        return (role == Qt::DisplayRole)? columnNames_[section] : columnTags_[section];
     else
         return QString::number(section);
 }

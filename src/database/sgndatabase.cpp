@@ -448,8 +448,9 @@ void SgnDatabase::seekGame(int index)
 
 void SgnDatabase::parseTagsIntoIndex()
 {
-    m_index.setTag("Length", "0", m_count - 1);
+    //m_index.setTag("Length", "0", m_count - 1);
     m_index.setTag("Result", "*", m_count - 1);
+
     while (m_currentLine.startsWith(QString("[")) && !m_file->atEnd())
     {
 		int tagend = m_currentLine.indexOf(' ');

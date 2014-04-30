@@ -378,7 +378,7 @@ void MainWindow::slotEditPasteSPN()
 		return;
 	}
 	game().setStartingBoard(board);
-    game().setResult(ResultUnknown);
+//    game().setResult(ResultUnknown);
 	slotGameChanged();
 }
 

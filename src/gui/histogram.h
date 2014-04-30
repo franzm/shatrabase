@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <QWidget>
 #include <QMap>
+#include <QSet>
 #include <QString>
 #include <QVector>
 #include <QPen>
@@ -109,6 +110,7 @@ protected:
     typedef QMap<QString, Data>::Iterator Iter;
     typedef QMap<QString, Data>::ConstIterator ConstIter;
 
+    QSet<QString> accepted_;
     QMap<QString, bool> visible_;
 
     // ------ widgets ------

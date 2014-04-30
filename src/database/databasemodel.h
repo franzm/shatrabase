@@ -50,6 +50,7 @@ public:
     virtual int columnCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
+    /** Returns translated names for Qt::DisplayRole and non-translated for Qt::UserRole */
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 signals:

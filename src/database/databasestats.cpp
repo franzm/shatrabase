@@ -53,10 +53,10 @@ void DatabaseStats::setDatabaseModel(const DatabaseModel & db)
     if (rows)
     for (int j = 0; j<db.columnCount(QModelIndex()); ++j)
     {
-        QString key = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
+        QString key = db.headerData(j, Qt::Horizontal, Qt::UserRole).toString();
+        QString trkey = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
 
         // don't add these
-        //   (XXX quick hack, won't work with translations)
         if (   key.compare("nr", Qt::CaseInsensitive) == 0
             || key.compare("date", Qt::CaseInsensitive) == 0)
             continue;
@@ -81,7 +81,7 @@ void DatabaseStats::setDatabaseModel(const DatabaseModel & db)
 
         }
         else
-                    // another hack
+
         if (key.compare("result", Qt::CaseInsensitive) == 0)
         {
             for (int i=0; i<rows; ++i)
@@ -99,7 +99,7 @@ void DatabaseStats::setDatabaseModel(const DatabaseModel & db)
             continue;
 
         // create data entry
-        createData_(key, vec);
+        createData_(trkey, vec);
 
     }
 }

@@ -6,7 +6,7 @@
 - OK setup default sdev engine on installation
 * remove all chessx / chesssettings references
 * smooth the desktop icon
-* Database statistics not working properly in other languages
+- OK Database statistics not working properly in other languages
 
 -- graphics --
 

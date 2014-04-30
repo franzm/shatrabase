@@ -38,29 +38,14 @@ Histogram::Histogram(QWidget *parent) :
 {
     setMouseTracking(true);
 
-    // XXX need to refacture this
-    visible_.insert(("Moves"), true);
-    visible_.insert(("Ply"), true);
-    visible_.insert(("Pieces White"), true);
-    visible_.insert(("Pieces Black"), true);
-    visible_.insert(("Opening move"), true);
+    // accepted values
+    accepted_.insert("Moves");
+    accepted_.insert("Ply");
+    accepted_.insert("Pieces White");
+    accepted_.insert("Pieces Black");
+    accepted_.insert("Opening move");
 
-    /*
-    QHBoxLayout * l0 = new QHBoxLayout(this);
 
-        list_ = new QListWidget(this);
-        list_->setFixedWidth(100);
-        l0->addWidget(list_);
-
-        frame_ = new QFrame(this);
-        l0->addWidget(frame_);
-
-        // set dark background
-        QPalette p = palette();
-        p.setColor(QPalette::Background, QColor(70,70,70));
-        frame_->setPalette(p);
-        frame_->setAutoFillBackground(true);
-    */
     // set dark background
     QPalette p = palette();
     p.setColor(QPalette::Background, QColor(70,70,70));
@@ -161,11 +146,16 @@ void Histogram::setDatabaseModel(const DatabaseModel & db)
         v.toInt(&ok);
         if (ok)
         {
-            QString key = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
+            QString key = db.headerData(j, Qt::Horizontal, Qt::UserRole).toString();
+            QString trkey = db.headerData(j, Qt::Horizontal, Qt::DisplayRole).toString();
 
             // don't add what's not predefined
-            if (visible_.find(key) == visible_.end())
+            if (accepted_.find(key) == accepted_.end())
                 continue;
+
+            // update visibility
+            if (!visible_.contains(trkey))
+                visible_.insert(trkey, true);
 
             // create histogram
             std::map<int,int> set;
@@ -182,7 +172,7 @@ void Histogram::setDatabaseModel(const DatabaseModel & db)
                 vec[i] = k->second;
 
             // create data entry
-            Data * dat = setData(key, vec);
+            Data * dat = setData(trkey, vec);
 
             // transfer 'what' vector
             dat->what.resize(set.size());
@@ -245,7 +235,8 @@ void Histogram::mouseMoveEvent(QMouseEvent * e)
             if (j >= 0 && j < i.value().v.size() &&
                           j < i.value().what.size())
             {
-                msg += QString("%1: [%2:%3] ").arg(i.value().key)
+                //: 'num.' means 'number of' or 'count'
+                msg += tr("%1: [%2: num. %3]").arg(i.value().key)
                         .arg(i.value().what[j])
                         .arg(i.value().v[j]);
             }
@@ -301,7 +292,6 @@ void Histogram::showContextMenu(const QPoint& pos)
     showAll->setEnabled(!map_.empty());
     hideAll->setEnabled(!map_.empty());
 
-    QVector<QAction*> showKey;
     for (ConstIter i = map_.begin(); i!=map_.end(); ++i)
     {
         QAction * a = headerMenu.addAction(i.key());
