@@ -216,6 +216,9 @@ public:
     bool hasNoMoves() const;
     /** Return result based on contents of m_biyAt[] */
     Result gameResult() const;
+    /** Is game over? */
+    bool isEnd() const { // XXX need to fix this Draw thing
+        return !(gameResult() == Draw || gameResult() == ResultUnknown); }
     /** Return number of pieces of given color */
     int pieceCount(Color) const;
     /** Return piece at given square number */

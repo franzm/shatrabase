@@ -80,7 +80,7 @@ private:
     QList<Analysis> m_analyses;
     Ui::AnalysisWidget ui;
     Engine* m_engine;
-    bool m_active;
+    bool m_active, m_ignore;
     Board m_board;
 //  QString m_tablebaseEvaluation;
 //  Tablebase* m_tablebase;

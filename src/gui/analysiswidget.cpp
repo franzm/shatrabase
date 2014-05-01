@@ -21,6 +21,7 @@
 AnalysisWidget::AnalysisWidget(EngineDebugWidget * debug)
         : QWidget(0),
           m_engine(0),
+          m_ignore(false),
           m_engineDebug(debug)
 {
     ui.setupUi(this);
@@ -167,12 +168,23 @@ void AnalysisWidget::setPosition(const Board& board)
 {
     if (m_board != board)
     {
+        m_ignore = false;
+
         m_board = board;
         m_analyses.clear();
 //      m_tablebase->abortLookup();
 //      m_tablebaseEvaluation.clear();
 
         updateAnalysis();
+
+        if (board.isEnd())
+        {
+            m_ignore = true;
+            if (m_engine)
+                m_engine->stopAnalysis();
+            return;
+        }
+
         if (m_engine && m_engine->isActive())
             m_engine->startAnalysis(m_board, ui.vpcount->value());
     }
@@ -201,7 +213,8 @@ void AnalysisWidget::slotMpvChanged(int mpv)
     {
         while (m_analyses.count() > mpv)
             m_analyses.removeLast();
-        m_engine->setMpv(mpv);
+        if (!m_ignore)
+            m_engine->setMpv(mpv);
     }
 }
 
@@ -235,6 +248,9 @@ void AnalysisWidget::showTablebaseMove(Move move, int score)
 void AnalysisWidget::updateAnalysis()
 {
     //qDebug() << "analysisupdate";
+    if (m_ignore)
+        return;
+
     QString text;
     foreach (Analysis a, m_analyses)
         text.append(a.toString(m_board) + "<br>");
