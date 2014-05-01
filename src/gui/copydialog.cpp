@@ -17,6 +17,9 @@ CopyDialog::CopyDialog(QWidget * parent) : QDialog(parent)
 {
 	ui.setupUi(this);
 	connect(ui.databaseList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), SLOT(accept()));
+
+    // XXX quickly removed
+    ui.filterButton->setVisible(false);
 }
 
 CopyDialog::~CopyDialog()

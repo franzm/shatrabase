@@ -29,7 +29,7 @@
 - OK fix board sometimes off (animation/autoplay)
 * update gamelist after savegame
 * 'go to ...' when pasting gametext
-* remove 'filter' from copy games...
+- OK remove 'filter' from copy games...
 * AutoPlayerInterval should match Board animation
 
 -- gameplay --
