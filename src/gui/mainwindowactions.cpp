@@ -797,10 +797,12 @@ void MainWindow::saveGame()
     if (!database()->isReadOnly())
     {
         databaseInfo()->saveGame();
-        database()->index()->setTag("Length", QString::number(game().moveCount()), gameIndex() );
-        m_gameList->updateFilter();
+        //database()->index()->setTag("Length", QString::number(game().moveCount()), gameIndex() );
+        database()->addGameInfo(gameIndex(), &game());
+        //m_gameList->updateFilter();
         slotFilterChanged();
         slotGameChanged();
+        slotDatabaseChanged();
         game().setModified(false);
 
         if (AppSettings->getValue("/General/autoCommitDB").toBool())

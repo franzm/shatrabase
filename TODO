@@ -27,7 +27,7 @@
 - OK fix window max'd save/restore (common Qt prob) 
     * save maximized state but keep default pos/size
 - OK fix board sometimes off (animation/autoplay)
-* update gamelist after savegame
+- OK update gamelist after savegame
 * 'go to ...' when pasting gametext
 - OK remove 'filter' from copy games...
 * AutoPlayerInterval should match Board animation

@@ -103,6 +103,9 @@ public:
     /** Get deleted flag for a given game id from the index */
     virtual bool deleted(GameId id) const { return m_index.deleted(id); }
 
+    /** fill the indextags at @p index with infos from the @p game */
+    void addGameInfo(int index, Game * game);
+
     /** find duplicate games and push their indices to @p indices. */
     void findDuplicates(QVector<int>& indices, bool symmetric = false);
 signals:

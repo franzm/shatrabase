@@ -71,6 +71,8 @@ Game * SgnDatabase::parseGameIntern()
         game->setStartingBoard(spn);
     // parse game and set tag values
     m_index.setValidFlag(n, parseMoves(game));
+    addGameInfo(n, game);
+    /*
     m_index.setTag("Length", QString::number(game->moveCount()), n);
     m_index.setTag("Ply", QString::number(game->plyCount()), n);
     m_index.setTag("Pieces White", QString::number(game->board().pieceCount(White)), n);
@@ -81,6 +83,7 @@ Game * SgnDatabase::parseGameIntern()
         m_index.setTag(TagNameResult, resultString(game->board().gameResult()), n);
         g_resModified = true;
     }
+    */
     g_totalNodes += game->currentMove();
 
     return game;

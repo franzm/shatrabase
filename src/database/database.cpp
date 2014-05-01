@@ -41,6 +41,30 @@ QString Database::name() const
 	return fi.completeBaseName();
 }
 
+
+void Database::addGameInfo(int n, Game *game)
+{
+    m_index.setTag("Length", QString::number(game->moveCount()), n);
+    m_index.setTag("Ply", QString::number(game->plyCount()), n);
+    m_index.setTag("Pieces White", QString::number(game->board().pieceCount(White)), n);
+    m_index.setTag("Pieces Black", QString::number(game->board().pieceCount(Black)), n);
+    m_index.setTag("First move", QString::number(BN[game->move(1).from()]), n);
+    if (g_autoResultOnLoad && game->result() == ResultUnknown)
+    {
+        m_index.setTag(TagNameResult, resultString(game->board().gameResult()), n);
+        g_resModified = true;
+    }
+}
+
+
+
+
+
+
+
+
+// -------------- duplicate search -------------
+
 struct LocalGameInfo
 {
     int gameIndex;
