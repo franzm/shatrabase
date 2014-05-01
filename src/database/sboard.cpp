@@ -467,9 +467,11 @@ bool SBoard::SPNToBoard(const QString& qspn)
             if (epPossible(eps, Color(m_stm)))
             {
                 m_epSquare = NB[eps];
-                found = true;
+                //found = true;
             }
-            else return false;
+            // XXX ignore illegal ep square
+            //else return false;
+            found = true;
         }
     }
     if (!found) return false; found = false;

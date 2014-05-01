@@ -39,6 +39,7 @@
 #include "tableview.h"
 #include "histogram.h"
 #include "ushiengine.h"
+#include "ushienginetester.h"
 #include "version.h"
 
 #include <time.h>
@@ -1394,3 +1395,16 @@ void MainWindow::slotRedSquare()
     slotGameChanged();
 }
 
+void MainWindow::slotTestEngineEngine()
+{
+    USHIEngineTester * test = new USHIEngineTester(this);
+    connect(test, SIGNAL(stopped()), test, SLOT(deleteLater()));
+
+    EngineList elist;
+    elist.restore();
+    QString bin = elist[0].command;
+
+    test->setBinary(0,bin);
+    test->setBinary(1,bin);
+    test->startTests();
+}

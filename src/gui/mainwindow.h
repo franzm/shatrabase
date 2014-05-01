@@ -320,6 +320,7 @@ public slots:
     /** Displays the message @p msg in the status bar. */
     void slotDisplayStatusMessage(const QString& msg);
 
+    void slotTestEngineEngine();
 protected slots:
     void loadError(QUrl url);
     void loadReady(QUrl url, QString fileName);

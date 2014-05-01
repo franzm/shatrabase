@@ -22,9 +22,18 @@
 #include <QObject>
 #include <QProcess>
 #include <QString>
+#include <QApplication>
 
 #include "common.h"
+#include "sboard.h"
 
+/** @brief fast low-level ushi engine vs. engine testsuite
+
+    <p>This is a duplication of Engine/USHIEngine functionality
+    for fast and save engine vs. engine matches.
+    The main difference is that send() is blocking to make things easier.
+    </p>
+    */
 class USHIEngineTester : public QObject
 {
     Q_OBJECT
@@ -39,7 +48,16 @@ public:
 
     // ------- execute ---------
 
-    bool start();
+    bool startTests();
+    void stopTests();
+
+    // -------- debug ----------
+
+    static int debugTest(QApplication&);
+
+signals:
+
+    void stopped();
 
 private slots:
 
@@ -58,6 +76,7 @@ private slots:
 private:
 
     bool startEngine_(int stm);
+    void stopEngine_(int stm);
 
     // ----- slots -----
 
@@ -66,8 +85,18 @@ private:
     void eError_(int stm, QProcess::ProcessError);
     void ePoll_(int stm);
 
+    void processMessage_(int stm, const QString& msg);
+    void send_(int stm, const QString& msg);
+
+    bool startGame_(int startstm);
+    void sendPosition_(int stm, const QString& position);
+
     QString filename_[2];
-    QProcess engine_[2];
+    QProcess * process_[2];
+    bool active_[2];
+    volatile bool waitMove_[2];
+
+    SBoard board_;
 };
 
 #endif // USHIENGINETESTER_H

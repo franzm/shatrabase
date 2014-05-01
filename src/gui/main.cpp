@@ -23,10 +23,13 @@
 // debug
 // #include "boardview.h"
 // #include "ushiengine.h"
+//#include "ushienginetester.h"
 int main(int argc, char** argv)
 {
 	AppSettings = new Settings;
     QApplication a(argc, argv);
+
+    //return USHIEngineTester::debugTest(a);
 
     AppSettings->setValue("/General/executed",
         AppSettings->getValue("/General/executed").toInt() + 1);
