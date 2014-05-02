@@ -106,10 +106,10 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.limitNodes, SIGNAL(valueChanged(int)), SLOT(slotTCUpdate()));
 
     // language combo
-    const QMap<QString,QString> lang = AppSettings->languages();
-    for (QMap<QString,QString>::const_iterator i=lang.begin(); i!=lang.end(); ++i)
+    const std::map<QString,QString> lang = AppSettings->languages().toStdMap();
+    for (std::map<QString,QString>::const_reverse_iterator i=lang.rbegin(); i!=lang.rend(); ++i)
     {
-        ui.languageCombo->addItem(i.value(), QVariant(i.key()));
+        ui.languageCombo->addItem(i->second, QVariant(i->first));
     }
     connect(ui.languageCombo, SIGNAL(activated(int)), SLOT(slotShowLanguageMessage()));
 
