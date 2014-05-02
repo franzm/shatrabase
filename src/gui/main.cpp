@@ -19,26 +19,33 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "logstream.h"
+#include "ushienginetester.h"
 
-// debug
-// #include "boardview.h"
-// #include "ushiengine.h"
-//#include "ushienginetester.h"
 int main(int argc, char** argv)
 {
 	AppSettings = new Settings;
     QApplication a(argc, argv);
 
-    //return USHIEngineTester::debugTest(a);
-
-    AppSettings->setValue("/General/executed",
-        AppSettings->getValue("/General/executed").toInt() + 1);
-
-    a.setWindowIcon(QIcon(":/images/shatrabase.png"));
-
 #ifdef Q_OS_MAC
     signal(SIGPIPE, SIG_IGN);
 #endif
+
+    // quick hack to test engine vs. engine in console
+    if (argc>1 && 0==QString(argv[1]).compare("test", Qt::CaseInsensitive))
+        return USHIEngineTester::debugTest(a);
+
+    // update execution counter
+    AppSettings->setValue("/General/executed",
+        AppSettings->getValue("/General/executed").toInt() + 1);
+
+    // --- prepare application ---
+
+    // the common exit condition
+    a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
+    // XXX findout: why is this not the .icn file
+    a.setWindowIcon(QIcon(":/images/shatrabase.png"));
+
+    // -- translation --
 
     QString langFile = QString("shatrabase_%1.qm").arg(AppSettings->getValue("/General/Language").toString());
 
@@ -47,19 +54,25 @@ int main(int argc, char** argv)
          translator.load(QString(":translation/") + langFile))
 		a.installTranslator(&translator);
 
+    // -- "the app" --
+
 	MainWindow* mainWindow = new MainWindow;
 
 	mainWindow->show();
 
-	// Destroy main window and close application
-	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
+    // -- run --
 
     startFileLog();
-	int result = a.exec();
+
+    int result = a.exec();
 
     stopFileLog();
 
+
+    // -- cleanup --
+
 	delete AppSettings;
-	return result;
+
+    return result;
 }
 

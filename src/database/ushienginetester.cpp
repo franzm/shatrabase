@@ -8,13 +8,15 @@
  *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
-#include <unistd.h>
+
 #include <QDebug>
 #include <QDir>
 
 #include "ushienginetester.h"
 
-#define SB_ET_DEBUG(arg_) { qDebug() << arg_; }
+#include "enginelist.h" // for USHIEngineTester::debugTest()
+
+#define SB_ET_DEBUG(stm__, arg__) { qDebug() << ( (stm__)? " b " : "w " ) << arg__; }
 
 USHIEngineTester::USHIEngineTester(QObject *parent)
     :   QObject(parent)
@@ -72,7 +74,7 @@ bool USHIEngineTester::startEngine_(int stm)
     }
 
     process->start(filename_[stm]);
-    SB_ET_DEBUG(stm << "waiting for start");
+    SB_ET_DEBUG(stm, "waiting for start");
     return process->waitForStarted(1000) && process->waitForReadyRead(1000);
 }
 
@@ -83,7 +85,7 @@ void USHIEngineTester::stopEngine_(int stm)
 
     send_(stm, "quit");
 
-    SB_ET_DEBUG(stm << "waiting for finished");
+    SB_ET_DEBUG(stm, "waiting for finished");
     process_[stm]->waitForFinished(1000);
     process_[stm]->deleteLater();
     process_[stm] = 0;
@@ -93,13 +95,13 @@ void USHIEngineTester::stopEngine_(int stm)
 
 void USHIEngineTester::eStart_(int stm)
 {
-    SB_ET_DEBUG(stm << "started");
+    SB_ET_DEBUG(stm, "started");
     active_[stm] = true;
 }
 
 void USHIEngineTester::eFinish_(int stm)
 {
-    SB_ET_DEBUG(stm << "finished");
+    SB_ET_DEBUG(stm, "finished");
     active_[stm] = false;
 }
 
@@ -123,7 +125,7 @@ void USHIEngineTester::eError_(int stm, QProcess::ProcessError)
 
 void USHIEngineTester::processMessage_(int stm, const QString &msg)
 {
-    SB_ET_DEBUG(stm << "-->" << msg);
+    SB_ET_DEBUG(stm, "-->" << msg);
 
     // first word
     QString command = msg.section(' ', 0, 0);
@@ -138,7 +140,9 @@ void USHIEngineTester::processMessage_(int stm, const QString &msg)
         Move move = board_.parseMove(moveText);
         if (!move.isLegal())
         {
-            SB_ET_DEBUG("illegal bestmove '"<<moveText<<"' from "<<stm<<move.sideMoving());
+            SB_ET_DEBUG(stm, "illegal bestmove '"<<moveText<<"'"
+                        << "\nspn '" << board_.toSPN()
+                        << " move.stm="<<move.sideMoving());
             stopTests();
             return;
         }
@@ -159,7 +163,7 @@ void USHIEngineTester::send_(int stm, const QString &msg)
 
     process_[stm]->write((msg+"\n").toLatin1());
     process_[stm]->waitForBytesWritten();
-    SB_ET_DEBUG(stm << "<--" << msg);
+    SB_ET_DEBUG(stm, "<--" << msg);
 }
 
 
@@ -183,7 +187,6 @@ bool USHIEngineTester::startGame_(int startstm)
 
 void USHIEngineTester::sendPosition_(int stm, const QString &position)
 {
-    waitMove_[stm] = true;
 //    send_(stm, "stop");
     send_(stm, "ushinewgame");
     send_(stm, "position spn " + position );
@@ -205,9 +208,15 @@ int USHIEngineTester::debugTest(QApplication & app)
     qDebug() << m.isLegal() << m.sideMoving();
     return 0;
     SQSSRSBRB/K/1SSSSSS/S6/7/2s4/7/ss1ssss/k/brbsrssqs w Tt - 41 2 2
-*/
-    const QString bin =
-        "/home/defgsus/prog/shatra/sources/build-sdev55-Desktop_Qt_5_1_1_GCC_64bit-Release/sdev55";
+*/    
+//    const QString bin =
+//        "/home/defgsus/prog/shatra/sources/build-sdev55-Desktop_Qt_5_1_1_GCC_64bit-Release/sdev55";
+    EngineList elist;
+    elist.restore();
+    QString bin = elist[0].command;
+
+
+    qDebug() << "--- TESTING SDEV<->SDEV with " << bin;
 
     USHIEngineTester match;
     match.setBinary(0, bin);

@@ -94,7 +94,6 @@ private:
     QString filename_[2];
     QProcess * process_[2];
     bool active_[2];
-    volatile bool waitMove_[2];
 
     SBoard board_;
 };
