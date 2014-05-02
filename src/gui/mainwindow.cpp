@@ -1121,8 +1121,6 @@ void MainWindow::setupActions()
 	QMenu *gameMenu = menuBar()->addMenu(tr("&Game"));
     m_menuGame = gameMenu;
 
-    gameMenu->addAction(createAction("Test Engine/Engine", SLOT(slotTestEngineEngine())));
-
     gameMenu->addAction(createAction(tr("&New"), SLOT(slotGameNew()), QKeySequence::New));
     QMenu* loadMenu = gameMenu->addMenu(tr("&Load"));
 
@@ -1212,6 +1210,7 @@ void MainWindow::setupActions()
     source->setCheckable(true);
     connect(source, SIGNAL(toggled(bool)), SLOT(slotGameViewToggle(bool)));
     debug->addAction(createAction("Dump Movenodes", SLOT(slotGameDumpMoveNodes())));
+    debug->addAction(createAction("Test Engine/Engine", SLOT(slotTestEngineEngine())));
 #endif
 
 }
