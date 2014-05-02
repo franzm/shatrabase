@@ -11,10 +11,12 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QStringBuilder>
 
 #include "ushienginetester.h"
 
 #include "enginelist.h" // for USHIEngineTester::debugTest()
+#include "output.h"
 
 #define SB_ET_DEBUG(stm__, arg__) { qDebug() << ( (stm__)? " b " : "w " ) << arg__; }
 
@@ -122,40 +124,6 @@ void USHIEngineTester::eError_(int stm, QProcess::ProcessError)
     stopEngine_(stm);
 }
 
-
-void USHIEngineTester::processMessage_(int stm, const QString &msg)
-{
-    SB_ET_DEBUG(stm, "-->" << msg);
-
-    // first word
-    QString command = msg.section(' ', 0, 0);
-
-    // on bestmove
-    if (command == "bestmove")
-    {
-        QString info = msg.section(' ', 1, -1, QString::SectionSkipEmpty);
-        QString moveText = info.section(' ', 0, 0, QString::SectionSkipEmpty);
-
-        // check move
-        Move move = board_.parseMove(moveText);
-        if (!move.isLegal())
-        {
-            SB_ET_DEBUG(stm, "illegal bestmove '"<<moveText<<"'"
-                        << "\nspn '" << board_.toSPN()
-                        << " move.stm="<<move.sideMoving());
-            stopTests();
-            return;
-        }
-
-        // execute
-        board_.doMove(move);
-        // XXX hack to make board update correctly
-        board_.fromSPN(board_.toSPN());
-        // ask opponent
-        sendPosition_(board_.toMove(), board_.toSPN());
-    }
-}
-
 void USHIEngineTester::send_(int stm, const QString &msg)
 {
     if (!process_[stm])
@@ -171,6 +139,7 @@ bool USHIEngineTester::startGame_(int startstm)
 {
     board_.setStandardPosition();
     board_.setToMove((Color)startstm);
+    game_.clear();
 
     // prepare new game for each
     for (int i=0; i<2; ++i)
@@ -191,10 +160,49 @@ void USHIEngineTester::sendPosition_(int stm, const QString &position)
     send_(stm, "ushinewgame");
     send_(stm, "position spn " + position );
     send_(stm, "go movetime 1000");
-
+    //send_(stm, "go depth 8");
 }
 
-int USHIEngineTester::debugTest(QApplication & app)
+void USHIEngineTester::processMessage_(int stm, const QString &msg)
+{
+    SB_ET_DEBUG(stm, "-->" << msg);
+
+    // first word
+    QString command = msg.section(' ', 0, 0);
+
+    // on bestmove
+    if (command == "bestmove")
+    {
+        QString info = msg.section(' ', 1, -1, QString::SectionSkipEmpty);
+        QString moveText = info.section(' ', 0, 0, QString::SectionSkipEmpty);
+
+        // check move
+        Move move = board_.parseMove(moveText);
+        if (!move.isLegal())
+        {
+            SB_ET_DEBUG(stm, "illegal move '"<<moveText<<"'"
+                         << " move.stm="<<move.sideMoving());
+
+            game_.setAnnotation(QString("illegal move %1").arg(moveText));
+
+            stopTests();
+            return;
+        }
+
+        // execute
+        board_.doMove(move);
+        // XXX hack to make board update correctly
+        board_.fromSPN(board_.toSPN());
+
+        // update game
+        game_.addMove(moveText);
+
+        // ask opponent (or multicapture)
+        sendPosition_(board_.toMove(), board_.toSPN());
+    }
+}
+
+int USHIEngineTester::debugTest(QApplication & app, QString bin)
 {
 /*    SBoard b;
     b.setStandardPosition();
@@ -211,22 +219,38 @@ int USHIEngineTester::debugTest(QApplication & app)
 */    
 //    const QString bin =
 //        "/home/defgsus/prog/shatra/sources/build-sdev55-Desktop_Qt_5_1_1_GCC_64bit-Release/sdev55";
-    EngineList elist;
-    elist.restore();
-    QString bin = elist[0].command;
 
+    // use defined engine if no override
+    if (bin.isEmpty())
+    {
+        EngineList elist;
+        elist.restore();
+        bin = elist[0].command;
+    }
 
     qDebug() << "--- TESTING SDEV<->SDEV with " << bin;
 
+    // setup tester class
     USHIEngineTester match;
+    match.connect(&match, SIGNAL(stopped()), &app, SLOT(quit()));
     match.setBinary(0, bin);
     match.setBinary(1, bin);
 
-    if (!match.startTests()) return -1;
+    if (!match.startTests())
+    {
+        qDebug() << "--- START TEST FAILED";
+        return -1;
+    }
 
     // start event loop
     app.exec();
 
-    match.stopTests();
+    qDebug() << "--- END";
+
+    // print game
+    Output out(Output::Sgn);
+    Game g(match.game());
+    qDebug() << out.output(&g);
+
     return 0;
 }

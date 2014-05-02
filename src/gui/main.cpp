@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 
     // quick hack to test engine vs. engine in console
     if (argc>1 && 0==QString(argv[1]).compare("test", Qt::CaseInsensitive))
-        return USHIEngineTester::debugTest(a);
+        return USHIEngineTester::debugTest(a, argc>2? QString(argv[2]) : QString());
 
     // update execution counter
     AppSettings->setValue("/General/executed",

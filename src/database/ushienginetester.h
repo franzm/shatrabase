@@ -26,6 +26,7 @@
 
 #include "common.h"
 #include "sboard.h"
+#include "game.h"
 
 /** @brief fast low-level ushi engine vs. engine testsuite
 
@@ -42,6 +43,10 @@ public:
     explicit USHIEngineTester(QObject * parent = 0);
     virtual ~USHIEngineTester();
 
+    // ------- getter ----------
+
+    const Game & game() const { return game_; }
+
     // -------- setup ----------
 
     void setBinary(int stm, QString filename) { filename_[stm] = filename; }
@@ -53,7 +58,7 @@ public:
 
     // -------- debug ----------
 
-    static int debugTest(QApplication&);
+    static int debugTest(QApplication&, QString binary = QString());
 
 signals:
 
@@ -96,6 +101,7 @@ private:
     bool active_[2];
 
     SBoard board_;
+    Game game_;
 };
 
 #endif // USHIENGINETESTER_H

@@ -111,7 +111,7 @@ public :
 	NagSet nags(MoveId moveId = CURRENT_MOVE) const;
 	/* @return next move in short algebraic notation, returns empty string if no such move */
 	QString moveToLann(MoveStringFlags flags = MoveOnly,
-			  NextPreviousMove nextPrevious = NextMove, MoveId moveId = CURRENT_MOVE);
+              NextPreviousMove nextPrevious = NextMove, MoveId moveId = CURRENT_MOVE);
     /* return comment associated with game */
     QString gameComment() const;
 
@@ -185,7 +185,7 @@ public :
 	/* Moves by given ply, returns actual ply reached */
 	int moveByPly(int diff);
 	/* Moves to the position corresponding to the given move id */
-	void moveToId(MoveId moveId);
+    void moveToId(MoveId moveId);
 	/* Moves to the given ply */
 	int moveToPly(int ply);
 	/* Move forward the given number of moves, returns actual number of moves made */
