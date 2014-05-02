@@ -9,6 +9,8 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include <iostream>
+
 #include <QDebug>
 #include <QDir>
 #include <QStringBuilder>
@@ -18,7 +20,12 @@
 #include "enginelist.h" // for USHIEngineTester::debugTest()
 #include "output.h"
 
-#define SB_ET_DEBUG(stm__, arg__) { qDebug() << ( (stm__)? " b " : "w " ) << arg__; }
+
+#define SB_PRINT(arg__) \
+    { QString str__; QDebug deb__(&str__); deb__ << arg__; \
+      std::cout << str__.toStdString() << std::endl; }
+
+#define SB_ET_DEBUG(stm__, arg__) { SB_PRINT( ( (stm__)? " b " : "w " ) << arg__); }
 
 USHIEngineTester::USHIEngineTester(QObject *parent)
     :   QObject(parent)

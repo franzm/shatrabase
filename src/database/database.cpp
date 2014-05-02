@@ -146,7 +146,9 @@ void Database::findDuplicates(QVector<int>& indices, bool do_symmetric)
             }
 
             // compare symmetric
+#ifdef QT_DEBUG
             bool sym = false;
+#endif
             if (!equal && do_symmetric)
             {
                 equal = true;
@@ -159,7 +161,9 @@ void Database::findDuplicates(QVector<int>& indices, bool do_symmetric)
                 }
                 if (equal)
                 {
+#ifdef QT_DEBUG
                     sym = true;
+#endif
                     numsym++;
                 }
             }
