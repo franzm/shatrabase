@@ -18,20 +18,23 @@
         <file alias="themes/boards/sand.png">data/themes/boards/sand.png</file>
         <file alias="themes/boards/slate.png">data/themes/boards/slate.png</file>
         <file alias="themes/boards/wood.png">data/themes/boards/wood.png</file>
-        <file alias="themes/alphashatra.png">data/themes/alphashatra.png</file>
-        <file alias="themes/meridashatra.png">data/themes/meridashatra.png</file>
-        <file alias="themes/motifshatra.png">data/themes/motifshatra.png</file>
-        <file alias="themes/outline/alphashatra.png">data/themes/outline/alphashatra.png</file>
-        <file alias="themes/outline/meridashatra.png">data/themes/outline/meridashatra.png</file>
-        <file alias="themes/outline/motifshatra.png">data/themes/motifshatra.png</file>
-        <file alias="themes/shadow/alphashatra.png">data/themes/shadow/alphashatra.png</file>
-        <file alias="themes/shadow/meridashatra.png">data/themes/shadow/meridashatra.png</file>
-        <file alias="themes/shadow/motifshatra.png">data/themes/motifshatra.png</file>
         <file alias="themes/boards/mahogony.png">data/themes/boards/mahogony.png</file>
         <file alias="themes/boards/sandlewood.png">data/themes/boards/sandlewood.png</file>
         <file alias="themes/boards/brazilwood.png">data/themes/boards/brazilwood.png</file>
         <file alias="themes/boards/maple.png">data/themes/boards/maple.png</file>
         <file alias="themes/boards/shatra1.png">data/themes/boards/shatra1.png</file>
+
+        <file alias="themes/alphashatra.png">data/themes/alphashatra.png</file>
+        <file alias="themes/meridashatra.png">data/themes/meridashatra.png</file>
+        <file alias="themes/motifshatra.png">data/themes/motifshatra.png</file>
+        <file alias="themes/originalshatra.png">data/themes/originalshatra.png</file>
+        <file alias="themes/franz1.png">data/themes/franz1.png</file>
+        <file alias="themes/shadow/franz1.png">data/themes/shadow/franz1.png</file>
+        <file alias="themes/shadow/originalshatra.png">data/themes/shadow/originalshatra.png</file>
+        <file alias="themes/shadow/alphashatra.png">data/themes/shadow/alphashatra.png</file>
+        <file alias="themes/shadow/meridashatra.png">data/themes/shadow/meridashatra.png</file>
+        <file alias="themes/shadow/motifshatra.png">data/themes/shadow/motifshatra.png</file>
+
         <file alias="help/about0.html">data/help/about0.html</file>
         <file alias="help/about1.html">data/help/about1.html</file>
         <file alias="help/about2.html">data/help/about2.html</file>
@@ -55,12 +58,6 @@
         <file alias="images/circle_orange.svg">data/images/circle_orange.svg</file>
         <file alias="images/circle_red.svg">data/images/circle_red.svg</file>
         <file alias="images/circle_yellow.svg">data/images/circle_yellow.svg</file>
-        <file alias="themes/originalshatra.png">data/themes/originalshatra.png</file>
-        <file alias="themes/shadow/originalshatra.png">data/themes/shadow/originalshatra.png</file>
-        <file alias="themes/outline/originalshatra.png">data/themes/outline/originalshatra.png</file>
-        <file alias="themes/franz1.png">data/themes/franz1.png</file>
-        <file alias="themes/shadow/franz1.png">data/themes/shadow/franz1.png</file>
-        <file alias="themes/outline/franz1.png">data/themes/outline/franz1.png</file>
         <file alias="/images/square_emboss.png">data/images/square_emboss.png</file>
         <file alias="translation/shatrabase_de.qm">translation/shatrabase_de.qm</file>
         <file alias="translation/shatrabase_ru.qm">translation/shatrabase_ru.qm</file>

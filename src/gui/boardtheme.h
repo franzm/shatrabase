@@ -34,7 +34,7 @@ public:
         LightSquare, DarkSquare, Highlight, Frame, CurrentMove,
         Background1, Background2, ColorRoleEndEntry };
     enum LoadTheme {LoadBoard = 1, LoadPieces = 2, LoadAll = LoadBoard | LoadPieces};
-    enum Effects {Plain, Outline = 1, Shadow = 2};
+    enum Effects {Plain, Shadow = 1};
     BoardTheme();
     ~BoardTheme();
     /* Reset piece and board selections based on config values */
@@ -96,7 +96,6 @@ private:
     QColor m_colors[ColorRoleEndEntry];
     QString m_pieceFilename;
     QString m_boardFilename;
-    bool m_org_batyr;
 };
 
 #endif
