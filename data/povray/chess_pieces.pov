@@ -13,6 +13,7 @@
 #version 3.7;
 global_settings { assumed_gamma 1.0 }
 
+#include "transforms.inc"
 
 camera
 {
@@ -28,6 +29,14 @@ camera
 light_source { <-1,1,-3> * 50 rgb 1 }
 // XXX a negative light color is very experimental ;) 
 //light_source { < 1,0.3,-3> * 50 rgb -0.1 }
+
+
+// ---------- per piece transform -----------
+
+#declare piece_transform = transform 
+{
+	rotate x * -30
+};
 
 
 // --------------- textures -----------------
@@ -79,31 +88,36 @@ light_source { <-1,1,-3> * 50 rgb 1 }
 #macro Shatra(tex_)
 	sor // surface of revolution
 	{ 
-		10
-		<2,-0.02>
-		<2,-0.01>
-		<2, 0>
+		12
+		<2.8,-0.02>
+		<2.8,-0.01>
+		<2.8, 0>
+		<2.5, 0.5>
 		<2, 1>
-		<1, 2>
-		<1, 4>
-		<2, 5>
-		<2, 6>
-		<0, 7>
+		<0.7, 3>
+		<0.6, 4>
+		<1, 5>
+		<1.6, 6>
+		<1, 6.9>
+		<0.1, 6.99>
 		<0, 7>
 		sturm
 		
 		texture { tex_ } 
 		
+		scale 0.86
 		translate y*-3.5
 		scale 0.8/7
+		
+		transform { piece_transform }
 	}
 #end
 
 #macro Tura(tex_)
 	merge 
 	{ 
-		SmoothCylinder(0, 1.5, 2, 0.4)
-		cylinder { y*1,y*5, 1.3 }
+		SmoothCylinder(0, 1.2, 2, 0.2)
+		cone { y*1.1, 1, y*5, 1.3 }
 		difference 
 		{
 			SmoothCylinder(5,7, 2, 0.4)
@@ -117,24 +131,139 @@ light_source { <-1,1,-3> * 50 rgb 1 }
 		
 		translate y*-3.5
 		scale 0.8/7
+		
+		transform { piece_transform }
 	}
 #end
 
+#macro Yalkyn(tex_)
+	difference 
+	{ 
+		sor 
+		{
+			10
+			<2,-0.02>
+			<2,-0.01>
+			<2, 0>
+			<2, 1>
+			<1, 2>
+			<1, 4>
+			<2, 5>
+			<2, 6>
+			<0, 7>
+			<0, 7>
+			sturm
+		}
+		
+		box { <0,0,-3>, <0.5,3,3> rotate z*-30 rotate y*-5 translate <0.3,5.5,0> }
+		
+		texture { tex_ } 
+		
+		translate y*-3.5
+		scale 0.8/7
+		
+		transform { piece_transform }
+	}
+#end
+
+
+#macro Batyr(tex_)
+	merge
+	{
+		difference 
+		{ 
+			sor
+			{
+				9
+				<2, 0>
+				<2.1, 0.1>
+				<3, 2>
+				<3.2, 3>
+				<3, 4>
+				<2, 4.8>
+				<1, 4.9>
+				<0, 5>
+				<0, 5.1>
+				sturm
+			}
+			
+			#local cutbox_ = box 
+			{ 
+				<-1,-1,-5>, <1,1,5> 
+				rotate z*45 
+				Shear_Trans(<1,0,0>, <0,3,0>, <0,0,1>)
+				translate y*6 
+			}
+			object { cutbox_ }
+			object { cutbox_ rotate y*-50 }
+			object { cutbox_ rotate y*50 }
+			object { cutbox_ rotate y*90 }
+		}
+		
+		torus { 2.2, 0.2 translate y*0.2 }
+		
+		#local crownsphere_ = sphere { 0, 0.3 scale <1,1.6,1> translate <-1, 5, -2> }
+		object { crownsphere_ }
+		object { crownsphere_ rotate y*-50 }
+		object { crownsphere_ rotate y*130 }
+		object { crownsphere_ rotate y*180 }
+		
+		#local crownsphere_ = sphere { 0, 0.3 scale <1,1.6,1> translate <2.5, 4.5, -1> }
+		
+		object { crownsphere_ }
+		object { crownsphere_ rotate y*-40 }
+		object { crownsphere_ rotate y*140 }
+		object { crownsphere_ rotate y*180 }
+		
+		texture { tex_ } 
+		
+		translate y*-3.5
+		scale 0.8/7
+		
+		transform { piece_transform }
+	}
+#end
+
+
+#macro Biy(tex_)
+	merge
+	{ 
+		sor
+		{
+			9
+			<2, 0>
+			<2.1, 0.1>
+			<3, 2>
+			<3.2, 3>
+			<3, 4>
+			<2, 4.8>
+			<1, 4.9>
+			<0, 5>
+			<0, 5.1>
+			sturm
+		}
+		
+		SmoothCylinder(4.8,7,0.3, 0.1)
+		object { SmoothCylinder(-1,1, 0.3, 0.1) rotate z*90 translate y*6 }
+		
+		texture { tex_ } 
+		
+		translate y*-3.5
+		scale 0.8/7
+		
+		transform { piece_transform }
+	}
+#end
 
 /* ------------ PUT IT ALL TOGETHER ------------ */
   
 #macro PieceRow(tex_)
 union
 {
-/*    object { Tura   (White_, Black_) translate x * 0 }
-    object { Yalkyn (White_, Black_) translate x * 1 }
-    object { Batyr  (White_, Black_) translate x * 2 }
-    object { Biy    (White_, Black_) translate x * 3 }
-    */
     object { Tura   (tex_) translate x * 0 }
-    object { Shatra (tex_) translate x * 1 }
-    object { Shatra (tex_) translate x * 2 }
-    object { Shatra (tex_) translate x * 3 }
+    object { Yalkyn (tex_) translate x * 1 }
+    object { Batyr  (tex_) translate x * 2 }
+    object { Biy    (tex_) translate x * 3 }
     object { Shatra (tex_) translate x * 4 }
 }
 #end
