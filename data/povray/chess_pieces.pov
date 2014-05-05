@@ -27,6 +27,8 @@ camera
 }
 
 light_source { <-1,1,-3> * 50 rgb 1 }
+light_source { <-1,5,-3> * 50 rgb 0.3 * <1,1,1.5> }
+light_source { <0.3,0.2,-1> * 50 rgb 0.3 * <1.5,1,1> }
 // XXX a negative light color is very experimental ;) 
 //light_source { < 1,0.3,-3> * 50 rgb -0.1 }
 
@@ -35,7 +37,8 @@ light_source { <-1,1,-3> * 50 rgb 1 }
 
 #declare piece_transform = transform 
 {
-	rotate x * -30
+	rotate x * -20
+	scale 0.9
 };
 
 
@@ -49,26 +52,20 @@ light_source { <-1,1,-3> * 50 rgb 1 }
 #declare White = texture
 {
     pigment { color rgb 1 }
-    finish { Glossy(1) diffuse 0.6 }
-};
-
-#declare WhiteInlay = texture
-{
-    pigment { color rgb 1 }
-    finish { Glossy(2) diffuse 0.25 }
+    finish { Glossy(1) diffuse 0.6 ambient 0 }
 };
 
 #declare Black = texture
 {
     pigment { color rgb 0.1 }
-    finish { Glossy(1) diffuse 0.2 }
+    finish { Glossy(1) diffuse 0.2 ambient 0 }
 };
 
 
 #declare Transparent = texture
 { 
     pigment { color rgbf <0.5,0.7,1.0, 0.99> }
-    finish { Glossy(1) }
+    finish { Glossy(0.3) }
 };
     
 // --------------- helper objects ------------------
@@ -117,7 +114,7 @@ light_source { <-1,1,-3> * 50 rgb 1 }
 	merge 
 	{ 
 		SmoothCylinder(0, 1.2, 2, 0.2)
-		cone { y*1.1, 1, y*5, 1.3 }
+		cone { y*1, 1, y*5, 1.3 }
 		difference 
 		{
 			SmoothCylinder(5,7, 2, 0.4)

@@ -29,11 +29,13 @@
         <file alias="themes/motifshatra.png">data/themes/motifshatra.png</file>
         <file alias="themes/originalshatra.png">data/themes/originalshatra.png</file>
         <file alias="themes/franz1.png">data/themes/franz1.png</file>
+        <file alias="themes/chess3d.png">data/themes/chess3d.png</file>
         <file alias="themes/shadow/franz1.png">data/themes/shadow/franz1.png</file>
         <file alias="themes/shadow/originalshatra.png">data/themes/shadow/originalshatra.png</file>
         <file alias="themes/shadow/alphashatra.png">data/themes/shadow/alphashatra.png</file>
         <file alias="themes/shadow/meridashatra.png">data/themes/shadow/meridashatra.png</file>
         <file alias="themes/shadow/motifshatra.png">data/themes/shadow/motifshatra.png</file>
+        <file alias="themes/shadow/chess3d.png">data/themes/shadow/chess3d.png</file>
 
         <file alias="help/about0.html">data/help/about0.html</file>
         <file alias="help/about1.html">data/help/about1.html</file>
