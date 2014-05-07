@@ -14,6 +14,8 @@
 
 #include "sboard.h"
 #include <QDebug>
+#include <sstream>
+#include <iomanip>
 
 SBoard getStandardPosition();
 
@@ -818,6 +820,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
              s <= (c? lsq : (last != NoSquare? last : first)); ++s)
         {
             at = NB[s];
+            m_b = 0;
             if (isVacant(at) || isOppositeColor(at)) continue;
 
             Piece p = Piece(m_sb[at] & 0xf);
@@ -1255,3 +1258,58 @@ SBoard getStandardPosition()
     return b;
 }
 
+
+QString SBoard::dumpAll(const SBoard * comp) const
+{
+    std::stringstream str;
+
+#define SB_SB_COMP(what__) \
+    (comp && comp->what__ != what__ ? "*" : "")
+
+#define SB_SB_DEBUG(what__) \
+    str << std::left << std::setw(20) << #what__ " " << SB_SB_COMP(what__) << what__ << std::endl;
+
+#define SB_SB_DEBUG_A(what__, num__) \
+    str << std::left << std::setw(20) << #what__ " "; \
+    for (int i=0; i<(num__); ++i) str << SB_SB_COMP(what__[i]) << what__[i] << " "; \
+    str << std::endl;
+
+#define SB_SB_DEBUG_A_T(what__, num__, typecast__) \
+    str << std::left << std::setw(20) << #what__ " "; \
+    for (int i=0; i<(num__); ++i) str << SB_SB_COMP(what__[i]) << (typecast__)what__[i] << " "; \
+    str << std::endl;
+
+    SB_SB_DEBUG_A_T(m_sb, 144, int);
+    SB_SB_DEBUG(m_movesLoaded);
+    SB_SB_DEBUG(m_stm);
+    SB_SB_DEBUG(m_transit);
+    SB_SB_DEBUG(m_allurgent);
+    SB_SB_DEBUG(m_sntm);
+    SB_SB_DEBUG(m_lstm);
+    SB_SB_DEBUG(m_from);
+    SB_SB_DEBUG(m_to);
+    SB_SB_DEBUG_A(m_biyAt, 2);
+    SB_SB_DEBUG_A(m_temdek, 2);
+    SB_SB_DEBUG(m_epSquare);
+    SB_SB_DEBUG(m_epVictim);
+    SB_SB_DEBUG(m_latePromo);
+    SB_SB_DEBUG(m_moveNumber);
+    SB_SB_DEBUG(m_halfMoves);
+    SB_SB_DEBUG_A(m_offBoard,12);
+    SB_SB_DEBUG_A(m_pieceCount,2);
+    SB_SB_DEBUG_A(m_promoWait,2);
+    SB_SB_DEBUG(m_b);
+    SB_SB_DEBUG_A(m_urgent,2);
+    SB_SB_DEBUG_A(m_caps,2);
+    SB_SB_DEBUG_A(m_temdekPending,2);
+    //urstack<int,16> m_dfs;     // stack for defunkt pieces - NB no real undo
+    //urvct<int,16> m_ext;       // vector for capture extensions
+    //BoardList m_ml;            // list of generated moves
+
+#undef SB_SB_COMP
+#undef SB_SB_DEBUG
+#undef SB_SB_DEBUG_A
+#undef SB_SB_DEBUG_A_T
+
+    return QString::fromStdString(str.str());
+}

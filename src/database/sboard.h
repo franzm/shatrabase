@@ -285,6 +285,12 @@ public:
     /** Generate all move types, third parameter optional */
     int generate(bool cc, int first, int last = NoSquare);
 
+    // Debugging
+    //
+    /** Return a debug dump with all the board state.
+     *  If @p compare != 0, add an * at each value that's different */
+    QString dumpAll(const SBoard * compare = 0) const;
+
   private:
     inline int sPhi(int s); // s is numeric square, others are board coords
     inline int promoWaiting();
@@ -311,7 +317,8 @@ public:
  //  1) acts as a flag, and 2) allows us to shorten notation, eg :g10 but
  // TODO rethink undo data uint, could be ushort?
     bb  m_allurgent;           // bitboard of all pieces marked urgent
-  private:
+  //private:
+public:
     int m_sntm;                // side not to move
     int m_lstm;                // last side to move
     int m_from;

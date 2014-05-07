@@ -198,8 +198,11 @@ void USHIEngineTester::processMessage_(int stm, const QString &msg)
 
         // execute
         board_.doMove(move);
+        //SBoard old = board_;
+        //SB_ET_DEBUG(stm, "--- after doMove() ---\n" << board_.dumpAll());
         // XXX hack to make board update correctly
         board_.fromSPN(board_.toSPN());
+        //SB_ET_DEBUG(stm, "--- after fromSPN(toSPN()) ---\n" << board_.dumpAll(&old));
 
         // update game
         game_.addMove(moveText);
