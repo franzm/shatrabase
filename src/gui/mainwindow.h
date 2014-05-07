@@ -137,6 +137,7 @@ public slots:
     void slotEditCopyImage();
     /*Truncate moves to the end of the game. */
 	void slotEditTruncateEnd();
+    void slotEditRemoveResult();
     /*Truncate moves from the beginning of the game. */
 	void slotEditTruncateStart();
 	void slotReconfigure();

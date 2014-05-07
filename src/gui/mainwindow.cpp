@@ -1083,8 +1083,8 @@ void MainWindow::setupActions()
 						SLOT(slotEditTruncateStart())));
 	editremove->addAction(createAction(tr("Moves to the end"), SLOT(slotEditTruncateEnd()),
 						Qt::SHIFT + Qt::Key_Delete));
-    //editremove->addAction(createAction(tr("Result"),
-    //					SLOT(slotEditTruncateStart())));
+    editremove->addAction(createAction(tr("Game result"),
+                        SLOT(slotEditRemoveResult())));
     edit->addSeparator();
 	edit->addAction(createAction(tr("Setup &position..."), SLOT(slotEditBoard()),
 										  Qt::SHIFT + Qt::CTRL + Qt::Key_E));

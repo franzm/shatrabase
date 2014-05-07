@@ -413,6 +413,12 @@ void MainWindow::slotEditTruncateEnd()
 	slotGameChanged();
 }
 
+void MainWindow::slotEditRemoveResult()
+{
+    game().removeTag(TagNameResult);
+    slotGameChanged();
+}
+
 void MainWindow::slotEditTruncateStart()
 {
 	game().truncateVariation(Game::BeforeMove);
