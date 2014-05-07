@@ -59,6 +59,8 @@ bool PlayGameEngine::createEngine_()
         connect(engine_, SIGNAL(deactivated()), SLOT(engineDeactivated_()));
         /*connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
                                     SLOT(engineAnalysis_(const Analysis&)));*/
+        connect(engine_, SIGNAL(analysisUpdated(Analysis)),
+                                    SLOT(engineAnalysis_(const Analysis&)));
         connect(engine_, SIGNAL(bestMoveSend(Move)), SLOT(engineBestMove_(Move)));
         if (engineDebug_)
         {
@@ -141,6 +143,10 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
 {
     SB_PLAY_DEBUG("PlayGameEngine::engineAnalysis_()");
 
+    if (!a.variation().empty())
+        emit moveInfo(a.variation()[0], a.score());
+
+    /*
     // discard output if not wanted
     if (!listening_)
         return;
@@ -155,6 +161,7 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
 
     // send best move (and stop engine)
     sendMoves_();
+    */
 }
 
 void PlayGameEngine::sendMoves_()

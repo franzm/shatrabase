@@ -88,6 +88,8 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
 
     connect(play_, SIGNAL(moveMade1(Move)), SLOT(moveFromEngine(Move)));
     connect(play_, SIGNAL(moveMade2(Move)), SLOT(moveFromEngine(Move)));
+    connect(play_, SIGNAL(moveInfo1(Move,int)), SLOT(infoFromEngine(Move,int)));
+    connect(play_, SIGNAL(moveInfo2(Move,int)), SLOT(infoFromEngine(Move,int)));
     connect(play_, SIGNAL(ready()), SLOT(enginesReady()));
     connect(play_, SIGNAL(engineClueless()), SLOT(engineClueless()));
 
@@ -121,6 +123,18 @@ bool PlayGameWidget::blackCanMove() const
 bool PlayGameWidget::isTournament() const
 {
     return tc_.type() == TimeControl::T_Tournament;
+}
+
+bool PlayGameWidget::isHumanInvolved() const
+{
+    return !(play_->player1IsEngine() && play_->player2IsEngine());
+}
+
+bool PlayGameWidget::doInfoLines() const
+{
+    return !(isTournament() && isHumanInvolved())
+            && !(!play_->player1IsEngine() && !play_->player2IsEngine())
+            ;
 }
 
 QString PlayGameWidget::resultString() const
@@ -207,13 +221,14 @@ void PlayGameWidget::slotName2Changed_(const QString& s)
 void PlayGameWidget::slotEngine1Changed_(const QString& s)
 {
     play_->setEngineName1(s);
-    updateEngineWidgets_();
+    // also calls updateEngineWidgets_();
+    setWidgetsPlaying_(playing_);
 }
 
 void PlayGameWidget::slotEngine2Changed_(const QString& s)
 {
     play_->setEngineName2(s);
-    updateEngineWidgets_();
+    setWidgetsPlaying_(playing_);
 }
 
 void PlayGameWidget::slotConfig1Clicked_()
@@ -348,17 +363,22 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
 {    
     const bool
         tourn = tc_.type() == TimeControl::T_Tournament,
-        timeplay = tourn || tc_.type() == TimeControl::T_Match;
+        timeplay = tourn || tc_.type() == TimeControl::T_Match,
+        doinf = doInfoLines();
 
     ui_->b_new->setEnabled(!p);
     ui_->b_continue->setEnabled(!p && !timeplay);
     ui_->b_pause->setEnabled(p && !timeplay);
-    ui_->b_flip->setEnabled(!p); // XXX Don't allow as long as first Player can't be Engine
+    ui_->b_flip->setEnabled(!p);
     ui_->b_resign->setEnabled(p);
     ui_->nameEdit1->setEnabled(!p);
     ui_->nameEdit2->setEnabled(!p);
-    ui_->engineCombo1->setEnabled(!p); // XXX Don't allow as long as first Player can't be Engine
+    ui_->engineCombo1->setEnabled(!p);
     ui_->engineCombo2->setEnabled(!p);
+    ui_->labelInfo1->setVisible(doinf);
+    ui_->labelInfo2->setVisible(doinf);
+    ui_->labelInfo1->setText("");
+    ui_->labelInfo2->setText("");
 
     if (!p)
     {
@@ -438,6 +458,16 @@ void PlayGameWidget::setPosition(const Board& board)
     userMoved_ = true;
 }
 
+void PlayGameWidget::infoFromEngine(Move m, int s)
+{
+    QLabel * l = ui_->labelInfo1;
+    if (m.sideMoving() == 1)
+        l = ui_->labelInfo2;
+
+    l->setText(QString("<html><b>%1</b> (%2)</html>")
+               .arg(m.toNumeric())
+               .arg((qreal)s/100));
+}
 
 void PlayGameWidget::moveFromEngine(Move m)
 {
@@ -671,7 +701,11 @@ void PlayGameWidget::slotTimeout_(int stm)
         emit playerWins();
     }
     else
-        Q_ASSERT(!"XXX engine/engine not supported");
+    {
+        stop();
+        emit gameComment(("XXX timeout"));
+        //Q_ASSERT(!"XXX engine/engine not supported");
+    }
 }
 
 void PlayGameWidget::slotUpdateClocks_()

@@ -730,7 +730,7 @@ void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
     if (slotGameNew())
     {
         // disable all non-related functions
-        slotPlayEnableWidgets(false, m_playGame->isTournament());
+        slotPlayEnableWidgets(false, m_playGame->isTournament() && m_playGame->isHumanInvolved());
 
         // set boardview flags
         m_boardView->setFlags(

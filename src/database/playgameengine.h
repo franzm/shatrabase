@@ -10,7 +10,7 @@
 #include <QTime>
 #include <QTimer>
 
-#if 1
+#if 0
 #   define SB_PLAY_DEBUG(stream_arg__) { qDebug() << (void*)this << stream_arg__; }
 #else
 #   define SB_PLAY_DEBUG(unused__) { }
@@ -48,6 +48,9 @@ signals:
 
     /** The Engine returned a move */
     void moveMade(Move);
+
+    /** The Engine has updated pv line */
+    void moveInfo(Move, int score);
 
     /** The Engine did not return a move in the maximum time allowed. */
     void engineClueless();

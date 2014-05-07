@@ -69,6 +69,10 @@ public:
 	/* Convert to algebraic notation (e2e4, g8f6 etc.) */
 	QString toAlgebraic() const;
 
+    /* Convert to numeric notation */
+    QString toNumeric() const;
+
+
     /* Return true if this move was made by given color */
 	bool operator==(const Color& color) const;
     /* Return true if this move was NOT made by given color */
@@ -326,6 +330,32 @@ inline QString Move::toAlgebraic() const
     alg += '`' + (t>>4);
     alg += QString::number(t & 0xf);
     return alg;
+}
+
+inline QString Move::toNumeric() const
+{
+    if (!isLegal()) return "?";
+
+#define x 0
+static const int BN[144] = { // table converts to numerical system
+
+    x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,
+    x,  x,  x,  x,  x,  17, 24, 31, 38, 45, 52, x,  x,  x,  x,  x,
+    x,  x,  x,  x,  x,  16, 23, 30, 37, 44, 51, x,  x,  x,  x,  x,
+    x,  3,  6,  9,  x,  15, 22, 29, 36, 43, 50, x,  56, 59, 62, x,
+    x,  2,  5,  8,  10, 14, 21, 28, 35, 42, 49, 53, 55, 58, 61, x,
+    x,  1,  4,  7,  x,  13, 20, 27, 34, 41, 48, x,  54, 57, 60, x,
+    x,  x,  x,  x,  x,  12, 19, 26, 33, 40, 47, x,  x,  x,  x,  x,
+    x,  x,  x,  x,  x,  11, 18, 25, 32, 39, 46, x,  x,  x,  x,  x,
+    x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x
+};
+#undef x
+
+    QString n;
+    n += QString::number(BN[from()]);
+    n += isCapture()? ":" : "-";
+    n += QString::number(BN[to()]);
+    return n;
 }
 
 #endif // MOVE_H

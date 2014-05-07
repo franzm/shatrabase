@@ -81,6 +81,12 @@ signals:
     /** Emitted when a move has been suggested by Engine for Player 2 */
     void moveMade2(Move);
 
+    /** The Engine 1 has updated pv line */
+    void moveInfo1(Move, int score);
+
+    /** The Engine 2 has updated pv line */
+    void moveInfo2(Move, int score);
+
 public slots:
 
     /** Updates settings */

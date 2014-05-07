@@ -38,6 +38,9 @@ PlayGame::PlayGame(EngineDebugWidget * debug, QObject *parent)
     connect(engine1_, SIGNAL(moveMade(Move)), SLOT(engineMove1_(Move)));
     connect(engine2_, SIGNAL(moveMade(Move)), SLOT(engineMove2_(Move)));
 
+    connect(engine1_, SIGNAL(moveInfo(Move,int)), SIGNAL(moveInfo1(Move,int)));
+    connect(engine2_, SIGNAL(moveInfo(Move,int)), SIGNAL(moveInfo2(Move,int)));
+
     connect(engine1_, SIGNAL(ready()), SLOT(engineActivated1_()));
     connect(engine2_, SIGNAL(ready()), SLOT(engineActivated2_()));
 

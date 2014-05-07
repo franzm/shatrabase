@@ -48,7 +48,14 @@ public:
     explicit PlayGameWidget(EngineDebugWidget * debug, QWidget *parent = 0);
     ~PlayGameWidget();
 
+    /** Is there a tournament mode set-up? */
     bool isTournament() const;
+
+    /** Is any of the players a human? */
+    bool isHumanInvolved() const;
+
+    /** show info lines? */
+    bool doInfoLines() const;
 
     bool isPlaying() const { return playing_; }
 
@@ -112,6 +119,7 @@ private slots:
     void enginesReady();
     void engineClueless();
     void moveFromEngine(Move);
+    void infoFromEngine(Move,int);
 
     // -- widget callbacks --
 
