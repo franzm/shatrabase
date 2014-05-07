@@ -19,7 +19,7 @@ CommentColor=#00ff00
 NagColor=#ff0000
 HeaderColor=#0000ff
 [OUTPUTHEADER]
-<html><head><title>ChessX HTML Output</title><style>\n
+<html><head><title>Shatrabase HTML Output</title><style>\n
 A:link, A:visited { text-decoration: none }\n
 A:active { text-decoration: underline }\n
 .mainline {font-weight: @MainLineFontWeight@; color: @MainLineMoveColor@}\n

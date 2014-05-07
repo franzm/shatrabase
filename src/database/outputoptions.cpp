@@ -17,6 +17,7 @@ OutputOptions::OutputOptions()
 {
 	createDefaultOptions();
 }
+
 bool OutputOptions::createDefaultOptions()
 {
 	m_list.clear();
@@ -28,7 +29,7 @@ bool OutputOptions::createDefaultOptions()
 	createOption("TextWidth", Integer, "0:200", "80", "");
 	createOption("VariationIndentLevel", Integer, "1:200", "4", "");
 	createOption("VariationIndentSize", Integer, "1:10", "3", "");
-	createOption("CommentIndent", String, "Always|OnlyMainline|Never", "OnlyMainline", "");
+    createOption("CommentIndent", String, "Always|OnlyMainline|Never", "Never", "");
 
 	createOption("MainLineMoveColor", Color, "", "black", "");
 	createOption("VariationColor", Color, "", "blue", "");
@@ -70,11 +71,13 @@ bool OutputOptions::createOption(const QString& optionName, OutputOptionType opt
 	return true;
 
 }
+
 bool OutputOptions::setOption(const QString& optionString)
 {
 	QStringList temp = optionString.split('=');
 	return setOption(temp[0], temp[1]);
 }
+
 bool OutputOptions::setOption(const QString& optionName, const QString& optionValue)
 {
 	if (!validateValue(optionName, optionValue)) {
@@ -86,6 +89,7 @@ bool OutputOptions::setOption(const QString& optionName, const QString& optionVa
 	m_list[optionName] = optionValue;
 	return true;
 }
+
 bool OutputOptions::setOption(const QString& optionName, bool optionValue)
 {
 	if (optionValue) {
@@ -94,18 +98,22 @@ bool OutputOptions::setOption(const QString& optionName, bool optionValue)
 		return setOption(optionName, QString("false"));
 	}
 }
+
 bool OutputOptions::setOption(const QString& optionName, int optionValue)
 {
 	return setOption(optionName, QString::number(optionValue));
 }
+
 int OutputOptions::getOptionAsInt(const QString& optionName)
 {
 	return m_list[optionName].toInt();
 }
+
 QString OutputOptions::getOptionAsString(const QString& optionName)
 {
 	return m_list[optionName];
 }
+
 bool OutputOptions::getOptionAsBool(const QString& optionName)
 {
 	if ((m_list[optionName] == "true") || (m_list[optionName] == "1")) {
@@ -189,6 +197,7 @@ QString OutputOptions::getOptionDescription(const QString& optionName)
 {
 	return m_description[optionName];
 }
+
 QStringList OutputOptions::getOptionList()
 {
 	return m_list.keys();
@@ -198,6 +207,7 @@ QMap<QString, QString> OutputOptions::getOptionListAndDescription()
 {
 	return m_description;
 }
+
 OutputOptions::OutputOptionType OutputOptions::optionString2Type(const QString& optionTypeStr)
 {
 	if (optionTypeStr == "String") {

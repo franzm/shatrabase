@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "playgameenginedialog.h"
 
 // no multicaptures are given by PlayGameEngine
+// each capture of a sequence is it's own move (in terms of move-time)
 // currently a workaround
 #define SB_SINGLE_CAPTURE
 

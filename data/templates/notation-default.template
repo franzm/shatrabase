@@ -15,7 +15,7 @@ MainLineFontWeight,String,Bold|Normal,Bold,The weight of the font
 ColumnStyle=false
 SymbolicNag=true
 TextWidth=0
-CommentIndent=OnlyMainline
+CommentIndent=Never
 MainLineMoveColor=#000000
 CommentColor=#008000
 VariationColor=#0000ff
