@@ -141,7 +141,10 @@ public slots:
     /*Truncate moves from the beginning of the game. */
 	void slotEditTruncateStart();
 	void slotReconfigure();
+    /** Executes the Preferences */
 	void slotConfigure();
+    /** Executes the Preferences for Gameplay */
+    void slotConfigureGame();
     /* About Shatrabase */
 	void slotHelpAbout();
     /* Display Tracker at Shatrabase SourceForge */

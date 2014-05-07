@@ -128,6 +128,11 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
 #endif
 }
 
+void PreferencesDialog::setPage(int tabIndex)
+{
+    ui.tabWidget->setCurrentIndex(tabIndex);
+}
+
 void PreferencesDialog::slotTCEnable()
 {
     // keep one of limits on

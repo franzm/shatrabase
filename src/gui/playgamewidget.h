@@ -72,6 +72,9 @@ public:
     QString resultString() const;
 
 signals:
+    /** Please open the game properties */
+    void configureGameRequest();
+
     /** Emitted when a new game wants to be played */
     void startNewGameRequest(const QMap<QString, QString>& tags);
 

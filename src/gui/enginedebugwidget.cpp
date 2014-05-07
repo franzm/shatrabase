@@ -20,9 +20,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include "enginedebugwidget.h"
 
+#include <QMenu>
+#include <QAction>
+
 EngineDebugWidget::EngineDebugWidget(QWidget *parent) :
     QTextBrowser(parent)
 {
+    // enable contextmenu
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
+                this, SLOT(showContextMenu(const QPoint&)));
 }
 
 
@@ -43,4 +50,16 @@ void EngineDebugWidget::slotEngineDebug(Engine * engine, Engine::DebugType t, co
            .arg(QTime::currentTime().toString())
            .arg(prefix)
            .arg(str));
+}
+
+void EngineDebugWidget::showContextMenu(const QPoint& pos)
+{
+    QMenu * m = new QMenu(this);
+
+    QAction* a = m->addAction(tr("Clear"));
+    connect(a, SIGNAL(triggered()), SLOT(clear()));
+
+    m->exec(mapToGlobal(pos));
+
+    m->deleteLater();
 }

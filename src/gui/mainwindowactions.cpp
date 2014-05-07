@@ -299,6 +299,15 @@ void MainWindow::slotConfigure()
     P.exec();
 }
 
+void MainWindow::slotConfigureGame()
+{
+    PreferencesDialog P(this);
+    P.setPage(1);
+    connect(&P, SIGNAL(reconfigure()), SLOT(slotReconfigure()));
+    connect(&P, SIGNAL(reconfigure()), SLOT(slotNotationChanged()));
+    P.exec();
+}
+
 void MainWindow::slotReconfigure()
 {
     if (AppSettings->getValue("/MainWindow/VerticalTabs").toBool())

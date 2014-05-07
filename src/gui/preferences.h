@@ -29,6 +29,9 @@ public:
 	/* Destroy the dialog */
 	virtual ~PreferencesDialog();
 
+    /** Sets the index of the tabwidget */
+    void setPage(int tabIndex);
+
 public slots:
     /* Restore Default values */
     void slotReset();

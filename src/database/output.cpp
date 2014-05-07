@@ -334,8 +334,6 @@ void Output::writeComment(const QString& comment, const QString& mvno, CommentTy
 	MarkupType markupIndent = type == Comment ? MarkupAnnotationIndent : MarkupPreAnnotationIndent;
 	MarkupType markupInline = type == Comment ? MarkupAnnotationInline : MarkupPreAnnotationInline;
 
-    qDebug() << m_options.getOptionAsString("CommentIndent");
-
 	if (comment.isEmpty())
 		return;
 	if (m_options.getOptionAsBool("ColumnStyle") && (m_currentVariationLevel == 0))

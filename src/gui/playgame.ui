@@ -146,6 +146,17 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="b_config">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/images/b_config.png</normaloff>:/images/b_config.png</iconset>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

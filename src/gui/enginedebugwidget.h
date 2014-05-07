@@ -39,6 +39,8 @@ public slots:
     /** Add text to debug output */
     void slotEngineDebug(Engine * engine, Engine::DebugType t, const QString& str);
 
+    void showContextMenu(const QPoint& pos);
+
 };
 
 #endif // ENGINEDEBUGWIDGET_H

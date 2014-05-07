@@ -84,6 +84,7 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     connect(ui_->b_pause, SIGNAL(clicked()), SLOT(pause_()));
     connect(ui_->b_resign, SIGNAL(clicked()), SLOT(resign_()));
     connect(ui_->b_flip, SIGNAL(clicked()), SLOT(flipPlayers_()));
+    connect(ui_->b_config, SIGNAL(clicked()), SIGNAL(configureGameRequest()));
 
     // ----- setup PlayGame -----
 
