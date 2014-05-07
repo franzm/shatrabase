@@ -380,6 +380,7 @@ void MainWindow::slotEditPasteSPN()
 	}
 	game().setStartingBoard(board);
 //    game().setResult(ResultUnknown);
+    game().removeTag(TagNameResult);
 	slotGameChanged();
 }
 

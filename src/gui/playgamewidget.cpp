@@ -254,7 +254,6 @@ void PlayGameWidget::startNewGame()
     ignoreAnswer_ = false;
 
     // first player is engine? - then go
-    // XXX not really working right now
     sendFreshBoardWhenReady_ = play_->player1IsEngine();
 
     // run engines
@@ -272,6 +271,8 @@ void PlayGameWidget::continue_()
 
     playing_ = true;
     ignoreAnswer_ = false;
+    sendFreshBoardWhenReady_ = play_->player1IsEngine();
+
 
     play_->activate();
     //XXX tc_.startMove();
@@ -352,11 +353,11 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
     ui_->b_new->setEnabled(!p);
     ui_->b_continue->setEnabled(!p && !timeplay);
     ui_->b_pause->setEnabled(p && !timeplay);
-    ui_->b_flip->setEnabled(/*!p*/false); // XXX Don't allow as long as first Player can't be Engine
+    ui_->b_flip->setEnabled(!p); // XXX Don't allow as long as first Player can't be Engine
     ui_->b_resign->setEnabled(p);
     ui_->nameEdit1->setEnabled(!p);
     ui_->nameEdit2->setEnabled(!p);
-    ui_->engineCombo1->setEnabled(/*!p*/false); // XXX Don't allow as long as first Player can't be Engine
+    ui_->engineCombo1->setEnabled(!p); // XXX Don't allow as long as first Player can't be Engine
     ui_->engineCombo2->setEnabled(!p);
 
     if (!p)
@@ -392,7 +393,8 @@ void PlayGameWidget::enginesReady()
 
         Board b;
         b.setStandardPosition();
-        setPosition(b);
+        //setPosition(b);
+        play_->setPosition(b,settings_(curStm_));
     }
 }
 

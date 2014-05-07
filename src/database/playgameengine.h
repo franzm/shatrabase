@@ -10,7 +10,7 @@
 #include <QTime>
 #include <QTimer>
 
-#if 0
+#if 1
 #   define SB_PLAY_DEBUG(stream_arg__) { qDebug() << (void*)this << stream_arg__; }
 #else
 #   define SB_PLAY_DEBUG(unused__) { }
@@ -36,7 +36,7 @@ public:
     /** Stops the Engine if running */
     void stop();
 
-    // --- proerties ---
+    // --- properties ---
 
     /** Set minimum wait time in millisecs */
     void setWaitTime(int min_ms) { minWaitTime_ = min_ms; }
