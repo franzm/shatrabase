@@ -467,6 +467,9 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
     if (m.sideMoving() == 1)
         l = ui_->labelInfo2;
 
+    if (m.sideMoving() == 1)
+        s = -s;
+
     l->setText(QString("<html><b>%1</b> (%2)</html>")
                .arg(m.toNumeric())
                .arg((qreal)s/100));
@@ -703,10 +706,11 @@ void PlayGameWidget::slotTimeout_(int stm)
         stop();
         emit playerWins();
     }
-    else
+    else // engine vs. engine
     {
-        stop();
         emit gameComment(stm == 0? tr("White lost in time") : tr("Black lost in time"));
+        winStm_ = !stm;
+        stop();
         emit pauseGame();
     }
 }

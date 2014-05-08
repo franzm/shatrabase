@@ -205,6 +205,8 @@ public slots:
     void slotPlayGameContinue();
     /** Will restore the Board flags from playing to normal. */
     void slotPlayGameEnd();
+    /* An Engine/Engine match has finished with a result. */
+    //void slotPlayGameEnded();
     /** Connected to PlayGameWidget: Engine has made a move */
     void slotPlayGameMove(Move);
     /** Player has won. */
