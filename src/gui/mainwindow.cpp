@@ -64,7 +64,8 @@ MainWindow::MainWindow() : QMainWindow(),
     m_gameToolBar(0),
     m_showSgnSource(false),
     m_autoPlayTimer(0),
-    m_bGameChange(false)
+    m_bGameChange(false),
+    m_nextGameSaveQuick(false)
 {
 	setObjectName("MainWindow");
 
@@ -213,12 +214,13 @@ MainWindow::MainWindow() : QMainWindow(),
     addDockWidget(Qt::RightDockWidgetArea, playerSelDock);
     connect(m_playGame, SIGNAL(configureGameRequest()), SLOT(slotConfigureGame()));
     connect(m_playGame, SIGNAL(startNewGameRequest(QMap<QString,QString>)), SLOT(slotPlayGameNew(QMap<QString,QString>)));
-    connect(m_playGame, SIGNAL(continueGame()), SLOT(slotPlayGameContinue()));
+    connect(m_playGame, SIGNAL(continueGameRequest()), SLOT(slotPlayGameContinue()));
     connect(m_playGame, SIGNAL(pauseGame()), SLOT(slotPlayGameEnd()));
     connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));
     connect(m_playGame, SIGNAL(gameComment(QString)), SLOT(slotGameAddComment(QString)));
     connect(m_playGame, SIGNAL(playerWins()), SLOT(slotPlayPlayerWins()));
     connect(m_playGame, SIGNAL(playerLoses()), SLOT(slotPlayOtherWins()));
+    connect(m_playGame, SIGNAL(gameEnded()), SLOT(slotPlayGameEnd()));
     connect(this, SIGNAL(reconfigure()), m_playGame, SLOT(slotReconfigure()));
 
 

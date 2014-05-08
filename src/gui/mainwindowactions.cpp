@@ -757,7 +757,7 @@ void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)
         g.setModified(true);
         slotGameChanged();
 
-        m_playGame->startNewGame();
+        m_playGame->startNewGameOk();
     }
 }
 
@@ -765,7 +765,16 @@ void MainWindow::slotPlayGameContinue()
 {
     Game &g = databaseInfo()->currentGame();
 
-    m_playGame->setPosition(g.board());
+    m_playGame->continuePosition(g.board());
+}
+
+void MainWindow::slotPlayGamePaused()
+{
+    // restore functionallity
+    slotPlayEnableWidgets(true);
+
+    // restore boardview flags
+    m_boardView->setFlags(0);
 }
 
 void MainWindow::slotPlayGameEnd()
@@ -778,12 +787,29 @@ void MainWindow::slotPlayGameEnd()
 
     // restore boardview flags
     m_boardView->setFlags(0);
+
+    if (m_playGame->doAutoSaveAndContinue())
+    {
+        m_nextGameSaveQuick = true; /* avoid save dialog */
+        m_playGame->startNewGame();
+    }
 }
 
 void MainWindow::slotPlayGameMove(Move m)
 {
-    game().addMove(m);
-    game().forward();
+    if (game().atLineEnd())
+        game().addMove(m);
+    else
+    {
+        // only add variation when different
+        // XXX won't work, won't trigger animationFinished() for play game
+        //if (!(m == game().move(game().currentMove())))
+
+        game().addVariation(m);
+
+        game().forward();
+    }
+
     slotGameChanged();
 }
 
@@ -832,6 +858,13 @@ void MainWindow::saveGame()
 
 bool MainWindow::slotGameSave()
 {
+    if (m_nextGameSaveQuick)
+    {
+        m_nextGameSaveQuick = false;
+        saveGame();
+        return true;
+    }
+
     if (database()->isReadOnly())
     {
         MessageDialog::error(tr("This database is read only."));

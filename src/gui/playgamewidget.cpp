@@ -105,7 +105,7 @@ PlayGameWidget::~PlayGameWidget()
     delete ui_;
 }
 
-bool PlayGameWidget::isUser(Color stm) const
+bool PlayGameWidget::isHuman(Color stm) const
 {
     return (stm == White && !play_->player1IsEngine())
             ||
@@ -137,6 +137,11 @@ bool PlayGameWidget::doInfoLines() const
     return !(isTournament() && isHumanInvolved())
             && !(!play_->player1IsEngine() && !play_->player2IsEngine())
             ;
+}
+
+bool PlayGameWidget::doAutoSaveAndContinue() const
+{
+    return (!isHumanInvolved() && ui_->cbSaveAndContinue->isChecked());
 }
 
 QString PlayGameWidget::resultString() const
@@ -260,6 +265,11 @@ void PlayGameWidget::start_()
 
 void PlayGameWidget::startNewGame()
 {
+    start_();
+}
+
+void PlayGameWidget::startNewGameOk()
+{
     // update widget Spaß
     setWidgetsPlayer_(White);
     setWidgetsPlaying_(true);
@@ -283,11 +293,14 @@ void PlayGameWidget::startNewGame()
 
 void PlayGameWidget::continue_()
 {
+    emit continueGameRequest();
+    /*
     // update widget Spaß
     setWidgetsPlaying_(true);
 
     playing_ = true;
     ignoreAnswer_ = false;
+    // XXX should depend on player
     sendFreshBoardWhenReady_ = play_->player1IsEngine();
 
 
@@ -295,8 +308,32 @@ void PlayGameWidget::continue_()
     //XXX tc_.startMove();
 
     emit continueGame();
+*/
+//    setPosition(boa);
 
     // ... wait for setPosition() from MainWindow
+}
+
+void PlayGameWidget::continuePosition(const Board &board)
+{
+    curStm_ = board.toMove();
+
+    // update widget Spaß
+    setWidgetsPlaying_(true);
+    //setWidgetsPlayer_(curStm_);
+
+    playing_ = true;
+    ignoreAnswer_ = false;
+    //sendFreshBoardWhenReady_ = !isHuman(curStm_);
+
+    play_->activate();
+
+    initTiming_(curStm_);
+    curStm_ = (Color)(!curStm_);
+    startNewMove_(board);
+    /*
+    tc_.startMove();
+    setPosition();*/
 }
 
 void PlayGameWidget::stop()
@@ -345,15 +382,7 @@ void PlayGameWidget::flipPlayers_()
 
     slotReconfigure();
 }
-/*
-void PlayGameWidget::setSidePlaying_(Color stm, bool dotime)
-{
-    setWidgetsPlayer_(stm);
-    lastStm_ = stm;
-    if (dotime)
-        tc_.startMove(stm);
-}
-*/
+
 void PlayGameWidget::setWidgetsPlayer_(int stm)
 {
     activeLed_ = stm;
@@ -382,6 +411,7 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
     ui_->labelInfo2->setVisible(doinf);
     ui_->labelInfo1->setText("");
     ui_->labelInfo2->setText("");
+    ui_->cbSaveAndContinue->setVisible(!isHumanInvolved());
 
     if (!p)
     {
@@ -456,7 +486,7 @@ void PlayGameWidget::setPosition(const Board& board)
     // when move ended, !stm == side that made last move
     curStm_ = board.transitAt() == 0?
                 (Color)(!board.toMove())
-              : board.toMove();
+                       : board.toMove();
 
     userMoved_ = true;
 }
@@ -538,7 +568,7 @@ void PlayGameWidget::animationFinished(const Board& board)
     const Color stm = transit? board.toMove() : (Color)(!board.toMove());
 
     // user move
-    if (isUser(stm))
+    if (isHuman(stm))
     {
         // make sure no duplicate animation has occured
         if (!userMoved_) return;
@@ -608,7 +638,7 @@ void PlayGameWidget::startNewMove_(const Board& board)
     setWidgetsPlayer_(stm);
 
     // start engine
-    if (!isUser(stm))
+    if (!isHuman(stm))
     {
         blinkTimer_.start();
         play_->setPosition(board, settings_(stm));
@@ -712,7 +742,7 @@ void PlayGameWidget::slotTimeout_(int stm)
         emit gameComment(stm == 0? tr("White lost in time") : tr("Black lost in time"));
         winStm_ = !stm;
         stop();
-        emit pauseGame();
+        emit gameEnded();
     }
 }
 
@@ -722,7 +752,7 @@ void PlayGameWidget::slotUpdateClocks_()
     ui_->clock2->setTime(tc_.getTotalTime(Black), tc_.getMoveTime(Black));
 }
 
-void PlayGameWidget::initTiming_()
+void PlayGameWidget::initTiming_(int stm)
 {
     // clock visibility
     bool
@@ -733,6 +763,6 @@ void PlayGameWidget::initTiming_()
     ui_->clock1->setVisible(showTotal, showMove);
     ui_->clock2->setVisible(showTotal, showMove);
 
-    tc_.start();
+    tc_.start(stm);
 }
 

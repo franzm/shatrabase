@@ -203,7 +203,10 @@ public slots:
     void slotPlayGameNew(const QMap<QString, QString>& tags);
     /** Connected to PlayGameWidget to signal continuation of current game */
     void slotPlayGameContinue();
-    /** Will restore the Board flags from playing to normal. */
+    /** Will restore the gui from playing to normal. */
+    void slotPlayGamePaused();
+    /** Will restore the gui from playing to normal and
+        add result to board and possibly save and continue (engine vs. engine). */
     void slotPlayGameEnd();
     /* An Engine/Engine match has finished with a result. */
     //void slotPlayGameEnded();
@@ -429,7 +432,8 @@ private:
             * m_ExternalBoardAction,
             * m_saveAction,
             * m_saveAsAction;
-    bool m_bGameChange;
+    bool m_bGameChange,
+         m_nextGameSaveQuick;
     Board m_lastSendBoard;
     AnalysisWidget* m_mainAnalysis, * m_analysis2;
     Board m_AutoInsertLastBoard;

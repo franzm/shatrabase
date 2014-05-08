@@ -54,13 +54,16 @@ public:
     /** Is any of the players a human? */
     bool isHumanInvolved() const;
 
+    /** Returns whether the given side to move is controlled by the user. */
+    bool isHuman(Color stm) const;
+
     /** show info lines? */
     bool doInfoLines() const;
 
-    bool isPlaying() const { return playing_; }
+    /** should MainWindow save the current game and start a new one? */
+    bool doAutoSaveAndContinue() const;
 
-    /** Returns whether the given side to move is controlled by the user. */
-    bool isUser(Color stm) const;
+    bool isPlaying() const { return playing_; }
 
     /** Returns if White should be able to interact with board */
     bool whiteCanMove() const;
@@ -79,7 +82,7 @@ signals:
     void startNewGameRequest(const QMap<QString, QString>& tags);
 
     /** Emitted when the current game in Chessbrowser should be continued. */
-    void continueGame();
+    void continueGameRequest();
 
     /** Emitted when player needs a break. */
     void pauseGame();
@@ -92,14 +95,19 @@ signals:
 
     void playerWins();
     void playerLoses();
+    /** On engine vs. engine result */
+    void gameEnded();
 
 public slots:
 
     /** Applies app settings */
     void slotReconfigure();
 
-    /** Send this as an answer to setNewGameRequest(). */
+    /** Tell PlayGameWidget to 'click new game' */
     void startNewGame();
+
+    /** Send this as an answer to setNewGameRequest(). */
+    void startNewGameOk();
 
     /** Stops play mode. E.g. when save current game was cancelled. */
     void stop();
@@ -111,6 +119,9 @@ public slots:
     /** Sets new position. Signals that a move has been performed.
         If required, the Engine will be queried. */
     void setPosition(const Board& board);
+
+    /** Continue a game from the current possiton */
+    void continuePosition(const Board& board);
 
     /** Signal that board has done the last issued move */
     void animationFinished(const Board& board);
@@ -157,7 +168,7 @@ private:
     Engine::SearchSettings settings_(int stm) const;
 
     /** initialize TimeControl at beginning of game */
-    void initTiming_();
+    void initTiming_(int stm = 0);
 
     /** Start playing board.toMove().
      *  Sets widgets and starts timing.
