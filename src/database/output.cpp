@@ -19,6 +19,17 @@
 
 QMap<Output::OutputType, QString> Output::m_outputMap;
 
+QString Output::outputTypeExtensionStr(OutputType t)
+{
+    switch (t)
+    {
+        case Html: return ".html";
+        case Sgn: return ".sgn";
+        case Latex: return ".tex";
+        defualt: return ".txt";
+    }
+}
+
 Output::Output(OutputType output, const QString& pathToTemplateFile)
 {
 	m_outputType = output;

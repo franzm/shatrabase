@@ -269,8 +269,9 @@ void MainWindow::slotFileExportFilter()
 void MainWindow::slotFileExportAll()
 {
 	int format;
-	QString filename = exportFileName(format);
-	if (!filename.isEmpty()) {
+    QString filename = exportFileName(format);
+    if (!filename.isEmpty())
+    {
 		Output output((Output::OutputType)format);
 		output.output(filename, *database());
 	}

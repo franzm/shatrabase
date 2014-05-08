@@ -85,6 +85,8 @@ public:
         Latex, /*< Exports the game in Latex format */
         NotationWidget /*< Exports the game in format appropriate for the notation widget */
 	};
+    /** Returns the output type's extension */
+    static QString outputTypeExtensionStr(OutputType t);
 	enum MoveToWrite {
 		PreviousMove,
 		NextMove

@@ -940,9 +940,9 @@ QString MainWindow::exportFileName(int& format)
 
     // set file filters
     QStringList filters;
-	filters << tr("SGN file (*.sgn)")
-	<< tr("HTML page (*.html)")
-	<< tr("LaTeX document (*.tex)");
+    filters << tr("SGN file (*%1)").arg(Output::outputTypeExtensionStr(Output::Sgn))
+    << tr("HTML page (*%1)").arg(Output::outputTypeExtensionStr(Output::Html))
+    << tr("LaTeX document (*%1)").arg(Output::outputTypeExtensionStr(Output::Latex));
 #if QT_VERSION < 0x050000
     fd.setFilters(filters);
 #else
@@ -954,19 +954,26 @@ QString MainWindow::exportFileName(int& format)
     AppSettings->setValue("/Path/databaseExportPath", fd.directory().absolutePath());
 
     // determine format
+    Output::OutputType fmt = Output::Sgn;
 #if QT_VERSION < 0x050000
-    if (fd.selectedFilter().contains("*.tex"))
-		format = Output::Latex;
-	else if (fd.selectedFilter().contains("*.html"))
-		format = Output::Html;
+    if (fd.selectedFilter().contains(Output::outputTypeExtensionStr(Output::Latex)))
+        fmt = Output::Latex;
+    else if (fd.selectedFilter().contains(Output::outputTypeExtensionStr(Output::Html)))
+        fmt = Output::Html;
 #else
-    if (fd.selectedNameFilter().contains("*.tex"))
-        format = Output::Latex;
-    else if (fd.selectedNameFilter().contains("*.html"))
-        format = Output::Html;
+    if (fd.selectedNameFilter().contains(Output::outputTypeExtensionStr(Output::Latex)))
+        fmt = Output::Latex;
+    else if (fd.selectedNameFilter().contains(Output::outputTypeExtensionStr(Output::Html)))
+        fmt = Output::Html;
 #endif
-	else format = Output::Sgn;
-	return fd.selectedFiles().first();
+
+    QString fn = fd.selectedFiles().first();
+    // add extension ?
+    if (!fn.endsWith(Output::outputTypeExtensionStr(fmt)))
+         fn.append(Output::outputTypeExtensionStr(fmt));
+
+    format = fmt;
+    return fn;
 }
 
 bool MainWindow::gameEditComment(Output::CommentType type)
