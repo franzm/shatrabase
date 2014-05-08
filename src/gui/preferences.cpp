@@ -86,7 +86,6 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.cbLimitTime, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimitNodes, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTimeInc1, SIGNAL(clicked()), SLOT(slotTCEnable()));
-    connect(ui.cbTime2, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTimeInc2, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTimeInc3, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbAllMoves1, SIGNAL(clicked()), SLOT(slotTCEnable()));
@@ -152,10 +151,8 @@ void PreferencesDialog::slotTCEnable()
     // tournament
     bool all1 = ui.cbAllMoves1->isChecked();
     bool all2 = ui.cbAllMoves2->isChecked();
-    // sanity
-    bool tc3 = (!all1 && (!ui.cbTime2->isChecked() || !all2));
-    if (all1)
-        ui.cbTime2->setChecked(false);
+    bool tc3 = (!all1 && !all2);
+
     // 1
     on = ui.cbTournament->isChecked();
     ui.cbAllMoves1->setEnabled(on);
@@ -164,8 +161,7 @@ void PreferencesDialog::slotTCEnable()
     ui.cbTimeInc1->setEnabled(on);
     ui.timeInc1->setEnabled(on && ui.cbTimeInc1->isChecked());
     // 2
-    ui.cbTime2->setEnabled(on & !all1);
-    bool on1 = on & ui.cbTime2->isChecked() & !all1;
+    bool on1 = on & !all1;
     ui.cbAllMoves2->setEnabled(on1);
     ui.moves2->setEnabled(on1 && !all2);
     ui.time2->setEnabled(on1);
@@ -202,10 +198,10 @@ void PreferencesDialog::slotTCUpdate()
     tc.setNodeLimit(ui.cbLimitNodes->isChecked()? ui.limitNodes->value() : TimeControl::Unlimited);
     tc.setTimeLimit(ui.cbLimitTime->isChecked()? getMSecs(*ui.limitTime) : TimeControl::Unlimited);
 
-    bool tc2 = ui.cbTime2->isChecked(),
-         all1 = ui.cbAllMoves1->isChecked(),
+    bool all1 = ui.cbAllMoves1->isChecked(),
          all2 = ui.cbAllMoves2->isChecked(),
-         tc3 = !all1 && (!all2 || !tc2);
+         tc2 = !all1,
+         tc3 = !all1 && !all2;
     tc.setNumMoves1(all1? TimeControl::Unlimited : ui.moves1->value());
     tc.setNumMoves2(tc2? (all2? TimeControl::Unlimited : ui.moves2->value()) : 0);
     tc.setTimeForMoves1(getMSecs(*ui.time1));
@@ -215,7 +211,7 @@ void PreferencesDialog::slotTCUpdate()
     tc.setTimeInc2(ui.cbTimeInc2->isChecked() && tc2? getMSecs(*ui.timeInc2) : 0);
     tc.setTimeInc3(ui.cbTimeInc3->isChecked() && tc3? getMSecs(*ui.timeInc3) : 0);
 
-    ui.labelTC->setText(tc.humanReadable());
+    ui.labelTC->setText( tc.humanReadable() );
 }
 
 
@@ -546,7 +542,6 @@ void PreferencesDialog::restoreSettings()
     ui.cbTimeInc1->setChecked(AppSettings->getValue("doTimeInc1").toBool());
     ui.cbTimeInc2->setChecked(AppSettings->getValue("doTimeInc2").toBool());
     ui.cbTimeInc3->setChecked(AppSettings->getValue("doTimeInc3").toBool());
-    ui.cbTime2->setChecked(AppSettings->getValue("doTime2").toBool());
     setTime(*ui.limitTime, AppSettings->getValue("timeLimit").toInt());
     ui.limitNodes->setValue(AppSettings->getValue("nodeLimit").toInt());
     ui.limitDepth->setValue(AppSettings->getValue("depthLimit").toInt());
@@ -634,7 +629,6 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("doTimeInc1", ui.cbTimeInc1->isChecked());
     AppSettings->setValue("doTimeInc2", ui.cbTimeInc2->isChecked());
     AppSettings->setValue("doTimeInc3", ui.cbTimeInc3->isChecked());
-    AppSettings->setValue("doTime2", ui.cbTime2->isChecked());
     AppSettings->setValue("timeLimit", getMSecs(*ui.limitTime));
     AppSettings->setValue("nodeLimit", ui.limitNodes->value());
     AppSettings->setValue("depthLimit", ui.limitDepth->value());

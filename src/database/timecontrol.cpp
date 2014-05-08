@@ -134,7 +134,8 @@ void TimeControl::configure()
         timeInc2_ = 0;
     if (!AppSettings->getValue("doTimeInc3").toBool())
         timeInc3_ = 0;
-    if (!AppSettings->getValue("doTime2").toBool())
+    // cut off later stages on 'all moves in x'
+    if (numMoves1_ == Unlimited)
     {
         numMoves2_ = 0;
         timeForMoves2_ = 0;

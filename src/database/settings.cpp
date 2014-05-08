@@ -229,7 +229,6 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/TimeControl/doTimeInc1", false);
     map.insert("/TimeControl/doTimeInc2", false);
     map.insert("/TimeControl/doTimeInc3", false);
-    map.insert("/TimeControl/doTime2", false);
     map.insert("/TimeControl/timeAverage", 20*1000);
     map.insert("/TimeControl/timeLimit", 20*1000);
     map.insert("/TimeControl/nodeLimit", 10000000);
