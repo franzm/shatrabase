@@ -468,11 +468,12 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
         l = ui_->labelInfo2;
 
     if (m.sideMoving() == 1)
-        s = -s;
+        s = -s; 
 
-    l->setText(QString("<html><b>%1</b> (%2)</html>")
+    l->setText(QString("<html><b>%1</b> (<font color=\"#%3\">%2</font>)</html>")
                .arg(m.toNumeric())
-               .arg((qreal)s/100));
+               .arg((qreal)s/100)
+               .arg(s>0? "080" : s<0? "800" : "000"));
 }
 
 void PlayGameWidget::moveFromEngine(Move m)

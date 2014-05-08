@@ -105,8 +105,8 @@ void AnalysisWidget::engineActivated()
 
 void AnalysisWidget::engineError(QProcess::ProcessError e)
 {
-    MessageDialog::warning(tr("There was an error (%1) running engine <b>%2</b>.")
-                              .arg(e)
+    MessageDialog::warning(tr("There was an error running engine <b>%2</b>.\n%1")
+                              .arg(Engine::processErrorText(e))
                               .arg(ui.engineList->currentText()));
     stopEngine();
 }
@@ -165,9 +165,12 @@ void AnalysisWidget::showAnalysis(const Analysis& analysis)
     int mpv = analysis.mpv() - 1;
     if (mpv < 0 || mpv > m_analyses.count() || mpv >= ui.vpcount->value())
         return;
-    else if (mpv == m_analyses.count())
+    else
+    if (mpv == m_analyses.count())
         m_analyses.append(analysis);
-    else m_analyses[mpv] = analysis;
+    else
+        m_analyses[mpv] = analysis;
+
     updateAnalysis();
 }
 

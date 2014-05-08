@@ -125,7 +125,8 @@ HEADERS += src/database/board.h \
     src/gui/enginedebugwidget.h \
     src/database/timecontrol.h \
     src/database/playtimecontrol.h \
-    src/database/ushienginetester.h
+    src/database/ushienginetester.h \
+    src/database/metaanalysis.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -212,7 +213,8 @@ SOURCES += src/database/board.cpp \
     src/gui/enginedebugwidget.cpp \
     src/database/timecontrol.cpp \
     src/database/playtimecontrol.cpp \
-    src/database/ushienginetester.cpp
+    src/database/ushienginetester.cpp \
+    src/database/metaanalysis.cpp
 
 OTHER_FILES += \
     TODO
