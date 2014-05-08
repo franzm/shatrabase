@@ -10,53 +10,76 @@
 #include "metaanalysis.h"
 #include "settings.h"
 
-MetaAnalysis::MetaAnalysis(QObject *parent) :
-    QObject(parent)
+MetaAnalysis::MetaAnalysis(QObject *parent)
+    :    QObject    (parent),
+         running_   (false)
 {
 }
 
 
-bool MetaAnalysis::startAnalysis(const Board& board, int nv,
-                   const Engine::SearchSettings & settings)
+bool MetaAnalysis::activate(int index)
 {
     if (isAnalyzing())
         stopAnalysis();
 
     // create the main engine
-    Engine * e;
-    engines_.push_back( e = createEngine_() );
+    Engine * e = createEngine_(index);
+    engines_.push_back( e );
 
-    e->startAnalysis(board, nv, settings);
+    connect(e, SIGNAL(activated()), SIGNAL(activated()));
+
+    e->activate();
+
+    running_ = true;
+
+    return true;
+}
+
+bool MetaAnalysis::startAnalysis(const Board& board, int nv,
+                                const Engine::SearchSettings & settings)
+{
+//    qDebug() << "MetaAnalysis::startAnalysis(...)";
+
+    if (engines_.empty())
+        return false;
+
+//    qDebug() << "MetaAnalysis:: engine_[0]->startAnalysis(...)";
+    board_ = board;
+    initAnalyses_(nv);
+
+    engines_[0]->startAnalysis(board, nv, settings);
 
     return true;
 }
 
 void MetaAnalysis::stopAnalysis()
 {
+    running_ = false;
+
     foreach(Engine * e, engines_)
     {
-        e->stopAnalysis();
-        e->deleteLater();
+        if (e)
+        {
+            e->stopAnalysis();
+            e->deleteLater();
+        }
     }
     engines_.clear();
 }
 
 
-Engine * MetaAnalysis::createEngine_()
+Engine * MetaAnalysis::createEngine_(int index)
 {
-    Engine * e = Engine::newEngine(0); // XXX
+    Engine * e = Engine::newEngine(index); // XXX
     e->setParent(this);
 
-    //connect(e, SIGNAL(activated()), SLOT(slotEngineActivated()));
     connect(e, SIGNAL(error(QProcess::ProcessError)), SLOT(slotEngineDeactivated_()));
-    connect(e, SIGNAL(deactivated()), SLOT(slotEngineDeactivated()));
+    connect(e, SIGNAL(deactivated()), SLOT(slotEngineDeactivated_()));
     connect(e, SIGNAL(analysisUpdated(const Analysis&)),
-               SLOT(slotEngineAnalysis_(const Analysis&)));
-    /*if (m_engineDebug)
-        connect(m_engine, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
-            m_engineDebug, SLOT(slotEngineDebug(Engine*,Engine::DebugType,QString)));
-    */
-    e->activate(true);
+                 SLOT(slotEngineAnalysis_(const Analysis&)));
+    connect(e, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
+               SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)));
+
     return e;
 }
 
@@ -65,13 +88,44 @@ void MetaAnalysis::slotEngineDeactivated_()
     Engine * e = qobject_cast<Engine*>(sender());
     if (!e) return;
 
-
+    // first one is main
+    if (!engines_.empty() && engines_[0] == e)
+        emit deactivated();
 }
 
 void MetaAnalysis::slotEngineAnalysis_(const Analysis &a)
 {
     Engine * e = qobject_cast<Engine*>(sender());
-    if (!e) return;
+    if (!e || engines_.empty()) return;
 
-    emit analysisUpdated(a);
+    if (e == engines_[0])
+    {
+        // ignore out of range mpv
+        int n = a.mpv()-1;
+        if (n<0 || n>=analyses_.count())
+            return;
+
+        // store first time
+        if (!analyses_[n].isValid())
+            analyses_[n] = a;
+        // or update
+        else
+        {
+            //if (analyses_[n].variation()[0]
+            //        != a.variation()[0])
+        }
+
+        emit analysisUpdated(a);
+    }
+}
+
+
+void MetaAnalysis::initAnalyses_(int num)
+{
+    analyses_.resize(num);
+    for (int i=0; i<num; ++i)
+        analyses_[i] = Analysis();
+    analyses2_.resize(num);
+    for (int i=0; i<num; ++i)
+        analyses2_[i] = Analysis();
 }

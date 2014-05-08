@@ -23,6 +23,7 @@
 */
 
 class Analysis;
+class MetaAnalysis;
 class Board;
 class EngineDebugWidget;
 
@@ -51,6 +52,8 @@ public slots:
 
     /** Is any engine running. */
     bool isEngineRunning() const;
+    /** Turn on/off meta-analysis */
+    void setMetaMode(bool);
 private slots:
     /** Stop if analysis is no longer visible. */
     void toggleAnalysis();
@@ -80,6 +83,7 @@ private:
     QList<Analysis> m_analyses;
     Ui::AnalysisWidget ui;
     Engine* m_engine;
+    MetaAnalysis * m_metaengine;
     bool m_active, m_ignore;
     Board m_board;
     int m_windowNumber;

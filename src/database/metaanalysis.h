@@ -27,10 +27,18 @@ public:
 
 signals:
 
+    void activated();
+    void deactivated();
+
     /** Fired when any engine has produced some analysis */
     void analysisUpdated(const Analysis& analysis);
 
+    void engineDebug(Engine*,Engine::DebugType,QString);
+
 public slots:
+
+    /** Creates the main engine */
+    bool activate(int engineIndex);
 
     bool startAnalysis(const Board& board, int nv = 1,
                        const Engine::SearchSettings & settings = Engine::SearchSettings());
@@ -44,9 +52,16 @@ protected slots:
 
 protected:
 
-    Engine * createEngine_();
+    Engine * createEngine_(int index);
+    void initAnalyses_(int num);
 
     QVector<Engine*> engines_;
+    QVector<Analysis>
+            /** pv line for each mpv of main engine */
+            analyses_,
+            /** single pv for each additional engine */
+            analyses2_;
+    Board board_;
 
     bool running_;
 };

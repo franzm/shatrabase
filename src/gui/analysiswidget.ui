@@ -84,6 +84,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="cbMeta">
+         <property name="text">
+          <string>meta</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QComboBox" name="engineList">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">

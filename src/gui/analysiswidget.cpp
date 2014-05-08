@@ -17,10 +17,12 @@
 #include "enginelist.h"
 #include "enginedebugwidget.h"
 #include "messagedialog.h"
+#include "metaanalysis.h"
 
 AnalysisWidget::AnalysisWidget(int num, EngineDebugWidget * debug)
         : QWidget(0),
           m_engine(0),
+          m_metaengine(0),
           m_ignore(false),
           m_windowNumber(num),
           m_engineDebug(debug)
@@ -33,7 +35,10 @@ AnalysisWidget::AnalysisWidget(int num, EngineDebugWidget * debug)
     connect(ui.vpcount, SIGNAL(valueChanged(int)), SLOT(slotMpvChanged(int)));
     ui.analyzeButton->setFixedHeight(ui.engineList->sizeHint().height());
 
-//  m_tablebase = new Shredder;
+    // XXX
+    ui.cbMeta->setVisible(false);
+
+    //  m_tablebase = new Shredder;
 //  connect(m_tablebase, SIGNAL(bestMove(Move, int)), this, SLOT(showTablebaseMove(Move, int)));
 }
 
@@ -43,32 +48,63 @@ AnalysisWidget::~AnalysisWidget()
 //    delete m_tablebase;
 }
 
+void AnalysisWidget::setMetaMode(bool m)
+{
+    if ((m && m_engine)
+        || (!m && m_metaengine))
+        stopEngine();
+}
+
 void AnalysisWidget::startEngine()
 {
     int index = ui.engineList->currentIndex();
     stopEngine();
-    if (index != -1) {
+    if (index != -1)
+    {
         if (parentWidget() && !parentWidget()->isVisible())
             parentWidget()->show();
         ui.variationText->clear();
-        m_engine = Engine::newEngine(index);
-        ui.vpcount->setEnabled(m_engine->providesMvp());
-        ui.label->setEnabled(m_engine->providesMvp());
-        if (!m_engine->providesMvp())
+
+        if (!ui.cbMeta->isChecked())
         {
-            ui.vpcount->setValue(1);
+            m_engine = Engine::newEngine(index);
+            m_engine->setParent(this);
+            ui.vpcount->setEnabled(m_engine->providesMvp());
+            ui.label->setEnabled(m_engine->providesMvp());
+            if (!m_engine->providesMvp())
+            {
+                ui.vpcount->setValue(1);
+            }
+
+            connect(m_engine, SIGNAL(activated()), SLOT(engineActivated()));
+            connect(m_engine, SIGNAL(error(QProcess::ProcessError)), SLOT(engineError(QProcess::ProcessError)));
+            connect(m_engine, SIGNAL(deactivated()), SLOT(engineDeactivated()));
+            connect(m_engine, SIGNAL(analysisUpdated(const Analysis&)),
+                      SLOT(showAnalysis(const Analysis&)));
+            if (m_engineDebug)
+                connect(m_engine, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
+                    m_engineDebug, SLOT(slotEngineDebug(Engine*,Engine::DebugType,QString)));
+
+            m_engine->activate();
+        }
+        else // meta-analysis
+        {
+            m_metaengine = new MetaAnalysis(this);
+            ui.vpcount->setEnabled(true);
+            ui.label->setEnabled(true);
+
+            connect(m_metaengine, SIGNAL(activated()), SLOT(engineActivated()));
+            connect(m_metaengine, SIGNAL(deactivated()), SLOT(engineDeactivated()));
+            connect(m_metaengine, SIGNAL(analysisUpdated(const Analysis&)),
+                                    SLOT(showAnalysis(const Analysis&)));
+            if (m_engineDebug)
+                connect(m_metaengine, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
+                    m_engineDebug, SLOT(slotEngineDebug(Engine*,Engine::DebugType,QString)));
+
+            m_metaengine->activate(index);
         }
 
-        connect(m_engine, SIGNAL(activated()), SLOT(engineActivated()));
-        connect(m_engine, SIGNAL(error(QProcess::ProcessError)), SLOT(engineError(QProcess::ProcessError)));
-        connect(m_engine, SIGNAL(deactivated()), SLOT(engineDeactivated()));
-        connect(m_engine, SIGNAL(analysisUpdated(const Analysis&)),
-                  SLOT(showAnalysis(const Analysis&)));
-        if (m_engineDebug)
-            connect(m_engine, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
-                m_engineDebug, SLOT(slotEngineDebug(Engine*,Engine::DebugType,QString)));
-
-        m_engine->activate();
+        // store current used engine
         QString key = QString("/")+objectName()+"/Engine";
         AppSettings->setValue(key, ui.engineList->itemText(index));
     }
@@ -77,10 +113,17 @@ void AnalysisWidget::startEngine()
 void AnalysisWidget::stopEngine()
 {
     engineDeactivated();
-    if (m_engine) {
+    if (m_engine)
+    {
         m_engine->deactivate();
         m_engine->deleteLater();
         m_engine = 0;
+    }
+    if (m_metaengine)
+    {
+        m_metaengine->stopAnalysis();
+        m_metaengine->deleteLater();
+        m_metaengine = 0;
     }
 }
 
@@ -92,15 +135,21 @@ void AnalysisWidget::slotVisibilityChanged(bool visible)
 
 bool AnalysisWidget::isEngineRunning() const
 {
-    return m_engine && ui.analyzeButton->isChecked();
+    return (m_engine || m_metaengine) && ui.analyzeButton->isChecked();
 }
 
 void AnalysisWidget::engineActivated()
 {
+    qDebug() << "AnalysisWidget::engineActivated()";
+
     ui.analyzeButton->setChecked(true);
     ui.analyzeButton->setText(tr("Stop"));
     m_analyses.clear();
-    m_engine->startAnalysis(m_board, ui.vpcount->value());
+    if (m_engine)
+        m_engine->startAnalysis(m_board, ui.vpcount->value());
+
+    if (m_metaengine)
+        m_metaengine->startAnalysis(m_board, ui.vpcount->value());
 }
 
 void AnalysisWidget::engineError(QProcess::ProcessError e)
@@ -192,11 +241,16 @@ void AnalysisWidget::setPosition(const Board& board)
             m_ignore = true;
             if (m_engine)
                 m_engine->stopAnalysis();
+            if (m_metaengine)
+                m_metaengine->stopAnalysis();
             return;
         }
 
         if (m_engine && m_engine->isActive())
             m_engine->startAnalysis(m_board, ui.vpcount->value());
+
+        if (m_metaengine)
+            m_metaengine->startAnalysis(m_board, ui.vpcount->value());
     }
 }
 
@@ -224,7 +278,10 @@ void AnalysisWidget::slotMpvChanged(int mpv)
         while (m_analyses.count() > mpv)
             m_analyses.removeLast();
         if (!m_ignore)
-            m_engine->setMpv(mpv);
+        {
+            if (m_engine)
+                m_engine->setMpv(mpv);
+        }
     }
 
     AppSettings->setValue(
