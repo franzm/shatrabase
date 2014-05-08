@@ -675,10 +675,20 @@ bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool do
     {
         // emit appropriate signals
         if ((wwin && !e1) || (bwin && !e2))
-            emit playerWins();
+        {
+            if (isHumanInvolved())
+                emit playerWins();
+            else
+                emit gameEnded();
+        }
         else
         if ((wwin && e1) || (bwin && e2))
-            emit playerLoses();
+        {
+            if (isHumanInvolved())
+                emit playerLoses();
+            else
+                emit gameEnded();
+        }
     }
 
     return end;
