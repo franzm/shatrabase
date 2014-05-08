@@ -86,13 +86,13 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Delete on close */
 	setAttribute(Qt::WA_DeleteOnClose);
 
-	/* Output */
-	m_output = new Output(Output::NotationWidget);
-
     if (AppSettings->getValue("/MainWindow/VerticalTabs").toBool())
         setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowNestedDocks | QMainWindow::VerticalTabs);
     else
         setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::AllowNestedDocks);
+
+    /* Output */
+    m_output = new Output(Output::NotationWidget);
 
 	/* Board */
     m_boardSplitter = new QSplitter(Qt::Vertical);

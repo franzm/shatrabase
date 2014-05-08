@@ -42,7 +42,7 @@ void EngineDebugWidget::slotEngineDebug(Engine * engine, Engine::DebugType t, co
     {
     case Engine::D_ToEngine: setTextColor(Qt::black); prefix = "<-- "; break;
     case Engine::D_FromEngine: setTextColor(Qt::darkGreen); prefix = "--> "; break;
-    case Engine::D_Error: setTextColor(Qt::darkRed); prefix = "*** "; break;
+    case Engine::D_Error: setTextColor(Qt::darkRed); prefix = "!!! "; break;
     case Engine::D_Debug: setTextColor(Qt::gray); prefix = "### "; break;
     }
 

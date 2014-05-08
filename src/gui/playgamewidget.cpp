@@ -364,15 +364,16 @@ void PlayGameWidget::setWidgetsPlayer_(int stm)
 void PlayGameWidget::setWidgetsPlaying_(bool p)
 {    
     const bool
-        tourn = tc_.type() == TimeControl::T_Tournament,
+        tourn = isTournament(),
         timeplay = tourn || tc_.type() == TimeControl::T_Match,
         doinf = doInfoLines();
 
     ui_->b_new->setEnabled(!p);
-    ui_->b_continue->setEnabled(!p && !timeplay);
-    ui_->b_pause->setEnabled(p && !timeplay);
+    ui_->b_continue->setEnabled(!p && (!timeplay || !isHumanInvolved()));
+    ui_->b_pause->setEnabled(p && (!timeplay || !isHumanInvolved()));
     ui_->b_flip->setEnabled(!p);
-    ui_->b_resign->setEnabled(p);
+    ui_->b_resign->setEnabled(p && isHumanInvolved());
+    ui_->b_config->setEnabled(!p);
     ui_->nameEdit1->setEnabled(!p);
     ui_->nameEdit2->setEnabled(!p);
     ui_->engineCombo1->setEnabled(!p);
@@ -705,8 +706,8 @@ void PlayGameWidget::slotTimeout_(int stm)
     else
     {
         stop();
-        emit gameComment(("XXX timeout"));
-        //Q_ASSERT(!"XXX engine/engine not supported");
+        emit gameComment(stm == 0? tr("White lost in time") : tr("Black lost in time"));
+        emit pauseGame();
     }
 }
 

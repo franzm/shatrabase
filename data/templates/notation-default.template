@@ -19,7 +19,7 @@ CommentIndent=Never
 MainLineMoveColor=#000000
 CommentColor=#008000
 VariationColor=#0000ff
-NagColor=#C05050
+NagColor=#000000
 HeaderColor=#0000ff
 ShowHeader=false
 [OUTPUTHEADER]
