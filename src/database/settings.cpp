@@ -204,6 +204,8 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/General/autoCommitDB", false);
     map.insert("/General/gameStartPosition", 0);
     map.insert("/General/restartAnalysisOnMpv", false);
+    map.insert("/General/AnalysisLines1", 1);
+    map.insert("/General/AnalysisLines2", 1);
 
     map.insert("/GameText/FontSize",DEFAULT_FONTSIZE);
     map.insert("/MainWindow/GameToolBar", false);

@@ -309,7 +309,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Analysis Dock */
     DockWidgetEx* analysisDock = new DockWidgetEx(tr("Analysis 1"), this);
     analysisDock->setObjectName("AnalysisDock1");
-    AnalysisWidget* analysis = new AnalysisWidget(m_engineDebug);
+    AnalysisWidget* analysis = new AnalysisWidget(0, m_engineDebug);
     analysis->setObjectName("Analysis");
     analysisDock->setWidget(analysis);
     addDockWidget(Qt::RightDockWidgetArea, analysisDock);
@@ -332,7 +332,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Analysis Dock 2 */
     DockWidgetEx* analysisDock2 = new DockWidgetEx(tr("Analysis 2"), this);
 	analysisDock2->setObjectName("AnalysisDock2");
-    m_analysis2 = analysis = new AnalysisWidget(m_engineDebug);
+    m_analysis2 = analysis = new AnalysisWidget(1, m_engineDebug);
     analysis->setObjectName("Analysis2");
     analysisDock2->setWidget(analysis);
 	addDockWidget(Qt::RightDockWidgetArea, analysisDock2);

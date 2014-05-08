@@ -30,7 +30,7 @@ class AnalysisWidget : public QWidget
 {
     Q_OBJECT
 public:
-    AnalysisWidget(EngineDebugWidget * debug);
+    AnalysisWidget(int num, EngineDebugWidget * debug);
     ~AnalysisWidget();
 
     /** Get the main line */
@@ -82,6 +82,7 @@ private:
     Engine* m_engine;
     bool m_active, m_ignore;
     Board m_board;
+    int m_windowNumber;
 //  QString m_tablebaseEvaluation;
 //  Tablebase* m_tablebase;
 

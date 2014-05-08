@@ -18,10 +18,11 @@
 #include "enginedebugwidget.h"
 #include "messagedialog.h"
 
-AnalysisWidget::AnalysisWidget(EngineDebugWidget * debug)
+AnalysisWidget::AnalysisWidget(int num, EngineDebugWidget * debug)
         : QWidget(0),
           m_engine(0),
           m_ignore(false),
+          m_windowNumber(num),
           m_engineDebug(debug)
 {
     ui.setupUi(this);
@@ -151,6 +152,12 @@ void AnalysisWidget::slotReconfigure()
     f.setPointSize(fontSize);
     setFont(f);
     ui.variationText->setFont(f);
+
+    int mpv = AppSettings->getValue(
+                m_windowNumber == 0 ? "/General/AnalysisLines1" : "/General/AnalysisLines2"
+                                 ).toInt();
+    ui.vpcount->setValue(mpv);
+
 }
 
 void AnalysisWidget::showAnalysis(const Analysis& analysis)
@@ -216,6 +223,10 @@ void AnalysisWidget::slotMpvChanged(int mpv)
         if (!m_ignore)
             m_engine->setMpv(mpv);
     }
+
+    AppSettings->setValue(
+                m_windowNumber == 0 ? "/General/AnalysisLines1" : "/General/AnalysisLines2"
+                    , mpv);
 }
 
 
