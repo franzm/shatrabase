@@ -283,66 +283,52 @@ void PlayGameWidget::startNewGameOk()
     score_[0] = score_[1] = 0;
 
     // first player is engine? - then go
-    sendFreshBoardWhenReady_ = play_->player1IsEngine();
+    sendBoardWhenReady_ = play_->player1IsEngine();
+    sendBoard_.setStandardPosition();
 
     // run engines
     play_->activate();
 
     // start counting player 1
     initTiming_();
-    tc_.startMove();
+    if (isHuman(White))
+        tc_.startMove();
 }
 
 void PlayGameWidget::continue_()
 {
     emit continueGameRequest();
-    /*
-    // update widget Spaß
-    setWidgetsPlaying_(true);
-
-    playing_ = true;
-    ignoreAnswer_ = false;
-    // XXX should depend on player
-    sendFreshBoardWhenReady_ = play_->player1IsEngine();
-
-
-    play_->activate();
-    //XXX tc_.startMove();
-
-    emit continueGame();
-*/
-//    setPosition(boa);
-
-    // ... wait for setPosition() from MainWindow
 }
 
 void PlayGameWidget::continuePosition(const Board &board)
 {
-    winStm_ = -1;
-    // XXX curStm_ is actually last stm,
-    // will be flipped at end of func.
-    curStm_ = board.toMove();
-    userMoved_ = false;
-    ignoreAnswer_ = false;
+    SB_PLAY_DEBUG("PlayGameWidget::continuePosition(..)");
 
     // update widget Spaß
     setWidgetsPlaying_(true);
-    //setWidgetsPlayer_(curStm_);
+    setWidgetsPlayer_(curStm_);
 
+    winStm_ = -1;
+    // curStm_ is actually last stm,
+    // will be flipped at end of func.
+    curStm_ = board.toMove();
     playing_ = true;
+    userMoved_ = false;
     ignoreAnswer_ = false;
-    //sendFreshBoardWhenReady_ = !isHuman(curStm_);
+    score_[0] = score_[1] = 0;
+
+    sendBoardWhenReady_ = !isHuman(curStm_);
+    sendBoard_ = board;
 
     play_->activate();
 
     initTiming_(curStm_);
 
+    if (isHuman(curStm_))
+        tc_.startMove();
+
     curStm_ = (Color)(!curStm_);
 
-    startNewMove_(board);
-    /*
-    tc_.startMove();
-    setPosition();*/
 }
 
 void PlayGameWidget::stop()
@@ -429,7 +415,7 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
         ui_->led2->setValue(false);
     }
 
-    // bit hacky here
+    // XXX bit hacky here
     updateEngineWidgets_();
 }
 
@@ -461,14 +447,13 @@ void PlayGameWidget::enginesReady()
     if (!playing_)
         return;
 
-    if (sendFreshBoardWhenReady_)
+    if (sendBoardWhenReady_)
     {
-        sendFreshBoardWhenReady_ = false;
+        sendBoardWhenReady_ = false;
 
-        Board b;
-        b.setStandardPosition();
         //setPosition(b);
-        play_->setPosition(b,settings_(curStm_));
+        play_->setPosition(sendBoard_,settings_(curStm_));
+        tc_.startMove();
     }
 }
 
@@ -671,6 +656,8 @@ void PlayGameWidget::animationFinished(const Board& board)
 
 void PlayGameWidget::startNewMove_(const Board& board)
 {
+    SB_PLAY_DEBUG("PlayGameWidget::startNewMove_(..)");
+
     const Color stm = board.toMove();
 
     // update widets

@@ -224,8 +224,9 @@ private:
         //playerMultiPly_,
     /** Ignore the next answer from Engine */
         ignoreAnswer_,
-    /** Flag used when first player is Engine */
-        sendFreshBoardWhenReady_;
+    /** Flag used when first player is Engine, sends sendBoard_ */
+        sendBoardWhenReady_;
+    Board sendBoard_;
 
     // ---- time control ----
 
