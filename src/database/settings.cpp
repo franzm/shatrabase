@@ -246,8 +246,9 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
         map.insert(QString("/PlayGame/Player%1/maxTime").arg(i), 6000);
         map.insert(QString("/PlayGame/Player%1/maxDepth").arg(i), 0);
     }
-    map.insert(QString("/PlayGame/saveMoveTime"), false);
-    map.insert(QString("/PlayGame/saveScore"), false);
+    map.insert("/PlayGame/saveMoveTime", false);
+    map.insert("/PlayGame/saveScore", false);
+    map.insert("/PlayGame/restartEngineBetweenMoves", true);
 
     // custom colors (colordialog)
     for (int i=0; i<QColorDialog::customCount(); ++i)

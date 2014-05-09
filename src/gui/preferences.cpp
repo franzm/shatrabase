@@ -516,6 +516,7 @@ void PreferencesDialog::restoreSettings()
     // Play Game
     ui.cbSaveMoveTime->setChecked( AppSettings->getValue("/PlayGame/saveMoveTime").toBool() );
     ui.cbSaveScore->setChecked( AppSettings->getValue("/PlayGame/saveScore").toBool() );
+    ui.gameEngineRestartCheck->setChecked( AppSettings->getValue("/PlayGame/restartEngineBetweenMoves").toBool());
 
     // Time Control
     AppSettings->beginGroup("/TimeControl/");
@@ -604,6 +605,7 @@ void PreferencesDialog::saveSettings()
     // play game
     AppSettings->setValue("/PlayGame/saveMoveTime", ui.cbSaveMoveTime->isChecked());
     AppSettings->setValue("/PlayGame/saveScore", ui.cbSaveScore->isChecked());
+    AppSettings->setValue("/PlayGame/restartEngineBetweenMoves", ui.gameEngineRestartCheck->isChecked());
 
     // time control
     AppSettings->beginGroup("/TimeControl/");

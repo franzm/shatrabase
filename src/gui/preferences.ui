@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>574</height>
+    <height>596</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -1107,10 +1107,16 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1" colspan="4">
-           <widget class="QLineEdit" name="engineOptions">
-            <property name="placeholderText">
-             <string>Command Line Options</string>
+          <item row="4" column="4">
+           <widget class="QToolButton" name="engineOptionMore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Options</string>
             </property>
            </widget>
           </item>
@@ -1124,16 +1130,17 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="4">
-           <widget class="QToolButton" name="engineOptionMore">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+          <item row="2" column="1" colspan="4">
+           <widget class="QLineEdit" name="engineOptions">
+            <property name="placeholderText">
+             <string>Command Line Options</string>
             </property>
-            <property name="text">
-             <string>Options</string>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="4">
+           <widget class="QLineEdit" name="engineName">
+            <property name="placeholderText">
+             <string>Arbitrary name to identify engine </string>
             </property>
            </widget>
           </item>
@@ -1153,10 +1160,17 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1" colspan="4">
-           <widget class="QLineEdit" name="engineName">
-            <property name="placeholderText">
-             <string>Arbitrary name to identify engine </string>
+          <item row="4" column="1">
+           <widget class="QRadioButton" name="engineProtocolUSHI">
+            <property name="text">
+             <string>USHI</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Name:</string>
             </property>
            </widget>
           </item>
@@ -1172,20 +1186,6 @@
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="4" column="1">
-           <widget class="QRadioButton" name="engineProtocolUSHI">
-            <property name="text">
-             <string>USHI</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Name:</string>
-            </property>
-           </widget>
           </item>
           <item row="3" column="1" colspan="3">
            <widget class="QLineEdit" name="engineDirectory">
@@ -1278,6 +1278,16 @@
          </property>
          <property name="text">
           <string>Restart analysis on variation change</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="gameEngineRestartCheck">
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>Restart analysis between game moves</string>
          </property>
         </widget>
        </item>

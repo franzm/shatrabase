@@ -1,5 +1,6 @@
 #include "playgameengine.h"
 #include "enginedebugwidget.h"
+#include "settings.h"
 
 PlayGameEngine::PlayGameEngine(EngineDebugWidget * debug, QObject *parent)
     :   QObject             (parent),
@@ -43,6 +44,8 @@ void PlayGameEngine::stop()
 bool PlayGameEngine::createEngine_()
 {
     SB_PLAY_DEBUG("PlayGameEngine::createEngine_()");
+
+    stopBetweenMoves_ = AppSettings->getValue("/PlayGame/restartEngineBetweenMoves").toBool();
 
     destroyEngine_();
 

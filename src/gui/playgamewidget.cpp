@@ -318,7 +318,12 @@ void PlayGameWidget::continue_()
 
 void PlayGameWidget::continuePosition(const Board &board)
 {
+    winStm_ = -1;
+    // XXX curStm_ is actually last stm,
+    // will be flipped at end of func.
     curStm_ = board.toMove();
+    userMoved_ = false;
+    ignoreAnswer_ = false;
 
     // update widget Spaß
     setWidgetsPlaying_(true);
@@ -331,7 +336,9 @@ void PlayGameWidget::continuePosition(const Board &board)
     play_->activate();
 
     initTiming_(curStm_);
+
     curStm_ = (Color)(!curStm_);
+
     startNewMove_(board);
     /*
     tc_.startMove();
@@ -766,25 +773,24 @@ void PlayGameWidget::slotBlinkTimer_()
 
 void PlayGameWidget::slotTimeout_(int stm)
 {
-    // XXX This is all crap (alles Quark)
+    emit gameComment(stm == 0? tr("White lost in time") : tr("Black lost in time"));
 
-    if (stm == 0 && !play_->player1IsEngine())
-    {
-        stop();
-        emit playerLoses();
-    }
-    else
-    if (stm == 1 && play_->player2IsEngine())
-    {
-        stop();
-        emit playerWins();
-    }
-    else // engine vs. engine
-    {
-        emit gameComment(stm == 0? tr("White lost in time") : tr("Black lost in time"));
-        winStm_ = !stm;
-        stop();
+    winStm_ = !stm;
+
+    stop();
+
+    // engine vs. engine
+    if (!isHumanInvolved())
+
         emit gameEnded();
+
+    // player vs engine
+    else
+    {
+        if (isHuman((Color)stm))
+            emit playerLoses();
+        else
+            emit playerWins();
     }
 }
 
