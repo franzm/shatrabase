@@ -11,24 +11,24 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
-/** @ingroup Core
-   Low level list of moves, used by bitboard
-*/
 
-#ifndef __MOVELIST_H__
-#define __MOVELIST_H__
+#include "movelist.h"
 
-#include "move.h"
-#include <QVector>
-
-class MoveList : public QVector<Move>
+bool MoveList::isRepeating() const
 {
-public:
-    MoveList() : QVector<Move>() {}
-    inline Move& add() { push_back(Move()); return back(); }
+    for (int j=size()-1; j>0; --j)
+    {
+        int rc = 0;
+        for (int i=j-1; i>=0; --i)
+        {
+            if (at(i) == at(j))
+                rc ++;
 
-    /** Is there a repetition in the sequence of moves? */
-    bool isRepeating() const;
-};
+            if (rc>=2)
+                return true;
+        }
+    }
 
-#endif // __MOVELIST_H__
+    return false;
+}
+

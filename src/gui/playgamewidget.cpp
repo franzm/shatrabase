@@ -94,6 +94,7 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
     connect(play_, SIGNAL(moveInfo2(Move,int)), SLOT(infoFromEngine(Move,int)));
     connect(play_, SIGNAL(ready()), SLOT(enginesReady()));
     connect(play_, SIGNAL(engineClueless()), SLOT(engineClueless()));
+    connect(play_, SIGNAL(engineError(QString)), SLOT(engineError(const QString&)));
 
     setWidgetsPlaying_(false);
 
@@ -279,6 +280,7 @@ void PlayGameWidget::startNewGameOk()
     playing_ = true;
     userMoved_ = false;
     ignoreAnswer_ = false;
+    score_[0] = score_[1] = 0;
 
     // first player is engine? - then go
     sendFreshBoardWhenReady_ = play_->player1IsEngine();
@@ -424,13 +426,25 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
     updateEngineWidgets_();
 }
 
-void PlayGameWidget::setMoveTimeComment_(int mt)
+void PlayGameWidget::setMoveComment_(int mt, int score)
 {
+    QString s;
     if (AppSettings->getValue("/PlayGame/saveMoveTime").toBool())
     {
-        const QString s = tc_.msecToString(mt);
-        emit gameComment(s);
+        s += tc_.msecToString(mt);
     }
+    if (AppSettings->getValue("/PlayGame/saveScore").toBool()
+            && score)
+    {
+        if (!s.isEmpty())
+            s += " ";
+        if (score>0)
+            s += "+";
+        s += QString::number((qreal)score / 100);
+    }
+
+    if (!s.isEmpty())
+        emit gameComment(s);
 }
 
 void PlayGameWidget::enginesReady()
@@ -459,20 +473,29 @@ void PlayGameWidget::engineClueless()
     if (tc_.isMoving())
         tc_.endMove();
 
+
     // XXX what to do here?
-    QMessageBox::warning(
-             this,
-             tr("Shatra Engine"),
-             tr("Sorry, but the Engine did not respond\n"
-                "in the specified time... You win!"));
+    if (isHumanInvolved())
+        QMessageBox::warning(
+                 this,
+                 tr("Shatra Engine"),
+                 tr("Sorry, but the Engine did not respond\n"
+                    "in the specified time... You win!"));
 
     setWidgetsPlaying_(playing_ = false);
     stop();
+    emit gameComment(tr("Engine didn't respond"));
+    emit gameEnded();
+}
+
+void PlayGameWidget::engineError(const QString & str)
+{
+    emit gameComment("*ERROR* " + str);
 }
 
 void PlayGameWidget::setPosition(const Board& board)
 {
-    SB_PLAY_DEBUG("PlayGameWidget::setPosition() plyQue_.size()=" << plyQue_.size());
+    SB_PLAY_DEBUG("PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size());
 
     //qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
 
@@ -498,7 +521,9 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
         l = ui_->labelInfo2;
 
     if (m.sideMoving() == 1)
-        s = -s; 
+        s = -s;
+
+    score_[m.sideMoving()] = s;
 
     l->setText(QString("<html><b>%1</b> (<font color=\"#%3\">%2</font>)</html>")
                .arg(m.toNumeric())
@@ -547,6 +572,13 @@ void PlayGameWidget::moveFromEngine(Move m)
 //        qDebug() << "ENGINE MOVED";
         curStm_ = (Color)m.sideMoving();
         emit moveMade(m);
+
+        // clear 'what-was-i-thinking-field'
+        if (curStm_)
+            ui_->labelInfo2->clear();
+        else
+            ui_->labelInfo1->clear();
+
         return;
     }
 }
@@ -583,7 +615,7 @@ void PlayGameWidget::animationFinished(const Board& board)
 
         // only switches sides, tc_.stopMove() was called in setPosition()
         int mt = tc_.endMove();
-        setMoveTimeComment_(mt);
+        setMoveComment_(mt, 0);
 
         // switch sides if game not ended
         if (!checkGameResult_(board, true, true))
@@ -608,7 +640,7 @@ void PlayGameWidget::animationFinished(const Board& board)
 #ifdef SB_SINGLE_CAPTURE
         if (!transit)
 #endif
-        setMoveTimeComment_( tc_.getMoveTime(curStm_) );
+            setMoveComment_( tc_.getMoveTime(curStm_), score_[curStm_] );
 
         // check if last engine move ended game
         if (!checkGameResult_(board, true, true))

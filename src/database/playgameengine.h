@@ -56,7 +56,7 @@ signals:
     void engineClueless();
 
     /** What it says */
-    void engineCrashed();
+    void engineCrashed(const QString&);
 
 public slots:
 

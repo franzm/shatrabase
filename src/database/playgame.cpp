@@ -44,11 +44,11 @@ PlayGame::PlayGame(EngineDebugWidget * debug, QObject *parent)
     connect(engine1_, SIGNAL(ready()), SLOT(engineActivated1_()));
     connect(engine2_, SIGNAL(ready()), SLOT(engineActivated2_()));
 
-    connect(engine1_, SIGNAL(engineClueless()), SLOT(engineClueless_()));
-    connect(engine2_, SIGNAL(engineClueless()), SLOT(engineClueless_()));
+    connect(engine1_, SIGNAL(engineClueless()), SIGNAL(engineClueless()));
+    connect(engine2_, SIGNAL(engineClueless()), SIGNAL(engineClueless()));
 
-    connect(engine1_, SIGNAL(engineCrashed()), SLOT(engineClueless_()));
-    connect(engine1_, SIGNAL(engineCrashed()), SLOT(engineClueless_()));
+    connect(engine1_, SIGNAL(engineCrashed(QString)), SLOT(engineError_(QString)));
+    connect(engine1_, SIGNAL(engineCrashed(QString)), SLOT(engineError_(QString)));
 
     slotReconfigure();
 }
@@ -234,9 +234,4 @@ void PlayGame::engineActivated2_()
     player2Ready_ = true;
 }
 
-
-void PlayGame::engineClueless_()
-{
-   emit engineClueless();
-}
 

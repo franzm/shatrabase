@@ -121,7 +121,7 @@ void PlayGameEngine::engineError_(QProcess::ProcessError e)
 {
     Q_UNUSED(e);
     SB_PLAY_DEBUG("PlayGameEngine::engineError()" << Engine::processErrorText(e));
-    emit engineCrashed();
+    emit engineCrashed(Engine::processErrorText(e));
 }
 
 void PlayGameEngine::engineBestMove_(const Move& m)

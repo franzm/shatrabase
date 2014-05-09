@@ -214,7 +214,8 @@ SOURCES += src/database/board.cpp \
     src/database/timecontrol.cpp \
     src/database/playtimecontrol.cpp \
     src/database/ushienginetester.cpp \
-    src/database/metaanalysis.cpp
+    src/database/metaanalysis.cpp \
+    src/database/movelist.cpp
 
 OTHER_FILES += \
     TODO

@@ -477,6 +477,16 @@
             </widget>
            </item>
            <item>
+            <widget class="QCheckBox" name="cbSaveScore">
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>Save engine's score in gametext</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="verticalSpacer_5">
              <property name="orientation">
               <enum>Qt::Vertical</enum>

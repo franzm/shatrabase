@@ -132,6 +132,7 @@ private slots:
 
     void enginesReady();
     void engineClueless();
+    void engineError(const QString&);
     void moveFromEngine(Move);
     void infoFromEngine(Move,int);
 
@@ -190,8 +191,9 @@ private:
         Returns if game ended. */
     bool checkGameResult_(const Board&, bool triggerWinSignals, bool doStop);
 
-    /** Sends a comment to gametext with the given movetime (according to properties) */
-    void setMoveTimeComment_(int movetime_msec);
+    /** Sends a comment to gametext with the given info
+        (according to properties) */
+    void setMoveComment_(int movetime_msec, int score_cp);
 
     // ---- config ---
     QLed::ledColor colorPlayer_;
@@ -233,7 +235,8 @@ private:
     int timeMove_,
         timeStm_,
         totalTime_[2],
-        moveTime_[2];
+        moveTime_[2],
+        score_[2];
 
 };
 

@@ -76,6 +76,9 @@ signals:
     /** One of the Engines has timed out without returning a move */
     void engineClueless();
 
+    /** Emits an error string when something went wrong. */
+    void engineError(const QString& str);
+
     /** Emitted when a move has been suggested by Engine for Player 1 */
     void moveMade1(Move);
     /** Emitted when a move has been suggested by Engine for Player 2 */
@@ -115,7 +118,11 @@ protected slots:
     void engineMove1_(Move);
     void engineMove2_(Move);
 
-    void engineClueless_();
+    void engineError_(const QString& str)
+    {
+        emit engineError(str);
+        emit engineClueless();
+    }
 
 
 private:
