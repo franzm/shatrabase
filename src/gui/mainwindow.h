@@ -313,7 +313,7 @@ public slots:
     /* Database was changed - change informations. */
 	void slotDatabaseChanged();
     /* Delete current game. */
-	void slotDatabaseDeleteGame();
+    void slotDatabaseDeleteGames(const QVector<int>& idxs);
     /* Delete all game in filter. */
 	void slotDatabaseDeleteFilter();
     /* Compact database by removing obsolete information. */

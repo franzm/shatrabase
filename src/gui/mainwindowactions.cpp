@@ -1279,8 +1279,9 @@ void MainWindow::slotDatabaseCopy(int preselect)
 				m_databases[target]->database()->appendGame(g);
 		break;
 	default:
-		;
+        return;
 	}
+    slotDatabaseChanged();
     // XXX m_databases[target]->filter()->resize(m_databases[target]->database()->count(), true);
 }
 
@@ -1394,16 +1395,20 @@ void MainWindow::slotSearchTreeMove(const QModelIndex& index)
         slotBoardMove(m.from(), m.to(), 0);
 }
 
-void MainWindow::slotDatabaseDeleteGame()
+void MainWindow::slotDatabaseDeleteGames(const QVector<int>& idxs)
 {
-    int n = gameIndex();
-    if (database()->deleted(n))
+    for (int i=0; i<idxs.size(); ++i)
     {
-        database()->undelete(gameIndex());
-    }
-    else
-    {
-        database()->remove(gameIndex());
+        const int n = idxs[i];
+
+        if (database()->deleted(n))
+        {
+            database()->undelete(n);
+        }
+        else
+        {
+            database()->remove(n);
+        }
     }
     m_gameList->updateFilter();
 }

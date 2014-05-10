@@ -68,7 +68,7 @@ signals:
 	void searchDone();
     void raiseRequest();
     void requestCopyGame();
-    void requestDeleteGame();
+    void requestDeleteGames(const QVector<int>& idxs);
     void requestGameData(Game&);
 
 protected: //Drag'n'Drop Support

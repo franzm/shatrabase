@@ -154,7 +154,7 @@ void TimeControl::configure()
     if (!AppSettings->getValue("doNodeLimit").toBool())
         nodeLimit_ = Unlimited;
 
-    qDebug() << "depth" << depthLimit_ << "time" << timeLimit_ << "nodes" << nodeLimit_;
+    //qDebug() << "depth" << depthLimit_ << "time" << timeLimit_ << "nodes" << nodeLimit_;
 
     AppSettings->endGroup();
 #endif

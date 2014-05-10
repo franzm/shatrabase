@@ -90,10 +90,10 @@ void GameList::slotContextMenu(const QPoint& pos)
     if (cell.isValid() && selection.contains(cell))
     {
         QMenu menu(this);
-        menu.addAction(tr("Copy games..."), this, SLOT(slotCopyGame()));
+        menu.addAction(tr("Copy game(s) ..."), this, SLOT(slotCopyGame()));
         menu.addSeparator();
 
-        QAction* a = menu.addAction(tr("Delete game"), this, SLOT(slotDeleteGame()));
+        QAction* a = menu.addAction(tr("Delete/Undelete game(s)"), this, SLOT(slotDeleteGame()));
         a->setCheckable(true);
         a->setEnabled(!m_db->database()->isReadOnly());
         a->setChecked(m_db->database()->deleted(cell.row()));
@@ -230,7 +230,14 @@ void GameList::slotCopyGame()
 
 void GameList::slotDeleteGame()
 {
-    emit requestDeleteGame();
+    if (numSelected() < 1)
+        return;
+
+    QVector<int> idx;
+    for (int i=0; i<numSelected(); ++i)
+        idx.push_back(selectedGame(i));
+
+    emit requestDeleteGames(idx);
 }
 
 void GameList::startToDrag(const QModelIndex&)
@@ -251,31 +258,9 @@ void GameList::startToDrag(const QModelIndex&)
 int GameList::numSelected() const
 {
     return selectionModel()->selectedRows().size();
-    /*
-    int c = 0;
-    for (int i=0; i<selectionModel()->selection().size(); ++i)
-    {
-        c += selectionModel()->selection()[i].height();
-    }
-    return c;
-    */
 }
 
 int GameList::selectedGame(int index) const
 {
-    return selectionModel()->selectedRows()[index].row();
-    /*
-    int c = 0;
-    for (int i=0; i<selectionModel()->selection().size(); ++i)
-    {
-        for (int j=0; j<selectionModel()->selection()[i].height(); ++j, ++c)
-        {
-            qDebug() << "." << selectionModel()->selselection()[i].indexes()[j].row();
-            if (index == c)
-                return selectionModel()->selection()[i].indexes()[j].row();
-        }
-    }
-    //return selectionModel()->selection().indexes()[index].row();
-    return -1;
-    */
+    return m_sort->mapToSource(selectionModel()->selectedRows()[index]).row();
 }

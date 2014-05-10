@@ -179,11 +179,13 @@ QVariant DatabaseModel::data(const QModelIndex &index, int role) const
         {
             if (!db_->getValidFlag(i))
             {
-                QVariant v = QColor(Qt::red);
-                return v;
+                return QVariant(QColor(Qt::red));
             }
-            QVariant v = QColor(Qt::black);
-            return v;
+            else
+            if (db_->deleted(i))
+                return QVariant(QColor(Qt::gray));
+
+            return QVariant(QColor(Qt::black));
         }
     }
     return QVariant();
