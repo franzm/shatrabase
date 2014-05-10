@@ -557,7 +557,8 @@ void MainWindow::slotBoardClick(Square s, int button, QPoint pos)
 void MainWindow::slotMoveChanged()
 {
     const Game& g = game();
-    bool a = m_mainAnalysis->isEngineRunning();
+    bool a = m_mainAnalysis->isEngineRunning()
+            && !m_mainAnalysis->isFreeze();
     if (a) m_mainAnalysis->stopEngine();
 
     // Set board first
@@ -1104,7 +1105,10 @@ void MainWindow::slotToggleAutoPlayer()
 
 void MainWindow::slotAutoPlayTimeout()
 {
-    if (m_autoAnalysis->isChecked() && m_mainAnalysis->isEngineRunning() && (m_AutoInsertLastBoard != m_boardView->board()))
+    if (m_autoAnalysis->isChecked()
+    && m_mainAnalysis->isEngineRunning()
+    && !m_mainAnalysis->isFreeze()
+    && (m_AutoInsertLastBoard != m_boardView->board()))
     {
         Analysis a = m_mainAnalysis->getMainLine();
         if (!a.variation().isEmpty())

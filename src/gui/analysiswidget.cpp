@@ -56,7 +56,7 @@ void AnalysisWidget::setMetaMode(bool m)
 }
 
 void AnalysisWidget::startEngine()
-{
+{       
     int index = ui.engineList->currentIndex();
     stopEngine();
     if (index != -1)
@@ -136,6 +136,11 @@ void AnalysisWidget::slotVisibilityChanged(bool visible)
 bool AnalysisWidget::isEngineRunning() const
 {
     return (m_engine || m_metaengine) && ui.analyzeButton->isChecked();
+}
+
+bool AnalysisWidget::isFreeze() const
+{
+    return ui.freezeButton->isChecked();
 }
 
 void AnalysisWidget::engineActivated()
@@ -225,6 +230,9 @@ void AnalysisWidget::showAnalysis(const Analysis& analysis)
 
 void AnalysisWidget::setPosition(const Board& board)
 {
+    if (ui.freezeButton->isChecked())
+        return;
+
     if (m_board != board)
     {
         m_ignore = false;

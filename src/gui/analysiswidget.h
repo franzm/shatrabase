@@ -52,6 +52,8 @@ public slots:
 
     /** Is any engine running. */
     bool isEngineRunning() const;
+    /** Please don't touch me */
+    bool isFreeze() const;
     /** Turn on/off meta-analysis */
     void setMetaMode(bool);
 private slots:
