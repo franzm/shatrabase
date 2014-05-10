@@ -23,11 +23,14 @@ class CopyDialog : public QDialog
 {
 	Q_OBJECT
 	public:
-        enum SrcMode {SingleGame, Filter, AllGames};
+        enum SrcMode { SingleGame, Filter, SelectedGames, AllGames };
 		/* Create Preferences dialog */
 		CopyDialog(QWidget* parent = 0);
 		/* Destroy dialog */
 		virtual ~CopyDialog();
+        /** Turns on or off the 'selected games' radiobutton
+            and sets the text. */
+        void setSelectionVisible(int num);
 		/* Set current board */
 		void setDatabases(const QStringList& databases);
 		/* Get target database */

@@ -32,6 +32,9 @@ public:
     GameList(DatabaseInfo * db, QWidget* parent = 0);
     ~GameList();
 
+    int numSelected() const;
+    int selectedGame(int index) const;
+
     /** Set current database */
 public slots:
     /** Change current database */

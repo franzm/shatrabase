@@ -26,6 +26,13 @@ CopyDialog::~CopyDialog()
 {
 }
 
+void CopyDialog::setSelectionVisible(int num)
+{
+    ui.selectedButton->setVisible(num>0);
+    ui.selectedButton->setText(ui.selectedButton->text()
+                               + " (" + QString::number(num) + ")");
+}
+
 void CopyDialog::setDatabases(const QStringList& databases)
 {
 	ui.databaseList->clear();
@@ -51,6 +58,8 @@ void CopyDialog::setMode(SrcMode mode)
     case AllGames:
         ui.allButton->setChecked(true);
         break;
+    case SelectedGames:
+        ui.selectedButton->setChecked(true);
     }
 }
 
@@ -60,6 +69,8 @@ int CopyDialog::getMode() const
 		return SingleGame;
 	else if (ui.filterButton->isChecked())
 		return Filter;
-	else return AllGames;
+    else if (ui.selectedButton->isChecked())
+        return SelectedGames;
+    else return AllGames;
 }
 

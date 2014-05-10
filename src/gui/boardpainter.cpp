@@ -21,6 +21,12 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 
+#if (0)
+#   define SB_PAINTER_DEBUG(arg__) { qDebug() << arg; }
+#else
+#   define SB_PAINTER_DEBUG(unused__)
+#endif
+
 const int gBoard[64][2] = // graphics board x, y
 {
      {0,0},        {3,0}, {4,0}, {5,0},
@@ -260,7 +266,7 @@ BoardPainter::BoardPainter(BoardTheme * theme, QWidget *parent)
     m_animations    (0),
     m_anim_length   (0)
 {    
-//    qDebug() << "BoardPainter" << this;
+    SB_PAINTER_DEBUG("BoardPainter" << this);
     setScene(m_scene);
 
     // get size of the bitmaps
@@ -355,7 +361,7 @@ void BoardPainter::paintEvent(QPaintEvent * e)
     // start messure time
     if (m_start_anim)
     {
-        qDebug() << "starting animations";
+        SB_PAINTER_DEBUG("starting animations");
         m_anim_time.start();
         m_anim_timer.start();
         m_start_anim = false;
@@ -365,7 +371,7 @@ void BoardPainter::paintEvent(QPaintEvent * e)
 
 void BoardPainter::setBoard(const Board& board, const Move * move, Square ignore_to)
 {
-    qDebug() << "BoardPainter::setBoard(board," << (move? "anim" : "-") << ", " << ignore_to << ")";
+    SB_PAINTER_DEBUG("BoardPainter::setBoard(board," << (move? "anim" : "-") << ", " << ignore_to << ")");
 
     // keep side to turn
     m_is_white = board.toMove() == White;
@@ -399,7 +405,7 @@ void BoardPainter::setBoard(const Board& board, const Move * move, Square ignore
         emit animationFinished(board);
     else
     {
-        qDebug() << "qued" << m_animations << "animations";
+        SB_PAINTER_DEBUG("qued" << m_animations << "animations");
     }
 }
 
@@ -436,7 +442,7 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
             // don't animate when user dragged
             && to != ignore_to)
         {
-            //qDebug() << "turned defunkt " << i;
+            SB_PAINTER_DEBUG("turned defunkt " << i);
 
             PieceItem * pinew = pieceItemAt(i);
             addPixmapAnimation_(pinew,
@@ -453,7 +459,7 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
             // removed defunkt
             if (isDefunkt(pold))
             {
-                //qDebug() << "removed defunkt" << i;
+                SB_PAINTER_DEBUG("removed defunkt" << i);
                 addRemoveAnimation_(b, i, pold);
                 continue;
             }
@@ -462,7 +468,7 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
             int cap = BN[move.capturedAt()];
             if (cap == i)
             {
-                //qDebug() << "capturedAt" << cap;
+                SB_PAINTER_DEBUG("capturedAt" << cap);
                 addRemoveAnimation_(b, i, pold);
                 continue;
             }
@@ -849,12 +855,12 @@ int BoardPainter::animationLength_(Square from, Square to) const
 
 void BoardPainter::addMoveAnimation_(Square from, Square to)
 {
-    qDebug() << "BoardPainter::addMoveAnimation_("<<from<<","<<to<<")";
+    SB_PAINTER_DEBUG("BoardPainter::addMoveAnimation_("<<from<<","<<to<<")");
 
     PieceItem * p = pieceItemAt(to);
     if (!p)
     {
-        qDebug() << "illegal animation: no piece at " << to;
+        SB_PAINTER_DEBUG("illegal animation: no piece at " << to);
         return; // or throw a logic exception ;)
     }
 
@@ -870,7 +876,7 @@ void BoardPainter::addMoveAnimation_(Square from, Square to)
 
 void BoardPainter::addRemoveAnimation_(const Board& board, Square s, Piece p)
 {
-    qDebug() << "BoardPainter::addRemoveAnimation_("<<s<<","<<p<<")";
+    SB_PAINTER_DEBUG("BoardPainter::addRemoveAnimation_("<<s<<","<<p<<")");
 
     PieceItem * pi = pieceItemAt(s);
     //if (!pi)
@@ -886,7 +892,7 @@ void BoardPainter::addRemoveAnimation_(const Board& board, Square s, Piece p)
 
 void BoardPainter::addPixmapAnimation_(PieceItem *pi, const QPixmap &oldpix)
 {
-    qDebug() << "BoardPainter::addPixmapAnimation_("<<pi->square<<")";
+    SB_PAINTER_DEBUG("BoardPainter::addPixmapAnimation_("<<pi->square<<")");
 
     pi->animate = true;
     pi->anim_length = animationLength_();
@@ -959,7 +965,7 @@ void BoardPainter::animationStep_()
     {
         PieceItem * p = m_pieces[i];
 
-        //qDebug() << "animating " << p->square << " " << e << "/" << p->anim_length;
+        SB_PAINTER_DEBUG("animating " << p->square << " " << e << "/" << p->anim_length);
 
         // current animation position [0,1]
         qreal t = (qreal)e / p->anim_length;

@@ -959,7 +959,7 @@ Move SBoard::parseMove(const QString& algebraic)
 
         getAt;
         from = alph? at : NB[at];
-        //if (from > 144) return Move();
+        if (from > 144) return Move();
         if (!BN[from]) return move;
 
         if (alph && type != pieceTypeAt(from)) return move;

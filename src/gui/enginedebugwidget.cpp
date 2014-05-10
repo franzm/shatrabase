@@ -74,3 +74,4 @@ void EngineDebugWidget::showContextMenu(const QPoint& pos)
 
     m->deleteLater();
 }
+

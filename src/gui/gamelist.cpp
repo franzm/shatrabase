@@ -38,6 +38,9 @@ GameList::GameList(DatabaseInfo* db, QWidget* parent)
     m_sort = new SortFilterModel(this);
     m_sort->setSourceModel(m_model);
 
+    setSelectionMode(//QAbstractItemView::ContiguousSelection
+                     QAbstractItemView::ExtendedSelection);
+
     setModel(m_sort);
 	connect(this, SIGNAL(clicked(const QModelIndex&)), SLOT(itemSelected(const QModelIndex&)));
 	connect(this, SIGNAL(activated(const QModelIndex&)), SLOT(itemSelected(const QModelIndex&)));
@@ -89,10 +92,11 @@ void GameList::slotContextMenu(const QPoint& pos)
         QMenu menu(this);
         menu.addAction(tr("Copy games..."), this, SLOT(slotCopyGame()));
         menu.addSeparator();
-        QAction* deleteAction = menu.addAction(tr("Delete game"), this, SLOT(slotDeleteGame()));
-        deleteAction->setCheckable(true);
-        deleteAction->setEnabled(!m_db->database()->isReadOnly());
-        deleteAction->setChecked(m_db->database()->deleted(cell.row()));
+
+        QAction* a = menu.addAction(tr("Delete game"), this, SLOT(slotDeleteGame()));
+        a->setCheckable(true);
+        a->setEnabled(!m_db->database()->isReadOnly());
+        a->setChecked(m_db->database()->deleted(cell.row()));
         menu.exec(mapToGlobal(pos));
     }
 }
@@ -243,3 +247,35 @@ void GameList::startToDrag(const QModelIndex&)
     pDrag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction);
 }
 
+
+int GameList::numSelected() const
+{
+    return selectionModel()->selectedRows().size();
+    /*
+    int c = 0;
+    for (int i=0; i<selectionModel()->selection().size(); ++i)
+    {
+        c += selectionModel()->selection()[i].height();
+    }
+    return c;
+    */
+}
+
+int GameList::selectedGame(int index) const
+{
+    return selectionModel()->selectedRows()[index].row();
+    /*
+    int c = 0;
+    for (int i=0; i<selectionModel()->selection().size(); ++i)
+    {
+        for (int j=0; j<selectionModel()->selection()[i].height(); ++j, ++c)
+        {
+            qDebug() << "." << selectionModel()->selselection()[i].indexes()[j].row();
+            if (index == c)
+                return selectionModel()->selection()[i].indexes()[j].row();
+        }
+    }
+    //return selectionModel()->selection().indexes()[index].row();
+    return -1;
+    */
+}

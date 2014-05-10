@@ -238,7 +238,7 @@ void Histogram::mouseMoveEvent(QMouseEvent * e)
                 //: 'num.' means 'number of' or 'count'
                 msg += tr("%1: [%2: num. %3]").arg(i.value().key)
                         .arg(i.value().what[j])
-                        .arg(i.value().v[j]);
+                        .arg(i.value().v[j]) + " ";
             }
         }
 

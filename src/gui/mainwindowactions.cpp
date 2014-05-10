@@ -1235,19 +1235,26 @@ void MainWindow::slotDatabaseCopy(int preselect)
 	}
 	CopyDialog dlg(this);
     dlg.setMode((CopyDialog::SrcMode)preselect);
+    dlg.setSelectionVisible(m_gameList->numSelected());
+
 	QStringList db;
     for (int i = 0; i < m_databases.count(); ++i)
 		if (i != m_currentDatabase)
-			db.append(tr("%1. %2 (%3 games)").arg(i).arg(databaseName(i))
-				  .arg(m_databases[i]->database()->count()));
+            db.append(tr("%1. %2 (%3 games)")
+                      .arg(i)
+                      .arg(databaseName(i))
+                      .arg(m_databases[i]->database()->count()));
 	dlg.setDatabases(db);
 	if (dlg.exec() != QDialog::Accepted)
 		return;
+
 	int target = dlg.getDatabase();
 	if (target >= m_currentDatabase)
 		target++;
-	Game g;
-	switch (dlg.getMode()) {
+
+    Game g;
+    switch (dlg.getMode())
+    {
 	case CopyDialog::SingleGame:
 		m_databases[target]->database()->appendGame(game());
 		break;
@@ -1258,9 +1265,17 @@ void MainWindow::slotDatabaseCopy(int preselect)
                 m_databases[target]->database()->appendGame(g);
         */
 		break;
-	case CopyDialog::AllGames:
+    case CopyDialog::SelectedGames:
+        for (int i = 0; i < m_gameList->numSelected(); ++i)
+        {
+            qDebug() << "--" << m_gameList->selectedGame(i);
+            if (database()->loadGame(m_gameList->selectedGame(i), g))
+                m_databases[target]->database()->appendGame(g);
+        }
+        break;
+    case CopyDialog::AllGames:
         for (int i = 0; i < database()->count(); ++i)
-			if (database()->loadGame(i, g))
+            if (database()->loadGame(i, g))
 				m_databases[target]->database()->appendGame(g);
 		break;
 	default:
