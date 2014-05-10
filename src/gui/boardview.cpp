@@ -239,6 +239,9 @@ void BoardView::setBoard(const Board& value, const Move& move)
     // get all possible moves
     m_moves.clear();
     m_board.getMoveSquares(m_moves);
+    emit signalDisplayPositionInfo(
+                (m_moves.size()==1? tr("%1 move") : tr("%1 moves")).arg(m_moves.size())
+                );
 
     // update painter
     if (m_view)

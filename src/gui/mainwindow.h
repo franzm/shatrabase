@@ -328,6 +328,7 @@ public slots:
     void copyGame(QString fileName, const Game& game);
     /** Displays the message @p msg in the status bar. */
     void slotDisplayStatusMessage(const QString& msg);
+    void slotDisplayPositionInfo(const QString& msg);
 
     void slotTestPositionBase();
     void slotTestEngineEngine();
@@ -403,7 +404,8 @@ private:
     EngineDebugWidget * m_engineDebug;
     QToolBar* m_gameToolBar;
 	/* Status */
-	QLabel* m_statusFilter;
+    QLabel* m_statusFilter,
+          * m_positionInfo;
     QLabel* m_gameTitle;
 	/* Menus */
     QMenu * m_menuFile,

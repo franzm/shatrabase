@@ -114,6 +114,8 @@ signals:
     void externalClosed();
     /** Signal to display a message, e.g. on hover. */
     void signalDisplayMessage(const QString& msg);
+    /** Signal on setBoard */
+    void signalDisplayPositionInfo(const QString& msg);
 
     /** A piece move animation has been finished */
     void animationFinished(const Board& b);

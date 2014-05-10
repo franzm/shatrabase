@@ -110,6 +110,7 @@ MainWindow::MainWindow() : QMainWindow(),
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));
     connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
     connect(m_boardView, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
+    connect(m_boardView, SIGNAL(signalDisplayPositionInfo(QString)), SLOT(slotDisplayPositionInfo(QString)));
     connect(m_boardView, SIGNAL(animationFinished(Board)), SLOT(slotBoardAnimationFinished(Board)));
 
 
@@ -365,12 +366,12 @@ MainWindow::MainWindow() : QMainWindow(),
     m_oldSize = size();
     m_oldPos = pos();
 
-	/* Status */
-    m_statusFilter = new QLabel();
-    statusBar()->addPermanentWidget(m_statusFilter);
+    /* Status bar */
+    statusBar()->addPermanentWidget(m_positionInfo = new QLabel);
+    statusBar()->addPermanentWidget(m_statusFilter = new QLabel);
     statusBar()->setFixedHeight(statusBar()->height());
     statusBar()->setSizeGripEnabled(true);
-	m_progressBar = new QProgressBar;
+    m_progressBar = new QProgressBar;
 
     /* Reconfigure. */
     g_notation = AppSettings->getValue("/General/Notation").toBool();
@@ -1294,6 +1295,11 @@ void MainWindow::cancelOperation(const QString& msg)
 void MainWindow::slotDisplayStatusMessage(const QString& msg)
 {
     statusBar()->showMessage(msg);
+}
+
+void MainWindow::slotDisplayPositionInfo(const QString& msg)
+{
+    m_positionInfo->setText(msg);
 }
 
 bool MainWindow::QuerySaveGame()
