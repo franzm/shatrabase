@@ -31,6 +31,7 @@
 #include "sgndatabase.h"
 #include "playerlistwidget.h"
 #include "playgamewidget.h"
+#include "positionbase.h"
 #include "preferences.h"
 #include "savedialog.h"
 #include "settings.h"
@@ -1458,4 +1459,12 @@ void MainWindow::slotTestEngineEngine()
     test->setBinary(0,bin);
     test->setBinary(1,bin);
     test->startTests();
+}
+
+void MainWindow::slotTestPositionBase()
+{
+    PositionBase pb;
+
+    pb.addDatabase(*database());
+    pb.saveFile("/home/prog/shatra/positions.nn_input");
 }

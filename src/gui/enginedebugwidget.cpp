@@ -28,6 +28,7 @@ EngineDebugWidget::EngineDebugWidget(QWidget *parent) :
 {
     // enable contextmenu
     setContextMenuPolicy(Qt::CustomContextMenu);
+
     connect(this, SIGNAL(customContextMenuRequested(QPoint)),
                 this, SLOT(showContextMenu(const QPoint&)));
 }
@@ -56,8 +57,18 @@ void EngineDebugWidget::showContextMenu(const QPoint& pos)
 {
     QMenu * m = new QMenu(this);
 
-    QAction* a = m->addAction(tr("Clear"));
+    QAction* a = m->addAction(tr("Cl&ear"));
     connect(a, SIGNAL(triggered()), SLOT(clear()));
+    m->addSeparator();
+
+    a = m->addAction(tr("Select &all"));
+    connect(a, SIGNAL(triggered()), SLOT(selectAll()));
+
+    if (1)
+    {
+        a = m->addAction(tr("&Copy"));
+        connect(a, SIGNAL(triggered()), SLOT(copy()));
+    }
 
     m->exec(mapToGlobal(pos));
 
