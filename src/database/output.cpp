@@ -26,7 +26,7 @@ QString Output::outputTypeExtensionStr(OutputType t)
         case Html: return ".html";
         case Sgn: return ".sgn";
         case Latex: return ".tex";
-        defualt: return ".txt";
+        default: return ".txt";
     }
 }
 

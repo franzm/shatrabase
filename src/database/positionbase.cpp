@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-#include <QSaveFile>
+//#include <QSaveFile>
 
 #include "positionbase.h"
 
