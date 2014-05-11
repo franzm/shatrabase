@@ -529,8 +529,9 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
 
     bool isNum = AppSettings->getValue("/General/Notation").toBool() == NUM;
 
-    l->setText(QString("<html><b>%1</b> (<font color=\"#%3\">%2</font>)</html>")
+    l->setText(QString("<html><b>%1</b> (<font color=\"#%4\">%2%3</font>)</html>")
                .arg(isNum? m.toNumeric() : m.toAlgebraic())
+               .arg(s>0? "+" : "")
                .arg((qreal)s/100)
                .arg(s>0? "080" : s<0? "800" : "000"));
 }
