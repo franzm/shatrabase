@@ -10,7 +10,7 @@
 #include <QTime>
 #include <QTimer>
 
-#if 1
+#if 0
 #   define SB_PLAY_DEBUG(stream_arg__) { qDebug() << (void*)this << stream_arg__; }
 #else
 #   define SB_PLAY_DEBUG(unused__) { }

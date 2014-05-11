@@ -112,7 +112,7 @@ void PlayTimeControl::start(int stm)
 
 void PlayTimeControl::startMove()
 {
-    qDebug() << "startMove(" << move_ << "): " << (stm_? "Black" : "White");
+    //qDebug() << "startMove(" << move_ << "): " << (stm_? "Black" : "White");
 
     if (moving_) return; //Q_ASSERT(!moving_);
 
@@ -138,7 +138,7 @@ int PlayTimeControl::endMove()
 {
     int e = messure_.elapsed();
 
-    qDebug() << "endMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
+    //qDebug() << "endMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
 
     if (moving_)
     {
@@ -179,7 +179,7 @@ int PlayTimeControl::endMove()
 
 void PlayTimeControl::continueMove()
 {
-    qDebug() << "continueMove(" << move_ << "): " << (stm_? "Black" : "White");
+    //qDebug() << "continueMove(" << move_ << "): " << (stm_? "Black" : "White");
 
     if (moving_) return; //Q_ASSERT(!moving_);
 
@@ -201,7 +201,7 @@ int PlayTimeControl::stopMove()
 {
     int e = messure_.elapsed();
 
-    qDebug() << "stopMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
+    //qDebug() << "stopMove(" << move_ << "): " << (stm_? "Black" : "White") << e << "ms";
 
     if (!moving_) return moveTime_[stm_]; //Q_ASSERT(moving_);
 

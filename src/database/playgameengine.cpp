@@ -244,9 +244,7 @@ bool PlayGameEngine::setPosition(const Board &b, const Engine::SearchSettings& s
         sendPositionOnReady_ = true;
         board_ = b;
 
-        qDebug() << "calling act";
         engine_->activate();
-        qDebug() << "ret";
         return true; // best guess
     }
 

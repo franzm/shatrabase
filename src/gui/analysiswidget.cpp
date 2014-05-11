@@ -145,7 +145,7 @@ bool AnalysisWidget::isFreeze() const
 
 void AnalysisWidget::engineActivated()
 {
-    qDebug() << "AnalysisWidget::engineActivated()";
+    //qDebug() << "AnalysisWidget::engineActivated()";
 
     ui.analyzeButton->setChecked(true);
     ui.analyzeButton->setText(tr("Stop"));

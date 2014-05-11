@@ -26,7 +26,7 @@
 #include "engineoptiondata.h"
 
 
-#if 1
+#if 0
 #   define SB_ENGINE_DEBUG(stream_arg__) \
     { QString str__; QDebug deb__(&str__); deb__ << stream_arg__; engineDebug(this, D_Debug, str__); }
 #else

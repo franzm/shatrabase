@@ -639,7 +639,7 @@ void MainWindow::slotGameVarExit()
 
 void MainWindow::slotGameAddComment(const QString& s)
 {
-    qDebug() << "add game comment" << s;
+    //qDebug() << "add game comment" << s;
     game().setAnnotation(s);
     slotGameChanged(false);
 }

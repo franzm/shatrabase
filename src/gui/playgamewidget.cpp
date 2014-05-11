@@ -530,8 +530,6 @@ void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
 
-    qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
-
 #ifndef SB_SINGLE_CAPTURE
     // stop counter on first engine move
     // (potential multi-capture is already generated so don't count further)
