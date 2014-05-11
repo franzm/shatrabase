@@ -143,7 +143,8 @@ void PlayGameEngine::engineError_(QProcess::ProcessError e)
 
 void PlayGameEngine::engineBestMove_(const Move& m)
 {
-    SB_PLAY_DEBUG("PlayGameEngine::engineBestMove_()");
+    SB_PLAY_DEBUG("PlayGameEngine::engineBestMove_() listening_="<<listening_);
+    //qDebug() << "PlayGameEngine::engineBestMove_() listening_="<<listening_;
 
     if (!listening_)
         return;
@@ -201,7 +202,10 @@ void PlayGameEngine::sendMoves_()
     else
     {
         if (gotBestMove_)
+        {
+            //qDebug() << "send"<<bestMove_.toNumeric();
             emit moveMade(bestMove_);
+        }
         else
         if (!bestMoves_.empty())
         {

@@ -497,7 +497,8 @@ void PlayGameWidget::setPosition(const Board& board)
 
     if (!playing_) return;
 
-    //qDebug() << "PLAYER MOVED";
+    // XXX reset engine que
+    plyQue_.clear();
 
     // player's move ended (or at least one ply)
     tc_.stopMove();
@@ -532,6 +533,7 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
 void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
+//    qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
 
 #ifndef SB_SINGLE_CAPTURE
     // stop counter on first engine move
@@ -564,6 +566,7 @@ void PlayGameWidget::moveFromEngine(Move m)
 
     // first ply of a sequence can be send right away
     if (plyQue_.size() == 1)
+
     {
 //        qDebug() << "ENGINE MOVED";
         curStm_ = (Color)m.sideMoving();
@@ -594,6 +597,7 @@ void PlayGameWidget::animationFinished(const Board& board)
         winStm_ = Draw;
         emit gameComment("Draw by repetition");
         stop();
+        // XXX need a signal/slot for player notice
         emit gameEnded();
         return;
     }
