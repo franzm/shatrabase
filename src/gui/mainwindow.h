@@ -443,6 +443,7 @@ private:
     Square m_annotationSquare;
     QAction* m_autoPlay;
     QAction* m_autoAnalysis;
+    QVector<quint64> m_hashHistory;
 
     // stuff for storing non-maximized state
     QPoint m_oldPos;

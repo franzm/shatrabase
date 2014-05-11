@@ -818,6 +818,8 @@ void MainWindow::slotPlayGameMove(Move m)
         game().forward();
     }
 
+    m_hashHistory.push_back(game().board().getHashValue());
+
     slotGameChanged();
 }
 

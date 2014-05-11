@@ -107,6 +107,9 @@ public:
         return m_arrowAnnotation;
     }
 
+    /** Return true when there is a repetition in history. */
+    static bool isRepeating(const QVector<quint64>& hash_history);
+
 private:
     quint64 m_hashValue;
     

@@ -108,7 +108,19 @@ void BoardView::displayMessage(const QString& msg)
 
 QString BoardView::squareToString_(Square s) const
 {
-    QString r = QString("square %1 ").arg(s);
+    bool isNum = AppSettings->getValue("/General/Notation").toBool() == NUM;
+
+    QString r = tr("square") + " ";
+    if (isNum)
+        r += QString::number(s);
+    else
+    {
+        int an = NB[s];
+        r += (char)(((an>>4)&15)-1+'a');
+        r += QString::number(an&15);
+    }
+    r += " ";
+
     switch (m_board.pieceAt(s))
     {
         case WhiteBatyr:  r += tr("white batyr"); break;

@@ -13,6 +13,7 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include <QVector>
 #include "board.h"
 
 quint64 RAND_VALUES[MAX_PIECES][MAX_SQUARES];
@@ -281,3 +282,26 @@ Board getStandardStartBoard()
 
 const Board standardStartBoard = getStandardStartBoard();
 
+
+bool Board::isRepeating(const QVector<quint64> &his)
+{
+    if (his.size() < 2)
+        return false;
+
+    int rep = 0;
+    for (int j=his.size()-1; j>0; --j)
+    {
+        quint64 h = his[j];
+        for (int i=j-1; i>=0; --i)
+        {
+            if (his[i] == h)
+            {
+                rep++;
+                if (rep>=2)
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
