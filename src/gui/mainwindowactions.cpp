@@ -794,7 +794,12 @@ void MainWindow::slotPlayGameEnd()
     if (m_playGame->doAutoSaveAndContinue())
     {
         m_nextGameSaveQuick = true; /* avoid save dialog */
-        m_playGame->startNewGame();
+        // XXX wait a while before restart
+        QTimer * t = new QTimer(this);
+        t->setInterval(500);
+        connect(t,SIGNAL(timeout()),m_playGame,SLOT(startNewGame()));
+        connect(t,SIGNAL(timeout()),t,SLOT(deleteLater()));
+        t->start();
     }
 }
 
