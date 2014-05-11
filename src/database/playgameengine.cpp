@@ -9,7 +9,8 @@ PlayGameEngine::PlayGameEngine(EngineDebugWidget * debug, QObject *parent)
         minWaitTime_        (500),
         stopBetweenMoves_   (true),
         listening_          (false),
-        sendPositionOnActivate_(false)
+        sendPositionOnReady_(false),
+        dontSendReady_      (false)
 {
     SB_PLAY_DEBUG("PlayGameEngine::PlayGameEngine()");
 
@@ -47,7 +48,8 @@ bool PlayGameEngine::createEngine_()
 
     stopBetweenMoves_ = AppSettings->getValue("/PlayGame/restartEngineBetweenMoves").toBool();
 
-    destroyEngine_();
+    if (engine_)
+        destroyEngine_();
 
     EngineList elist;
     elist.restore();
@@ -58,18 +60,21 @@ bool PlayGameEngine::createEngine_()
         engine_ = Engine::newEngine(i);
 
         connect(engine_, SIGNAL(activated()), SLOT(engineActivated_()));
+        connect(engine_, SIGNAL(readyOk()), SLOT(engineReadyOk_()));
         connect(engine_, SIGNAL(error(QProcess::ProcessError)), SLOT(engineError_(QProcess::ProcessError)));
         connect(engine_, SIGNAL(deactivated()), SLOT(engineDeactivated_()));
-        /*connect(engine_, SIGNAL(analysisUpdated(const Analysis&)),
-                                    SLOT(engineAnalysis_(const Analysis&)));*/
         connect(engine_, SIGNAL(analysisUpdated(Analysis)),
                                     SLOT(engineAnalysis_(const Analysis&)));
         connect(engine_, SIGNAL(bestMoveSend(Move)), SLOT(engineBestMove_(Move)));
+
+        // debug
         if (engineDebug_)
         {
             connect(engine_, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
                     engineDebug_, SLOT(slotEngineDebug(Engine*,Engine::DebugType,QString)));
         }
+        connect(engine_, SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
+                         SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)));
 
         //if (!stopBetweenMoves_)
             engine_->activate();
@@ -100,18 +105,27 @@ void PlayGameEngine::destroyEngine_()
 
 void PlayGameEngine::engineActivated_()
 {
-    SB_PLAY_DEBUG("PlayGameEngine::engineActivated() sendPositionOnActivate_="
-                    << sendPositionOnActivate_);
+    SB_PLAY_DEBUG("PlayGameEngine::engineActivated_() sendPositionOnReady_="
+                    << sendPositionOnReady_);
+}
 
-    emit ready();
+void PlayGameEngine::engineReadyOk_()
+{
+    SB_PLAY_DEBUG("PlayGameEngine::engineReadyOk_() sendPositionOnReady_="
+                    << sendPositionOnReady_);
 
     // keep right going
-    if (sendPositionOnActivate_)
+    if (sendPositionOnReady_)
     {
         startAnalysis_(board_);
 
-        sendPositionOnActivate_ = false;
+        sendPositionOnReady_ = false;
     }
+
+    if (!dontSendReady_)
+        emit ready();
+    else
+        dontSendReady_ = false;
 
 }
 
@@ -212,19 +226,27 @@ bool PlayGameEngine::setPosition(const Board &b, const Engine::SearchSettings& s
 {
     SB_PLAY_DEBUG("PlayGameEngine::setPosition() stopBetweenMoves_=" << stopBetweenMoves_);
 
-    if (!engine_) return false;
+    if (!engine_)
+    {
+        qDebug() << "*** PlayGameEngine::setPosition(..) without engine_";
+        return false;
+    }
 
     settings_ = settings;
 
     if (stopBetweenMoves_)
     {
+        dontSendReady_ = true;
+
         if (engine_->isRunning())
             engine_->deactivate();
 
-        sendPositionOnActivate_ = true;
+        sendPositionOnReady_ = true;
         board_ = b;
 
+        qDebug() << "calling act";
         engine_->activate();
+        qDebug() << "ret";
         return true; // best guess
     }
 
@@ -234,7 +256,13 @@ bool PlayGameEngine::setPosition(const Board &b, const Engine::SearchSettings& s
 
 bool PlayGameEngine::startAnalysis_(const Board& b)
 {
-    if (!engine_) return false;
+    SB_PLAY_DEBUG("PlayGameEngine::startAnalysis_(...) engine_="<<engine_);
+
+    if (!engine_)
+    {
+        qDebug() << "*** PlayGameEngine::startAnalysis_(..) without engine_";
+        return false;
+    }
 
     listening_ = true;
     gotMove_ = gotBestMove_ = false;

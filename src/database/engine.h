@@ -138,6 +138,8 @@ public:
 signals:
     /** Fired when the engine is activated */
 	void activated();
+    /** XXX the uci/ushi ready signal */
+    void readyOk();
 
     /** Fired when the engine is deactivated */
 	void deactivated();

@@ -20,11 +20,18 @@
 #include "settings.h"
 #include "logstream.h"
 #include "ushienginetester.h"
+#include "playenginetester.h"
 
 int main(int argc, char** argv)
 {
 	AppSettings = new Settings;
     QApplication a(argc, argv);
+/*
+    PlayEngineTester t;
+    t.run();
+    a.exec();
+    return 0;*/
+
 
 #ifdef Q_OS_MAC
     signal(SIGPIPE, SIG_IGN);

@@ -127,7 +127,8 @@ HEADERS += src/database/board.h \
     src/database/playtimecontrol.h \
     src/database/ushienginetester.h \
     src/database/metaanalysis.h \
-    src/database/positionbase.h
+    src/database/positionbase.h \
+    src/database/playenginetester.h
 
 SOURCES += src/database/board.cpp \
     src/database/arrayhashkey.cpp \
@@ -217,7 +218,8 @@ SOURCES += src/database/board.cpp \
     src/database/ushienginetester.cpp \
     src/database/metaanalysis.cpp \
     src/database/movelist.cpp \
-    src/database/positionbase.cpp
+    src/database/positionbase.cpp \
+    src/database/playenginetester.cpp
 
 OTHER_FILES += \
     TODO

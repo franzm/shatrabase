@@ -37,7 +37,9 @@ bool USHIEngine::startAnalysis(const Board& board, int nv,
                     << settings.btime << ")");
 
 	m_mpv = nv;
-	if (!isActive()) {
+    if (!isActive())
+    {
+        qDebug() << "*** USHIEngine::startAnalysis() on inactive engine";
 		return false;
 	}
 
@@ -145,6 +147,8 @@ void USHIEngine::processMessage(const QString& message)
 
             // XXX below now
             //send("setoption name USHI_AnalyseMode value true");
+
+            emit readyOk();
 		}
 
         if (m_waitingOn == "ushinewgame")

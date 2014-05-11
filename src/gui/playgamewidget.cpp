@@ -271,6 +271,9 @@ void PlayGameWidget::startNewGame()
 
 void PlayGameWidget::startNewGameOk()
 {
+    if (isPlaying())
+        stop();
+
     // update widget Spaß
     setWidgetsPlayer_(White);
     setWidgetsPlaying_(true);
@@ -304,10 +307,6 @@ void PlayGameWidget::continuePosition(const Board &board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::continuePosition(..)");
 
-    // update widget Spaß
-    setWidgetsPlaying_(true);
-    setWidgetsPlayer_(curStm_);
-
     winStm_ = -1;
     // curStm_ is actually last stm,
     // will be flipped at end of func.
@@ -316,6 +315,10 @@ void PlayGameWidget::continuePosition(const Board &board)
     userMoved_ = false;
     ignoreAnswer_ = false;
     score_[0] = score_[1] = 0;
+
+    // update widget Spaß
+    setWidgetsPlaying_(true);
+    setWidgetsPlayer_(curStm_);
 
     sendBoardWhenReady_ = !isHuman(curStm_);
     sendBoard_ = board;
@@ -452,7 +455,7 @@ void PlayGameWidget::enginesReady()
         sendBoardWhenReady_ = false;
 
         //setPosition(b);
-        play_->setPosition(sendBoard_,settings_(curStm_));
+        play_->setPosition(sendBoard_,settings_(sendBoard_.toMove()));
         tc_.startMove();
     }
 }

@@ -124,7 +124,7 @@ void Engine::deleteProcess_()
 
 void Engine::activate(bool do_wait)
 {
-    SB_ENGINE_DEBUG("Engine::activate("<<do_wait<<")");
+    SB_ENGINE_DEBUG("Engine::activate( wait="<<do_wait<<")");
 
     if (m_process)
     {
@@ -206,14 +206,12 @@ void Engine::setActive(bool active)
 		emit activated();
     }
     else
+    if (!active && m_active)
     {
-        if (!active && m_active)
-        {
-			setAnalyzing(false);
-			m_active = false;
-			emit deactivated();
-		}
-	}
+        setAnalyzing(false);
+        m_active = false;
+        emit deactivated();
+    }
 }
 
 void Engine::setAnalyzing(bool analyzing)

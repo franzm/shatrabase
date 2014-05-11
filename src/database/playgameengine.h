@@ -10,7 +10,7 @@
 #include <QTime>
 #include <QTimer>
 
-#if 0
+#if 1
 #   define SB_PLAY_DEBUG(stream_arg__) { qDebug() << (void*)this << stream_arg__; }
 #else
 #   define SB_PLAY_DEBUG(unused__) { }
@@ -58,6 +58,9 @@ signals:
     /** What it says */
     void engineCrashed(const QString&);
 
+    /** debug info */
+    void engineDebug(Engine*, Engine::DebugType, const QString& msg);
+
 public slots:
 
     /** Sets new position and queries the Engine.
@@ -70,6 +73,7 @@ private slots:
 
     void engineActivated_();
     void engineDeactivated_();
+    void engineReadyOk_();
     void engineError_(QProcess::ProcessError);
     void engineAnalysis_(const Analysis&);
     void engineBestMove_(const Move&);
@@ -134,7 +138,9 @@ private:
     /** Discard any input from Engine if this is false. */
         listening_,
     /** used to send position in stopBetweenMoves mode */
-        sendPositionOnActivate_;
+        sendPositionOnReady_,
+    /** used to not delegate the readyOk signal */
+        dontSendReady_;
 };
 
 #endif // PLAYGAMEENGINE_H
