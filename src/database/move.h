@@ -325,31 +325,15 @@ inline QString Move::toAlgebraic() const
     if (!isLegal()) return "?";
 
     QString alg;
-    alg += '`' + (f>>4);
-    alg += QString::number(f & 0xf);
-    alg += '`' + (t>>4);
-    alg += QString::number(t & 0xf);
+    alg += strSquareNames[BN[from()]-1];
+    alg += isCapture()? ':' : '-';
+    alg += strSquareNames[BN[to()]-1];
     return alg;
 }
 
 inline QString Move::toNumeric() const
 {
     if (!isLegal()) return "?";
-
-#define x 0
-static const int BN[144] = { // table converts to numerical system
-
-    x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  17, 24, 31, 38, 45, 52, x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  16, 23, 30, 37, 44, 51, x,  x,  x,  x,  x,
-    x,  3,  6,  9,  x,  15, 22, 29, 36, 43, 50, x,  56, 59, 62, x,
-    x,  2,  5,  8,  10, 14, 21, 28, 35, 42, 49, 53, 55, 58, 61, x,
-    x,  1,  4,  7,  x,  13, 20, 27, 34, 41, 48, x,  54, 57, 60, x,
-    x,  x,  x,  x,  x,  12, 19, 26, 33, 40, 47, x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  11, 18, 25, 32, 39, 46, x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x
-};
-#undef x
 
     QString n;
     n += QString::number(BN[from()]);

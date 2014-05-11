@@ -42,53 +42,6 @@ enum D
 
 const D dir[8] = { s, sw, w, nw, n, ne, e, se };
 
-#define x 0x20
-const ubyte SB[144] = {	// empty board
-
-    x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  0,  0,  0,  0,  0,  0,  x,  x,  x,  x,  x,      // a-file
-    x,  x,  x,  x,  x,  0,  0,  0,  0,  0,  0,  x,  x,  x,  x,  x,      // b-file
-    x,  0,  0,  0,  x,  0,  0,  0,  0,  0,  0,  x,  0,  0,  0,  x,      // c-file       E
-    x,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  x,      // d-file     N + S
-    x,  0,  0,  0,  x,  0,  0,  0,  0,  0,  0,  x,  0,  0,  0,  x,      // e-file       W
-    x,  x,  x,  x,  x,  0,  0,  0,  0,  0,  0,  x,  x,  x,  x,  x,      // f-file
-    x,  x,  x,  x,  x,  0,  0,  0,  0,  0,  0,  x,  x,  x,  x,  x,      // g-file
-    x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x
-};
-#undef x
-
-#define x 0
-const int BN[144] = { // table converts to numerical system
-
-    x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  17, 24, 31, 38, 45, 52, x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  16, 23, 30, 37, 44, 51, x,  x,  x,  x,  x,
-    x,  3,  6,  9,  x,  15, 22, 29, 36, 43, 50, x,  56, 59, 62, x,    
-    x,  2,  5,  8,  10, 14, 21, 28, 35, 42, 49, 53, 55, 58, 61, x,
-    x,  1,  4,  7,  x,  13, 20, 27, 34, 41, 48, x,  54, 57, 60, x,    
-    x,  x,  x,  x,  x,  12, 19, 26, 33, 40, 47, x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  11, 18, 25, 32, 39, 46, x,  x,  x,  x,  x,
-    x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x
-};
-#undef x
-
-const int NB[64] = {  // numeric indices into array of board squares
-                      //  also useful for conversion to alphanumeric  
-    0x00,       0x51, 0x41, 0x31,    // eg 0x51 is 'e1', 0x15 is 'a5'
-                0x52, 0x42, 0x32,
-                0x53, 0x43, 0x33,
-                      0x44,
-    0x75, 0x65, 0x55, 0x45, 0x35, 0x25, 0x15,
-    0x76, 0x66, 0x56, 0x46, 0x36, 0x26, 0x16,
-    0x77, 0x67, 0x57, 0x47, 0x37, 0x27, 0x17,
-    0x78, 0x68, 0x58, 0x48, 0x38, 0x28, 0x18,
-    0x79, 0x69, 0x59, 0x49, 0x39, 0x29, 0x19,
-    0x7a, 0x6a, 0x5a, 0x4a, 0x3a, 0x2a, 0x1a,
-                      0x4b,
-                0x5c, 0x4c, 0x3c,
-                0x5d, 0x4d, 0x3d,
-                0x5e, 0x4e, 0x3e
-};
 
 // magic numbers :)
 const int sRules[2][3] = {{ 1, 131, 199 }, { 16, 56, 124 }};
