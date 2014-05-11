@@ -284,6 +284,7 @@ void PlayGameWidget::startNewGameOk()
     userMoved_ = false;
     ignoreAnswer_ = false;
     score_[0] = score_[1] = 0;
+    hashHistory_.clear();
 
     // first player is engine? - then go
     sendBoardWhenReady_ = play_->player1IsEngine();
@@ -585,6 +586,17 @@ void PlayGameWidget::animationFinished(const Board& board)
 
     if (!playing_)
         return;
+
+    hashHistory_.push_back(board.getHashValue());
+    if (Board::isRepeating(hashHistory_))
+    {
+        // XXX may work :|
+        winStm_ = Draw;
+        emit gameComment("Draw by repetition");
+        stop();
+        emit gameEnded();
+        return;
+    }
 
     // don't restart an ended game
     //if (checkGameResult_(board, false, false))

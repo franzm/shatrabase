@@ -523,7 +523,9 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
     }
 
     if (m_playGame->isPlaying())
+    {
         m_playGame->setPosition(board);
+    }
 
     slotGameChanged();
 }
@@ -817,8 +819,6 @@ void MainWindow::slotPlayGameMove(Move m)
 
         game().forward();
     }
-
-    m_hashHistory.push_back(game().board().getHashValue());
 
     slotGameChanged();
 }

@@ -218,6 +218,7 @@ private:
     bool userMoved_;
     int winStm_;
     QList<Move> plyQue_;
+    QVector<quint64> hashHistory_;
 
     bool playing_,
     /* Player is within a multi capture sequence */
