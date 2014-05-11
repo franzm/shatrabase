@@ -161,14 +161,16 @@ void USHIEngine::processMessage(const QString& message)
             // -- construct go command --
 
             QString cmd("go");
+            if (m_settings.maxNodes != SearchSettings::Unlimited)
+                cmd += QString(" nodes %1").arg(m_settings.maxNodes);
             if (m_settings.maxDepth != SearchSettings::Unlimited)
                 cmd += QString(" depth %1").arg(m_settings.maxDepth);
+            if (m_settings.maxTime != SearchSettings::Unlimited)
+                cmd += QString(" movetime %1").arg(m_settings.maxTime);
             if (m_settings.btime != SearchSettings::Unlimited)
                 cmd += QString(" btime %1").arg(m_settings.btime);
             if (m_settings.btime != SearchSettings::Unlimited)
                 cmd += QString(" wtime %1").arg(m_settings.wtime);
-            if (m_settings.maxTime != SearchSettings::Unlimited)
-                cmd += QString(" movetime %1").arg(m_settings.maxTime);
             if (m_settings.movestogo != SearchSettings::Unlimited)
                 cmd += QString(" movestogo %1").arg(m_settings.movestogo);
             if (m_settings.isUnlimited())

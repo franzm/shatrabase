@@ -285,6 +285,7 @@ void PlayGameWidget::startNewGameOk()
     ignoreAnswer_ = false;
     score_[0] = score_[1] = 0;
     hashHistory_.clear();
+    plyQue_.clear();
 
     // first player is engine? - then go
     sendBoardWhenReady_ = play_->player1IsEngine();
@@ -316,6 +317,8 @@ void PlayGameWidget::continuePosition(const Board &board)
     userMoved_ = false;
     ignoreAnswer_ = false;
     score_[0] = score_[1] = 0;
+    hashHistory_.clear();
+    plyQue_.clear();
 
     // update widget Spaß
     setWidgetsPlaying_(true);
@@ -341,6 +344,7 @@ void PlayGameWidget::stop()
         tc_.endMove();
     setWidgetsPlaying_(playing_ = false);
     play_->deactivate();
+    plyQue_.clear();
 }
 
 void PlayGameWidget::stopThinking()
@@ -349,6 +353,7 @@ void PlayGameWidget::stopThinking()
     ignoreAnswer_ = true;
     blinkTimer_.stop();
     play_->deactivate();
+    plyQue_.clear();
 }
 
 void PlayGameWidget::pause_()
@@ -508,7 +513,7 @@ void PlayGameWidget::setPosition(const Board& board)
                 (Color)(!board.toMove())
                        : board.toMove();
 
-    userMoved_ = true;
+    userMoved_ = isHuman((Color)!curStm_);
 }
 
 void PlayGameWidget::infoFromEngine(Move m, int s)
@@ -533,7 +538,7 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
 void PlayGameWidget::moveFromEngine(Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
-//    qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
+    //qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
 
 #ifndef SB_SINGLE_CAPTURE
     // stop counter on first engine move

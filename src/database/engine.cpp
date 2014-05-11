@@ -114,7 +114,10 @@ void Engine::deleteProcess_()
     SB_ENGINE_DEBUG("Engine::deleteProcess_()");
     if (m_process)
     {
-        m_process->waitForFinished(200);
+        disconnect(m_process, SIGNAL(error(QProcess::ProcessError)), 0,0);
+        disconnect(m_process, SIGNAL(readyReadStandardOutput()), 0,0);
+
+        m_process->waitForFinished(70);
         m_process->deleteLater();
         m_process = 0;
     }
@@ -142,7 +145,7 @@ void Engine::activate(bool do_wait)
         connect(m_process, SIGNAL(readyReadStandardOutput()), SLOT(pollProcess()));
         connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(processExited()));
         if (do_wait)
-            m_process->waitForStarted(1000);
+            m_process->waitForStarted(70);
         else
             m_process->start(m_command);
         SB_ENGINE_DEBUG("Engine::activate: process started");
@@ -159,7 +162,7 @@ void Engine::deactivate()
         if (m_process)
         {
             SB_ENGINE_DEBUG("Engine::deactivate(): m_process->waitForFinished(...)");
-            if (!m_process->waitForFinished(200))
+            if (!m_process->waitForFinished(70))
             {
                 SB_ENGINE_DEBUG("Engine::deactivate(): m_process->waitForFinished(...) timed out: KILLING NOW");
                 deleteProcess_();
