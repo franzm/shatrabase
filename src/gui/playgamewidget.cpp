@@ -513,7 +513,7 @@ void PlayGameWidget::setPosition(const Board& board)
                 (Color)(!board.toMove())
                        : board.toMove();
 
-    userMoved_ = isHuman((Color)!curStm_);
+    userMoved_ = isHuman((Color)curStm_);
 }
 
 void PlayGameWidget::infoFromEngine(Move m, int s)
