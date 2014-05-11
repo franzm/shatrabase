@@ -21,7 +21,7 @@ USHIEngine::USHIEngine(const QString& name,
     : Engine(name, command, bTestMode, directory)
 {
 	m_quitAfterAnalysis = false;
-	m_invertBlack = true;
+    m_invertBlack = false;
 
 }
 

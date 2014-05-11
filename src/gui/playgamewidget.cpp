@@ -515,8 +515,8 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
     if (m.sideMoving() == 1)
         l = ui_->labelInfo2;
 
-    if (m.sideMoving() == 1)
-        s = -s;
+    //if (m.sideMoving() == 1)
+    //    s = -s;
 
     score_[m.sideMoving()] = s;
 

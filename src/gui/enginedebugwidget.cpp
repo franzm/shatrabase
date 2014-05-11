@@ -36,6 +36,9 @@ EngineDebugWidget::EngineDebugWidget(QWidget *parent) :
 
 void EngineDebugWidget::slotEngineDebug(Engine * engine, Engine::DebugType t, const QString& str)
 {
+    if (!isVisible())
+        return;
+
     Q_UNUSED(engine);
 
     QString prefix;
