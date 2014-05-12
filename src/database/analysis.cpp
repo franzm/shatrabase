@@ -155,7 +155,7 @@ QString Analysis::toString(const Board& board) const
 	QString out;
 
     if (isResult()) {
-		QString color = testBoard.toMove() == White ? "000080" : "800000";
+        QString color = isWin()? "000080" : "800000";
         QString text = isWin()? tr("Win in") : isLoss()? tr("Loss in") : "";
 		out = QString("<font color=\"#%1\"><b>%2 %3</b></font> ")
                 .arg(color).arg(text).arg(movesToResult());

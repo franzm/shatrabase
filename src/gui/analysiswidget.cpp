@@ -332,7 +332,7 @@ void AnalysisWidget::updateAnalysis()
         return;
 
     Move bestMove;
-    int  bestScore = -1;
+    int  bestScore = -10000;
     bool hasminnps=false;
     quint64 minnps = 0, maxnps = 0,
             nodes = 0;
@@ -340,7 +340,7 @@ void AnalysisWidget::updateAnalysis()
     QString text;
     foreach (Analysis a, m_analyses)
     {
-        if ((bestScore < 0 || a.score() > bestScore)
+        if ((a.score() > bestScore)
                 && !a.variation().empty())
         {
             bestMove = a.variation()[0];
@@ -376,7 +376,8 @@ void AnalysisWidget::updateAnalysis()
                          );
 
     if (ui.cbSendBestMove->isVisible()
-            && ui.cbSendBestMove->isChecked())
+     && ui.cbSendBestMove->isChecked()
+     && bestMove.isLegal())
         emit this->bestMove(bestMove);
 
 }
