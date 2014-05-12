@@ -1196,7 +1196,9 @@ void MainWindow::setupActions()
 	m_menuDatabases = menuDatabase->addMenu(tr("&Switch to"));
 	menuDatabase->addAction(createAction(tr("&Copy games..."), SLOT(slotDatabaseCopy()),
 						  Qt::Key_F5));
+#ifdef QT_DEBUG
     menuDatabase->addAction(createAction(tr("Test PositionBase"), SLOT(slotTestPositionBase())));
+#endif
 
 	/* Help menu */
 	menuBar()->addSeparator();
