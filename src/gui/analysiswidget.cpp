@@ -212,6 +212,7 @@ void AnalysisWidget::slotReconfigure()
                                  ).toInt();
     ui.vpcount->setValue(mpv);
 
+    ui.cbSendBestMove->setVisible(AppSettings->getValue("/Board/guessMove").toBool());
 }
 
 void AnalysisWidget::showAnalysis(const Analysis& analysis)
@@ -330,33 +331,54 @@ void AnalysisWidget::updateAnalysis()
     if (m_ignore)
         return;
 
+    Move bestMove;
+    int  bestScore = -1;
     bool hasminnps=false;
     quint64 minnps = 0, maxnps = 0,
             nodes = 0;
+    int time = 1;
     QString text;
     foreach (Analysis a, m_analyses)
     {
+        if ((bestScore < 0 || a.score() > bestScore)
+                && !a.variation().empty())
+        {
+            bestMove = a.variation()[0];
+            bestScore = a.score();
+        }
+
         nodes = std::max(nodes, a.nodes());
+        time = std::max(time, a.time());
         maxnps = std::max(maxnps, a.nodesPerSecond());
         if (!hasminnps || minnps > a.nodesPerSecond())
             minnps = a.nodesPerSecond();
 
         text.append(a.toString(m_board) + "<br>");
     }
+    //int avnps = nodes / time * 1000;
     /*
     if (!m_tablebaseEvaluation.isEmpty())
     {
         text.append(tr("<a href=\"0\">[+]</a> <b>Tablebase:</b> ") + m_tablebaseEvaluation);
     }
     */
+
     ui.variationText->setText(text);
     ui.labelNodes->setText(tr("nodes") + ": " + QLocale::system().toString(nodes) );
     //: nodes per second:
     ui.labelNps->setText(tr("nps") + ": "
                             + (minnps != maxnps ?
-                                QLocale::system().toString(minnps)
+                                    QLocale::system().toString(minnps)
                                     + "-" + QLocale::system().toString(maxnps)
-                            :   QLocale::system().toString(minnps)) );
+                                :   QLocale::system().toString(minnps))
+    //: 'average' nodes per second
+    //                        + " (" + tr("avg. ") + QLocale::system().toString(avnps) + ")"
+                         );
+
+    if (ui.cbSendBestMove->isVisible()
+            && ui.cbSendBestMove->isChecked())
+        emit this->bestMove(bestMove);
+
 }
 
 Analysis AnalysisWidget::getMainLine() const

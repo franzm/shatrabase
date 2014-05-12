@@ -293,7 +293,7 @@ void BoardView::setBestMove(int from, int to)
 
     m_bestMoveFrom = from;
     m_bestMoveTo = to;
-    /*
+
     // find index of the supplied move in own movelist
     for (size_t i=0; i<m_moves.size(); ++i)
         if (m_moves[i].from == from &&
@@ -303,7 +303,7 @@ void BoardView::setBestMove(int from, int to)
         m_goal_index = 0;
         showGoals_(from, i);
         break;
-    }*/
+    }
 }
 
 

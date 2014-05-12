@@ -320,15 +320,15 @@ MainWindow::MainWindow() : QMainWindow(),
 			  SLOT(slotGameAddVariation(Analysis)));
     connect(analysis, SIGNAL(addVariation(QString)),
               SLOT(slotGameAddVariation(QString)));
+    connect(analysis, SIGNAL(bestMove(Move)), m_boardView, SLOT(setBestMove(Move)));
     connect(this, SIGNAL(boardChange(const Board&)), analysis, SLOT(setPosition(const Board&)));
     connect(this, SIGNAL(reconfigure()), analysis, SLOT(slotReconfigure()));
-	// Make sure engine is disabled if dock is hidden
+    // Make sure engine is disabled if dock is hidden
 	connect(analysisDock, SIGNAL(visibilityChanged(bool)),
               analysis, SLOT(slotVisibilityChanged(bool)));
 	m_menuView->addAction(analysisDock->toggleViewAction());
     analysisDock->toggleViewAction()->setShortcut(Qt::CTRL + Qt::Key_F2);
     analysisDock->hide();
-
     m_mainAnalysis = analysis;
 
 
@@ -343,6 +343,7 @@ MainWindow::MainWindow() : QMainWindow(),
 			  SLOT(slotGameAddVariation(Analysis)));
     connect(analysis, SIGNAL(addVariation(QString)),
               SLOT(slotGameAddVariation(QString)));
+    connect(analysis, SIGNAL(bestMove(Move)), m_boardView, SLOT(setBestMove(Move)));
     connect(this, SIGNAL(boardChange(const Board&)), analysis, SLOT(setPosition(const Board&)));
     connect(this, SIGNAL(reconfigure()), analysis, SLOT(slotReconfigure()));
 	// Make sure engine is disabled if dock is hidden
