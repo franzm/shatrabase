@@ -47,6 +47,10 @@ public:
     quint64 nodes() const;
     /* Set nodes spent on analysis. */
     void setNodes(quint64 nodes);
+    /* Nodes per second spent on analysis. */
+    quint64 nodesPerSecond() const;
+    /* Set nodes per second spent on analysis. */
+    void setNodesPerSecond(quint64 nodes);
     /* Main variation. */
     MoveList variation() const;
     /* Set main variation. */
@@ -72,7 +76,7 @@ private:
     int m_resultIn;
     int m_rtype;
     int m_numpv;
-    quint64 m_nodes;
+    quint64 m_nodes, m_nps;
     MoveList m_variation;
     Q_DECLARE_TR_FUNCTIONS(Analysis)
 };

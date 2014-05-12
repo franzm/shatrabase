@@ -330,9 +330,19 @@ void AnalysisWidget::updateAnalysis()
     if (m_ignore)
         return;
 
+    bool hasminnps=false;
+    quint64 minnps = 0, maxnps = 0,
+            nodes = 0;
     QString text;
     foreach (Analysis a, m_analyses)
+    {
+        nodes = std::max(nodes, a.nodes());
+        maxnps = std::max(maxnps, a.nodesPerSecond());
+        if (!hasminnps || minnps > a.nodesPerSecond())
+            minnps = a.nodesPerSecond();
+
         text.append(a.toString(m_board) + "<br>");
+    }
     /*
     if (!m_tablebaseEvaluation.isEmpty())
     {
@@ -340,6 +350,13 @@ void AnalysisWidget::updateAnalysis()
     }
     */
     ui.variationText->setText(text);
+    ui.labelNodes->setText(tr("nodes") + ": " + QLocale::system().toString(nodes) );
+    //: nodes per second:
+    ui.labelNps->setText(tr("nps") + ": "
+                            + (minnps != maxnps ?
+                                QLocale::system().toString(minnps)
+                                    + "-" + QLocale::system().toString(maxnps)
+                            :   QLocale::system().toString(minnps)) );
 }
 
 Analysis AnalysisWidget::getMainLine() const
