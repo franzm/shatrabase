@@ -173,7 +173,7 @@ bool SBoard::canMoveTo(const int from, const int to) const
     return false;
 }
 
-bool SBoard::setAt(const int at, const Piece p, bool urg=false)
+bool SBoard::setAt(const int at, const Piece p, bool urg)
 { // NB board coords
     Q_ASSERT_X(isValidPiece(p), "setAt()",
                QString("invalid piece %1").arg(p).toStdString().c_str());
