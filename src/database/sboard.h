@@ -111,7 +111,7 @@ public:
     /** Set initial shatra game position on the board */
     void setStandardPosition();
     /** Set the given piece on the board at the given square */
-    bool setAt(const int at, const Piece p, bool urg);
+    bool setAt(const int at, const Piece p, bool urg=false);
     /** Sets the transit piece (Piece currently executing capture sequence) */
     void setTransitAt(const Square at = NoSquare);
     /** Remove any piece sitting on given square */
