@@ -19,9 +19,11 @@
 void MainWindow::slotHelpAbout()
 {
     QString version = QString(STR_REVISION).replace(',','.');
-    QMessageBox dialog(QMessageBox::NoIcon, tr("About Shatrabase"), tr("<h1>Shatrabase</h1>"
+    QMessageBox dialog(QMessageBox::NoIcon,
+                        tr("About Shatrabase"),
+                        tr("<h1>Shatrabase</h1>"
                         "<p>Free Shatra database Version %1</p>"
-                        "<p>Derived from Chessx Version %1</p>"
+                        "<p>Derived from Chessx Version 0.9.5</p>"
                         COPYRIGHT
                         "<p>License: GNU Public License 3 - GPLv3</p>"
                         "<p>Developers: <a href=\"mailto:francis@afkm.com\">Francis Monkman</a>"

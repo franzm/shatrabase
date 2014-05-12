@@ -31,6 +31,7 @@
 * 'go to ...' when pasting gametext
 - OK remove 'filter' from copy games...
 * AutoPlayerInterval should match Board animation
+- take-back-last-move hotkey
 
 -- gameplay --
 

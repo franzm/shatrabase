@@ -11,7 +11,8 @@
         <file alias="templates/latex-default.template">data/templates/latex-default.template</file>
         <file alias="templates/notation-default.template">data/templates/notation-default.template</file>
         <file alias="templates/sgn-default.template">data/templates/sgn-default.template</file>
-        <file alias="themes/boards/aluminium.png">data/themes/boards/aluminium.png</file>
+        
+	<file alias="themes/boards/aluminium.png">data/themes/boards/aluminium.png</file>
         <file alias="themes/boards/cherry.png">data/themes/boards/cherry.png</file>
         <file alias="themes/boards/lapis.png">data/themes/boards/lapis.png</file>
         <file alias="themes/boards/marble.png">data/themes/boards/marble.png</file>
@@ -23,6 +24,7 @@
         <file alias="themes/boards/brazilwood.png">data/themes/boards/brazilwood.png</file>
         <file alias="themes/boards/maple.png">data/themes/boards/maple.png</file>
         <file alias="themes/boards/shatra1.png">data/themes/boards/shatra1.png</file>
+        <file alias="themes/boards/scientific marble.png">data/themes/boards/scientific_marble.png</file>
 
         <file alias="themes/alphashatra.png">data/themes/alphashatra.png</file>
         <file alias="themes/meridashatra.png">data/themes/meridashatra.png</file>
