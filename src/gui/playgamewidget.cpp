@@ -284,6 +284,7 @@ void PlayGameWidget::startNewGameOk()
     userMoved_ = false;
     ignoreAnswer_ = false;
     score_[0] = score_[1] = 0;
+    lastMoveNumber_ = 0;
     hashHistory_.clear();
     plyQue_.clear();
 
@@ -318,6 +319,7 @@ void PlayGameWidget::continuePosition(const Board &board)
     ignoreAnswer_ = false;
     score_[0] = score_[1] = 0;
     hashHistory_.clear();
+    lastMoveNumber_ = 0;
     plyQue_.clear();
 
     // update widget Spaß
@@ -596,16 +598,20 @@ void PlayGameWidget::animationFinished(const Board& board)
     if (!playing_)
         return;
 
-    hashHistory_.push_back(board.getHashValue());
-    if (Board::isRepeating(hashHistory_))
+    if (board.moveNumber() > lastMoveNumber_)
     {
-        // XXX may work :|
-        winStm_ = Draw;
-        emit gameComment("Draw by repetition");
-        stop();
-        // XXX need a signal/slot for player notice
-        emit gameEnded();
-        return;
+        hashHistory_.push_back(board.getHashValue());
+        if (Board::isRepeating(hashHistory_))
+        {
+            // XXX may work :|
+            winStm_ = Draw;
+            emit gameComment("Draw by repetition");
+            stop();
+            // XXX need a signal/slot for player notice
+            emit gameEnded();
+            return;
+        }
+        lastMoveNumber_ = board.moveNumber();
     }
 
     // don't restart an ended game

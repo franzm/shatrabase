@@ -87,6 +87,8 @@ public slots:
     void configure();
 
     /** Tell the BoardView the best current move, e.g. from analysis. */
+    void setBestMove(const Move& move) { setBestMove(BN[move.from()], BN[move.to()]); }
+    /** Tell the BoardView the best current move, e.g. from analysis. */
     void setBestMove(int from = InvalidSquare, int to = InvalidSquare);
     /** Executes current set best move. Returns true when there was one, false otherwise. */
     bool execBestMove();

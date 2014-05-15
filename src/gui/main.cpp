@@ -50,7 +50,8 @@ int main(int argc, char** argv)
     // the common exit condition
     a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
     // XXX findout: why is this not the .icn file
-    a.setWindowIcon(QIcon(":/images/shatrabase.png"));
+    //a.setWindowIcon(QIcon(":/images/shatrabase.png"));
+    a.setWindowIcon(QIcon(":/images/shatrabase.ico"));
 
     // -- translation --
 

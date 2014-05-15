@@ -23,7 +23,7 @@
         <file alias="themes/boards/brazilwood.png">data/themes/boards/brazilwood.png</file>
         <file alias="themes/boards/maple.png">data/themes/boards/maple.png</file>
         <file alias="themes/boards/shatra1.png">data/themes/boards/shatra1.png</file>
-
+        <file alias="themes/boards/scientific marble.png">data/themes/boards/scientific_marble.png</file>
         <file alias="themes/alphashatra.png">data/themes/alphashatra.png</file>
         <file alias="themes/meridashatra.png">data/themes/meridashatra.png</file>
         <file alias="themes/motifshatra.png">data/themes/motifshatra.png</file>
@@ -36,7 +36,6 @@
         <file alias="themes/shadow/meridashatra.png">data/themes/shadow/meridashatra.png</file>
         <file alias="themes/shadow/motifshatra.png">data/themes/shadow/motifshatra.png</file>
         <file alias="themes/shadow/chess3d.png">data/themes/shadow/chess3d.png</file>
-
         <file alias="help/about0.html">data/help/about0.html</file>
         <file alias="help/about1.html">data/help/about1.html</file>
         <file alias="help/about2.html">data/help/about2.html</file>
@@ -69,5 +68,6 @@
         <file alias="images/b_config.png">data/images/button_config.png</file>
         <file alias="/images/square_emboss_sunken.png">data/images/square_emboss_sunken.png</file>
         <file alias="images/b_flag.png">data/images/b_flag.png</file>
+        <file alias="images/shatrabase.ico">src/shatrabase.ico</file>
     </qresource>
 </RCC>

@@ -29,6 +29,7 @@ Analysis& Analysis::operator=(const Analysis& rhs)
         m_rtype     = rhs.m_rtype;
         m_numpv     = rhs.m_numpv;
         m_nodes     = rhs.m_nodes;
+        m_nps       = rhs.m_nps;
         m_variation = rhs.m_variation;
     }
     return *this;
@@ -38,7 +39,7 @@ void Analysis::clear()
 {
     m_score = m_msec = m_depth = 0;
     m_resultIn = m_rtype = 0;
-	m_nodes = 0;
+    m_nodes = m_nps = 0;
     m_numpv = 1;
 	m_variation.clear();
 }
@@ -101,6 +102,17 @@ void Analysis::setNodes(quint64 nodes)
 	m_nodes = nodes;
 }
 
+quint64 Analysis::nodesPerSecond() const
+{
+    return m_nps;
+}
+
+void Analysis::setNodesPerSecond(quint64 nodes)
+{
+//    qDebug()<<"setnodes " << nodes;
+    m_nps = nodes;
+}
+
 MoveList Analysis::variation() const
 {
 	return m_variation;
@@ -143,7 +155,7 @@ QString Analysis::toString(const Board& board) const
 	QString out;
 
     if (isResult()) {
-		QString color = testBoard.toMove() == White ? "000080" : "800000";
+        QString color = isWin()? "000080" : "800000";
         QString text = isWin()? tr("Win in") : isLoss()? tr("Loss in") : "";
 		out = QString("<font color=\"#%1\"><b>%2 %3</b></font> ")
                 .arg(color).arg(text).arg(movesToResult());

@@ -73,7 +73,7 @@ BEGIN
     BEGIN
         BLOCK "040704b0"
         BEGIN
-            VALUE "CompanyName", "shatrabase.sourceforge.net"
+            VALUE "CompanyName", "shatrabase.franzm.com.github"
             VALUE "FileDescription", "shatrabase app"
             VALUE "FileVersion", STR_REVISION
             VALUE "InternalName", "shatrabase"

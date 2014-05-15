@@ -229,8 +229,8 @@ void USHIEngine::parseBestmove(const QString& message)
 void USHIEngine::parseAnalysis(const QString& message)
 {
 	Analysis analysis;
-    bool multiPVFound, timeFound, nodesFound, depthFound, scoreFound, variationFound;
-    multiPVFound = timeFound = nodesFound = depthFound = scoreFound = variationFound = false;
+    bool multiPVFound, timeFound, nodesFound, npsFound, depthFound, scoreFound, variationFound;
+    multiPVFound = timeFound = nodesFound = npsFound = depthFound = scoreFound = variationFound = false;
 
 	QString info = message.section(' ', 1, -1, QString::SectionSkipEmpty);
 	int section = 0;
@@ -268,6 +268,14 @@ void USHIEngine::parseAnalysis(const QString& message)
 				continue;
 			}
 		}
+        if (name == "nps") {
+            analysis.setNodesPerSecond(info.section(' ', section + 1, section + 1, QString::SectionSkipEmpty).toLongLong(&ok));
+            section += 2;
+            if (ok) {
+                npsFound = true;
+                continue;
+            }
+        }
 
         if (name == "depth")
         {

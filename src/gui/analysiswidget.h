@@ -76,6 +76,7 @@ private slots:
 signals:
     void addVariation(const Analysis& analysis);
     void addVariation(const QString& san);
+    void bestMove(const Move &);
 private:
     /** Should analysis be running. */
     bool isAnalysisEnabled() const;

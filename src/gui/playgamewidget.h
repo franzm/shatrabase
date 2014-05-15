@@ -229,6 +229,9 @@ private:
         sendBoardWhenReady_;
     Board sendBoard_;
 
+    /** last move count in a game */
+    int lastMoveNumber_;
+
     // ---- time control ----
 
     PlayTimeControl tc_;
