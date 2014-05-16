@@ -791,7 +791,7 @@ void PlayGameWidget::slotBlinkTimer_()
 
 void PlayGameWidget::slotTimeout_(int stm)
 {
-    emit gameComment(stm == 0? tr("White lost in time") : tr("Black lost in time"));
+    emit gameComment(stm == 0? tr("White lost on time") : tr("Black lost on time"));
 
     winStm_ = !stm;
 
