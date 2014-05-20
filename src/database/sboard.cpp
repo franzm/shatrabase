@@ -727,7 +727,10 @@ inline void SBoard::getEvasions()
     int s = BN[at];
 
     if (isBiyOnTemdek(s) || isInFortress(s))
+    {
         doneFort = getDrops(s, Biy);
+        if (temdekOn(m_stm)) return;
+    }
 
     for (int d = 0; d < 8; d++)
         getMoves(at, Biy, dir[d], doneFort);
