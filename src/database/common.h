@@ -65,7 +65,7 @@ const ubyte SB[144] = {	// empty board
 #undef x
 
 #define x 0
-const int BN[144] = { // table converts to numerical system
+const int BN[144] = { // table converts board coords to numerical system
 
     x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,  x,
     x,  x,  x,  x,  x,  17, 24, 31, 38, 45, 52, x,  x,  x,  x,  x,

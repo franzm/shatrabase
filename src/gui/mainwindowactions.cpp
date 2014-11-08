@@ -469,13 +469,32 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
     if (!m.isLegal()) return;
 
     PieceType promotionPiece = None;
-    if (m.isPassMove())
+
+    if (m.pieceTypeMoved() == Biy)
     {
-        QMessageBox mb;
-        mb.setText(tr("You have the option not to move"));
-        mb.setInformativeText(tr("Do you really want to pass?"));
-        mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
-        if (mb.exec() == QMessageBox::No) return;
+        if (m.isCapture() && board.moveIsDual(from, to))
+        {
+            QMessageBox mb;
+            mb.setText(tr("You can either capture or drop"));
+            mb.setInformativeText(tr("   No to drop, Yes to capture"));
+            // NB can add a Cancel button for non-HumanTournament mode
+            mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+//            if (mb.exec() == QMessageBox::Cancel) return;
+
+            if (mb.exec() == QMessageBox::No)
+            {
+                m = board.prepareMove2(from, to);
+                if (!m.isLegal()) return;
+            }
+        }
+        else if (m.isPassMove())
+        {
+            QMessageBox mb;
+            mb.setText(tr("You have the option not to move"));
+            mb.setInformativeText(tr("Do you really want to pass?"));
+            mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+            if (mb.exec() == QMessageBox::No) return;
+        }
     }
     else if (m.isPromotion())
     {

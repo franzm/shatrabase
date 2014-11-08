@@ -144,11 +144,14 @@ public:
     /** Parse LAN representation of move, and return full Move() object */
     Move parseMove(const QString& algebraic);
     /** Return a full Move() object given only from-to (board notation) */
-    Move prepareMove(const int from, const int to) const;
     Move prepareMove(const int from, const int to);
-
+    Move prepareMove(const int from, const int to) const;
+    /** Only for Biy capture with duplicate drop move */
+    Move prepareMove2(const int from, const int to) const;
     // Query
     //
+    /** [see above] */
+    bool moveIsDual(const int from, const int to) const;
     /** Is piece sitting on given square moveable? */
     bool isMovable(const int from) const;
     /** Can a piece move from one square to another? */
@@ -274,7 +277,7 @@ public:
 public:
     int m_sntm;                // side not to move
     int m_lstm;                // last side to move
-    int m_from;
+    int m_from;                // board coords
     int m_to;
     int m_biyAt[2];            // locations of the biys
     int m_temdek[2];           // temdek counters

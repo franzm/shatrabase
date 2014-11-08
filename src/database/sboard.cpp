@@ -1004,6 +1004,92 @@ Move SBoard::parseMove(const QString& algebraic)
 }
 #undef getAt
 
+Move SBoard::prepareMove(const int from, const int to)
+{
+    if (!m_movesLoaded)
+    {
+        generate(inSequence(), BN[from]);
+    }
+    Move move;
+    int p = -1; bool found = false;
+    while (++p < m_ml.count())
+    {
+        if (from == m_ml[p].from() && to == m_ml[p].to())
+        {
+            found = true; move = m_ml[p]; break;
+        }
+    }
+    if (found)
+    {
+        move.e |= m_epSquare;
+        move.x |= m_transit;
+        move.g |= m_urgent[m_stm];
+        move.o |= m_latePromo;
+    }
+    return move;
+}
+
+Move SBoard::prepareMove(const int from, const int to) const
+{
+    Move move;
+    if (!m_movesLoaded) return move;
+
+    int p = -1; bool found = false;
+    while (++p < m_ml.count())
+    {
+        if (from == m_ml[p].from() && to == m_ml[p].to())
+        {
+            found = true; move = m_ml[p]; break;
+        }
+    }
+    if (found)
+    {
+        move.e |= m_epSquare;
+        move.x |= m_transit;
+        move.g |= m_urgent[m_stm];
+        move.o |= m_latePromo;
+    }
+    return move;
+}
+Move SBoard::prepareMove2(const int f, const int t) const
+{
+    Move move;
+    if (!m_movesLoaded) return move;
+
+    int from = NB[f], to = NB[t];
+    int p = -1, found = 0;
+    while (++p < m_ml.count())
+    {
+        if (from == m_ml[p].from() && to == m_ml[p].to())
+        {
+            ++found;
+            if (found == 2) {move = m_ml[p]; break; }
+        }
+    }
+    if (found == 2)
+    {
+        move.e |= m_epSquare;
+        move.x |= m_transit;
+        move.g |= m_urgent[m_stm];
+        move.o |= m_latePromo;
+    }
+    return move;
+}
+
+bool SBoard::moveIsDual(const int f, const int t) const
+{
+    int from = NB[f], to = NB[t];
+    int p = -1, found2 = 0;
+    while (++p < m_ml.count())
+    {
+        if (from == m_ml[p].from() && to == m_ml[p].to())
+        {
+            ++found2;
+        }
+    }
+    return found2 == 2;
+}
+  
 bool SBoard::doMove(const Move& m)
 {
     ++m_halfMoves;
@@ -1161,53 +1247,6 @@ void SBoard::undoMove(const Move& m)
 
     m_to = inSequence()? m_from : NoSquare;
     m_from = NoSquare;
-}
-
-Move SBoard::prepareMove(const int from, const int to)
-{
-    if (!m_movesLoaded)
-    {
-        generate(inSequence(), BN[from]);
-    }
-    Move move;
-    int p = -1; bool found = false;
-    while (++p < m_ml.count())
-    {
-        if (from == m_ml[p].from() && to == m_ml[p].to())
-        {
-            found = true; move = m_ml[p]; break;
-        }
-    }
-    if (found)
-    {
-        move.e |= m_epSquare;
-        move.x |= m_transit;
-        move.g |= m_urgent[m_stm];
-        move.o |= m_latePromo;
-    }
-    return move;
-}
-
-Move SBoard::prepareMove(const int from, const int to) const // board coords
-{
-    Move move;
-    if (!m_movesLoaded) return move;
-    int p = -1; bool found = false;
-    while (++p < m_ml.count())
-    {
-        if (from == m_ml[p].from() && to == m_ml[p].to())
-        {
-            found = true; move = m_ml[p]; break;
-        }
-    }
-    if (found)
-    {
-        move.e |= m_epSquare;
-        move.x |= m_transit;
-        move.g |= m_urgent[m_stm];
-        move.o |= m_latePromo;
-    }
-    return move;
 }
 
 bool SBoard::canBeReachedFrom(const SBoard& target) const

@@ -24,8 +24,10 @@ public:
     /* Return square piece sits on after move */
     Square to() const;
     
-	/* Get the piece type moving NB not colorized */
-	Piece pieceMoved() const;
+    /* Get the piece type moving colorized */
+    Piece pieceMoved() const;
+    /* Get the piece type moving */
+    PieceType pieceTypeMoved() const;
     /* Return square of captured piece  */
     Square capturedAt() const;
     /* Return previous en passant square  */
@@ -278,6 +280,15 @@ inline Piece Move::pieceMoved() const
     if (t & 0x80) p |= 2;
     if (c & 0x80) p |= 4;
     return Piece(p + (b & STM? 0 : 5));
+}
+
+inline PieceType Move::pieceTypeMoved() const
+{
+    int p = 0;
+    if (f & 0x80) p |= 1;
+    if (t & 0x80) p |= 2;
+    if (c & 0x80) p |= 4;
+    return PieceType(p);
 }
 
 inline Piece Move::promotedPiece() const
