@@ -939,6 +939,7 @@ Move SBoard::parseMove(const QString& algebraic)
     char c = *s++;
     Move move; // zero is illegal move
     int from, to, at, temp, type = Shatra, alph;
+    bool capt = false;
 
     if (c != ':')
     {    
@@ -967,12 +968,14 @@ Move SBoard::parseMove(const QString& algebraic)
 
         if (alph && type != pieceTypeAt(from)) return move;
         if (c != '-' && c != ':') return move;
+        else capt = c == ':';
     }
     else
     {
         from = m_to; // NB ***from must = last to***
         if (from == NoSquare) return move;
         alph = (int)isAlpha(*s);
+        capt = true;
     }
     c = *s++;
     getAt;
@@ -993,7 +996,7 @@ Move SBoard::parseMove(const QString& algebraic)
         }
     }
 
-    move = prepareMove(from, to);
+    move = prepareMove(from, to, capt);
     if (move.isPromotion())
     {
         if (type)
@@ -1004,19 +1007,20 @@ Move SBoard::parseMove(const QString& algebraic)
 }
 #undef getAt
 
-Move SBoard::prepareMove(const int from, const int to)
+Move SBoard::prepareMove(const int from, const int to, const bool capt)
 {
     if (!m_movesLoaded)
     {
         generate(inSequence(), BN[from]);
     }
     Move move;
+    bool c = m_ml[0].isCapture();
     int p = -1; bool found = false;
     while (++p < m_ml.count())
     {
         if (from == m_ml[p].from() && to == m_ml[p].to())
         {
-            found = true; move = m_ml[p]; break;
+            found = true; move = m_ml[p]; if (!(c && !capt)) break;
         }
     }
     if (found)

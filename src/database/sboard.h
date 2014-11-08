@@ -144,7 +144,7 @@ public:
     /** Parse LAN representation of move, and return full Move() object */
     Move parseMove(const QString& algebraic);
     /** Return a full Move() object given only from-to (board notation) */
-    Move prepareMove(const int from, const int to);
+    Move prepareMove(const int from, const int to, const bool capt=false);
     Move prepareMove(const int from, const int to) const;
     /** Only for Biy capture with duplicate drop move */
     Move prepareMove2(const int from, const int to) const;
