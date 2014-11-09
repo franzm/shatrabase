@@ -16,7 +16,7 @@
 
 #include <QMap>
 #include <QString>
-#include <QStringList>
+//#include <QStringList>
 
 typedef unsigned char ubyte;
 typedef unsigned char Square;
@@ -119,7 +119,7 @@ extern bool g_resModified;
 extern int  g_nErrors;
 extern int  g_aveNodes;
 extern int  g_totalNodes;
-
+extern int  g_version;
 
 const int ConstPieceTypes = WasShatra + 1;
 const int Was = WasBatyr - Batyr;
@@ -212,6 +212,8 @@ enum Result { ResultUnknown, WhiteWin, Draw, BlackWin };
 //#define MIN(a,b) b^((a^b) & -(a<b))
 //#define MAX(a,b) a^((a^b) & -(a<b))
 //#define SWAP(a,b) (((a)^=(b)), ((b)^=(a)), ((a)^=(b)))
+
+QString startPosition();
 
 /* Returns a string representation of a result */
 QString resultString(Result result);

@@ -28,15 +28,27 @@ Piece operator++(Piece& w, int)
     return alt;
 }
 */
-bool g_loading    = false;
-bool g_searching  = false;
-bool g_notation   = NUM; // default is numeric
-bool g_nChanged   = false;
+bool g_loading          = false;
+bool g_searching        = false;
+bool g_notation         = NUM;  // default is numeric
+bool g_nChanged         = false;
 bool g_autoResultOnLoad = false;
 bool g_resModified;
-int  g_nErrors    = 0;
-int  g_aveNodes   = 0;
-int  g_totalNodes = 0;
+int  g_nErrors          = 0;
+int  g_aveNodes         = 0;
+int  g_totalNodes       = 0;
+int  g_version          = 2;    // for now, default is 'chess version'
+
+QString startPosition()
+{
+    switch (g_version ) {
+    case 1 :
+        return "SSSSSSSSS/K/SSSSSSS/SSSSSSS/7/7/sssssss/sssssss/k/sssssssss w Tt - - - 1";
+    case 2 :
+        return "SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1";
+    }
+    return "";
+}
 
 QString resultString(Result result)
 {

@@ -144,11 +144,20 @@ void SBoard::setTransitAt(const Square at)
 
 void SBoard::fillOffboard()
 {
-    m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 1;
-    m_offBoard[WhiteTura] = m_offBoard[BlackTura] = 2;
-    m_offBoard[WhiteYalkyn] = m_offBoard[BlackYalkyn] = 2;
-    m_offBoard[WhiteBiy] = m_offBoard[BlackBiy] = 1;
-    m_offBoard[WhiteShatra] = m_offBoard[BlackShatra] = 11;
+    switch (g_version)
+    {
+    case 1 :
+        m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 24; // nominal max promo + 1 :)
+        m_offBoard[WhiteBiy] = m_offBoard[BlackBiy] = 1;
+        m_offBoard[WhiteShatra] = m_offBoard[BlackShatra] = 23;
+        break;
+    case 2 :
+        m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 1;
+        m_offBoard[WhiteTura] = m_offBoard[BlackTura] = 2;
+        m_offBoard[WhiteYalkyn] = m_offBoard[BlackYalkyn] = 2;
+        m_offBoard[WhiteBiy] = m_offBoard[BlackBiy] = 1;
+        m_offBoard[WhiteShatra] = m_offBoard[BlackShatra] = 11;
+    }
 }
 
 bool SBoard::isMovable(const int from) const
@@ -328,8 +337,9 @@ int spn_slash[10] = { 9, 10, 17, 24, 31, 38, 45, 52, 53 };
 
 bool SBoard::SPNToBoard(const QString& qspn)
 {
-    SaneString spn(qspn);
     if (qspn.length() < 21) return false; // conceivable minimum SPN length?
+
+    SaneString spn(qspn);
     int i = 0, j = fsq;
     int k_on[2] = { 0, 0 };
     int tw = 0, tb = 0, sp = 0, sl = 0;
@@ -466,7 +476,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
             j = i;
             while (isNum(c)) c = spn[++i];
             int eps = spn.mid(j, i - j).toInt();
-            if (epPossible(eps, Color(m_stm)))
+            if (g_version == 2 && epPossible(eps, Color(m_stm)))
             {
                 m_epSquare = NB[eps];
                 //found = true;
@@ -561,6 +571,7 @@ QString SBoard::toSPN() const
  // rules change for shatras on different ranks
 inline int SBoard::sPhi(int s)
 {
+    if(g_version == 1) return 2;
     switch (m_stm)
     {
     case White:
@@ -872,7 +883,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                 m_b = bstm; doneFort = false;
                 
                 if (isInFortress(s) || isBiyOnTemdek(s)) doneFort = getDrops(s, pt);
-                else if (pt == Shatra)
+                else if (g_version == 2 && pt == Shatra)
                     if (s == lTower[m_sntm] || s == rTower[m_sntm]) getPorts(s);
 
                 if (!(doneFort && isReserve(s)))
@@ -1055,8 +1066,9 @@ Move SBoard::prepareMove(const int from, const int to) const
     }
     return move;
 }
+
 Move SBoard::prepareMove2(const int f, const int t) const
-{
+{ // only called for biy capture/drop duplicates..
     Move move;
     if (!m_movesLoaded) return move;
 
@@ -1070,18 +1082,20 @@ Move SBoard::prepareMove2(const int f, const int t) const
             if (found == 2) {move = m_ml[p]; break; }
         }
     }
-    if (found == 2)
+/*
+    if (found == 2) // ..so the following don't apply
     {
         move.e |= m_epSquare;
         move.x |= m_transit;
         move.g |= m_urgent[m_stm];
         move.o |= m_latePromo;
     }
+*/
     return move;
 }
 
 bool SBoard::moveIsDual(const int f, const int t) const
-{
+{ // only called for biy capture/drop duplicates
     int from = NB[f], to = NB[t];
     int p = -1, found2 = 0;
     while (++p < m_ml.count())
@@ -1285,24 +1299,18 @@ void SBoard::getMoveSquares(std::vector<SquareMove>& vec) const
     }
 }
 
-
-
  // NB the following are not member functions
 /* Init board values before starting */
 void SBoardInit()
-{ 
+{
     SBoardInitRun = true;
-    standardPosition.fromSPN
-        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
+    standardPosition.fromSPN (startPosition());
 }
 
 SBoard getStandardPosition()
 {
     SBoard b;
-    b.fromSPN
-        ("SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1");
-        //("SQSSRSBRB/K/SSSSSSS/1s3s1/4s2/7/7/2sss1s/k/brbsrssqs w Tt - - - 1");
-        //("SQSSRSBRB/K/SSS2SS/7/7/4S2/3S3/sssssss/k/brbsrssqs w Tt - - - 1");
+    b.fromSPN (startPosition());
     return b;
 }
 
