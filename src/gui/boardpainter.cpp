@@ -302,8 +302,10 @@ void BoardPainter::configure()
 {
     AppSettings->beginGroup("/Board/");
     //m_do_show_side = ...
-    m_do_moat = AppSettings->getValue("showMoat").toBool();
-    m_do_tower = AppSettings->getValue("showTower").toBool();
+//    m_do_moat = AppSettings->getValue("showMoat").toBool();
+//    m_do_tower = AppSettings->getValue("showTower").toBool();
+    m_do_moat = g_version == 2;
+    m_do_tower = m_do_moat;
     m_do_show_frame = AppSettings->getValue("showFrame").toBool();
     m_do_square_numbers = AppSettings->getValue("showSquareNumbers").toBool();
     m_frame_width = AppSettings->getValue("frameWidth").toInt();

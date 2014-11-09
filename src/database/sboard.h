@@ -88,6 +88,8 @@ inline Square bitScanForward(quint64 b) {
 
 const bb bFort[2] = { 0x00000000000003fe,0x7fc0000000000000 };
 
+void SBoardInit();
+
 class SBoard
 {
 public:

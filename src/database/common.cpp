@@ -37,7 +37,7 @@ bool g_resModified;
 int  g_nErrors          = 0;
 int  g_aveNodes         = 0;
 int  g_totalNodes       = 0;
-int  g_version          = 2;    // for now, default is 'chess version'
+int  g_version;
 
 QString startPosition()
 {

@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     QTranslator translator;
     if (translator.load(AppSettings->dataPath() + "/lang/" + langFile) ||
          translator.load(QString(":translation/") + langFile))
-		a.installTranslator(&translator);
+        a.installTranslator(&translator);
 
     // -- "the app" --
 

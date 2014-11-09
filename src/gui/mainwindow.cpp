@@ -36,6 +36,7 @@
 #include "playgamewidget.h"
 #include "preferences.h"
 #include "savedialog.h"
+#include "sboard.h"
 #include "settings.h"
 #include "tablebase.h"
 #include "tableview.h"
@@ -56,6 +57,7 @@
 #include <QStatusBar>
 #include <QTimer>
 #include <QToolBar>
+#include <QMessageBox>
 
 MainWindow::MainWindow() : QMainWindow(),
     m_stats(0),
@@ -357,7 +359,19 @@ MainWindow::MainWindow() : QMainWindow(),
 	/* Randomize */
 	srand(time(0));
 
-	/* Restoring layouts */
+    /* Input Shatra Version for this session */
+    QMessageBox mb(
+                QMessageBox::Question,
+                tr("Shatra Version"),
+                tr("Choose Shatra version"),
+                QMessageBox::Yes | QMessageBox::No);
+    mb.setButtonText(QMessageBox::Yes, tr("Extended"));
+    mb.setButtonText(QMessageBox::No, tr("Original"));
+    g_version = mb.exec() == QMessageBox::No? 1 : 2;
+//    AppSettings->setValue("showMoat", g_version == 2? true : false);
+    SBoardInit();
+
+    /* Restoring layouts */
 	if (!AppSettings->layout(this))
 		resize(800, 600);
     AppSettings->beginGroup("/MainWindow/");

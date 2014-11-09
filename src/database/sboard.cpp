@@ -14,6 +14,7 @@
 
 #include "sboard.h"
 #include <QDebug>
+#include <QMessageBox>
 #include <sstream>
 #include <iomanip>
 
@@ -24,7 +25,6 @@ SBoard clearedPosition;
 
 
 bool SBoardInitRun;
-void SBoardInit();
 
 /* Initialize a new ShatraBoard, ensure global data has been initialized */
 SBoard::SBoard()
@@ -820,13 +820,17 @@ inline bool SBoard::getCapture
 //           3) captures, if none generate all moves (fsq, lsq)
 int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 {
-    int s, at, r, pr, bstm( m_stm<<2 );
+    int s, at, r, pr, bstm( m_stm<<2 ), next_out;
     bool c( !cc ), inFort, doneFort;
     m_promoWait[m_sntm] = promoWaiting();
     m_caps[0] = m_caps[1] = false;
     m_epVictim = NoSquare;
     m_ml.clear();
+
     if (m_biyAt[m_stm] == NoSquare) return 0; // biy was captured
+    if (g_version == 1) next_out = m_stm?
+        63-(m_temdek[m_stm]-isBiyOnTemdek(gateAt[Black])) :
+            m_temdek[m_stm]-isBiyOnTemdek(gateAt[White]);
 
     do
     {           
@@ -881,11 +885,19 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
             else // drop, teleport or ordinary moves
             {
                 m_b = bstm; doneFort = false;
-                
-                if (isInFortress(s) || isBiyOnTemdek(s)) doneFort = getDrops(s, pt);
-                else if (g_version == 2 && pt == Shatra)
-                    if (s == lTower[m_sntm] || s == rTower[m_sntm]) getPorts(s);
 
+                switch (g_version) {
+                case 1:
+                    if (s == next_out || isBiyOnTemdek(s))
+                        doneFort = getDrops(s, pt);
+                    break;
+                case 2:
+                    if (isInFortress(s) || isBiyOnTemdek(s))
+                        doneFort = getDrops(s, pt);
+                    else if (pt == Shatra &&
+                             (s == lTower[m_sntm] || s == rTower[m_sntm]))
+                        getPorts(s);
+                }
                 if (!(doneFort && isReserve(s)))
                 {
                     for (int d = 0; d < 8; ++d)
@@ -1304,13 +1316,13 @@ void SBoard::getMoveSquares(std::vector<SquareMove>& vec) const
 void SBoardInit()
 {
     SBoardInitRun = true;
-    standardPosition.fromSPN (startPosition());
+    standardPosition.fromSPN(startPosition());
 }
 
 SBoard getStandardPosition()
 {
     SBoard b;
-    b.fromSPN (startPosition());
+    b.fromSPN(startPosition());
     return b;
 }
 
