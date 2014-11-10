@@ -169,6 +169,10 @@ inline bool isInFortress(const int s)
 inline bool isInHomeFort(const int s, const int stm)
     { return stm == White? s < gateAt[White] : s > gateAt[Black]; }
 
+/* Return true if given piece is shatra on opponent's gate */
+inline bool isShatraBiy(const int s, const int stm, const PieceType pt)
+{ return pt == Shatra && s == gateAt[!stm]; }
+
 /* Rank and File :) */
 inline int Rank(int s) { return s & 0x0f; }
 inline int File(int s) { return s>>4; }

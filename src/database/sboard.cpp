@@ -659,7 +659,7 @@ inline void SBoard::doCFlags(int from, int to, int cp)
  // if dropping from home fort, add decTemdek flag if T on
 inline bool SBoard::getDrops(int s, PieceType piece)
 {
-    bool t = s <= gateAt[White];
+    bool t = s <= gateAt[White], sb = false;
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
     t ^= (m_stm != White); // our own fortress?
@@ -667,9 +667,14 @@ inline bool SBoard::getDrops(int s, PieceType piece)
     {
         if (temdekOn(m_stm)) m_b |= DECTDK; // and Temdek on?
     }
-    else if (piece == Shatra)
-        return false; // shatras can't drop from enemy fort
-
+    else switch (g_version) {
+    case 1:
+        sb = isShatraBiy(s, m_stm, piece);
+        break;
+    case 2:
+        if (piece == Shatra)
+            return false; // shatras can't drop from enemy fort
+    }
     for (int i = 0; i < 21; i++)
     {    
         to = NB[h + i]; // Numeric to Board coords
@@ -678,7 +683,7 @@ inline bool SBoard::getDrops(int s, PieceType piece)
             m_ml.add().genMove(at, to, piece, m_b); ++n;
         }
     }
-    return n > 0;
+    return n > 0 && !sb;
 }
  // 'teleports' from tower squares!
 inline void SBoard::getPorts(int s)
@@ -727,7 +732,7 @@ inline void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
                     m_ml.add().genMove(at, to, piece, m_b);
             }
         }
-        if (piece == Biy) break;
+        if (g_version == 1 || piece == Biy) break;
     }
 }
  // evasions for biy only
@@ -828,10 +833,12 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
     m_ml.clear();
 
     if (m_biyAt[m_stm] == NoSquare) return 0; // biy was captured
-    if (g_version == 1) next_out = m_stm?
-        63-(m_temdek[m_stm]-isBiyOnTemdek(gateAt[Black])) :
-            m_temdek[m_stm]-isBiyOnTemdek(gateAt[White]);
-
+    if (g_version == 1) {
+        bool kt = m_biyAt[m_stm] == gateAtB[m_stm]
+                && m_temdek[m_stm] > 0;
+        next_out = m_stm?
+        63-(m_temdek[m_stm]-kt) :  m_temdek[m_stm]-kt;
+    }
     do
     {           
         for (s = (c? fsq : first);
@@ -888,8 +895,9 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 
                 switch (g_version) {
                 case 1:
-                    if (s == next_out || isBiyOnTemdek(s))
+                    if (s == next_out || isBiyOnTemdek(s) || isShatraBiy(s, m_stm, pt))
                         doneFort = getDrops(s, pt);
+                    else doneFort = isReserve(s);
                     break;
                 case 2:
                     if (isInFortress(s) || isBiyOnTemdek(s))
