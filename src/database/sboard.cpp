@@ -834,10 +834,9 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 
     if (m_biyAt[m_stm] == NoSquare) return 0; // biy was captured
     if (g_version == 1) {
-        bool kt = m_biyAt[m_stm] == gateAtB[m_stm]
-                && m_temdek[m_stm] > 0;
+        bool kt = m_biyAt[m_stm] == gateAtB[m_stm] && m_temdek[m_stm] > 0;
         next_out = m_stm?
-        63-(m_temdek[m_stm]-kt) :  m_temdek[m_stm]-kt;
+            63-(m_temdek[m_stm]-kt) :  m_temdek[m_stm]-kt;
     }
     do
     {           
