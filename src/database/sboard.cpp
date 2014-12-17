@@ -569,7 +569,7 @@ QString SBoard::toSPN() const
 
 /* MOVE GENERATION */
  // rules change for shatras on different ranks
-inline int SBoard::sPhi(int s)
+int SBoard::sPhi(int s)
 {
     if(g_version == 1) return 2;
     switch (m_stm)
@@ -586,7 +586,7 @@ inline int SBoard::sPhi(int s)
     return 255; // (would be error if we got here)
 }
  // waiting will promote if slider captured (for sntm!)
-inline int SBoard::promoWaiting()
+int SBoard::promoWaiting()
 {
     switch (m_stm)
     {
@@ -603,7 +603,7 @@ inline int SBoard::promoWaiting()
     return NoSquare;
 }
  // capture blocked by temdek
-inline bool SBoard::prohibited(int to, PieceType p)
+bool SBoard::prohibited(int to, PieceType p)
 {
 //    bool fortW = Rank(to) < (p == Biy? 4 : 5);
 //    bool fortB = Rank(to) > (p == Biy? 11 : 10);
@@ -616,14 +616,14 @@ inline bool SBoard::prohibited(int to, PieceType p)
     return false;
 }
  // already generated as drop move
-inline bool SBoard::duplicate(int to, bool fort)
+bool SBoard::duplicate(int to, bool fort)
 {
     if (fort == White) { if (Rank(to) > 4 && Rank(to) < 8) return true; }
     else if (Rank(to) < 11 && Rank(to) > 7) return true;
     return false;
 }
 // for captures within fortresses
-inline void SBoard::doCFlags(int from, int to, int cp)
+void SBoard::doCFlags(int from, int to, int cp)
 {
     if (m_promoWait[m_sntm])
         if (pieceTypeAt(cp) <= Yalkyn) m_b |= PROMO_sntm;
@@ -657,7 +657,7 @@ inline void SBoard::doCFlags(int from, int to, int cp)
     }
 }
  // if dropping from home fort, add decTemdek flag if T on
-inline bool SBoard::getDrops(int s, PieceType piece)
+bool SBoard::getDrops(int s, PieceType piece)
 {
     bool t = s <= gateAt[White], sb = false;
     int to, n = 0, at = NB[s];
@@ -686,7 +686,7 @@ inline bool SBoard::getDrops(int s, PieceType piece)
     return n > 0 && !sb;
 }
  // 'teleports' from tower squares!
-inline void SBoard::getPorts(int s)
+void SBoard::getPorts(int s)
 {
     int to, at = NB[s], h = s < 31? 1 : 54; // top left of fortresses
 
@@ -701,7 +701,7 @@ inline void SBoard::getPorts(int s)
     }
 }
  // main move generator (for single vector)
-inline void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
+void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
 {
     int to = at; bool s2 = false, fort;
  //   if (doneFort)
@@ -736,7 +736,7 @@ inline void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
     }
 }
  // evasions for biy only
-inline void SBoard::getEvasions()
+void SBoard::getEvasions()
 {
     bool doneFort = false;
     int at = m_biyAt[m_stm];
@@ -752,7 +752,7 @@ inline void SBoard::getEvasions()
         getMoves(at, Biy, dir[d], doneFort);
 }
  // capture -- checks for continuation, and flags any such in Move object
-inline bool SBoard::getCapture
+bool SBoard::getCapture
     (int at, PieceType piece, D d, int r, bool inFort)
 {
     int to = at, to2, v_at, dd, pr, flags = m_b;
@@ -864,15 +864,27 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                 D td1( noD ), td2( noD );
                 if (m_epSquare && pt == Shatra)
                 { // force ep to be examined first
-                    if (m_epSquare == at + (m_stm? sw : ne) ||
-                        m_epSquare == at + (m_stm? se : nw))
-                    {   td1 = (D)(m_epSquare - at);
-                        if (getCapture(at, pt, td1, pr, false))
-                        { // if the ep succeeded, block two directions
-                            td2 = (D)(m_epVictim - at);
-                            m_epVictim = NoSquare;
-                            m_caps[1] = true;// non-biy capture
-                        }
+                    if ((m_stm == White
+                        && ((Rank(at) == 8
+                          && (m_epSquare == at+se || m_epSquare == at+sw))
+                        ||  (Rank(at) == 9
+                          && (m_epSquare == at+e  || m_epSquare == at+w))))
+                    ||  (m_stm == Black
+                        && ((Rank(at) == 7
+                          && (m_epSquare == at+ne || m_epSquare == at+nw))
+                        ||  (Rank(at) == 6
+                          && (m_epSquare == at+e  || m_epSquare == at+w)))))
+                    {
+                        td1 = (D)(m_epSquare - at);
+                    }
+
+                    if (getCapture(at, pt, td1, pr, false))
+                    { // if the ep succeeded, block capture direction
+                      // (so we don't generate it twice), as well as
+                      // actual piece capture direction
+                        td2 = (D)(m_epVictim - at);
+                        m_epVictim = NoSquare;
+                        m_caps[1] = true;// non-biy capture
                     }
                 }
 
