@@ -87,6 +87,7 @@ inline Square bitScanForward(quint64 b) {
 }
 
 const bb bFort[2] = { 0x00000000000003fe,0x7fc0000000000000 };
+const bb bFortGate[2] = { 0x7fe, quint64(0x7fe)<<52 };
 
 void SBoardInit();
 

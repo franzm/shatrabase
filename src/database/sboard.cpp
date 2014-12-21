@@ -940,7 +940,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                     m_sb[m_epVictim] = m_stm? WhiteShatra : BlackShatra;
                 return m_ml.count();
             }
-            else if (m_allurgent & bFort[m_stm]) // no captures, check for urgent pieces
+            else if (m_allurgent & bFortGate[m_stm]) // no captures, check for urgent pieces
             {
                 bb au = m_allurgent;
                 Square usq;
