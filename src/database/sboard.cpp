@@ -348,7 +348,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
     initState();
     m_moveNumber = 1;
     fillOffboard();
-
+    qDebug() << spn;
     while (j <= lsq)
     {
         if (sp > 0)
@@ -612,6 +612,8 @@ bool SBoard::prohibited(int to, PieceType p)
 
     if (m_stm) { if (fortB && temdekOn(Black)) return true; }
     else         if (fortW && temdekOn(White)) return true;
+    else if (g_version == 1 && p == Shatra && m_stm? fortB : fortW)
+        return true;
 
     return false;
 }
@@ -659,7 +661,7 @@ void SBoard::doCFlags(int from, int to, int cp)
  // if dropping from home fort, add decTemdek flag if T on
 bool SBoard::getDrops(int s, PieceType piece)
 {
-    bool t = s <= gateAt[White], sb = false;
+    bool t = s <= gateAt[White];
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
     t ^= (m_stm != White); // our own fortress?
@@ -667,14 +669,9 @@ bool SBoard::getDrops(int s, PieceType piece)
     {
         if (temdekOn(m_stm)) m_b |= DECTDK; // and Temdek on?
     }
-    else switch (g_version) {
-    case 1:
-        sb = isShatraBiy(s, m_stm, piece);
-        break;
-    case 2:
-        if (piece == Shatra)
-            return false; // shatras can't drop from enemy fort
-    }
+    if (g_version == 2 && piece == Shatra)
+        return false; // shatras can't drop from enemy fort
+
     for (int i = 0; i < 21; i++)
     {    
         to = NB[h + i]; // Numeric to Board coords
@@ -683,7 +680,7 @@ bool SBoard::getDrops(int s, PieceType piece)
             m_ml.add().genMove(at, to, piece, m_b); ++n;
         }
     }
-    return n > 0 && !sb;
+    return n > 0;
 }
  // 'teleports' from tower squares!
 void SBoard::getPorts(int s)
@@ -718,7 +715,8 @@ void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
                 s2 ^= true; // for two-square moves
                 m_ml.add().genMove(at, to, Shatra, m_b);
             }
-            if (Rank(at) != sFirst[m_stm] || !s2) break; // 2-move
+            if (Rank(at) != sFirst[m_stm] || !s2 || g_version == 1)
+                break; // 2-move
         }
         else // other piece types
         {
@@ -732,7 +730,7 @@ void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
                     m_ml.add().genMove(at, to, piece, m_b);
             }
         }
-        if (g_version == 1 || piece == Biy) break;
+        if (piece == Biy) break;
     }
 }
  // evasions for biy only
@@ -909,9 +907,10 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 
                 switch (g_version) {
                 case 1:
-                    if (s == next_out || isBiyOnTemdek(s) || isShatraBiy(s, m_stm, pt))
+                    if (s == next_out
+                     || (isInHomeGF(s, m_stm) && temdekOff(m_stm))
+                     || isInOppGF(s, m_stm))
                         doneFort = getDrops(s, pt);
-                    else doneFort = isReserve(s);
                     break;
                 case 2:
                     if (isInFortress(s) || isBiyOnTemdek(s))

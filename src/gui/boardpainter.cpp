@@ -304,7 +304,7 @@ void BoardPainter::configure()
     //m_do_show_side = ...
 //    m_do_moat = AppSettings->getValue("showMoat").toBool();
 //    m_do_tower = AppSettings->getValue("showTower").toBool();
-    m_do_moat = g_version == 2;
+    m_do_moat = true; //g_version == 2;
     m_do_tower = m_do_moat;
     m_do_show_frame = AppSettings->getValue("showFrame").toBool();
     m_do_square_numbers = AppSettings->getValue("showSquareNumbers").toBool();
@@ -530,25 +530,29 @@ void BoardPainter::createBoard_(const Board& board)
             s->frame = true;
         }
 
-        // set temdek flag
-        if ((i == gateAt[Black] && board.temdekOn(Black)) ||
-            (i == gateAt[White] && board.temdekOn(White)))
+        if (g_version == 2)
         {
-            s->temdek = (i == gateAt[White])? 2 : 1;
-        }
+            // set temdek flag
+            if ((i == gateAt[Black] && board.temdekOn(Black)) ||
+                    (i == gateAt[White] && board.temdekOn(White)))
+            {
+                s->temdek = (i == gateAt[White])? 2 : 1;
+            }
 
-        // set tower square overlay
-        if (m_do_tower && board.isTower(i))
-        {
-            s->overlay = &m_theme->towerOverlay();
-        }
+            // set tower square overlay
+            if (m_do_tower && board.isTower(i))
+            {
+                s->overlay = &m_theme->towerOverlay();
+            }
 
-        // hint for enPassant
-        if (board.enPassantSquare() == i
-                && board.epPossible(i, board.toMove()))
-        {
-            s->overlay = &m_theme->enPassantOverlay();
+            // hint for enPassant
+            if (board.enPassantSquare() == i
+                    && board.epPossible(i, board.toMove()))
+            {
+                s->overlay = &m_theme->enPassantOverlay();
+            }
         }
+        else s->temdek = 0;
 
         // number display
         if (m_do_square_numbers)
