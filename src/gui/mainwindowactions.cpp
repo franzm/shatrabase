@@ -498,27 +498,31 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
     }
     else if (m.isPromotion())
     {
-        bool ok; int i = 0;
-        PieceType ix[3];
-        QStringList moves;
-
-        if (board.canPromoteTo(Batyr))
-        moves << tr("Batyr"), ix[i++] = Batyr;
-        if (board.canPromoteTo(Tura))
-            moves << tr("Tura"), ix[i++] = Tura;
-        if (board.canPromoteTo(Yalkyn))
-            moves << tr("Yalkyn"), ix[i++] = Yalkyn;
-        if (i)
+        if (g_version == 1)
+            m.setPromotionPiece(Batyr);
+        else
         {
-            int index = moves.indexOf(QInputDialog::getItem(0,
-                tr("Promotion"), tr("Promote to:"), moves, 0, false, &ok));
-            if (!ok)
-                return;
-            promotionPiece = ix[index];
-        }
-        m.setPromotionPiece(promotionPiece); // set None if none available
-    }
+            bool ok; int i = 0;
+            PieceType ix[3];
+            QStringList moves;
 
+            if (board.canPromoteTo(Batyr))
+                moves << tr("Batyr"), ix[i++] = Batyr;
+            if (board.canPromoteTo(Tura))
+                moves << tr("Tura"), ix[i++] = Tura;
+            if (board.canPromoteTo(Yalkyn))
+                moves << tr("Yalkyn"), ix[i++] = Yalkyn;
+            if (i)
+            {
+                int index = moves.indexOf(QInputDialog::getItem(0,
+                tr("Promotion"), tr("Promote to:"), moves, 0, false, &ok));
+                if (!ok)
+                    return;
+                promotionPiece = ix[index];
+            }
+            m.setPromotionPiece(promotionPiece); // set None if none available
+        }
+    }
     // Use an existing move with the correct promotion type if possible
     if (game().findNextMove(from, to, promotionPiece))
     {

@@ -796,8 +796,11 @@ bool SBoard::getCapture
                   && (inFort || !prohibited(to2 + d2, piece))) // here too
                 {
                     doCFlags(at, to, v_at);
+                    if (g_version == 1
+                     && piece == Shatra && Rank(to) == sFinal[m_stm])
+                        m_b |= PROMO;
                     m_ml.add().genCapt(at, to, piece, v_at, v, m_b | C_CONT);
-                    return c; // will continue - so no promo for shatras,
+                    return c; // will continue - so no promo for shatras in v2,
                 }             // only one square allowed for sliders
                 pr >>= 1;
             }
