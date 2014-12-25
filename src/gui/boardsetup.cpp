@@ -34,6 +34,12 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
 
     for (int piece = WhiteBatyr; piece <= BlackShatra; piece++)
     {
+        if (g_version == 1)
+        {
+            while (piece == WhiteTura || piece == WhiteYalkyn
+             || piece == BlackTura || piece == BlackYalkyn)
+                ++piece;
+        }
         BoardSetupToolButton* button = new BoardSetupToolButton(this);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         //button->setAlignment(Qt::AlignJustify|Qt::AlignVCenter);
