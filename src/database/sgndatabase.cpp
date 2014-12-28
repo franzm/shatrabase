@@ -620,6 +620,7 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
 
 void SgnDatabase::parseToken(Game* game, const QString& token)
 {
+    qDebug() << token;
 	switch (token.at(0).toLatin1()) {
 	case '(':
 		m_newVariation = true;

@@ -612,7 +612,7 @@ bool SBoard::prohibited(int to, PieceType p)
 
     if (m_stm) { if (fortB && temdekOn(Black)) return true; }
     else         if (fortW && temdekOn(White)) return true;
-    else if (g_version == 1 && p == Shatra && m_stm? fortB : fortW)
+    if (g_version == 1 && p == Shatra && (m_stm? fortB : fortW))
         return true;
 
     return false;
@@ -669,7 +669,7 @@ bool SBoard::getDrops(int s, PieceType piece)
     {
         if (temdekOn(m_stm)) m_b |= DECTDK; // and Temdek on?
     }
-    if (g_version == 2 && piece == Shatra)
+    else if (g_version == 2 && piece == Shatra)
         return false; // shatras can't drop from enemy fort
 
     for (int i = 0; i < 21; i++)
@@ -982,13 +982,13 @@ Move SBoard::parseMove(const QString& algebraic)
     const char* s = lann;
     char c = *s++;
     Move move; // zero is illegal move
-    int from, to, at, temp, type = Shatra, alph;
-    bool capt = false;
+    int from, to, at, temp, type = Shatra;
+    bool capt = false, alph;
 
     if (c != ':')
     {    
         switch (c)
-       {
+        {
         case 'Q': type = Batyr;  c = *s++; break;
         case 'R': type = Tura;   c = *s++; break;
         case 'B': type = Yalkyn; c = *s++; break;
@@ -1003,10 +1003,10 @@ Move SBoard::parseMove(const QString& algebraic)
             if (isUpper(c)) return move;
         }
 
-        alph = (int)isAlpha(c); // string is alphanumeric or numeric?
+        alph = isAlpha(c); // string is alphanumeric or numeric?
 
         getAt;
-        from = alph? at : NB[at];
+        from = (alph? at : NB[at]);
         if (from > 144) return Move();
         if (!BN[from]) return move;
 
@@ -1018,12 +1018,12 @@ Move SBoard::parseMove(const QString& algebraic)
     {
         from = m_to; // NB ***from must = last to***
         if (from == NoSquare) return move;
-        alph = (int)isAlpha(*s);
+        alph = isAlpha(*s);
         capt = true;
     }
     c = *s++;
     getAt;
-    to = alph? at : NB[at]; if (!BN[to]) return move;
+    to = (alph? at : NB[at]); if (!BN[to]) return move;
 
     type = Empty;
 
@@ -1047,6 +1047,8 @@ Move SBoard::parseMove(const QString& algebraic)
             move.setPromoted(m_offBoard[type + PC[m_stm]]? type : 0);
         else move.setPromoted(Empty);
     }
+//    if (!move.m)
+//        alph = true;
     return move;
 }
 #undef getAt

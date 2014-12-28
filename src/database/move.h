@@ -293,7 +293,7 @@ inline PieceType Move::pieceTypeMoved() const
 
 inline Piece Move::promotedPiece() const
 {
-   return Piece((b & 3) + ( b & STM? 5 : 0));
+    return Piece((b & 3) + ( b & STM? 5 : 0));
 }
 
 inline uint Move::promoted() const
