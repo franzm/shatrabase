@@ -845,10 +845,9 @@ bool SBoard::getCapture
 int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 {
     int s, at, r, pr, bstm( m_stm<<2 ), next_out, pieces_capturing = 0;
-    bool c( !cc ), inFort, doneDrop;
+    bool c( !cc ), inFort, doneDrop, biyCaps = false;
     PieceType homeGate = None, awayGate = None;
     m_promoWait[m_sntm] = promoWaiting();
-    m_caps[0] = m_caps[1] = false;
     m_epVictim = NoSquare;
     m_ml.clear();
 
@@ -904,7 +903,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                       // actual piece capture direction
                         td2 = (D)(m_epVictim - at);
                         m_epVictim = NoSquare;
-                        m_caps[1] = true;// non-biy capture
+                        ++pieces_capturing;
                     }
                 }
 
@@ -917,7 +916,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                     if (r & 1)
                         if (getCapture(at, pt, dir[d], pr, inFort))
                         {
-                            m_caps[pt == Biy? 0 : 1] = true;
+                            if (pt == Biy) biyCaps = true;
                             if (s == gateAt[m_stm]) homeGate = pt;
                             else if (s == gateAt[m_sntm]) awayGate = pt;
                             ++pieces_capturing;
@@ -963,7 +962,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
         {
             if (m_ml.count())
             {
-                if (onlyBiyCaptures()) getEvasions();
+                if (biyCaps && pieces_capturing == 1) getEvasions();
                 else if (m_epVictim)
                     m_sb[m_epVictim] = m_stm? WhiteShatra : BlackShatra;
                 else if (pieces_capturing == 1 && g_version == 1)
@@ -1424,7 +1423,6 @@ QString SBoard::dumpAll(const SBoard * comp) const
     SB_SB_DEBUG_A(m_promoWait,2);
     SB_SB_DEBUG(m_b);
     SB_SB_DEBUG_A(m_urgent,2);
-    SB_SB_DEBUG_A(m_caps,2);
     SB_SB_DEBUG_A(m_temdekPending,2);
     //urstack<int,16> m_dfs;     // stack for defunkt pieces - NB no real undo
     //urvct<int,16> m_ext;       // vector for capture extensions

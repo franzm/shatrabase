@@ -264,8 +264,6 @@ public:
     inline void getMoves(int at, PieceType p, D d, bool df);
     /** Used to determine possible captures */
     inline bool isOppositeColor(int at) const;
-    /** Biy can make evasion only if no other piece can capture */
-    inline bool onlyBiyCaptures() const;
 
     ubyte m_sb[144];           // shatra board, MUST be first data member
   protected:
@@ -295,7 +293,6 @@ public:
     int m_promoWait[2];        // could need 3 for each side??? :)
     int m_b;                   // flags, better than passing it round
     int m_urgent[2];           // location of moving piece marked urgent
-    bool m_caps[2];            // used for "if no other piece can capture"
     bool m_temdekPending[2];   // delay temdek removal during capture sequence
     urstack<int,16> m_dfs;     // stack for defunkt pieces - NB no real undo
     urvct<int,16> m_ext;       // vector for capture extensions
@@ -367,11 +364,6 @@ inline void SBoard::setToMove(const Color& c)
 inline bool SBoard::sameSide() const
 {
 	return m_stm == m_lstm;
-}
-
-inline bool SBoard::onlyBiyCaptures() const
-{
-	return m_caps[0] && !m_caps[1];
 }
 
 inline bool SBoard::isOppositeColor(int at) const
