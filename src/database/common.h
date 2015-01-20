@@ -165,6 +165,10 @@ inline bool isValidPiece(const Piece p)
 inline bool isInFortress(const int s)
     { return s > gateAt[Black] || s < gateAt[White]; }
 
+/* Return true if given piece is in either gate or fortress [v1]*/
+inline bool isInFortGate(const int s)
+    { return s >= gateAt[Black] || s <= gateAt[White]; }
+
 /* Return true if given piece is in its home fortress */
 inline bool isInHomeFort(const int s, const int stm)
     { return stm == White? s < gateAt[White] : s > gateAt[Black]; }

@@ -661,7 +661,7 @@ void SBoard::doCFlags(int from, int to, int cp)
  // if dropping from home fort, add decTemdek flag if T on
 bool SBoard::getDrops(int s, PieceType piece)
 {
-    bool t = s <= gateAt[White];
+    bool t = (g_version == 2? s <= gateAt[White] : s < gateAt[White]);
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
     t ^= (m_stm != White); // our own fortress?
@@ -698,10 +698,10 @@ void SBoard::getPorts(int s)
     }
 }
  // main move generator (for single vector)
-void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
+void SBoard::getMoves(int at, PieceType piece, D d, bool doneDrop)
 {
     int to = at; bool s2 = false, fort;
- //   if (doneFort)
+ //   if (doneDrop)
     fort = Rank(at) > 10;
 
     while (isVacant(to += d))
@@ -720,7 +720,7 @@ void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
         }
         else // other piece types
         {
-            if(doneFort)
+            if (doneDrop)
             {
                  if(!duplicate(to, fort))
                     m_ml.add().genMove(at, to, piece, m_b);
@@ -733,21 +733,39 @@ void SBoard::getMoves(int at, PieceType piece, D d, bool doneFort)
         if (piece == Biy) break;
     }
 }
- // evasions for biy only
+// evasions for biy only
 void SBoard::getEvasions()
 {
-    bool doneFort = false;
+    bool doneDrop = false;
     int at = m_biyAt[m_stm];
     int s = BN[at];
 
-    if (isBiyOnTemdek(s) || isInFortress(s))
+    if (g_version == 1)
     {
-        doneFort = getDrops(s, Biy);
+        if (isInFortGate(s))
+            doneDrop = getDrops(s, Biy);
+    }
+    else if (isBiyOnTemdek(s) || isInFortress(s))
+    {
+        doneDrop = getDrops(s, Biy);
         if (temdekOn(m_stm)) return;
     }
 
     for (int d = 0; d < 8; d++)
-        getMoves(at, Biy, dir[d], doneFort);
+        getMoves(at, Biy, dir[d], doneDrop);
+}
+// evasions for shatras and batyrs, original version only
+void SBoard::getEvasions(Square s, PieceType piece)
+{
+    bool doneDrop = getDrops(s, piece);
+    int at = NB[s];
+
+    int r = (piece == Shatra? sRules[m_stm][2] : 255);
+    for (int d = 0; d < 8; d++)
+    {
+        if (r & 1) getMoves(at, piece, dir[d], doneDrop);
+        r >>= 1;
+    }
 }
  // capture -- checks for continuation, and flags any such in Move object
 bool SBoard::getCapture
@@ -826,8 +844,9 @@ bool SBoard::getCapture
 //           3) captures, if none generate all moves (fsq, lsq)
 int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 {
-    int s, at, r, pr, bstm( m_stm<<2 ), next_out;
-    bool c( !cc ), inFort, doneFort;
+    int s, at, r, pr, bstm( m_stm<<2 ), next_out, pieces_capturing = 0;
+    bool c( !cc ), inFort, doneDrop;
+    PieceType homeGate = None, awayGate = None;
     m_promoWait[m_sntm] = promoWaiting();
     m_caps[0] = m_caps[1] = false;
     m_epVictim = NoSquare;
@@ -897,36 +916,43 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 
                     if (r & 1)
                         if (getCapture(at, pt, dir[d], pr, inFort))
+                        {
                             m_caps[pt == Biy? 0 : 1] = true;
+                            if (s == gateAt[m_stm]) homeGate = pt;
+                            else if (s == gateAt[m_sntm]) awayGate = pt;
+                            ++pieces_capturing;
+                       }
                     r >>= 1;
                 }
             }
             else // drop, teleport or ordinary moves
             {
-                m_b = bstm; doneFort = false;
+                m_b = bstm; doneDrop = false;
 
                 switch (g_version) {
                 case 1:
                     if (s == next_out
                      || (isInHomeGF(s, m_stm) && temdekOff(m_stm))
                      || isInOppGF(s, m_stm))
-                        doneFort = getDrops(s, pt);
+                         doneDrop = getDrops(s, pt);
+                    else doneDrop = // prevent other reserves from moving
+                            (isInHomeFort(s, m_stm) && temdekOn(m_stm));
                     break;
                 case 2:
                     if (isInFortress(s) || isBiyOnTemdek(s))
-                        doneFort = getDrops(s, pt);
+                         doneDrop = getDrops(s, pt);
                     else if (pt == Shatra &&
-                             (s == lTower[m_sntm] || s == rTower[m_sntm]))
-                        getPorts(s);
+                            (s == lTower[m_sntm] || s == rTower[m_sntm]))
+                         getPorts(s);
                 }
-                if (!(doneFort && isReserve(s)))
+                if (!(isReserve(s) && doneDrop))
                 {
                     for (int d = 0; d < 8; ++d)
                     {
                         if (!r) break;
                         m_b = bstm;
 
-                        if (r & 1) getMoves(at, pt, dir[d], doneFort);
+                        if (r & 1) getMoves(at, pt, dir[d], doneDrop);
                         r >>= 1;
                     }
                 }
@@ -940,6 +966,13 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                 if (onlyBiyCaptures()) getEvasions();
                 else if (m_epVictim)
                     m_sb[m_epVictim] = m_stm? WhiteShatra : BlackShatra;
+                else if (pieces_capturing == 1 && g_version == 1)
+                { // "Biy's Right" for original version
+                    if (homeGate)
+                        getEvasions(gateAt[m_stm], homeGate);
+                    else if (awayGate)
+                        getEvasions(gateAt[m_sntm], awayGate);
+                }
                 return m_ml.count();
             }
             else if (m_allurgent & bFortGate[m_stm]) // no captures, check for urgent pieces

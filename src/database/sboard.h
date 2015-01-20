@@ -256,11 +256,12 @@ public:
     inline bool prohibited(int to, PieceType p);
     inline bool duplicate(int to, bool fort);
     inline void doCFlags(int from, int to, int cp);
-    inline bool getDrops(int s, PieceType piece);
+    inline bool getDrops(int s, PieceType p);
     inline void getPorts(int s);
     inline void getEvasions();
-    inline bool getCapture(int at, PieceType piece, D d, int r, bool f);
-    inline void getMoves(int at, PieceType piece, D d, bool df);
+    inline void getEvasions(Square s, PieceType p);
+    inline bool getCapture(int at, PieceType p, D d, int r, bool f);
+    inline void getMoves(int at, PieceType p, D d, bool df);
     /** Used to determine possible captures */
     inline bool isOppositeColor(int at) const;
     /** Biy can make evasion only if no other piece can capture */

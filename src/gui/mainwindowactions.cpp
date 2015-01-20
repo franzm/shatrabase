@@ -470,7 +470,7 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
 
     PieceType promotionPiece = None;
 
-    if (m.pieceTypeMoved() == Biy)
+    if (m.pieceTypeMoved() == Biy || g_version == 1)
     {
         if (m.isCapture() && board.moveIsDual(from, to))
         {
@@ -496,7 +496,7 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
             if (mb.exec() == QMessageBox::No) return;
         }
     }
-    else if (m.isPromotion())
+    if (m.isPromotion())
     {
         if (g_version == 1)
             m.setPromotionPiece(Batyr);
