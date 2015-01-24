@@ -30,6 +30,9 @@ public:
         bool bTestMode,
         const QString& directory = QString());
 
+    /** Sets the Shatra version - 1 Original, 2 Extended **/
+    void setShatraVersion();
+
     /** Analyses the the given position.
         If @p movetime_ms > 0, limit the analysis time to given millisecs.
         If @p max_ply > 0, only the specified number of plies will be searched. */

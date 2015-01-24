@@ -13,6 +13,7 @@
 
 #include "ushiengine.h"
 #include "enginedata.h"
+#include "qmessagebox.h"
 
 USHIEngine::USHIEngine(const QString& name,
 			  const QString& command,
@@ -88,8 +89,8 @@ void USHIEngine::setMpv(int mpv)
 
 void USHIEngine::protocolStart()
 {
-	//tell the engine we are using the ushi protocol
-	send("ushi");
+    //tell the engine we are using the ushi protocol
+    send("ushi");
 }
 
 void USHIEngine::protocolEnd()
@@ -99,13 +100,34 @@ void USHIEngine::protocolEnd()
 	m_board.clear();
 }
 
+void USHIEngine::setShatraVersion()
+{
+    send(QString("setoption name Shatra version value %1").arg(g_version));
+}
+
 void USHIEngine::processMessage(const QString& message)
 {
+    qDebug()<<message;
     if (message == "ushiok") {
+        setShatraVersion();
 		//once the engine is running wait for it to initialise
-		m_waitingOn = "ushiok";
-		send("isready");
+        m_waitingOn = "ushiok";
+        send("isready");
 	}
+
+    if (message == "version unsupported")
+    {
+        protocolEnd();
+        QMessageBox mb;
+        mb.setText(tr("The engine does not support this version of Shatra"));
+        mb.exec();
+        // quit
+    }
+    if (message == "version supported")
+    {
+        m_waitingOn = "ushiok";
+//        send("isready");
+    }
 
     if (message == "readyok")
     {

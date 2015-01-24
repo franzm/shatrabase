@@ -367,7 +367,7 @@ MainWindow::MainWindow() : QMainWindow(),
                 QMessageBox::Yes | QMessageBox::No);
     mb.setButtonText(QMessageBox::Yes, tr("Extended"));
     mb.setButtonText(QMessageBox::No, tr("Original"));
-    g_version = mb.exec() == QMessageBox::No? 1 : 2;
+    g_version = mb.exec() == QMessageBox::No? Original : Extended;
 //    AppSettings->setValue("showMoat", g_version == 2? true : false);
     SBoardInit();
 

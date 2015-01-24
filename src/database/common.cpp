@@ -28,6 +28,8 @@ Piece operator++(Piece& w, int)
     return alt;
 }
 */
+ShatraVersion  g_version(Unspecified);
+
 bool g_loading          = false;
 bool g_searching        = false;
 bool g_notation         = NUM;  // default is numeric
@@ -37,17 +39,19 @@ bool g_resModified;
 int  g_nErrors          = 0;
 int  g_aveNodes         = 0;
 int  g_totalNodes       = 0;
-int  g_version;
 
 QString startPosition()
 {
-    switch (g_version ) {
-    case 1 :
+    switch (g_version)
+    {
+    case Original :
         return "SSSSSSSSS/K/SSSSSSS/SSSSSSS/7/7/sssssss/sssssss/k/sssssssss w Tt - - - 1";
-    case 2 :
+    case Extended :
         return "SQSSRSBRB/K/SSSSSSS/7/7/7/7/sssssss/k/brbsrssqs w Tt - - - 1";
+    case Unspecified :
+    default :
+        return "";
     }
-    return "";
 }
 
 QString resultString(Result result)

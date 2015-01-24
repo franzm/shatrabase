@@ -109,6 +109,9 @@ enum Piece
 enum PieceType { None, Batyr, Tura, Yalkyn, Biy, Shatra };
 enum Color { White, Black };
 enum BoardLimits { fsq = 1, lsq = 62 };
+enum ShatraVersion { Unspecified, Original, Extended };
+
+extern ShatraVersion g_version;
 
 extern bool g_loading;
 extern bool g_searching;
@@ -119,7 +122,6 @@ extern bool g_resModified;
 extern int  g_nErrors;
 extern int  g_aveNodes;
 extern int  g_totalNodes;
-extern int  g_version;
 
 const int ConstPieceTypes = WasShatra + 1;
 const int Was = WasBatyr - Batyr;

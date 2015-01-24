@@ -141,6 +141,8 @@ public:
     void clearEnPassantSquare();
     /** Fill offboard stash with full complement */
     void fillOffboard();
+    /** Original version, loads both m_nextOut values */
+    void findNextOut();
 
     // Move factories
     //
@@ -222,7 +224,6 @@ public:
     /** Returns all moves in tuples of SquareFrom and SquareTo.
         The moves will be push_back'd onto the vector */
     void getMoveSquares(std::vector<SquareMove>& vec) const;
-
     // Long algebraic or numeric format
     //
     /** Return a LANN string representation of given move */
@@ -277,6 +278,8 @@ public:
     bb  m_allurgent;           // bitboard of all pieces marked urgent
   //private:
 public:
+    ShatraVersion m_ver;       // local copy
+    int m_b;                   // flags, better than passing it round
     int m_sntm;                // side not to move
     int m_lstm;                // last side to move
     int m_from;                // board coords
@@ -291,7 +294,7 @@ public:
     int m_offBoard[12];        // pieces are either on or off the board
     int m_pieceCount[2];       // simple counter for onboard pieces
     int m_promoWait[2];        // could need 3 for each side??? :)
-    int m_b;                   // flags, better than passing it round
+    int m_nextOut[2];          // original version, next shatras out of forts
     int m_urgent[2];           // location of moving piece marked urgent
     bool m_temdekPending[2];   // delay temdek removal during capture sequence
     urstack<int,16> m_dfs;     // stack for defunkt pieces - NB no real undo

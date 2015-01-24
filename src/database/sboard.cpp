@@ -144,19 +144,22 @@ void SBoard::setTransitAt(const Square at)
 
 void SBoard::fillOffboard()
 {
-    switch (g_version)
+    switch (m_ver)
     {
-    case 1 :
-        m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 24; // nominal max promo + 1 :)
+    case Original :
+        m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 23; // nominal max promos
         m_offBoard[WhiteBiy] = m_offBoard[BlackBiy] = 1;
         m_offBoard[WhiteShatra] = m_offBoard[BlackShatra] = 23;
         break;
-    case 2 :
+    case Extended :
         m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 1;
         m_offBoard[WhiteTura] = m_offBoard[BlackTura] = 2;
         m_offBoard[WhiteYalkyn] = m_offBoard[BlackYalkyn] = 2;
         m_offBoard[WhiteBiy] = m_offBoard[BlackBiy] = 1;
         m_offBoard[WhiteShatra] = m_offBoard[BlackShatra] = 11;
+        break;
+    case Unspecified :
+        break;
     }
 }
 
@@ -320,6 +323,20 @@ bool SBoard::epPossible(int sq, Color side) const // should be Square?
     return okay;
 }
 
+void SBoard::findNextOut()
+{
+    if (m_temdek[White])
+    {
+        for (int x = fsq; x < gateAt[White]; x++)
+            if (m_sb[NB[x]] == WhiteShatra) m_nextOut[White] = x;
+    }
+    if (m_temdek[Black])
+    {
+        for (int x = lsq; x > gateAt[Black]; x--)
+            if (m_sb[NB[x]] == BlackShatra) m_nextOut[Black] = x;
+    }
+}
+
  // Why QString throws asserts for access past end of string and
  // refuses to return a real c++ char type is beyond him (me too)
 class SaneString : public QString
@@ -342,13 +359,15 @@ bool SBoard::SPNToBoard(const QString& qspn)
     SaneString spn(qspn);
     int i = 0, j = fsq;
     int k_on[2] = { 0, 0 };
-    int tw = 0, tb = 0, sp = 0, sl = 0;
+    int resw = 0, resb = 0, sp = 0, sl = 0;
     char c = spn[0];
-    bool found, wt, bt, urg = false;
+    bool found, wres, bres, urg = false;
+    
     initState();
+    m_ver = g_version;
     m_moveNumber = 1;
     fillOffboard();
-    qDebug() << spn;
+//    qDebug() << spn;
     while (j <= lsq)
     {
         if (sp > 0)
@@ -361,9 +380,8 @@ bool SBoard::SPNToBoard(const QString& qspn)
             if (j != spn_slash[sl++] + 1) return false;
             c = spn[++i];
         }
-        bt = j >= gateAt[Black]; wt = j <= gateAt[White];
+        bres = j >= gateAt[Black]; wres = j <= gateAt[White];
         if (isNum(c)) { sp = c - '0'; continue; }
-
 
         if (c == '!')
         {
@@ -376,34 +394,34 @@ bool SBoard::SPNToBoard(const QString& qspn)
         {          // piece type is specified by the SPN string
         case 'Q':  // nb style borrowed from chessx
             if (!setAt(NB[j++], WhiteBatyr, urg)) return false;
-            if (wt) ++tw; break;
+            if (wres) ++resw; break;
         case 'R':  // maybe faster than a loop check (?)
             if (!setAt(NB[j++], WhiteTura, urg))  return false;
-            if (wt) ++tw; break;
+            if (wres) ++resw; break;
         case 'B': // but a real pain if needing translation at some point
             if (!setAt(NB[j++], WhiteYalkyn, urg)) return false;
-            if (wt) ++tw; break;
+            if (wres) ++resw; break;
         case 'K':
             if (!setAt(NB[j++], WhiteBiy, urg))  return false;
-            if (wt) ++tw; ++k_on[White]; break;
+            if (wres) ++resw; ++k_on[White]; break;
         case 'S':
             if (!setAt(NB[j++], WhiteShatra, urg)) return false;
-            if (wt) ++tw; break;
+            if (wres) ++resw; break;
         case 'q':
             if (!setAt(NB[j++], BlackBatyr, urg)) return false;
-            if (bt) ++tb; break;
+            if (bres) ++resb; break;
         case 'r':
             if (!setAt(NB[j++], BlackTura, urg))  return false;
-            if (bt) ++tb; break;
+            if (bres) ++resb; break;
         case 'b':
             if (!setAt(NB[j++], BlackYalkyn, urg)) return false;
-            if (bt) ++tb; break;
+            if (bres) ++resb; break;
         case 'k':
             if (!setAt(NB[j++], BlackBiy, urg))  return false;
-            if (bt) ++tb; ++k_on[Black]; break;
+            if (bres) ++resb; ++k_on[Black]; break;
         case 's':
             if (!setAt(NB[j++], BlackShatra, urg)) return false;
-            if (bt) ++tb; break;
+            if (bres) ++resb; break;
             // NB must add defunkt to dfstack...
         case 'y':
             setAt(NB[j], WasBatyr); m_dfs.push(NB[j++]);  break; // batYr
@@ -442,9 +460,9 @@ bool SBoard::SPNToBoard(const QString& qspn)
         case ' ': break;
         case '-': found = true; break; // NB single hyphen cancels any field
         case 'T':
-            m_temdek[White] = tw; found = true; break;
+            m_temdek[White] = resw; found = true; break;
         case 't':
-            m_temdek[Black] = tb; found = true;
+            m_temdek[Black] = resb; found = true;
         }
     } while(!found || (c != ' '));
     if (!found) return false; found = false;
@@ -476,7 +494,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
             j = i;
             while (isNum(c)) c = spn[++i];
             int eps = spn.mid(j, i - j).toInt();
-            if (g_version == 2 && epPossible(eps, Color(m_stm)))
+            if (m_ver == Extended && epPossible(eps, Color(m_stm)))
             {
                 m_epSquare = NB[eps];
                 //found = true;
@@ -510,6 +528,8 @@ bool SBoard::SPNToBoard(const QString& qspn)
     if (!isNum(c)) return false;
     m_moveNumber = spn.mid(i).toInt();    
     if (m_moveNumber < 1) return false;
+    
+    if (m_ver == Original) findNextOut();
        
     return true;
 }
@@ -571,7 +591,8 @@ QString SBoard::toSPN() const
  // rules change for shatras on different ranks
 int SBoard::sPhi(int s)
 {
-    if(g_version == 1) return 2;
+    if(m_ver == Original) return 2;
+    
     switch (m_stm)
     {
     case White:
@@ -612,7 +633,7 @@ bool SBoard::prohibited(int to, PieceType p)
 
     if (m_stm) { if (fortB && temdekOn(Black)) return true; }
     else         if (fortW && temdekOn(White)) return true;
-    if (g_version == 1 && p == Shatra && (m_stm? fortB : fortW))
+    if (m_ver == Original && p == Shatra && (m_stm? fortB : fortW))
         return true;
 
     return false;
@@ -635,7 +656,7 @@ void SBoard::doCFlags(int from, int to, int cp)
     case White:
         if (Rank(to) <= 4)
         {
-            if (temdekOn(White)) { if (Rank(from) <= 4)  m_b |= FLIP_URGENT; }
+            if (temdekOn(White) && Rank(from) <= 4)  m_b |= FLIP_URGENT;
         }
         else if (from == m_urgent[White]) m_b |= FLIP_URGENT;
 
@@ -648,7 +669,7 @@ void SBoard::doCFlags(int from, int to, int cp)
     case Black:
         if (Rank(to) >= 11)
         {
-            if (temdekOn(Black)) { if (Rank(from) >= 11)  m_b |= FLIP_URGENT; }
+            if (temdekOn(Black) && Rank(from) >= 11)  m_b |= FLIP_URGENT;
         }
         else if (from == m_urgent[Black]) m_b |= FLIP_URGENT;
 
@@ -661,7 +682,8 @@ void SBoard::doCFlags(int from, int to, int cp)
  // if dropping from home fort, add decTemdek flag if T on
 bool SBoard::getDrops(int s, PieceType piece)
 {
-    bool t = (g_version == 2? s <= gateAt[White] : s < gateAt[White]);
+    bool t = (m_ver == Extended?
+        s <= gateAt[White] : s < gateAt[White]);
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
     t ^= (m_stm != White); // our own fortress?
@@ -669,7 +691,7 @@ bool SBoard::getDrops(int s, PieceType piece)
     {
         if (temdekOn(m_stm)) m_b |= DECTDK; // and Temdek on?
     }
-    else if (g_version == 2 && piece == Shatra)
+    else if (m_ver == Extended && piece == Shatra)
         return false; // shatras can't drop from enemy fort
 
     for (int i = 0; i < 21; i++)
@@ -715,7 +737,7 @@ void SBoard::getMoves(int at, PieceType piece, D d, bool doneDrop)
                 s2 ^= true; // for two-square moves
                 m_ml.add().genMove(at, to, Shatra, m_b);
             }
-            if (Rank(at) != sFirst[m_stm] || !s2 || g_version == 1)
+            if (Rank(at) != sFirst[m_stm] || !s2 || m_ver == Original)
                 break; // 2-move
         }
         else // other piece types
@@ -740,7 +762,7 @@ void SBoard::getEvasions()
     int at = m_biyAt[m_stm];
     int s = BN[at];
 
-    if (g_version == 1)
+    if (m_ver == Original)
     {
         if (isInFortGate(s))
             doneDrop = getDrops(s, Biy);
@@ -812,7 +834,7 @@ bool SBoard::getCapture
                   && (inFort || !prohibited(to2 + d2, piece))) // here too
                 {
                     doCFlags(at, to, v_at);
-                    if (g_version == 1
+                    if (m_ver == Original
                      && piece == Shatra && Rank(to) == sFinal[m_stm])
                         m_b |= PROMO;
                     m_ml.add().genCapt(at, to, piece, v_at, v, m_b | C_CONT);
@@ -844,7 +866,7 @@ bool SBoard::getCapture
 //           3) captures, if none generate all moves (fsq, lsq)
 int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 {
-    int s, at, r, pr, bstm( m_stm<<2 ), next_out, pieces_capturing = 0;
+    int s, at, r, pr, bstm( m_stm<<2 ), pieces_capturing = 0;
     bool c( !cc ), inFort, doneDrop, biyCaps = false;
     PieceType homeGate = None, awayGate = None;
     m_promoWait[m_sntm] = promoWaiting();
@@ -852,11 +874,6 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
     m_ml.clear();
 
     if (m_biyAt[m_stm] == NoSquare) return 0; // biy was captured
-    if (g_version == 1) {
-        bool kt = m_biyAt[m_stm] == gateAtB[m_stm] && m_temdek[m_stm] > 0;
-        next_out = m_stm?
-            63-(m_temdek[m_stm]-kt) :  m_temdek[m_stm]-kt;
-    }
     do
     {           
         for (s = (c? fsq : first);
@@ -928,16 +945,17 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
             {
                 m_b = bstm; doneDrop = false;
 
-                switch (g_version) {
-                case 1:
-                    if (s == next_out
+                switch (m_ver) {
+                case Unspecified : // only to avoid compiler warning, we hope
+                case Original :
+                    if (s == m_nextOut[m_stm]
                      || (isInHomeGF(s, m_stm) && temdekOff(m_stm))
                      || isInOppGF(s, m_stm))
                          doneDrop = getDrops(s, pt);
                     else doneDrop = // prevent other reserves from moving
                             (isInHomeFort(s, m_stm) && temdekOn(m_stm));
                     break;
-                case 2:
+                case Extended :
                     if (isInFortress(s) || isBiyOnTemdek(s))
                          doneDrop = getDrops(s, pt);
                     else if (pt == Shatra &&
@@ -965,7 +983,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                 if (biyCaps && pieces_capturing == 1) getEvasions();
                 else if (m_epVictim)
                     m_sb[m_epVictim] = m_stm? WhiteShatra : BlackShatra;
-                else if (pieces_capturing == 1 && g_version == 1)
+                else if (pieces_capturing == 1 && m_ver == Original)
                 { // "Biy's Right" for original version
                     if (homeGate)
                         getEvasions(gateAt[m_stm], homeGate);
@@ -1200,6 +1218,12 @@ bool SBoard::doMove(const Move& m)
     {
         --m_temdek[m_stm]; // boardview may delay this
         m_temdekPending[m_stm] = temdekOff(m_stm);
+        if (m_ver == Original && BN[m_from] == m_nextOut[m_stm])
+        {
+            if (m_stm)
+                 while((m_sb[NB[++m_nextOut[m_stm]]] & 0xf) != BlackShatra);
+            else while((m_sb[NB[--m_nextOut[m_stm]]] & 0xf) != WhiteShatra);
+        }
     }
     else if (pieceType(piece) == Shatra)
     {
@@ -1288,12 +1312,24 @@ void SBoard::undoMove(const Move& m)
     m_lstm = m_stm;
     if (!inSequence())
     {
-        swapToMove(); // NB ...where m_stm is updated ***emit state change???
+        swapToMove();
         if (m_stm == Black) --m_moveNumber;
     }
     m_sntm = m_stm ^ 1; // side not to move
     
-    if (m.decsTemdek()) ++m_temdek[m_stm];
+    if (m.decsTemdek())
+    {
+        ++m_temdek[m_stm];
+        if (m_ver == Original)
+        {
+            int at = BN[m_from];
+            if (m_stm)
+            {
+                 if(at < m_nextOut[Black]) m_nextOut[Black] = at;          
+            }
+            else if(at > m_nextOut[White]) m_nextOut[White] = at;
+        }  
+    }
     else if (m.isPromotion())
     {
         ++m_offBoard[piece];
@@ -1370,6 +1406,7 @@ void SBoard::getMoveSquares(std::vector<SquareMove>& vec) const
 /* Init board values before starting */
 void SBoardInit()
 {
+    if (g_version == Unspecified) return;
     SBoardInitRun = true;
     standardPosition.fromSPN(startPosition());
 }

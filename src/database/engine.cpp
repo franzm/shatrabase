@@ -63,9 +63,6 @@ Engine* Engine::newEngine(EngineList& engineList, int index, bool bTestMode)
         command = QString("\"%1\"").arg(command);
     QString exe = QString("%1 %2").arg(command).arg(options);
 
-//    if (protocol == EngineData::WinBoard)
-//        engine = new WBEngine(name, exe, bTestMode, directory);
-//    else
     engine = new USHIEngine(name, exe, bTestMode, directory);
 
     engine->m_mapOptionValues = engineList[index].m_optionValues;
@@ -91,9 +88,6 @@ Engine* Engine::newEngine(int index, bool bTestMode)
 		command = QString("\"%1\"").arg(command);
 	QString exe = QString("%1 %2").arg(command).arg(options);
 
-//	if (protocol == "WinBoard")
-//        engine = new WBEngine(name, exe, bTestMode, directory);
-//    else
     engine = new USHIEngine(name, exe, bTestMode, directory);
 
     AppSettings->getMap(key + "/OptionValues", engine->m_mapOptionValues);
