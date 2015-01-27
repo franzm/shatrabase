@@ -682,14 +682,14 @@ void SBoard::doCFlags(int from, int to, int cp)
  // if dropping from home fort, add decTemdek flag if T on
 bool SBoard::getDrops(int s, PieceType piece)
 {
-    bool t = (m_ver == Extended?
-        s <= gateAt[White] : s < gateAt[White]);
+    bool t = s <= gateAt[White], no_dt = false;
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
     t ^= (m_stm != White); // our own fortress?
     if (t)
     {
-        if (temdekOn(m_stm)) m_b |= DECTDK; // and Temdek on?
+        if (temdekOn(m_stm)) // and Temdek on? NB Biy/Original version
+            m_b |= (m_ver == Original && s == gateAt[m_stm])? 0 : DECTDK;
     }
     else if (m_ver == Extended && piece == Shatra)
         return false; // shatras can't drop from enemy fort
@@ -697,6 +697,7 @@ bool SBoard::getDrops(int s, PieceType piece)
     for (int i = 0; i < 21; i++)
     {    
         to = NB[h + i]; // Numeric to Board coords
+
         if (isVacant(to))
         {
             m_ml.add().genMove(at, to, piece, m_b); ++n;
@@ -948,7 +949,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                 switch (m_ver) {
                 case Unspecified : // only to avoid compiler warning, we hope
                 case Original :
-                    if (s == m_nextOut[m_stm]
+                    if ((s == m_nextOut[m_stm] || isBiyOnTemdek(s))
                      || (isInHomeGF(s, m_stm) && temdekOff(m_stm))
                      || isInOppGF(s, m_stm))
                          doneDrop = getDrops(s, pt);
