@@ -403,7 +403,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
             if (wres) ++resw; break;
         case 'K':
             if (!setAt(NB[j++], WhiteBiy, urg))  return false;
-            if (wres) ++resw; ++k_on[White]; break;
+            if (wres && m_ver == Extended) ++resw; ++k_on[White]; break;
         case 'S':
             if (!setAt(NB[j++], WhiteShatra, urg)) return false;
             if (wres) ++resw; break;
@@ -418,7 +418,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
             if (bres) ++resb; break;
         case 'k':
             if (!setAt(NB[j++], BlackBiy, urg))  return false;
-            if (bres) ++resb; ++k_on[Black]; break;
+            if (bres && m_ver == Extended) ++resb; ++k_on[Black]; break;
         case 's':
             if (!setAt(NB[j++], BlackShatra, urg)) return false;
             if (bres) ++resb; break;
@@ -682,7 +682,7 @@ void SBoard::doCFlags(int from, int to, int cp)
  // if dropping from home fort, add decTemdek flag if T on
 bool SBoard::getDrops(int s, PieceType piece)
 {
-    bool t = s <= gateAt[White], no_dt = false;
+    bool t = s <= gateAt[White];
     int to, n = 0, at = NB[s];
     int h = t? 11 : 32; // top left corners of the two halves
     t ^= (m_stm != White); // our own fortress?
@@ -1219,11 +1219,14 @@ bool SBoard::doMove(const Move& m)
     {
         --m_temdek[m_stm]; // boardview may delay this
         m_temdekPending[m_stm] = temdekOff(m_stm);
-        if (m_ver == Original && BN[m_from] == m_nextOut[m_stm])
+        if (m_ver == Original && temdekOn(m_stm)
+        && BN[m_from] == m_nextOut[m_stm])
         {
             if (m_stm)
-                 while((m_sb[NB[++m_nextOut[m_stm]]] & 0xf) != BlackShatra);
-            else while((m_sb[NB[--m_nextOut[m_stm]]] & 0xf) != WhiteShatra);
+                 while((m_sb[NB[++m_nextOut[Black]]] & 0xf) != BlackShatra
+                     && m_nextOut[Black] <= lsq);
+            else while((m_sb[NB[--m_nextOut[White]]] & 0xf) != WhiteShatra
+                     && m_nextOut[White] >= fsq);
         }
     }
     else if (pieceType(piece) == Shatra)
