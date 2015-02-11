@@ -297,8 +297,8 @@ public:
     int m_nextOut[2];          // original version, next shatras out of forts
     int m_urgent[2];           // location of moving piece marked urgent
     bool m_temdekPending[2];   // delay temdek removal during capture sequence
-    urstack<int,16> m_dfs;     // stack for defunkt pieces - NB no real undo
-    urvct<int,16> m_ext;       // vector for capture extensions
+    urstack<int,24> m_dfs;     // stack for defunkt pieces - NB no real undo
+    urvct<int,24> m_ext;       // vector for capture extensions
   protected:
     BoardList m_ml;            // list of generated moves
 

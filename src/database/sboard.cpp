@@ -1197,8 +1197,8 @@ bool SBoard::moveIsDual(const int f, const int t) const
 bool SBoard::doMove(const Move& m)
 {
     ++m_halfMoves;
- //   if (m_halfMoves > 50)
-//        bool debug = true; // XXX
+//   if (m_halfMoves > 50)
+//       bool debug = true; // XXX?
     m_from = m.from();
     m_to = m.to();
 
