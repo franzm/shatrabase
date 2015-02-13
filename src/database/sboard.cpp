@@ -924,7 +924,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                         ++pieces_capturing;
                     }
                 }
-                bool cap;
+                bool cap = false;
                 for (int d = 0; d < 8; ++d) // eight compass points
                 {
                     if (!r) break; // finished all available vectors
