@@ -251,7 +251,7 @@ public:
      *  If @p compare != 0, add an * at each value that's different */
     QString dumpAll(const SBoard * compare = 0) const;
 
-  private:
+private:
     inline int sPhi(int s); // s is numeric square, others are board coords
     inline int promoWaiting();
     inline bool prohibited(int to, PieceType p);
@@ -267,7 +267,7 @@ public:
     inline bool isOppositeColor(int at) const;
 
     ubyte m_sb[144];           // shatra board, MUST be first data member
-  protected:
+protected:
     // Extra state data
     bool m_movesLoaded;        // movelist exists for this board position
     int m_stm;                 // side to move
@@ -299,7 +299,7 @@ public:
     bool m_temdekPending[2];   // delay temdek removal during capture sequence
     urstack<int,24> m_dfs;     // stack for defunkt pieces - NB no real undo
     urvct<int,24> m_ext;       // vector for capture extensions
-  protected:
+protected:
     BoardList m_ml;            // list of generated moves
 
 };
