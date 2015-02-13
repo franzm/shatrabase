@@ -924,7 +924,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                         ++pieces_capturing;
                     }
                 }
-
+                bool cap;
                 for (int d = 0; d < 8; ++d) // eight compass points
                 {
                     if (!r) break; // finished all available vectors
@@ -937,7 +937,8 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
                             if (pt == Biy) biyCaps = true;
                             if (s == gateAt[m_stm]) homeGate = pt;
                             else if (s == gateAt[m_sntm]) awayGate = pt;
-                            ++pieces_capturing;
+                            if (!cap) ++pieces_capturing;
+                            cap = true;
                        }
                     r >>= 1;
                 }
