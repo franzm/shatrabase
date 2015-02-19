@@ -34,7 +34,7 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
 
     for (int piece = WhiteBatyr; piece <= BlackShatra; piece++)
     {
-        if (g_version == 1)
+        if (g_version == Original)
         {
             while (piece == WhiteTura || piece == WhiteYalkyn
              || piece == BlackTura || piece == BlackYalkyn)

@@ -69,7 +69,7 @@ QString SBoard::moveToLann(const Move& move) const
 
     switch (g_notation)
     {
-    case true:
+    case ALG:
         if (!move.wasInSequence())
         {
             if (pieceTypeAt(from) != Shatra)
@@ -83,13 +83,16 @@ QString SBoard::moveToLann(const Move& move) const
         lann += '`' + (to>>4);
         lann += QString::number(to & 0xf);
         break;
-    default:
+    case NUM:
+        from = BN[from]; to = BN[to];
+        if (g_numrev)
+            from = 63 - from, to = 63 - to;
         if (!move.wasInSequence())
         {
-            lann += QString::number(BN[from]);
+            lann += QString::number(from);
         }
         lann += move.isCapture()? ':' : '-';
-        lann += QString::number(BN[to]);
+        lann += QString::number(to);
     }
     
     if (move.isPromotion())

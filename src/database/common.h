@@ -116,6 +116,7 @@ extern ShatraVersion g_version;
 extern bool g_loading;
 extern bool g_searching;
 extern bool g_notation;
+extern bool g_numrev; // coord numerals flipped
 extern bool g_nChanged;
 extern bool g_autoResultOnLoad;
 extern bool g_resModified;
@@ -123,6 +124,7 @@ extern int  g_nErrors;
 extern int  g_aveNodes;
 extern int  g_totalNodes;
 
+const int MaxGen = 256; // actual max appears to be 250
 const int ConstPieceTypes = WasShatra + 1;
 const int Was = WasBatyr - Batyr;
 const int PC[2] = { Empty, WhiteShatra }; // piece 'color constant'

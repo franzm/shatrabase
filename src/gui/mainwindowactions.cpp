@@ -470,7 +470,7 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
 
     PieceType promotionPiece = None;
 
-    if (m.pieceTypeMoved() == Biy || g_version == 1)
+    if (m.pieceTypeMoved() == Biy || g_version == Original)
     {
         if (m.isCapture() && board.moveIsDual(from, to))
         {
@@ -498,8 +498,7 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
     }
     if (m.isPromotion())
     {
-        if (g_version == 1)
-            m.setPromotionPiece(Batyr);
+        if (g_version == Original) m.setPromotionPiece(Batyr);
         else
         {
             bool ok; int i = 0;

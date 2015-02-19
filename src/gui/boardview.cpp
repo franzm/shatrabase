@@ -112,7 +112,10 @@ QString BoardView::squareToString_(Square s) const
 
     QString r = tr("square") + " ";
     if (isNum)
+    {
+        if (g_numrev) s = 63 - s;
         r += QString::number(s);
+    }
     else
     {
         int an = NB[s];

@@ -17,10 +17,10 @@
 #include "move.h"
 #include "urvct.hpp"
 
-class BoardList : public urvct<Move,256>
+class BoardList : public urvct<Move,MaxGen>
 {
   public:
-    BoardList() : urvct<Move,256>() {}
+    BoardList() : urvct<Move,MaxGen>() {}
     inline Move& add() { append(Move()); return back(); }    
 };
 
