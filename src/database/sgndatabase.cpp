@@ -62,11 +62,12 @@ Game * SgnDatabase::parseGameIntern()
 {
     g_autoResultOnLoad = AppSettings->getValue("/General/autoGameResult").toBool();
 
-    Game* game = new Game;
+    Game* game = new Game; g_newGame = true;
     // indextags index
     IndexBaseType n = m_count - 1;
     // get the start board
     QString spn = m_index.tagValue(TagNameSPN, n);
+//    qDebug() << spn;
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
     // parse game and set tag values
@@ -85,6 +86,7 @@ Game * SgnDatabase::parseGameIntern()
     }
     */
     g_totalNodes += game->currentMove();
+    g_inRev = false;
 
     return game;
 }
@@ -609,6 +611,17 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
             }
             m_newVariation = false;
         } else {	// next move in the game
+            if (g_newGame) { // parse first 'from' value
+                qDebug() << token;
+                int sq = 0;
+                for (int c = 0; c < 2; ++c) {
+                    if (!token.at(c).isDigit())
+                        break;
+                    else sq = (sq * 10) + token.at(c).digitValue();
+                }
+                g_inRev = sq > 31; // game starts from high end
+                g_newGame = false;
+            }
             m_variation = game->addMove(token, QString(), nag);
             if (!m_precomment.isEmpty()) {
                 game->setAnnotation(m_precomment, m_variation, Game::BeforeMove);
@@ -620,7 +633,6 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
 
 void SgnDatabase::parseToken(Game* game, const QString& token)
 {
-    qDebug() << token;
 	switch (token.at(0).toLatin1()) {
 	case '(':
 		m_newVariation = true;

@@ -557,7 +557,7 @@ void BoardPainter::createBoard_(const Board& board)
         // number display
         if (m_do_square_numbers)
         {
-            Square j = g_numrev? 63 - i : i;
+            Square j = g_numRev? 63 - i : i;
             s->numberStr = QString::number(j);
         }
 

@@ -85,7 +85,7 @@ QString SBoard::moveToLann(const Move& move) const
         break;
     case NUM:
         from = BN[from]; to = BN[to];
-        if (g_numrev)
+        if (g_numRev)
             from = 63 - from, to = 63 - to;
         if (!move.wasInSequence())
         {
@@ -1061,7 +1061,7 @@ Move SBoard::parseMove(const QString& algebraic)
         alph = isAlpha(c); // string is alphanumeric or numeric?
 
         getAt;
-        from = (alph? at : NB[at]);
+        from = (alph? at : g_inRev? NB[63-at] : NB[at]);
         if (from > 144) return Move();
         if (!BN[from]) return move;
 
@@ -1078,7 +1078,8 @@ Move SBoard::parseMove(const QString& algebraic)
     }
     c = *s++;
     getAt;
-    to = (alph? at : NB[at]); if (!BN[to]) return move;
+    to = (alph? at : g_inRev? NB[63-at] : NB[at]);
+    if (!BN[to]) return move;
 
     type = Empty;
 
@@ -1289,7 +1290,7 @@ bool SBoard::doMove(const Move& m)
     if (pieceType(piece) == Biy)
     {       
         m_biyAt[m_stm] = m_to;
-        if (temdekOn(m_stm))
+        if (temdekOn(m_stm) && m_ver == Extended)
             if ((m_to == gateAtB[m_stm]) && (m_to != m_from))
                 ++m_temdek[m_stm];
     }

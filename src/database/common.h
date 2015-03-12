@@ -116,7 +116,9 @@ extern ShatraVersion g_version;
 extern bool g_loading;
 extern bool g_searching;
 extern bool g_notation;
-extern bool g_numrev; // coord numerals flipped
+extern bool g_numRev; // coord numerals flipped
+extern bool g_inRev;
+extern bool g_newGame;
 extern bool g_nChanged;
 extern bool g_autoResultOnLoad;
 extern bool g_resModified;
@@ -235,7 +237,6 @@ QString startPosition();
 QString resultString(Result result);
 
 static const QString TagNameSPN      = "SPN";
-static const QString TagNameECO      = "ECO";
 static const QString TagNameSetUp    = "Setup";
 static const QString TagNameSource   = "Source";
 static const QString TagNameResult   = "Result";

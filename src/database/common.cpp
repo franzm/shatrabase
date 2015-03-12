@@ -33,7 +33,9 @@ ShatraVersion  g_version(Unspecified);
 bool g_loading          = false;
 bool g_searching        = false;
 bool g_notation         = NUM;  // default is numeric
-bool g_numrev           = true;
+bool g_numRev           = false;
+bool g_inRev            = false;
+bool g_newGame          = false;
 bool g_nChanged         = false;
 bool g_autoResultOnLoad = false;
 bool g_resModified;
