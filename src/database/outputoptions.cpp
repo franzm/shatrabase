@@ -12,6 +12,7 @@
 
 #include "outputoptions.h"
 #include <QRegExp>
+#include <QObject> // for tr()
 
 OutputOptions::OutputOptions()
 {

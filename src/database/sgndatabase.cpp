@@ -61,6 +61,7 @@ void SgnDatabase::parseGame()
 Game * SgnDatabase::parseGameIntern()
 {
     g_autoResultOnLoad = AppSettings->getValue("/General/autoGameResult").toBool();
+    g_numRev = AppSettings->getValue("/Board/reverseSquareNumbers").toBool();
 
     Game* game = new Game; g_newGame = true;
     // indextags index

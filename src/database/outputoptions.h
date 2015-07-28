@@ -17,6 +17,7 @@
 #include <QString>
 #include <QMap>
 #include <QStringList>
+#include <QObject>
 
 /** @ingroup Core
 The OutputOptions class manages options for @ref Output class.

@@ -270,6 +270,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/showTower", true);
     map.insert("/Board/showFrame", true);
     map.insert("/Board/showSquareNumbers", false);
+    map.insert("/Board/reverseSquareNumbers", g_numRev);
     map.insert("/Board/frameWidth", 4);
     map.insert("/Board/showCurrentMove", true);
     map.insert("/Board/showAllMoves", true);
