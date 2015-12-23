@@ -81,6 +81,7 @@ const Square magictable[64] =
 
 #ifdef QT_OS_WIN
 #   pragma warning(disable: 4146)
+#   pragma warning(disable: 4267)
 #endif
 inline Square bitScanForward(quint64 b) {
     return magictable[((b & -b) * magic) >> 58];
