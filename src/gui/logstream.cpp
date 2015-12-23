@@ -24,9 +24,6 @@ void SimpleLoggingHandler(QtMsgType type, const char *msg)
         case QtDebugMsg:
             logfile << QTime::currentTime().toString().toLatin1().data() << " : "         << msg << endl;
             break;
-        case QtInfoMsg:
-            logfile << QTime::currentTime().toString().toLatin1().data() << " Info: "     << msg << endl;
-            break;
         case QtCriticalMsg:
             logfile << QTime::currentTime().toString().toLatin1().data() << " Critical: " << msg << endl;
             break;
