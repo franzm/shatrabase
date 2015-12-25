@@ -365,9 +365,15 @@ MainWindow::MainWindow() : QMainWindow(),
                 tr("Shatra Version"),
                 tr("Choose Shatra version"),
                 QMessageBox::Yes | QMessageBox::No);
+#ifndef QT_OS_WIN
     mb.setButtonText(QMessageBox::Yes, tr("Extended"));
     mb.setButtonText(QMessageBox::No, tr("Original"));
     g_version = mb.exec() == QMessageBox::No? Original : Extended;
+#else
+    mb.setButtonText(QMessageBox::Yes, tr("Original"));
+    mb.setButtonText(QMessageBox::No, tr("Extended"));
+    g_version = mb.exec() == QMessageBox::Yes? Original : Extended;
+#endif
     SBoardInit();
 
     /* Restoring layouts */
