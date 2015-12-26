@@ -582,7 +582,7 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("showFrame", QVariant(ui.boardFrameCheck->isChecked()));
     AppSettings->setValue("showSquareNumbers", QVariant(ui.boardSNumbersCheck->isChecked()));
     AppSettings->setValue("reverseSquareNumbers", QVariant(ui.boardReverseNum->isChecked()));
-    g_numRev = ui.boardReverseNum->isChecked();
+    g_numRev = !ui.boardReverseNum->isChecked();
     AppSettings->setValue("frameWidth", QVariant(ui.boardFrameSize->value()));
     AppSettings->setValue("showCurrentMove", QVariant(ui.hilightCurrentMove->isChecked()));
     AppSettings->setValue("showAllMoves", QVariant(ui.hilightAllMoves->isChecked()));

@@ -395,7 +395,8 @@ MainWindow::MainWindow() : QMainWindow(),
 
     /* Reconfigure. */
     g_notation = AppSettings->getValue("/General/Notation").toBool();
-	slotReconfigure();
+    g_numRev = !AppSettings->getValue("/Board/reverseSquareNumbers").toBool();
+    slotReconfigure();
 
 	/* Reset board - not earlier, as all widgets have to be created. */
 	slotGameChanged();

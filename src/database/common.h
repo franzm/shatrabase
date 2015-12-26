@@ -14,7 +14,7 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-// #define QT_OS_WIN // uncomment for MS builds
+#define QT_OS_WIN // uncomment for MS builds
 
 #include <QMap>
 #include <QString>
