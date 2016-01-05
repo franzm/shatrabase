@@ -79,7 +79,7 @@ const Square magictable[64] =
    61, 38, 50, 34, 60, 49, 59, 58,
 };
 
-#ifdef QT_OS_WIN
+#ifdef Q_OS_WIN
 #   pragma warning(disable: 4146)
 #   pragma warning(disable: 4267)
 #endif
