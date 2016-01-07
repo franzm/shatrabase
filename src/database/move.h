@@ -347,9 +347,9 @@ inline QString Move::toNumeric() const
     if (!isLegal()) return "?";
 
     QString n;
-    n += QString::number(BN[from()]);
+    n += QString::number((g_numRev? 63 - BN[from()] : BN[from()]));
     n += isCapture()? ":" : "-";
-    n += QString::number(BN[to()]);
+    n += QString::number((g_numRev? 63 - BN[to()] : BN[to()]));
     return n;
 }
 

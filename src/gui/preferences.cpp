@@ -52,11 +52,7 @@ int getMSecs(const QTimeEdit& te)
 PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
 {
 	ui.setupUi(this);
-/*
-#ifndef Q_WS_WIN
-	ui.engineProtocolWinBoard->setText(tr("XBoard"));
-#endif
-*/
+
     ui.cbMoveOnLoad->addItem(tr("go to beginning of game"));
     ui.cbMoveOnLoad->addItem(tr("go to first move of game"));
     ui.cbMoveOnLoad->addItem(tr("go to last move of game"));
@@ -78,7 +74,7 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.engineOptionMore, SIGNAL(clicked(bool)), SLOT(slotShowOptionDialog()));
     connect(ui.notationNumeric, SIGNAL(clicked()), SLOT(slotNumericNotation()));
     connect(ui.notationAlgebraic, SIGNAL(clicked()), SLOT(slotAlgebraicNotation()));
-
+    connect(ui.boardReverseNum, SIGNAL(clicked()), SLOT(slotNumericNotation()));
     connect(ui.cbMatchTime, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimit, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTournament, SIGNAL(clicked()), SLOT(slotTCEnable()));
