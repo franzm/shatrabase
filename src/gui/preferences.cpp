@@ -74,7 +74,7 @@ PreferencesDialog::PreferencesDialog(QWidget* parent) : QDialog(parent)
     connect(ui.engineOptionMore, SIGNAL(clicked(bool)), SLOT(slotShowOptionDialog()));
     connect(ui.notationNumeric, SIGNAL(clicked()), SLOT(slotNumericNotation()));
     connect(ui.notationAlgebraic, SIGNAL(clicked()), SLOT(slotAlgebraicNotation()));
-    connect(ui.boardReverseNum, SIGNAL(clicked()), SLOT(slotNumericNotation()));
+    connect(ui.boardReverseNum, SIGNAL(clicked()), SLOT(slotNumrevChanged()));
     connect(ui.cbMatchTime, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbLimit, SIGNAL(clicked()), SLOT(slotTCEnable()));
     connect(ui.cbTournament, SIGNAL(clicked()), SLOT(slotTCEnable()));
@@ -367,14 +367,19 @@ void PreferencesDialog::slotShowOptionDialog()
 
 void PreferencesDialog::slotNumericNotation()
 {
-    g_notation = false; g_nChanged = true;
+    g_notation = NUM; g_nChanged = true;
     ui.notationNumeric->setChecked(true);
 }
 
 void PreferencesDialog::slotAlgebraicNotation()
 {
-    g_notation = true; g_nChanged = true;
+    g_notation = ALG; g_nChanged = true;
     ui.notationAlgebraic->setChecked(true);
+}
+
+void PreferencesDialog::slotNumrevChanged()
+{
+    g_nChanged = true;
 }
 
 int PreferencesDialog::exec()

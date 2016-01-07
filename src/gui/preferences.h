@@ -62,6 +62,8 @@ public slots:
     void slotNumericNotation();
     /* select Algebraic notation for moves */
     void slotAlgebraicNotation();
+    /* alert for redraw */
+    void slotNumrevChanged();
 
     void slotShowLanguageMessage();
 
