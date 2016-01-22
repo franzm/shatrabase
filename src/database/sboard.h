@@ -79,10 +79,11 @@ const Square magictable[64] =
    61, 38, 50, 34, 60, 49, 59, 58,
 };
 
-#ifdef Q_OS_WIN
+#ifdef _MSC_VER
 #   pragma warning(disable: 4146)
 #   pragma warning(disable: 4267)
 #endif
+
 inline Square bitScanForward(quint64 b) {
     return magictable[((b & -b) * magic) >> 58];
 }
