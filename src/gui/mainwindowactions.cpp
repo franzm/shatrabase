@@ -842,7 +842,13 @@ void MainWindow::slotPlayGameMove(Move m)
         game().forward();
     }
 
-    slotGameChanged();
+    if (m_playGame->isBoardUpdate())
+        slotGameChanged(true);
+    else
+    {
+        //slotGameChanged(false);
+        m_playGame->animationFinished(game().board());
+    }
 }
 
 void MainWindow::slotPlayPlayerWins()

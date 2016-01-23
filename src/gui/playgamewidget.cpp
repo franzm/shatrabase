@@ -145,6 +145,11 @@ bool PlayGameWidget::doAutoSaveAndContinue() const
     return (!isHumanInvolved() && ui_->cbSaveAndContinue->isChecked());
 }
 
+bool PlayGameWidget::isBoardUpdate() const
+{
+    return isHumanInvolved() || !ui_->cbNoUpdateBoard->isChecked();
+}
+
 QString PlayGameWidget::resultString() const
 {
     if (winStm_ < 0)
@@ -418,6 +423,7 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
     ui_->labelInfo1->setText("");
     ui_->labelInfo2->setText("");
     ui_->cbSaveAndContinue->setVisible(!isHumanInvolved());
+    ui_->cbNoUpdateBoard->setVisible(!isHumanInvolved());
 
     if (!p)
     {

@@ -65,6 +65,10 @@ public:
 
     bool isPlaying() const { return playing_; }
 
+    /** Should the board be updated?
+        False only possible in engine vs. engine */
+    bool isBoardUpdate() const;
+
     /** Returns if White should be able to interact with board */
     bool whiteCanMove() const;
     /** Returns if Black should be able to interact with board */

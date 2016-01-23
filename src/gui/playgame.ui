@@ -164,6 +164,19 @@
         </layout>
        </item>
        <item>
+        <widget class="QCheckBox" name="cbNoUpdateBoard">
+         <property name="toolTip">
+          <string>Disables updating the board graphic</string>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>no board update</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="cbSaveAndContinue">
          <property name="toolTip">
           <string>Save the game and continue a new one after a game is finished.</string>
