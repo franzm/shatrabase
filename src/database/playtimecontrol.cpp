@@ -110,6 +110,13 @@ void PlayTimeControl::start(int stm)
     emit timeUpdated();
 }
 
+void PlayTimeControl::continueGame(int stm)
+{
+    stm_ = stm;
+
+    emit timeUpdated();
+}
+
 void PlayTimeControl::startMove()
 {
     //qDebug() << "startMove(" << move_ << "): " << (stm_? "Black" : "White");

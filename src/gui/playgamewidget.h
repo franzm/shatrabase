@@ -90,7 +90,7 @@ signals:
     /** The Engine has send a new position. */
     void moveMade(Move);
 
-    /** This class want's to add a comment at current position */
+    /** This class wants to add a comment at current position */
     void gameComment(const QString&);
 
     void playerWins();
@@ -168,8 +168,9 @@ private:
         current properties and time. */
     Engine::SearchSettings settings_(int stm) const;
 
-    /** initialize TimeControl at beginning of game */
-    void initTiming_(int stm = 0);
+    /** initialize TimeControl at beginning of game.
+        If @p beginning is false, continue game instead. */
+    void initTiming_(int stm = 0, bool beginning = true);
 
     /** Start playing board.toMove().
      *  Sets widgets and starts timing.

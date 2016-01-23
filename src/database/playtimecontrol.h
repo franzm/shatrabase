@@ -71,6 +71,9 @@ public slots:
     /** Inititalize for a new game */
     void start(int stm_0_or_1 = 0);
 
+    /** Inititalize for a continuing the game */
+    void continueGame(int stm_0_or_1 = 0);
+
     /** Start counting the current stm */
     void startMove();
 

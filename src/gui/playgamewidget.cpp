@@ -331,7 +331,7 @@ void PlayGameWidget::continuePosition(const Board &board)
 
     play_->activate();
 
-    initTiming_(curStm_);
+    initTiming_(curStm_, false);
 
     if (isHuman(curStm_))
         tc_.startMove();
@@ -818,7 +818,7 @@ void PlayGameWidget::slotUpdateClocks_()
     ui_->clock2->setTime(tc_.getTotalTime(Black), tc_.getMoveTime(Black));
 }
 
-void PlayGameWidget::initTiming_(int stm)
+void PlayGameWidget::initTiming_(int stm, bool reset)
 {
     // clock visibility
     bool
@@ -829,6 +829,9 @@ void PlayGameWidget::initTiming_(int stm)
     ui_->clock1->setVisible(showTotal, showMove);
     ui_->clock2->setVisible(showTotal, showMove);
 
-    tc_.start(stm);
+    if (reset)
+        tc_.start(stm);
+    else
+        tc_.continueGame(stm);
 }
 
