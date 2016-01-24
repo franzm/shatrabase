@@ -58,8 +58,9 @@
     - OK resign
     * date is discarded (PartialDate class to strict in parsing)
 * test/fix restartBetweenMoves in PlayGameEngine
-* engine vs. engine
-    * turn off board for fast games
+    (restartBetweenMoves is the only behaviour working right now..)
+- OK turn off board for fast games in engine vs. engine
+- Sbase is still sending position for analysis *after* end of game
 
 -- board setup --
 
@@ -74,6 +75,7 @@
 * add more analysis options (USHI)
 - OK don't ask analysis for moves after end of game
 * Database modified flag seems to be activated without reason
+* if playing a game, then opening a database to save it in, you're prompted to save to clipboard.
 
 -- strange things --
 

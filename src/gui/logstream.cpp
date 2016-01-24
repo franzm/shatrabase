@@ -21,6 +21,9 @@ void SimpleLoggingHandler(QtMsgType type, const char *msg)
 
     switch (type)
     {
+#if QT_VERSION >= QT_VERSION_CHECK(5,5,0)
+        case QtInfoMsg:
+#endif
         case QtDebugMsg:
             logfile << QTime::currentTime().toString().toLatin1().data() << " : "         << msg << endl;
             break;
