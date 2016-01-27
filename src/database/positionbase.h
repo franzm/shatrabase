@@ -35,7 +35,7 @@ public slots:
 
     void addGame(const Game&);
 
-    void addPosition(const SBoard&, Result);
+    void addPosition(const SHATRA::SBoard&, SHATRA::Result);
 
     bool saveFile(const QString filename);
     bool loadFile(const QString filename);

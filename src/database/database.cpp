@@ -46,13 +46,13 @@ void Database::addGameInfo(int n, Game *game)
 {
     m_index.setTag("Length", QString::number(game->moveCount()), n);
     m_index.setTag("Ply", QString::number(game->plyCount()), n);
-    m_index.setTag("Pieces White", QString::number(game->board().pieceCount(White)), n);
-    m_index.setTag("Pieces Black", QString::number(game->board().pieceCount(Black)), n);
-    m_index.setTag("First move", QString::number(BN[game->move(1).from()]), n);
-    if (g_autoResultOnLoad && game->result() == ResultUnknown)
+    m_index.setTag("Pieces White", QString::number(game->board().pieceCount(SHATRA::White)), n);
+    m_index.setTag("Pieces Black", QString::number(game->board().pieceCount(SHATRA::Black)), n);
+    m_index.setTag("First move", QString::number(SHATRA::BN[game->move(1).from()]), n);
+    if (SHATRA::g_autoResultOnLoad && game->result() == SHATRA::ResultUnknown)
     {
-        m_index.setTag(TagNameResult, resultString(game->board().gameResult()), n);
-        g_resModified = true;
+        m_index.setTag(SHATRA::TagNameResult, resultString(game->board().gameResult()), n);
+        SHATRA::g_resModified = true;
     }
 }
 
@@ -68,7 +68,7 @@ void Database::addGameInfo(int n, Game *game)
 struct LocalGameInfo
 {
     int gameIndex;
-    MoveList moves;
+    SHATRA::MoveList moves;
 };
 typedef QVector<LocalGameInfo> LocalGameInfos;
 
@@ -129,7 +129,7 @@ void Database::findDuplicates(QVector<int>& indices, bool do_symmetric)
             continue;
 
         qDebug() << inf.count() << " games starting "
-                 << BN[inf[0].moves[0].from()] << "-" << BN[inf[0].moves[0].to()]
+                 << SHATRA::BN[inf[0].moves[0].from()] << "-" << SHATRA::BN[inf[0].moves[0].to()]
                  << " and length " << inf[0].moves.count();
 
         // compare each

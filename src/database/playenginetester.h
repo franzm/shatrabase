@@ -29,7 +29,7 @@ public slots:
 protected slots:
 
     void engineReady_();
-    void engineMove_(const Move&);
+    void engineMove_(const SHATRA::Move&);
     void engineClueless_();
     void engineCrashed_(const QString&);
     void engineDebug_(Engine*, Engine::DebugType, const QString& msg);
@@ -39,7 +39,7 @@ protected:
     PlayGameEngine * engine_[2];
     Engine::SearchSettings settings_;
 
-    Board board_;
+    SHATRA::Board board_;
 };
 
 #endif // PLAYENGINETESTER_H

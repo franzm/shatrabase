@@ -22,21 +22,21 @@ const unsigned MinAveRating = 5;
 MoveData::MoveData()
 {
 	count = 0;
-    for (int  r = ResultUnknown; r <= BlackWin; ++r)
+    for (int r = SHATRA::ResultUnknown; r <= SHATRA::BlackWin; ++r)
 		result[r] = 0;
 	year = rating = 0;
 	dated = rated = 0;
 
 }
 
-void MoveData::addGame(Game& g, Color c, MoveType movetype)
+void MoveData::addGame(Game& g, SHATRA::Color c, MoveType movetype)
 {
 	if (!count)
 		move = (movetype == StandardMove) ? g.moveToLann(Game::MoveOnly, Game::PreviousMove)
 			: qApp->translate("MoveData", "[end]");
     ++count;
 	result[g.result()]++;
-	unsigned elo = (c == White) ? g.tag("WhiteElo").toInt() : g.tag("BlackElo").toInt();
+    unsigned elo = (c == SHATRA::White) ? g.tag("WhiteElo").toInt() : g.tag("BlackElo").toInt();
 	if (elo >= 1000) {
 		rating += elo;
         ++rated;
@@ -50,7 +50,9 @@ void MoveData::addGame(Game& g, Color c, MoveType movetype)
 
 double MoveData::percentage() const
 {
-	unsigned c = result[ResultUnknown] + 2 * result[WhiteWin] + result[Draw];
+    unsigned c = result[SHATRA::ResultUnknown]
+                + 2 * result[SHATRA::WhiteWin]
+                + result[SHATRA::Draw];
 	return c * 500 / count / 10.0;
 }
 
@@ -97,7 +99,7 @@ OpeningTreeUpdater oupd;
 void OpeningTreeUpdater::run()
 {
     Game g;
-    QMap<Move, MoveData> moves;
+    QMap<SHATRA::Move, MoveData> moves;
     int games = 0;
     for (int i = 0; i < m_database->count(); ++i) {
         m_database->loadGameMoves(i, g);
@@ -111,7 +113,7 @@ void OpeningTreeUpdater::run()
             g.moveToId(id);
             if (g.atGameEnd())
             {
-                moves[Move()].addGame(g, m_board.toMove(), MoveData::GameEnd);
+                moves[SHATRA::Move()].addGame(g, m_board.toMove(), MoveData::GameEnd);
             }
             else
             {
@@ -140,7 +142,7 @@ void OpeningTreeUpdater::run()
     m_moves->clear();
     if (!m_break)
     {
-        for (QMap<Move, MoveData>::iterator it = moves.begin(); it != moves.end(); ++it)
+        for (QMap<SHATRA::Move, MoveData>::iterator it = moves.begin(); it != moves.end(); ++it)
             m_moves->append(it.value());
         qSort(m_moves->begin(), m_moves->end());
         emit UpdateFinished(&m_board);
@@ -156,7 +158,8 @@ void OpeningTreeUpdater::cancel()
     m_break = true;
 }
 
-bool OpeningTreeUpdater::update(Database& db, const Board& b, QList<MoveData>& m, int& g, bool updateFilter)
+bool OpeningTreeUpdater::update(Database& db, const SHATRA::Board& b,
+                                QList<MoveData>& m, int& g, bool updateFilter)
 {
     m_break = false;
     m_database = &db;
@@ -169,7 +172,7 @@ bool OpeningTreeUpdater::update(Database& db, const Board& b, QList<MoveData>& m
     return true;
 }
 
-bool OpeningTree::update(Database& db, const Board& b, bool updateFilter)
+bool OpeningTree::update(Database& db, const SHATRA::Board& b, bool updateFilter)
 {
     if (!oupd.isRunning())
     {
@@ -180,8 +183,10 @@ bool OpeningTree::update(Database& db, const Board& b, bool updateFilter)
         m_updateFilter = updateFilter;
         emit openingTreeUpdateStarted();
         m_bRequestPending = false;
-        connect(&oupd, SIGNAL(UpdateFinished(Board*)), this, SLOT(updateFinished(Board*)), Qt::UniqueConnection);
-        connect(&oupd, SIGNAL(UpdateTerminated(Board*)), this, SLOT(updateTerminated(Board*)), Qt::UniqueConnection);
+        connect(&oupd, SIGNAL(UpdateFinished(SHATRA::Board*)),
+                this, SLOT(updateFinished(SHATRA::Board*)), Qt::UniqueConnection);
+        connect(&oupd, SIGNAL(UpdateTerminated(SHATRA::Board*)),
+                this, SLOT(updateTerminated(SHATRA::Board*)), Qt::UniqueConnection);
         connect(&oupd,SIGNAL(progress(int)), SIGNAL(progress(int)), Qt::UniqueConnection);
         return oupd.update(db,b, m_moves, m_games, m_updateFilter);
     }
@@ -208,7 +213,7 @@ void OpeningTree::cancel(bool bVisible)
     }
 }
 
-void OpeningTree::updateFinished(Board* b)
+void OpeningTree::updateFinished(SHATRA::Board* b)
 {
     sort();
     emit openingTreeUpdated();
@@ -218,14 +223,16 @@ void OpeningTree::updateFinished(Board* b)
     }
 }
 
-void OpeningTree::updateTerminated(Board*)
+void OpeningTree::updateTerminated(SHATRA::Board*)
 {
     if (m_bRequestPending)
     {
         emit openingTreeUpdateStarted();
         m_bRequestPending = false;
-        connect(&oupd, SIGNAL(UpdateFinished(Board*)), this, SLOT(updateFinished(Board*)), Qt::UniqueConnection);
-        connect(&oupd, SIGNAL(UpdateTerminated(Board*)), this, SLOT(updateTerminated(Board*)), Qt::UniqueConnection);
+        connect(&oupd, SIGNAL(UpdateFinished(SHATRA::Board*)),
+                this, SLOT(updateFinished(SHATRA::Board*)), Qt::UniqueConnection);
+        connect(&oupd, SIGNAL(UpdateTerminated(SHATRA::Board*)),
+                this, SLOT(updateTerminated(SHATRA::Board*)), Qt::UniqueConnection);
         connect(&oupd,SIGNAL(progress(int)),SIGNAL(progress(int)), Qt::UniqueConnection);
         oupd.update(*m_database,m_board, m_moves, m_games, m_updateFilter);
     }
@@ -256,7 +263,8 @@ OpeningTree::OpeningTree(QObject * parent)
     m_names << tr("Move") << tr("Count") << tr("Score") << tr("Rating") << tr("Year");
 }
 
-OpeningTree::OpeningTree(Database & db, const Board & b, bool updateFilter, QObject * parent)
+OpeningTree::OpeningTree(Database & db, const SHATRA::Board & b,
+                         bool updateFilter, QObject * parent)
     : QAbstractTableModel(parent),
         m_sortcolumn(1), m_order(Qt::DescendingOrder), m_database(0)
 {

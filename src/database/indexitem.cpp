@@ -27,12 +27,12 @@ IndexItem::~IndexItem()
     m_mapTagIndexToValueIndex.clear();
 }
 
-void IndexItem::set(TagIndex tagIndex, ValueIndex valueIndex)
+void IndexItem::set(SHATRA::TagIndex tagIndex, SHATRA::ValueIndex valueIndex)
 {
     m_mapTagIndexToValueIndex[tagIndex] = valueIndex;
 }
 
-ValueIndex IndexItem::valueIndex(TagIndex tagIndex) const
+SHATRA::ValueIndex IndexItem::valueIndex(SHATRA::TagIndex tagIndex) const
 {
     if (m_mapTagIndexToValueIndex.contains(tagIndex))
     {
@@ -41,7 +41,7 @@ ValueIndex IndexItem::valueIndex(TagIndex tagIndex) const
     return 0;
 }
 
-bool IndexItem::hasTagIndex(TagIndex tagIndex) const
+bool IndexItem::hasTagIndex(SHATRA::TagIndex tagIndex) const
 {
     return (m_mapTagIndexToValueIndex.contains(tagIndex));
 }

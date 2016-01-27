@@ -76,7 +76,7 @@ public:
 	/* Empty constructor. */
 	PositionSearch();
 	/* Standard constructor. */
-	PositionSearch(Database* db, const Board& position);
+    PositionSearch(Database* db, const SHATRA::Board& position);
 	/* Object cloning - probably obsolete. */
 	virtual PositionSearch *clone() const;
 	/* Standard destructor. */
@@ -84,14 +84,14 @@ public:
 	/* Type - probably obsolete. */
 	virtual Search::Type type() const;
 	/* @return sought position. */
-	Board position() const;
+    SHATRA::Board position() const;
 	/* Sets sought position. */
-	void setPosition(const Board & position);
+    void setPosition(const SHATRA::Board & position);
 	/* Return moveId of the move after which the game matches the search + 1.
 	   E.g. for standard game and chess start position 1 is returned. */
 	virtual int matches(int index);
 private:
-	Board m_position;
+    SHATRA::Board m_position;
 };
 
 /* The EloSearch class is used for searching both white and black player Elo. */

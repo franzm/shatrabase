@@ -30,15 +30,15 @@ BoardView::BoardView(QWidget* parent, int flags)
     m_showAllMoves(true),
     m_guessMove (true),
     m_guessNextMove (true),
-    m_selectedSquare (InvalidSquare),
-    m_hoverSquare (InvalidSquare),
-    m_bestMoveFrom  (InvalidSquare),
-    m_bestMoveTo    (InvalidSquare),
+    m_selectedSquare(SHATRA::InvalidSquare),
+    m_hoverSquare   (SHATRA::InvalidSquare),
+    m_bestMoveFrom  (SHATRA::InvalidSquare),
+    m_bestMoveTo    (SHATRA::InvalidSquare),
     m_goal_index    (0),
     //m_own_from      (0),
     //m_own_to        (0),
-    m_dragged       (InvalidPiece),
-    m_dragStartSquare(InvalidSquare),
+    m_dragged       (SHATRA::InvalidPiece),
+    m_dragStartSquare(SHATRA::InvalidSquare),
     m_lastDropped   (0),
     //m_clickUsed(false),
     // m_wheelCurrentDelta(0),
@@ -91,7 +91,8 @@ void BoardView::configure()
     m_view = new BoardPainter(&m_theme, this);
     m_view->setBoard(m_board);
     connect(m_view, SIGNAL(displayMessage(QString)), SLOT(slotDisplayMessage(QString)));
-    connect(m_view, SIGNAL(animationFinished(Board)), SLOT(slotAnimationFinished(Board)));
+    connect(m_view, SIGNAL(animationFinished(SHATRA::Board)),
+            SLOT(slotAnimationFinished(SHATRA::Board)));
 
     setFlipped(flipped);
 
@@ -106,19 +107,20 @@ void BoardView::displayMessage(const QString& msg)
     signalDisplayMessage(msg);
 }
 
-QString BoardView::squareToString_(Square s) const
+QString BoardView::squareToString_(SHATRA::Square s) const
 {
-    bool isNum = AppSettings->getValue("/General/Notation").toBool() == NUM;
+    bool isNum = AppSettings->getValue("/General/Notation").toBool() == SHATRA::NUM;
 
     QString r = tr("square") + " ";
     if (isNum)
     {
-        if (g_numRev) s = 63 - s;
+        if (SHATRA::g_numRev)
+            s = 63 - s;
         r += QString::number(s);
     }
     else
     {
-        int an = NB[s];
+        int an = SHATRA::NB[s];
         r += (char)(((an>>4)&15)-1+'a');
         r += QString::number(an&15);
     }
@@ -126,22 +128,22 @@ QString BoardView::squareToString_(Square s) const
 
     switch (m_board.pieceAt(s))
     {
-        case WhiteBatyr:  r += tr("white batyr"); break;
-        case WhiteTura:   r += tr("white tura"); break;
-        case WhiteYalkyn: r += tr("white yalkyn"); break;
-        case WhiteBiy:    r += tr("white biy"); break;
-        case WhiteShatra: r += tr("white shatra"); break;
+        case SHATRA::WhiteBatyr:  r += tr("white batyr"); break;
+        case SHATRA::WhiteTura:   r += tr("white tura"); break;
+        case SHATRA::WhiteYalkyn: r += tr("white yalkyn"); break;
+        case SHATRA::WhiteBiy:    r += tr("white biy"); break;
+        case SHATRA::WhiteShatra: r += tr("white shatra"); break;
 
-        case BlackBatyr:  r += tr("black batyr"); break;
-        case BlackTura:   r += tr("black tura"); break;
-        case BlackYalkyn: r += tr("black yalkyn"); break;
-        case BlackBiy:    r += tr("black biy"); break;
-        case BlackShatra: r += tr("black shatra"); break;
+        case SHATRA::BlackBatyr:  r += tr("black batyr"); break;
+        case SHATRA::BlackTura:   r += tr("black tura"); break;
+        case SHATRA::BlackYalkyn: r += tr("black yalkyn"); break;
+        case SHATRA::BlackBiy:    r += tr("black biy"); break;
+        case SHATRA::BlackShatra: r += tr("black shatra"); break;
 
-        case WasBatyr:    r += tr("captured batyr"); break;
-        case WasTura:     r += tr("captured tura"); break;
-        case WasYalkyn:   r += tr("captured yalkyn"); break;
-        case WasShatra:   r += tr("captured shatra"); break;
+        case SHATRA::WasBatyr:    r += tr("captured batyr"); break;
+        case SHATRA::WasTura:     r += tr("captured tura"); break;
+        case SHATRA::WasYalkyn:   r += tr("captured yalkyn"); break;
+        case SHATRA::WasShatra:   r += tr("captured shatra"); break;
 
         default: break;
     }
@@ -234,7 +236,7 @@ void BoardView::setBoard(const Board& value,int from, int to)
 }
 */
 
-void BoardView::setBoard(const Board& value, const Move& move)
+void BoardView::setBoard(const SHATRA::Board& value, const SHATRA::Move& move)
 {
     //if (m_view->isAnimating())
     //    m_view->stopAnimation_();
@@ -244,8 +246,8 @@ void BoardView::setBoard(const Board& value, const Move& move)
         = m_dragStartSquare
         = m_bestMoveFrom
         = m_bestMoveTo
-            = InvalidSquare;
-    m_dragged = InvalidPiece;
+            = SHATRA::InvalidSquare;
+    m_dragged = SHATRA::InvalidPiece;
 
     // copy position
     m_board = value;
@@ -272,13 +274,13 @@ void BoardView::setBoard(const Board& value, const Move& move)
 
     // select the moving start square
     if (m_move.isLegal())
-        selectSquare_(BN[m_move.from()]);
+        selectSquare_(SHATRA::BN[m_move.from()]);
 
     update();
 }
 
 
-Board BoardView::board() const
+SHATRA::Board BoardView::board() const
 {
     return m_board;
 }
@@ -291,7 +293,8 @@ const BoardTheme& BoardView::theme() const
 
 void BoardView::setBestMove(int from, int to)
 {
-    if (from == InvalidSquare || to == InvalidSquare)
+    if (from == SHATRA::InvalidSquare
+       || to == SHATRA::InvalidSquare)
         return;
 
     m_bestMoveFrom = from;
@@ -451,9 +454,9 @@ void BoardView::paintEvent(QPaintEvent* event)
 
 
 
-Square BoardView::squareAt(const QPoint& p) const
+SHATRA::Square BoardView::squareAt(const QPoint& p) const
 {
-    return m_view? m_view->squareAt(p) : InvalidSquare;
+    return m_view? m_view->squareAt(p) : SHATRA::InvalidSquare;
 }
 
 void BoardView::leaveEvent(QEvent *)
@@ -471,7 +474,7 @@ void BoardView::mousePressEvent(QMouseEvent* event)
     if (event->buttons() & Qt::LeftButton)
     {
         // select / potentially start dragging
-        if (m_hoverSquare != InvalidSquare)
+        if (m_hoverSquare != SHATRA::InvalidSquare)
         {
             // init for drag start
             m_dragStart = event->pos();
@@ -486,7 +489,7 @@ void BoardView::mousePressEvent(QMouseEvent* event)
     }
     // right-click
     else if ((event->button() & Qt::RightButton)
-             && (m_hoverSquare != InvalidSquare)
+             && (m_hoverSquare != SHATRA::InvalidSquare)
              && !(m_flags & F_NoExecuteMoves))
     {
         if (m_guessNextMove && m_board.isMovable(m_hoverSquare))
@@ -511,10 +514,10 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 
     if (!event->buttons())
 	{
-        Square s = squareAt(event->pos());
+        SHATRA::Square s = squareAt(event->pos());
 
         // status message on square
-        if (s != InvalidSquare)
+        if (s != SHATRA::InvalidSquare)
             displayMessage(squareToString_(s));
         else
         if (m_messageSend)
@@ -546,11 +549,11 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 
     // -- change drag endpoint --
 
-    if (m_dragged != InvalidPiece)
+    if (m_dragged != SHATRA::InvalidPiece)
     {
         m_dragPoint = event->pos();
 
-        Square s = squareAt(m_dragPoint);
+        SHATRA::Square s = squareAt(m_dragPoint);
 
         if ((m_flags & F_AllowAllMoves)
             || m_board.canMoveTo(m_dragStartSquare, s))
@@ -570,7 +573,7 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 
     // -- start dragging --
 
-    if (m_dragStartSquare != InvalidSquare)
+    if (m_dragStartSquare != SHATRA::InvalidSquare)
     {
         // drag enabeling distance
         if ((event->pos() - m_dragStart).manhattanLength()
@@ -592,26 +595,26 @@ void BoardView::mouseMoveEvent(QMouseEvent *event)
 
 void BoardView::mouseReleaseEvent(QMouseEvent* event)
 {
-    Square s = squareAt(event->pos());
+    SHATRA::Square s = squareAt(event->pos());
 
     // ---- piece drop ----
 
-    if (m_dragged != InvalidPiece)
+    if (m_dragged != SHATRA::InvalidPiece)
     {
-        Square from = m_dragStartSquare;
+        SHATRA::Square from = m_dragStartSquare;
         // XXX probably irrelevant
         //m_board.setAt(from, m_dragged);
 
         // reset drag data
-        m_dragged = InvalidPiece;
-        m_dragStartSquare = InvalidSquare;
+        m_dragged = SHATRA::InvalidPiece;
+        m_dragStartSquare = SHATRA::InvalidSquare;
         // reset painter
         if (m_view) m_view->setDragPiece();
         selectSquare_();
         setCursor(QCursor(Qt::ArrowCursor));
 
         // dropped on a new square on board?
-        if (s != InvalidSquare && s != m_dragStartSquare)
+        if (s != SHATRA::InvalidSquare && s != m_dragStartSquare)
         {
             // copy piece
             if ((m_flags & F_AllowCopyPiece) && (event->modifiers() & Qt::ShiftModifier))
@@ -637,14 +640,14 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
     }
 
     // any valid square action?
-    else if (m_selectedSquare != InvalidSquare)
+    else if (m_selectedSquare != SHATRA::InvalidSquare)
     {
-        Square from = m_selectedSquare;
+        SHATRA::Square from = m_selectedSquare;
 
         // left-click/release on square
         if (event->button() & Qt::LeftButton)
         {
-            std::vector<Square> v;
+            std::vector<SHATRA::Square> v;
             m_board.getReachableSquares(from,v);
 
             // auto execute move?
@@ -662,7 +665,7 @@ void BoardView::mouseReleaseEvent(QMouseEvent* event)
     }
 
     // any click/release on any square?
-    if (s != InvalidSquare && F_AllowAllMoves)
+    if (s != SHATRA::InvalidSquare && (m_flags & F_AllowAllMoves))
     {
         emit clicked(s, event->button(), event->pos());
         event->accept();
@@ -726,7 +729,7 @@ bool BoardView::isFlipped() const
 }
 
 
-void BoardView::selectSquare_(Square s)
+void BoardView::selectSquare_(SHATRA::Square s)
 {
     if (s == m_selectedSquare) return;
 
@@ -735,14 +738,14 @@ void BoardView::selectSquare_(Square s)
 
     // assign
     m_selectedSquare = s;
-    if (s == InvalidSquare) return;
+    if (s == SHATRA::InvalidSquare) return;
 
     // set highlight
     if (m_view && m_showCurrentMove && !(m_flags & F_HideMoveHelp))
         m_view->addHighlight(m_selectedSquare, BoardPainter::H_SELECT);
 }
 
-void BoardView::setHoverSquare_(Square s)
+void BoardView::setHoverSquare_(SHATRA::Square s)
 {
     if (s == m_hoverSquare) return;
 
@@ -751,23 +754,23 @@ void BoardView::setHoverSquare_(Square s)
 
     // assign
     m_hoverSquare = s;
-    if (s == InvalidSquare /*|| (m_flags & F_HideMoveHelp)*/) return;
+    if (s == SHATRA::InvalidSquare /*|| (m_flags & F_HideMoveHelp)*/) return;
 
     // set highlight
     if (m_view) m_view->addHighlight(s, BoardPainter::H_HOVER);
 }
 
-void BoardView::showGoals_(Square s, int gidx)
+void BoardView::showGoals_(SHATRA::Square s, int gidx)
 {
     // clear all previous
     if (m_view)
         m_view->clearHighlights(BoardPainter::H_GOAL | BoardPainter::H_TARGET);
 
-    if (s == InvalidSquare || (m_flags & F_HideMoveHelp))
+    if (s == SHATRA::InvalidSquare || (m_flags & F_HideMoveHelp))
         return;
 
     // get all move goals
-    std::vector<Square> squares;
+    std::vector<SHATRA::Square> squares;
     m_board.getReachableSquares(s, squares);
 
     // set goal-index
@@ -807,21 +810,21 @@ QRect BoardView::squareRect(Square square)
                         y * m_theme.size().height()), m_theme.size());
 }
 */
-bool BoardView::canDrag(Square s)
+bool BoardView::canDrag(SHATRA::Square s)
 {
     if (m_view->isAnimating())
         return false;
     //if (m_dragged != InvalidPiece) // already dragging
     //    return false;
-    if ((m_flags & F_DisableWhite) && m_board.toMove() == White)
+    if ((m_flags & F_DisableWhite) && m_board.toMove() == SHATRA::White)
         return false;
-    if ((m_flags & F_DisableBlack) && m_board.toMove() == Black)
+    if ((m_flags & F_DisableBlack) && m_board.toMove() == SHATRA::Black)
         return false;
 
-    if (s == InvalidSquare)
+    if (s == SHATRA::InvalidSquare)
         return false;
     if (m_flags & F_AllowAllMoves)
-        return m_board.pieceAt(s) != Empty;
+        return m_board.pieceAt(s) != SHATRA::EmptyPiece;
     if (m_board.isMovable(s))
     {
         //setCursor(QCursor(Qt::OpenHandCursor));
@@ -860,7 +863,7 @@ void BoardView::dropEvent(QDropEvent *event)
     const BoardViewMimeData *mimeData = qobject_cast<const BoardViewMimeData *>(event->mimeData());
     if (mimeData)
     {
-        Square s = squareAt(event->pos());
+        SHATRA::Square s = squareAt(event->pos());
         emit pieceDropped(s, mimeData->m_piece);
         event->acceptProposedAction();
     }

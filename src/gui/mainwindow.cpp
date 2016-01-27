@@ -107,13 +107,18 @@ MainWindow::MainWindow() : QMainWindow(),
     m_boardView->setMinimumSize(200, 320);
     m_boardView->resize(400, 640);
     connect(this, SIGNAL(reconfigure()), m_boardView, SLOT(configure()));
-    connect(m_boardView, SIGNAL(moveMade(Square, Square, int)), SLOT(slotBoardMove(Square, Square, int)));
-    connect(m_boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotBoardClick(Square, int, QPoint)));
+    connect(m_boardView, SIGNAL(moveMade(SHATRA::Square, SHATRA::Square, int)),
+                        SLOT(slotBoardMove(SHATRA::Square, SHATRA::Square, int)));
+    connect(m_boardView, SIGNAL(clicked(SHATRA::Square, int, QPoint)),
+                        SLOT(slotBoardClick(SHATRA::Square, int, QPoint)));
 	connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotBoardMoveWheel(int)));
     connect(m_boardView, SIGNAL(externalClosed()), SLOT(slotBoardExternalClosed()));
-    connect(m_boardView, SIGNAL(signalDisplayMessage(QString)), SLOT(slotDisplayStatusMessage(QString)));
-    connect(m_boardView, SIGNAL(signalDisplayPositionInfo(QString)), SLOT(slotDisplayPositionInfo(QString)));
-    connect(m_boardView, SIGNAL(animationFinished(Board)), SLOT(slotBoardAnimationFinished(Board)));
+    connect(m_boardView, SIGNAL(signalDisplayMessage(QString)),
+                        SLOT(slotDisplayStatusMessage(QString)));
+    connect(m_boardView, SIGNAL(signalDisplayPositionInfo(QString)),
+                        SLOT(slotDisplayPositionInfo(QString)));
+    connect(m_boardView, SIGNAL(animationFinished(SHATRA::Board)),
+                        SLOT(slotBoardAnimationFinished(SHATRA::Board)));
 
 
 	/* Game view */
@@ -156,7 +161,8 @@ MainWindow::MainWindow() : QMainWindow(),
 	connect(m_gameView, SIGNAL(anchorClicked(const QUrl&)), SLOT(slotGameViewLink(const QUrl&)));
 	connect(m_gameView, SIGNAL(actionRequested(EditAction)), SLOT(slotGameModify(EditAction)));
 	connect(this, SIGNAL(databaseChanged(DatabaseInfo*)), m_gameView, SLOT(slotDatabaseChanged(DatabaseInfo*)));
-    connect(this, SIGNAL(displayTime(const QString&, Color)), m_gameView, SLOT(slotDisplayTime(const QString&, Color)));
+    connect(this, SIGNAL(displayTime(const QString&, SHATRA::Color)),
+            m_gameView, SLOT(slotDisplayTime(const QString&, SHATRA::Color)));
     m_gameWindow->setCentralWidget(m_gameView);
     connect(this, SIGNAL(reconfigure()), m_gameView, SLOT(slotReconfigure()));
     m_gameTitle = new QLabel;
@@ -219,7 +225,7 @@ MainWindow::MainWindow() : QMainWindow(),
     connect(m_playGame, SIGNAL(startNewGameRequest(QMap<QString,QString>)), SLOT(slotPlayGameNew(QMap<QString,QString>)));
     connect(m_playGame, SIGNAL(continueGameRequest()), SLOT(slotPlayGameContinue()));
     connect(m_playGame, SIGNAL(pauseGame()), SLOT(slotPlayGameEnd()));
-    connect(m_playGame, SIGNAL(moveMade(Move)), SLOT(slotPlayGameMove(Move)));
+    connect(m_playGame, SIGNAL(moveMade(SHATRA::Move)), SLOT(slotPlayGameMove(SHATRA::Move)));
     connect(m_playGame, SIGNAL(gameComment(QString)), SLOT(slotGameAddComment(QString)));
     connect(m_playGame, SIGNAL(playerWins()), SLOT(slotPlayPlayerWins()));
     connect(m_playGame, SIGNAL(playerLoses()), SLOT(slotPlayOtherWins()));
@@ -322,8 +328,10 @@ MainWindow::MainWindow() : QMainWindow(),
 			  SLOT(slotGameAddVariation(Analysis)));
     connect(analysis, SIGNAL(addVariation(QString)),
               SLOT(slotGameAddVariation(QString)));
-    connect(analysis, SIGNAL(bestMove(Move)), m_boardView, SLOT(setBestMove(Move)));
-    connect(this, SIGNAL(boardChange(const Board&)), analysis, SLOT(setPosition(const Board&)));
+    connect(analysis, SIGNAL(bestMove(SHATRA::Move)),
+            m_boardView, SLOT(setBestMove(SHATRA::Move)));
+    connect(this, SIGNAL(boardChange(const SHATRA::Board&)),
+            analysis, SLOT(setPosition(const SHATRA::Board&)));
     connect(this, SIGNAL(reconfigure()), analysis, SLOT(slotReconfigure()));
     // Make sure engine is disabled if dock is hidden
 	connect(analysisDock, SIGNAL(visibilityChanged(bool)),
@@ -345,8 +353,10 @@ MainWindow::MainWindow() : QMainWindow(),
 			  SLOT(slotGameAddVariation(Analysis)));
     connect(analysis, SIGNAL(addVariation(QString)),
               SLOT(slotGameAddVariation(QString)));
-    connect(analysis, SIGNAL(bestMove(Move)), m_boardView, SLOT(setBestMove(Move)));
-    connect(this, SIGNAL(boardChange(const Board&)), analysis, SLOT(setPosition(const Board&)));
+    connect(analysis, SIGNAL(bestMove(SHATRA::Move)),
+            m_boardView, SLOT(setBestMove(SHATRA::Move)));
+    connect(this, SIGNAL(boardChange(const SHATRA::Board&)),
+            analysis, SLOT(setPosition(const SHATRA::Board&)));
     connect(this, SIGNAL(reconfigure()), analysis, SLOT(slotReconfigure()));
 	// Make sure engine is disabled if dock is hidden
 	connect(analysisDock2, SIGNAL(visibilityChanged(bool)),
@@ -368,13 +378,15 @@ MainWindow::MainWindow() : QMainWindow(),
 #ifndef Q_OS_WIN
     mb.setButtonText(QMessageBox::Yes, tr("Extended"));
     mb.setButtonText(QMessageBox::No, tr("Original"));
-    g_version = mb.exec() == QMessageBox::No? Original : Extended;
+    SHATRA::g_version = mb.exec() == QMessageBox::No ?
+                SHATRA::Original : SHATRA::Extended;
 #else
     mb.setButtonText(QMessageBox::Yes, tr("Original"));
     mb.setButtonText(QMessageBox::No, tr("Extended"));
-    g_version = mb.exec() == QMessageBox::Yes? Original : Extended;
+    SHATRA::g_version = mb.exec() == QMessageBox::Yes ?
+                SHATRA::Original : SHATRA::Extended;
 #endif
-    SBoardInit();
+    SHATRA::SBoardInit();
 
     /* Restoring layouts */
 	if (!AppSettings->layout(this))
@@ -394,8 +406,8 @@ MainWindow::MainWindow() : QMainWindow(),
     m_progressBar = new QProgressBar;
 
     /* Reconfigure. */
-    g_notation = AppSettings->getValue("/General/Notation").toBool();
-    g_numRev = !AppSettings->getValue("/Board/reverseSquareNumbers").toBool();
+    SHATRA::g_notation = AppSettings->getValue("/General/Notation").toBool();
+    SHATRA::g_numRev = !AppSettings->getValue("/Board/reverseSquareNumbers").toBool();
     slotReconfigure();
 
 	/* Reset board - not earlier, as all widgets have to be created. */

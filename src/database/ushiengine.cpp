@@ -26,7 +26,7 @@ USHIEngine::USHIEngine(const QString& name,
 
 }
 
-bool USHIEngine::startAnalysis(const Board& board, int nv,
+bool USHIEngine::startAnalysis(const SHATRA::Board& board, int nv,
                                const SearchSettings & settings)
 {
     SB_ENGINE_DEBUG("USHIEngine::startAnalysis("
@@ -102,7 +102,7 @@ void USHIEngine::protocolEnd()
 
 void USHIEngine::setShatraVersion()
 {
-    send(QString("setoption name Shatra version value %1").arg(g_version));
+    send(QString("setoption name Shatra version value %1").arg(SHATRA::g_version));
 }
 
 void USHIEngine::processMessage(const QString& message)
@@ -227,8 +227,8 @@ void USHIEngine::parseBestmove(const QString& message)
     QString info = message.section(' ', 1, -1, QString::SectionSkipEmpty);
     QString moveText = info.section(' ', 0, 0, QString::SectionSkipEmpty);
 
-    Board board(m_board);
-    Move move = board.parseMove(moveText);
+    SHATRA::Board board(m_board);
+    SHATRA::Move move = board.parseMove(moveText);
     if (!move.isLegal())
     {
         engineDebug(this, D_Error, tr("illegal bestmove '%1' from engine!").arg(moveText));
@@ -317,7 +317,7 @@ void USHIEngine::parseAnalysis(const QString& message)
             int score = type.toDouble(&ok);
             if (ok)
             {
-                if (m_invertBlack && m_board.toMove() == Black)
+                if (m_invertBlack && m_board.toMove() == SHATRA::Black)
                     analysis.setScore(-score);
                 else
                     analysis.setScore(score);
@@ -329,13 +329,13 @@ void USHIEngine::parseAnalysis(const QString& message)
 
                 if(type == "win")
                 {
-                    analysis.setMovesToResult(abs(score), Win);
+                    analysis.setMovesToResult(abs(score), SHATRA::Win);
                 }
                 else if(type == "loss")
                 {
-                    analysis.setMovesToResult(abs(score), Loss);
+                    analysis.setMovesToResult(abs(score), SHATRA::Loss);
                 }
-                else if (m_invertBlack && m_board.toMove() == Black)
+                else if (m_invertBlack && m_board.toMove() == SHATRA::Black)
                 {
 					analysis.setScore(-score);
                 }
@@ -352,14 +352,14 @@ void USHIEngine::parseAnalysis(const QString& message)
 
         if (name == "pv")
         {
-			Board board = m_board;
-			MoveList moves;
+            SHATRA::Board board = m_board;
+            SHATRA::MoveList moves;
 			QString moveText;
 			section++;
             while ((moveText = info.section(' ', section, section, QString::SectionSkipEmpty)) != "")
             {
 //                qDebug() << "pv " << moveText;
-                Move move = board.parseMove(moveText);
+                SHATRA::Move move = board.parseMove(moveText);
 				if (!move.isLegal())
                 {
                     engineDebug(this, D_Error, tr("illegal move '%1' from engine!").arg(moveText));

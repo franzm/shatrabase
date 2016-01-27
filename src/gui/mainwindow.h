@@ -22,9 +22,9 @@
 #include <QAction>
 #include <QMainWindow>
 
+namespace SHATRA { class Board; }
 class Analysis;
 class AnalysisWidget;
-class Board;
 class BoardView;
 class ChessBrowser;
 class Database;
@@ -211,13 +211,13 @@ public slots:
     /* An Engine/Engine match has finished with a result. */
     //void slotPlayGameEnded();
     /** Connected to PlayGameWidget: Engine has made a move */
-    void slotPlayGameMove(Move);
+    void slotPlayGameMove(SHATRA::Move);
     /** Player has won. */
     void slotPlayPlayerWins();
     /** Not the player has won. */
     void slotPlayOtherWins();
     /** A piece move animation has finished. */
-    void slotBoardAnimationFinished(const Board&);
+    void slotBoardAnimationFinished(const SHATRA::Board&);
     /* Save game, replacing old one if modified, appending if new
         @return false if cancelled, true if changes are to be saved or discarded. */
     bool slotGameSave();
@@ -286,9 +286,9 @@ public slots:
     /* Move @p index was selected in Opening Tree. */
 	void slotSearchTreeMove(const QModelIndex& index);
     /* Made given move on the board */
-    void slotBoardMove(Square from, Square to, int button);
+    void slotBoardMove(SHATRA::Square from, SHATRA::Square to, int button);
     /* Board square was clicked */
-    void slotBoardClick(Square square, int button, QPoint pos);
+    void slotBoardClick(SHATRA::Square square, int button, QPoint pos);
     /* Browse current game by mouse wheel */
 	void slotBoardMoveWheel(int wheel);
     /** Externalizes or takes back the board view. */
@@ -351,13 +351,13 @@ signals:
     /* Re-read configuration. */
     void reconfigure();
     /* Main game has been updated. */
-	void boardChange(const Board& board);
+    void boardChange(const SHATRA::Board& board);
     /* Current database changed. */
 	void databaseChanged(DatabaseInfo* databaseInfo);
     /* Emitted upon finishing a file download */
     void LoadFinished(DatabaseInfo*);
     /* Emitted upon a update for the elapsed / clock time */
-    void displayTime(const QString&, Color);
+    void displayTime(const QString&, SHATRA::Color);
 
 private:
     /* Create single menu action. */
@@ -437,10 +437,10 @@ private:
             * m_saveAsAction;
     bool m_bGameChange,
          m_nextGameSaveQuick;
-    Board m_lastSendBoard;
+    SHATRA::Board m_lastSendBoard;
     AnalysisWidget* m_mainAnalysis, * m_analysis2;
-    Board m_AutoInsertLastBoard;
-    Square m_annotationSquare;
+    SHATRA::Board m_AutoInsertLastBoard;
+    SHATRA::Square m_annotationSquare;
     QAction* m_autoPlay;
     QAction* m_autoAnalysis;
 

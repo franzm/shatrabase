@@ -20,6 +20,8 @@
 #include "rand64.h"
 #include "arrayhashkey.h"
 
+namespace SHATRA {
+
 /*
    This class is actually only responsible for calculating a hash for each
    position; it derives from SBoard to provide all other functionality.
@@ -140,5 +142,8 @@ private:
 };
 
 extern const Board standardStartBoard;
+
+} // namespace SHATRA
+
 #endif
 

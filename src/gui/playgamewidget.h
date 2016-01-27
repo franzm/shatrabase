@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #include "playtimecontrol.h"
 #include "qled.h"
 
-class Board;
+namespace SHATRA { class Board; }
 class PlayGame;
 class EngineDebugWidget;
 
@@ -55,7 +55,7 @@ public:
     bool isHumanInvolved() const;
 
     /** Returns whether the given side to move is controlled by the user. */
-    bool isHuman(Color stm) const;
+    bool isHuman(SHATRA::Color stm) const;
 
     /** show info lines? */
     bool doInfoLines() const;
@@ -92,7 +92,7 @@ signals:
     void pauseGame();
 
     /** The Engine has send a new position. */
-    void moveMade(Move);
+    void moveMade(SHATRA::Move);
 
     /** This class wants to add a comment at current position */
     void gameComment(const QString&);
@@ -122,13 +122,13 @@ public slots:
 
     /** Sets new position. Signals that a move has been performed.
         If required, the Engine will be queried. */
-    void setPosition(const Board& board);
+    void setPosition(const SHATRA::Board& board);
 
     /** Continue a game from the current possiton */
-    void continuePosition(const Board& board);
+    void continuePosition(const SHATRA::Board& board);
 
     /** Signal that board has done the last issued move */
-    void animationFinished(const Board& board);
+    void animationFinished(const SHATRA::Board& board);
 
 private slots:
 
@@ -137,8 +137,8 @@ private slots:
     void enginesReady();
     void engineClueless();
     void engineError(const QString&);
-    void moveFromEngine(Move);
-    void infoFromEngine(Move,int);
+    void moveFromEngine(SHATRA::Move);
+    void infoFromEngine(SHATRA::Move, int);
 
     // -- widget callbacks --
 
@@ -179,7 +179,7 @@ private:
     /** Start playing board.toMove().
      *  Sets widgets and starts timing.
      *  Sends board to Engine if necessary. */
-    void startNewMove_(const Board& board);
+    void startNewMove_(const SHATRA::Board& board);
 
     /* Sets the playing side, updates widgets,
      *  optionally starts counting move time */
@@ -194,7 +194,7 @@ private:
 
     /** Checks Game result and talks with MainWindow.
         Returns if game ended. */
-    bool checkGameResult_(const Board&, bool triggerWinSignals, bool doStop);
+    bool checkGameResult_(const SHATRA::Board&, bool triggerWinSignals, bool doStop);
 
     /** Sends a comment to gametext with the given info
         (according to properties) */
@@ -219,10 +219,10 @@ private:
 
     PlayGame * play_;
 
-    Color curStm_;
+    SHATRA::Color curStm_;
     bool userMoved_;
     int winStm_;
-    QList<Move> plyQue_;
+    QList<SHATRA::Move> plyQue_;
     QVector<quint64> hashHistory_;
 
     bool playing_,
@@ -232,7 +232,7 @@ private:
         ignoreAnswer_,
     /** Flag used when first player is Engine, sends sendBoard_ */
         sendBoardWhenReady_;
-    Board sendBoard_;
+    SHATRA::Board sendBoard_;
 
     /** last move count in a game */
     int lastMoveNumber_;

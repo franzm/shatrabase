@@ -36,7 +36,7 @@ class Tablebase : public QObject
 	Q_OBJECT
 signals:
 	/** Emitted when best move has been gathered from tablebase */
-	void bestMove(Move move, int score);
+        void bestMove(SHATRA::Move move, int score);
 public slots:
 	/** Request best move from table base given SPN position */
 	virtual void getBestMove(QString spn) = 0;
@@ -56,7 +56,7 @@ public:
 	Shredder();
 	~Shredder();
 signals:
-	void bestMove(Move move, int score);
+        void bestMove(SHATRA::Move move, int score);
 public slots:
 	void getBestMove(QString spn);
     void abortLookup();

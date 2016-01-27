@@ -16,7 +16,7 @@
 #include <QtCore>
 #include "movelist.h"
 
-class Board;
+namespace SHATRA { class Board; }
 
 /** The analysis class contains engine analysis. */
 class Analysis
@@ -52,9 +52,9 @@ public:
     /* Set nodes per second spent on analysis. */
     void setNodesPerSecond(quint64 nodes);
     /* Main variation. */
-    MoveList variation() const;
+    SHATRA::MoveList variation() const;
     /* Set main variation. */
-    void setVariation(const MoveList& variation);
+    void setVariation(const SHATRA::MoveList& variation);
     /* Is win. */
     bool isWin() const;
     /* Is loss. */
@@ -66,7 +66,7 @@ public:
     /* Set moves to win or loss. */
     void setMovesToResult(int distance, int rtype);
     /* Convert analysis to formatted text. */
-    QString toString(const Board& board) const;
+    QString toString(const SHATRA::Board& board) const;
     /* Assignment operator */
     Analysis& operator=(const Analysis& rhs);
 private:
@@ -77,7 +77,7 @@ private:
     int m_rtype;
     int m_numpv;
     quint64 m_nodes, m_nps;
-    MoveList m_variation;
+    SHATRA::MoveList m_variation;
     Q_DECLARE_TR_FUNCTIONS(Analysis)
 };
 

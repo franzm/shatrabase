@@ -28,26 +28,26 @@ BoardTheme::BoardTheme()
 BoardTheme::~BoardTheme()
 {}
 
-const QPixmap& BoardTheme::piece(Piece p, bool flipped) const
+const QPixmap& BoardTheme::piece(SHATRA::Piece p, bool flipped) const
 {
     if (flipped)
     {
-        if (p == WhiteBatyr)
-            return m_piece[ConstPieceTypes];
-        if (p == BlackBatyr)
-            return m_piece[ConstPieceTypes+1];
+        if (p == SHATRA::WhiteBatyr)
+            return m_piece[SHATRA::ConstPieceTypes];
+        if (p == SHATRA::BlackBatyr)
+            return m_piece[SHATRA::ConstPieceTypes+1];
     }
     return m_piece[p];
 }
 
-const QPixmap& BoardTheme::originalPiece(Piece p, bool flipped) const
+const QPixmap& BoardTheme::originalPiece(SHATRA::Piece p, bool flipped) const
 {
     if (flipped)
     {
-        if (p == WhiteBatyr)
-            return m_originalPiece[ConstPieceTypes];
-        if (p == BlackBatyr)
-            return m_originalPiece[ConstPieceTypes+1];
+        if (p == SHATRA::WhiteBatyr)
+            return m_originalPiece[SHATRA::ConstPieceTypes];
+        if (p == SHATRA::BlackBatyr)
+            return m_originalPiece[SHATRA::ConstPieceTypes+1];
     }
     return m_originalPiece[p];
 }
@@ -112,31 +112,31 @@ bool BoardTheme::loadPieces(const QString& pieces, int effect)
     int rs2 = realsize + realsize;
 
 	/* Cut big theme bitmap into separate pieces */
-    m_originalPiece[WhiteTura] =   big.copy(0 * realsize, 0, realsize, realsize);
-	m_originalPiece[WhiteYalkyn] = big.copy(1 * realsize, 0, realsize, realsize);
-    m_originalPiece[WhiteBatyr] =  big.copy(2 * realsize, 0, realsize, realsize);
-    m_originalPiece[WhiteBiy] =    big.copy(3 * realsize, 0, realsize, realsize);
-	m_originalPiece[WhiteShatra] = big.copy(4 * realsize, 0, realsize, realsize);
-    m_originalPiece[BlackTura] =   big.copy(0 * realsize, realsize, realsize, realsize);
-	m_originalPiece[BlackYalkyn] = big.copy(1 * realsize, realsize, realsize, realsize);
-    m_originalPiece[BlackBatyr] =  big.copy(2 * realsize, realsize, realsize, realsize);
-    m_originalPiece[BlackBiy] =    big.copy(3 * realsize, realsize, realsize, realsize);
-	m_originalPiece[BlackShatra] = big.copy(4 * realsize, realsize, realsize, realsize);
-    m_originalPiece[WasTura] =     big.copy(0 * realsize, rs2, realsize, realsize);
-    m_originalPiece[WasYalkyn] =   big.copy(1 * realsize, rs2, realsize, realsize);
-    m_originalPiece[WasBatyr] =    big.copy(2 * realsize, rs2, realsize, realsize);
-    m_originalPiece[WasShatra] =   big.copy(4 * realsize, rs2, realsize, realsize);
+    m_originalPiece[SHATRA::WhiteTura] =   big.copy(0 * realsize, 0, realsize, realsize);
+    m_originalPiece[SHATRA::WhiteYalkyn] = big.copy(1 * realsize, 0, realsize, realsize);
+    m_originalPiece[SHATRA::WhiteBatyr] =  big.copy(2 * realsize, 0, realsize, realsize);
+    m_originalPiece[SHATRA::WhiteBiy] =    big.copy(3 * realsize, 0, realsize, realsize);
+    m_originalPiece[SHATRA::WhiteShatra] = big.copy(4 * realsize, 0, realsize, realsize);
+    m_originalPiece[SHATRA::BlackTura] =   big.copy(0 * realsize, realsize, realsize, realsize);
+    m_originalPiece[SHATRA::BlackYalkyn] = big.copy(1 * realsize, realsize, realsize, realsize);
+    m_originalPiece[SHATRA::BlackBatyr] =  big.copy(2 * realsize, realsize, realsize, realsize);
+    m_originalPiece[SHATRA::BlackBiy] =    big.copy(3 * realsize, realsize, realsize, realsize);
+    m_originalPiece[SHATRA::BlackShatra] = big.copy(4 * realsize, realsize, realsize, realsize);
+    m_originalPiece[SHATRA::WasTura] =     big.copy(0 * realsize, rs2, realsize, realsize);
+    m_originalPiece[SHATRA::WasYalkyn] =   big.copy(1 * realsize, rs2, realsize, realsize);
+    m_originalPiece[SHATRA::WasBatyr] =    big.copy(2 * realsize, rs2, realsize, realsize);
+    m_originalPiece[SHATRA::WasShatra] =   big.copy(4 * realsize, rs2, realsize, realsize);
     if (hasFlippedBatyr)
     {
-        m_originalPiece[ConstPieceTypes] =
+        m_originalPiece[SHATRA::ConstPieceTypes] =
                                    big.copy(5 * realsize, 0, realsize, realsize);
-        m_originalPiece[ConstPieceTypes+1] =
+        m_originalPiece[SHATRA::ConstPieceTypes+1] =
                                    big.copy(5 * realsize, realsize, realsize, realsize);
     }
     else
     {
-        m_originalPiece[ConstPieceTypes] = m_originalPiece[WhiteBatyr];
-        m_originalPiece[ConstPieceTypes+1] = m_originalPiece[BlackBatyr];
+        m_originalPiece[SHATRA::ConstPieceTypes] = m_originalPiece[SHATRA::WhiteBatyr];
+        m_originalPiece[SHATRA::ConstPieceTypes+1] = m_originalPiece[SHATRA::BlackBatyr];
     }
 
     m_pieceFilename = themePath;
@@ -215,8 +215,8 @@ void BoardTheme::setSize(const QSize& value)
 	if (!isValid())
 		return;
 	m_size = value;
-    for (int i = 1; i < ConstPieceTypes+2; i++)
-        if (i != InvalidPiece)
+    for (int i = 1; i < SHATRA::ConstPieceTypes+2; i++)
+        if (i != SHATRA::InvalidPiece)
             m_piece[i] = m_originalPiece[i].scaled(m_size,
                 Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     updateSquares();
@@ -232,8 +232,8 @@ void BoardTheme::updateSquares()
 {
 	if (!isValid())
 		return;
-	bool scale = m_size.width() > m_originalPiece[WhiteTura].width()
-			  || m_size.height() > m_originalPiece[WhiteTura].height()
+    bool scale = m_size.width() > m_originalPiece[SHATRA::WhiteTura].width()
+              || m_size.height() > m_originalPiece[SHATRA::WhiteTura].height()
 			  || m_size.width() < 30 || m_size.height() < 30;
 	if (isBoardPlain()) {
 		m_square[0] = QPixmap(m_size);

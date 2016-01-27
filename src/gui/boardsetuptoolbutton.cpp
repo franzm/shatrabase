@@ -45,7 +45,7 @@ void BoardSetupToolButton::resizeEvent(QResizeEvent * e)
     setPixmap(p1);
 }
 
-void BoardSetupToolButton::slotClearBackground(Piece p)
+void BoardSetupToolButton::slotClearBackground(SHATRA::Piece p)
 {
     if (p==m_piece)
         slotSetSelected();

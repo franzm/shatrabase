@@ -21,7 +21,7 @@
 #include <QMenu>
 
 BoardSetupDialog::BoardSetupDialog(QWidget* parent)
-    : QDialog(parent), m_wheelCurrentDelta(0), m_selectedPiece(Empty)
+    : QDialog(parent), m_wheelCurrentDelta(0), m_selectedPiece(SHATRA::EmptyPiece)
 {
 	ui.setupUi(this);
     m_boardView = new BoardView(ui.boardTab);//boardFrame);
@@ -32,27 +32,29 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
 
     m_minDeltaWheel = AppSettings->getValue("/Board/minWheelCount").toInt();
 
-    for (int piece = WhiteBatyr; piece <= BlackShatra; piece++)
+    for (int piece = SHATRA::WhiteBatyr; piece <= SHATRA::BlackShatra; piece++)
     {
-        if (g_version == Original)
+        if (SHATRA::g_version == SHATRA::Original)
         {
-            while (piece == WhiteTura || piece == WhiteYalkyn
-             || piece == BlackTura || piece == BlackYalkyn)
+            while (piece == SHATRA::WhiteTura || piece == SHATRA::WhiteYalkyn
+             || piece == SHATRA::BlackTura || piece == SHATRA::BlackYalkyn)
                 ++piece;
         }
         BoardSetupToolButton* button = new BoardSetupToolButton(this);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         //button->setAlignment(Qt::AlignJustify|Qt::AlignVCenter);
         button->setMinimumSize(QSize(50,50));
-        button->m_piece = (Piece)piece;
+        button->m_piece = (SHATRA::Piece)piece;
 
-        button->m_pixmap = m_boardView->theme().piece(Piece(piece));
-        ui.buttonLayout->addWidget(button, (piece - 1) % 5, piece >= BlackBatyr);
+        button->m_pixmap = m_boardView->theme().piece(SHATRA::Piece(piece));
+        ui.buttonLayout->addWidget(button, (piece - 1) % 5, piece >= SHATRA::BlackBatyr);
 
         connect(button, SIGNAL(signalDragStarted(QWidget*,QMouseEvent*)),
                                     SLOT(startDrag(QWidget*,QMouseEvent*)));
-        connect(button, SIGNAL(signalClicked(Piece)), this, SLOT(labelClicked(Piece)));
-        connect(this, SIGNAL(signalClearBackground(Piece)),button, SLOT(slotClearBackground(Piece)));
+        connect(button, SIGNAL(signalClicked(SHATRA::Piece)),
+                this, SLOT(labelClicked(SHATRA::Piece)));
+        connect(this, SIGNAL(signalClearBackground(SHATRA::Piece)),
+                button, SLOT(slotClearBackground(SHATRA::Piece)));
 	}
 
     // popup menu
@@ -78,18 +80,23 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
     connect(pa_urgent, SIGNAL(triggered()), SLOT(slotSquareUrgent()));
     m_popmenu->addAction(pa_urgent);
 
-    emit signalClearBackground(Empty);
+    emit signalClearBackground(SHATRA::EmptyPiece);
 
 	connect(ui.okButton, SIGNAL(clicked()), SLOT(slotAccept()));
 	connect(ui.cancelButton, SIGNAL(clicked()), SLOT(reject()));
 	connect(ui.clearButton, SIGNAL(clicked()), SLOT(slotClear()));
 	connect(ui.resetButton, SIGNAL(clicked()), SLOT(slotReset()));
-    connect(m_boardView, SIGNAL(clicked(Square, int, QPoint)), SLOT(slotSelected(Square, int)));
-    connect(m_boardView, SIGNAL(moveMade(Square, Square, int)), SLOT(slotMovePiece(Square, Square)));
-    connect(m_boardView, SIGNAL(copyPiece(Square, Square)), SLOT(slotCopyPiece(Square, Square)));
-    connect(m_boardView, SIGNAL(invalidMove(Square)), SLOT(slotInvalidMove(Square)));
+    connect(m_boardView, SIGNAL(clicked(SHATRA::Square, int, QPoint)),
+            SLOT(slotSelected(SHATRA::Square, int)));
+    connect(m_boardView, SIGNAL(moveMade(SHATRA::Square, SHATRA::Square, int)),
+                        SLOT(slotMovePiece(SHATRA::Square, SHATRA::Square)));
+    connect(m_boardView, SIGNAL(copyPiece(SHATRA::Square, SHATRA::Square)),
+                        SLOT(slotCopyPiece(SHATRA::Square, SHATRA::Square)));
+    connect(m_boardView, SIGNAL(invalidMove(SHATRA::Square)),
+                        SLOT(slotInvalidMove(SHATRA::Square)));
     connect(m_boardView, SIGNAL(wheelScrolled(int)), SLOT(slotChangePiece(int)));
-    connect(m_boardView, SIGNAL(pieceDropped(Square,Piece)), SLOT(slotDroppedPiece(Square, Piece)));
+    connect(m_boardView, SIGNAL(pieceDropped(SHATRA::Square, SHATRA::Piece)),
+                        SLOT(slotDroppedPiece(SHATRA::Square, SHATRA::Piece)));
 	connect(ui.toMoveButton, SIGNAL(clicked()), SLOT(slotToggleSide()));
 //	connect(ui.epCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotEnPassantSquare()));
 	connect(ui.moveSpin, SIGNAL(valueChanged(int)), SLOT(slotMoveNumber()));
@@ -100,7 +107,7 @@ BoardSetupDialog::BoardSetupDialog(QWidget* parent)
 BoardSetupDialog::~BoardSetupDialog()
 {}
 
-Board BoardSetupDialog::board() const
+SHATRA::Board BoardSetupDialog::board() const
 {
     return m_board;
 }
@@ -110,7 +117,7 @@ void BoardSetupDialog::setFlipped(bool flipped)
     m_boardView->setFlipped(flipped);
 }
 
-void BoardSetupDialog::setBoard(const Board& b)
+void BoardSetupDialog::setBoard(const SHATRA::Board& b)
 {
     m_board = b;
     m_boardView->setBoard(b);
@@ -141,7 +148,7 @@ int BoardSetupDialog::exec()
 
 void BoardSetupDialog::slotReset()
 {
-	Board b;
+    SHATRA::Board b;
 	b.setStandardPosition();
 	setBoard(b);
 }
@@ -160,14 +167,14 @@ void BoardSetupDialog::slotAccept()
 
 void BoardSetupDialog::slotClear()
 {
-	Board b;
+    SHATRA::Board b;
 //    b.setAt(gateAt[White], WhiteBiy);
 //    b.setAt(gateAt[Black], BlackBiy);
     b.fillOffboard();
 	setBoard(b);
 }
 
-void BoardSetupDialog::slotSelected(Square square, int button)
+void BoardSetupDialog::slotSelected(SHATRA::Square square, int button)
 {
     // popup
     if (button & Qt::LeftButton)
@@ -177,18 +184,18 @@ void BoardSetupDialog::slotSelected(Square square, int button)
     // flip color
     if (button & Qt::RightButton)
     {
-        Piece piece = m_board.pieceAt(square);
-        if (piece == Empty || piece == InvalidPiece)
+        SHATRA::Piece piece = m_board.pieceAt(square);
+        if (piece == SHATRA::EmptyPiece || piece == SHATRA::InvalidPiece)
             return;
 
-        if (piece >= BlackBatyr && piece <= BlackShatra)
-            piece = (Piece)(piece - (BlackBatyr - WhiteBatyr));
-        else if (piece >= WhiteBatyr && piece <= WhiteShatra)
-            piece = (Piece)(piece + (BlackBatyr - WhiteBatyr));
+        if (piece >= SHATRA::BlackBatyr && piece <= SHATRA::BlackShatra)
+            piece = (SHATRA::Piece)(piece - (SHATRA::BlackBatyr - SHATRA::WhiteBatyr));
+        else if (piece >= SHATRA::WhiteBatyr && piece <= SHATRA::WhiteShatra)
+            piece = (SHATRA::Piece)(piece + (SHATRA::BlackBatyr - SHATRA::WhiteBatyr));
         else
             return;
 
-        Board b(m_board);
+        SHATRA::Board b(m_board);
         b.removeFrom(square);
         b.setAt(square, piece);
         if (b.pieceAt(square) != piece)
@@ -203,8 +210,10 @@ void BoardSetupDialog::showSideToMove()
 	QSize size = ui.toMoveButton->iconSize();
 	QPixmap pixmap(size);
 	QPainter painter(&pixmap);
-	painter.fillRect(0, 0, size.width(), size.height(), m_toMove == White ? Qt::black : Qt::white);
-	painter.fillRect(1, 1, size.width() - 2, size.height() - 2, m_toMove == White ? Qt::white : Qt::black);
+    painter.fillRect(0, 0, size.width(), size.height(),
+                     m_toMove == SHATRA::White ? Qt::black : Qt::white);
+    painter.fillRect(1, 1, size.width() - 2, size.height() - 2,
+                     m_toMove == SHATRA::White ? Qt::white : Qt::black);
 	ui.toMoveButton->setIcon(QIcon(pixmap));
 }
 
@@ -219,41 +228,43 @@ void BoardSetupDialog::slotChangePiece(int dir)
 {
     int i = m_selectedPiece;
     i += (dir == BoardView::WheelUp) ? -1 : 1;
-    if (i < 0) i = (int) BlackShatra;
-    else if (i>BlackShatra) i = (int) Empty;
-    m_selectedPiece = (Piece) i;
+    if (i < 0)
+        i = (int)SHATRA::BlackShatra;
+    else if (i>SHATRA::BlackShatra)
+        i = (int)SHATRA::EmptyPiece;
+    m_selectedPiece = (SHATRA::Piece)i;
     emit signalClearBackground(m_selectedPiece);
 }
 
-void BoardSetupDialog::slotDroppedPiece(Square s, Piece p)
+void BoardSetupDialog::slotDroppedPiece(SHATRA::Square s, SHATRA::Piece p)
 {
     m_board.setAt(s, p);
     setBoard(m_board);
 }
 
-void BoardSetupDialog::slotMovePiece(Square from, Square to)
+void BoardSetupDialog::slotMovePiece(SHATRA::Square from, SHATRA::Square to)
 {
-    Piece p = m_board.pieceAt(from);
+    SHATRA::Piece p = m_board.pieceAt(from);
     m_board.removeFrom(from);
-    if (m_board.pieceAt(to) != Empty)
+    if (m_board.pieceAt(to) != SHATRA::EmptyPiece)
         m_board.removeFrom(to);
     m_board.setAt(to, p);
     setBoard(m_board);
 }
 
-void BoardSetupDialog::slotCopyPiece(Square from, Square to)
+void BoardSetupDialog::slotCopyPiece(SHATRA::Square from, SHATRA::Square to)
 {
-    Piece p = m_board.pieceAt(from);
-    if (m_board.pieceAt(to) != Empty)
+    SHATRA::Piece p = m_board.pieceAt(from);
+    if (m_board.pieceAt(to) != SHATRA::EmptyPiece)
         m_board.removeFrom(to);
     m_board.setAt(to, p);
     setBoard(m_board);
 }
 
-void BoardSetupDialog::slotInvalidMove(Square from)
+void BoardSetupDialog::slotInvalidMove(SHATRA::Square from)
 {
-    Piece p = m_board.pieceAt(from);
-    if (pieceType(p) != Biy)
+    SHATRA::Piece p = m_board.pieceAt(from);
+    if (pieceType(p) != SHATRA::Biy)
     {
         m_board.removeFrom(from);
         setBoard(m_board);
@@ -275,18 +286,18 @@ QString BoardSetupDialog::boardStatusMessage() const
 {
     switch (m_board.validate())
     {
-	case Valid:
-		return QString();
-	case NoWhiteBiy:
-        return tr("No white biy");
-	case NoBlackBiy:
-        return tr("No black biy");
-    case TooManyBiys:
-        return tr("Too many biys");
-	case InvalidEnPassant:
-		return tr("En passant square is not correct");
-	default:
-        return tr("Incomplete");
+        case SHATRA::Valid:
+            return QString();
+        case SHATRA::NoWhiteBiy:
+            return tr("No white biy");
+        case SHATRA::NoBlackBiy:
+            return tr("No black biy");
+        case SHATRA::TooManyBiys:
+            return tr("Too many biys");
+        case SHATRA::InvalidEnPassant:
+            return tr("En passant square is not correct");
+        default:
+            return tr("Incomplete");
 	}
 }
 
@@ -325,7 +336,7 @@ void BoardSetupDialog::slotPasteSPN()
     spn.remove(QRegExp("\\[[^\\]]*\\]"));
 
     // Now parse the hopefully naked Spn
-    Board b;
+    SHATRA::Board b;
     if (!b.fromSPN(spn))
     {
         QString msg = spn.length() ?
@@ -353,7 +364,7 @@ void BoardSetupDialog::slotEnPassantSquare()
 */
 void BoardSetupDialog::slotMoveNumber()
 {
-	Board b(board());
+    SHATRA::Board b(board());
 	b.setMoveNumber(ui.moveSpin->value());
 	setBoard(b);
 }
@@ -363,7 +374,7 @@ void BoardSetupDialog::startDrag(QWidget* w, QMouseEvent* event)
     BoardSetupToolButton *child = qobject_cast<BoardSetupToolButton*>(w);
     if (!child)
         return;
-    Piece p = child->m_piece;
+    SHATRA::Piece p = child->m_piece;
 
     QPoint hotSpot = event->pos();
 
@@ -380,7 +391,7 @@ void BoardSetupDialog::startDrag(QWidget* w, QMouseEvent* event)
     pDrag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction);
 }
 
-void BoardSetupDialog::labelClicked(Piece p)
+void BoardSetupDialog::labelClicked(SHATRA::Piece p)
 {
     m_selectedPiece = p;
     emit signalClearBackground(m_selectedPiece);
@@ -388,29 +399,29 @@ void BoardSetupDialog::labelClicked(Piece p)
 
 // -------------- popup --------------
 
-void BoardSetupDialog::openSquarePopup(Square s)
+void BoardSetupDialog::openSquarePopup(SHATRA::Square s)
 {
-    if (s == InvalidSquare)
+    if (s == SHATRA::InvalidSquare)
         return;
 
     m_popsquare = s;
-    Piece piece = m_board.pieceAt(s);
+    SHATRA::Piece piece = m_board.pieceAt(s);
 
-    bool notempty = !(piece == Empty || piece == InvalidPiece),
-         ispiece = notempty && piece < WasBatyr;
+    bool notempty = !(piece == SHATRA::EmptyPiece || piece == SHATRA::InvalidPiece),
+         ispiece = notempty && piece < SHATRA::WasBatyr;
 
     pa_temdek->setEnabled(s<=10 || s>=53);
     pa_temdek->setText( m_board.temdekOn(s>31)?
                             tr("Open temdek") : tr("Close temdek") );
-    pa_enpassant->setEnabled(m_board.epPossible(s, White) ||
-                             m_board.epPossible(s, Black));
+    pa_enpassant->setEnabled(m_board.epPossible(s, SHATRA::White) ||
+                             m_board.epPossible(s, SHATRA::Black));
                              //(s>=18 && s<=24) || (s>=39 && s<=45)) && !notempty);
     pa_enpassant->setText(m_board.enPassantSquare() == s?
                     tr("Clear en passant square") : tr("Set en passant square"));
-    pa_urgent->setEnabled(ispiece && isInHomeFort(s, s<=31? White : Black));
+    pa_urgent->setEnabled(ispiece && isInHomeFort(s, s<=31? SHATRA::White : SHATRA::Black));
     pa_urgent->setText(m_board.isUrgent(s)? tr("Clear urgent") : tr("Set urgent"));
 
-    pa_defunkt->setEnabled(ispiece && piece != WhiteBiy && piece != BlackBiy);
+    pa_defunkt->setEnabled(ispiece && piece != SHATRA::WhiteBiy && piece != SHATRA::BlackBiy);
 
     pa_transit->setEnabled(ispiece && pieceColor(piece) == m_board.toMove());
     pa_transit->setText( m_board.transitAt() == s ?
@@ -435,14 +446,14 @@ void BoardSetupDialog::openSquarePopup(Square s)
 void BoardSetupDialog::slotSquareDefunkt()
 {
     int p = m_board.pieceAt(m_popsquare);
-    if (p >= WhiteBatyr && p<=WhiteShatra)
-        p += (WasBatyr - WhiteBatyr);
+    if (p >= SHATRA::WhiteBatyr && p <= SHATRA::WhiteShatra)
+        p += (SHATRA::WasBatyr - SHATRA::WhiteBatyr);
     else
-    if (p >= BlackBatyr && p<=BlackShatra)
-        p += (WasBatyr - BlackBatyr);
+    if (p >= SHATRA::BlackBatyr && p <= SHATRA::BlackShatra)
+        p += (SHATRA::WasBatyr - SHATRA::BlackBatyr);
     else return;
 
-    m_board.setAt(m_popsquare, (Piece)p);
+    m_board.setAt(m_popsquare, (SHATRA::Piece)p);
     setBoard(m_board);
 }
 
@@ -468,10 +479,10 @@ void BoardSetupDialog::slotSquareTemdek()
     else
     {
         // insert
-        if (stm == White)
+        if (stm == SHATRA::White)
         {
             // T before t
-            if (m_board.temdekOn(Black))
+            if (m_board.temdekOn(SHATRA::Black))
             {
                 const int i = spn.indexOf("t");
                 if (i<0) return;
@@ -488,7 +499,7 @@ void BoardSetupDialog::slotSquareTemdek()
         else
         {
             // t after T
-            if (m_board.temdekOn(White))
+            if (m_board.temdekOn(SHATRA::White))
             {
                 const int i = spn.indexOf("T");
                 if (i<0) return;
@@ -504,7 +515,7 @@ void BoardSetupDialog::slotSquareTemdek()
         }
     }
     //qDebug() << spn;
-    Board b;
+    SHATRA::Board b;
     if (b.fromSPN(spn))
         setBoard(b);
     else
@@ -513,7 +524,7 @@ void BoardSetupDialog::slotSquareTemdek()
 
 void BoardSetupDialog::slotSquareEnPassant()
 {
-    Board b(m_board);
+    SHATRA::Board b(m_board);
     if (b.enPassantSquare() == m_popsquare)
         b.clearEnPassantSquare();
     else
@@ -528,11 +539,11 @@ void BoardSetupDialog::slotSquareEnPassant()
 
 void BoardSetupDialog::slotSquareUrgent()
 {
-    Board b(m_board);
+    SHATRA::Board b(m_board);
     if (b.isUrgent(m_popsquare))
-        b.clearUrgentAt(NB[m_popsquare]);
+        b.clearUrgentAt(SHATRA::NB[m_popsquare]);
     else
-        b.setUrgentAt(NB[m_popsquare]);
+        b.setUrgentAt(SHATRA::NB[m_popsquare]);
 
     if (b.fromSPN(b.toSPN()))
         setBoard(b);
@@ -542,11 +553,11 @@ void BoardSetupDialog::slotSquareUrgent()
 
 void BoardSetupDialog::slotSquareTransit()
 {
-    Board b(m_board);
-    if (b.transitAt() == NoSquare)
+    SHATRA::Board b(m_board);
+    if (b.transitAt() == SHATRA::NoSquare)
         b.setTransitAt(m_popsquare);
     else
-        b.setTransitAt(NoSquare);
+        b.setTransitAt(SHATRA::NoSquare);
 
     if (b.fromSPN(b.toSPN()))
         setBoard(b);

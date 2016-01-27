@@ -14,6 +14,8 @@
 
 #include "movelist.h"
 
+namespace SHATRA {
+
 bool MoveList::isRepeating() const
 {
     for (int j=size()-1; j>0; --j)
@@ -32,3 +34,4 @@ bool MoveList::isRepeating() const
     return false;
 }
 
+} // namespace SHATRA

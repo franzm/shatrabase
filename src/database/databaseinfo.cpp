@@ -53,13 +53,13 @@ void DatabaseInfo::doLoadFile(QString filename)
         emit LoadFinished(this);
         return;
     }
-    g_loading = true;
+    SHATRA::g_loading = true;
     m_database->parseFile();
-    if (g_resModified)
+    if (SHATRA::g_resModified)
         m_database->setModified(true); // NB temporary fix
     m_bLoaded = true;
     emit LoadFinished(this);
-    g_loading = false;
+    SHATRA::g_loading = false;
 }
 
 void DatabaseInfo::run()

@@ -21,6 +21,8 @@
 #include "move.h"
 #include <QVector>
 
+namespace SHATRA {
+
 class MoveList : public QVector<Move>
 {
 public:
@@ -30,5 +32,7 @@ public:
     /** Is there a repetition in the sequence of moves? */
     bool isRepeating() const;
 };
+
+} // namespace SHATRA
 
 #endif // __MOVELIST_H__

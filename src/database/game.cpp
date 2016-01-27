@@ -61,7 +61,7 @@ Game::~Game()
 {
 }
 
-MoveId Game::addMove(const Move& move, const QString& annotation, NagSet nags)
+MoveId Game::addMove(const SHATRA::Move& move, const QString& annotation, NagSet nags)
 {
     MoveNode node;
     MoveId previousNode = m_currentNode;
@@ -86,13 +86,13 @@ MoveId Game::addMove(const Move& move, const QString& annotation, NagSet nags)
 
 MoveId Game::addMove(const QString& lannMove, const QString& annotation, NagSet nags)
 {
-    Move move = m_currentBoard.parseMove(lannMove);
+    SHATRA::Move move = m_currentBoard.parseMove(lannMove);
     if (move.isLegal())
         return addMove(move, annotation, nags);
     return NO_MOVE;
 }
 
-bool Game::currentNodeHasVariation(Square from, Square to) const
+bool Game::currentNodeHasVariation(SHATRA::Square from, SHATRA::Square to) const
 {
     if (m_currentNode == NO_MOVE) return false;
 
@@ -100,7 +100,7 @@ bool Game::currentNodeHasVariation(Square from, Square to) const
     QList<MoveId>::iterator i;
     for (i = vs.begin(); i != vs.end(); ++i)
     {
-        Move m = move(*i);
+        SHATRA::Move m = move(*i);
         if( m.from() == from && m.to() == to )
         {
             return true;
@@ -109,7 +109,7 @@ bool Game::currentNodeHasVariation(Square from, Square to) const
     return false;
 }
 
-bool Game::currentNodeHasMove(Square from, Square  to) const
+bool Game::currentNodeHasMove(SHATRA::Square from, SHATRA::Square to) const
 {
     if (currentNodeHasVariation(from,to))
     {
@@ -119,7 +119,7 @@ bool Game::currentNodeHasMove(Square from, Square  to) const
     node = m_moveNodes[m_currentNode].nextNode;
     if (node == NO_MOVE)
         return true;
-    Move m = m_moveNodes[node].move ;
+    SHATRA::Move m = m_moveNodes[node].move ;
     if( m.from() == from && m.to() == to )
     {
         return (m_moveNodes[node].nextNode != NO_MOVE);
@@ -129,14 +129,16 @@ bool Game::currentNodeHasMove(Square from, Square  to) const
 
 // does the next main move or one of the variations go from square from to square to
 // if so make it on the board
-bool Game::findNextMove(Square from, Square to, PieceType promotionPiece)
+bool Game::findNextMove(SHATRA::Square from, SHATRA::Square to,
+                        SHATRA::PieceType promotionPiece)
 {
     int node;
     node = m_moveNodes[m_currentNode].nextNode;
     if( node != NO_MOVE ) {
-        Move m = m_moveNodes[node].move ;
+        SHATRA::Move m = m_moveNodes[node].move ;
         if( m.from() == from && m.to() == to &&
-                ((promotionPiece == None) || ((m.isPromotion() && (pieceType( m.promotedPiece()) == promotionPiece)))))
+                ((promotionPiece == SHATRA::NoPiece) ||
+                    ((m.isPromotion() && (pieceType( m.promotedPiece()) == promotionPiece)))))
         {
             forward();
             return true;
@@ -147,9 +149,10 @@ bool Game::findNextMove(Square from, Square to, PieceType promotionPiece)
             QList<MoveId>::iterator i;
             for (i = vs.begin(); i != vs.end(); ++i)
             {
-                Move m = move(*i);
+                SHATRA::Move m = move(*i);
                 if( m.from() == from && m.to() == to &&
-                        ((promotionPiece == None) || ((m.isPromotion() && (pieceType( m.promotedPiece()) == promotionPiece)))))
+                        ((promotionPiece == SHATRA::NoPiece) || ((m.isPromotion()
+                            && (pieceType( m.promotedPiece()) == promotionPiece)))))
                 {
                     moveToId(*i);
                     return true;
@@ -160,18 +163,18 @@ bool Game::findNextMove(Square from, Square to, PieceType promotionPiece)
     return false;
 }
 
-void Game::getAllPlies(MoveList& moves)
+void Game::getAllPlies(SHATRA::MoveList& moves)
 {
     moves.clear();
     for (int i=0; i<plyCount(); ++i)
     {
-        Move m = move(i+1);
+        SHATRA::Move m = move(i+1);
         if (m.isLegal())
             moves.append(m);
     }
 }
 
-bool Game::replaceMove(const Move& move, const QString& annotation, NagSet nags)
+bool Game::replaceMove(const SHATRA::Move& move, const QString& annotation, NagSet nags)
 {
     int node;
     node = m_moveNodes[m_currentNode].nextNode;
@@ -199,7 +202,7 @@ bool Game::replaceMove(const QString& lannMove, const QString& annotation, NagSe
     return replaceMove(m_currentBoard.parseMove(lannMove), annotation, nags);
 }
 
-MoveId Game::addVariation(const Move& move, const QString& annotation, NagSet nags)
+MoveId Game::addVariation(const SHATRA::Move& move, const QString& annotation, NagSet nags)
 {
     MoveId previousNode = m_currentNode;
     MoveId saveNextNode = m_moveNodes[m_currentNode].nextNode;
@@ -211,7 +214,7 @@ MoveId Game::addVariation(const Move& move, const QString& annotation, NagSet na
     return (m_moveNodes.size() - 1);
 }
 
-MoveId Game::addVariation(const MoveList& moveList, const QString& annotation)
+MoveId Game::addVariation(const SHATRA::MoveList& moveList, const QString& annotation)
 {
     if (moveList.isEmpty())
         return NO_MOVE;
@@ -222,7 +225,7 @@ MoveId Game::addVariation(const MoveList& moveList, const QString& annotation)
         varStart = addVariation(moveList.first());
     }
     else if (!atGameStart()) {
-        Move oldMove = move();
+        SHATRA::Move oldMove = move();
         backward();
         varStart = addVariation(oldMove);
         start = 0;
@@ -323,22 +326,22 @@ void Game::truncateVariation(Position position)
         m_moveNodes[m_currentNode].previousNode = 0;
         backward();
         m_startingBoard = m_currentBoard;
-        if (m_startingBoard != standardStartBoard)
+        if (m_startingBoard != SHATRA::standardStartBoard)
         {
-            m_tags[TagNameSPN] = m_startingBoard.toSPN();
-            m_tags[TagNameSetUp] = "1";
+            m_tags[SHATRA::TagNameSPN] = m_startingBoard.toSPN();
+            m_tags[SHATRA::TagNameSetUp] = "1";
         }
         moveToId(current);
     }
     compact();
 }
 
-const Board& Game::board() const
+const SHATRA::Board& Game::board() const
 {
     return m_currentBoard;
 }
 
-Board Game::startingBoard() const
+SHATRA::Board Game::startingBoard() const
 {
     return m_startingBoard;
 }
@@ -394,16 +397,16 @@ bool Game::isMainline(MoveId moveId) const
         return m_moveNodes[node].parentNode == NO_MOVE;
 }
 
-Result Game::result() const
+SHATRA::Result Game::result() const
 {
     if (m_tags["Result"] == "1-0") {
-        return WhiteWin;
+        return SHATRA::WhiteWin;
     } else if (m_tags["Result"] == "1/2-1/2") {
-        return Draw;
+        return SHATRA::Draw;
     } else if (m_tags["Result"] == "0-1") {
-        return BlackWin;
+        return SHATRA::BlackWin;
     } else {
-        return ResultUnknown;
+        return SHATRA::ResultUnknown;
     }
 }
 
@@ -519,11 +522,11 @@ bool Game::setSquareAnnotation(QString squareAnnotation, MoveId node)
     return true;
 }
 
-bool Game::appendSquareAnnotation(Square s, QChar colorCode)
+bool Game::appendSquareAnnotation(SHATRA::Square s, QChar colorCode)
 {
     QString newAnnot;
     QString annot = squareAnnotation();
-    QString sq = strSquareNames[s];
+    QString sq = SHATRA::strSquareNames[s];
     if (annot.isEmpty())
     {
         if (colorCode != QChar(0))
@@ -893,8 +896,9 @@ void Game::moveToId(MoveId moveId)
 
     //jump to node, travelling back to start adding the moves to the stack
     int node = moveId;
-    QStack < Move > moveStack;
-    while (node) {
+    QStack<SHATRA::Move> moveStack;
+    while (node)
+    {
         moveStack.push(m_moveNodes[node].move);
         node = m_moveNodes[node].previousNode;
     }
@@ -926,13 +930,13 @@ int Game::moveToPly(int ply)
     }
 }
 
-Move Game::move(MoveId moveId) const
+SHATRA::Move Game::move(MoveId moveId) const
 {
     MoveId node = nodeValid(moveId);
     if (node != NO_MOVE) {
         return m_moveNodes[node].move;
     }
-    return Move();
+    return SHATRA::Move();
 }
 
 void Game::moveToEnd()
@@ -965,7 +969,7 @@ int Game::forward(int count)
 int Game::backward(int count)
 {
     int moved = 0;
-    if (g_loading)
+    if (SHATRA::g_loading)
     {
         while ((m_moveNodes[m_currentNode].previousNode >= 0) && (moved < count))
         {
@@ -1064,7 +1068,7 @@ void Game::removeTag(const QString& tag)
     m_tags.remove(tag);
 }
 
-void Game::setStartingBoard(const Board& startingBoard)
+void Game::setStartingBoard(const SHATRA::Board& startingBoard)
 {
     setStartingBoard(startingBoard.toSPN());
 }
@@ -1073,16 +1077,17 @@ void Game::setStartingBoard(const QString& spn)
 {
     clear();
     m_startingBoard.fromSPN(spn);
-    if (m_startingBoard != standardStartBoard)
+    if (m_startingBoard != SHATRA::standardStartBoard)
     {
-        m_tags[TagNameSPN] = spn;
-        m_tags[TagNameSetUp] = "1";
+        m_tags[SHATRA::TagNameSPN] = spn;
+        m_tags[SHATRA::TagNameSetUp] = "1";
     }
     m_currentBoard = m_startingBoard;
-    m_startPly = (m_startingBoard.moveNumber() - 1) * 2 + (m_startingBoard.toMove() == Black);
+    m_startPly = (m_startingBoard.moveNumber() - 1) * 2
+                    + (m_startingBoard.toMove() == SHATRA::Black);
 }
 
-void Game::setResult(Result result)
+void Game::setResult(SHATRA::Result result)
 {
     m_tags["Result"] = resultString(result);
     setModified(true);
@@ -1111,10 +1116,10 @@ QString Game::moveToLann(MoveStringFlags flags, NextPreviousMove nextPrevious, M
 
     // Move number
     QString lann;
-    if (m_currentBoard.toMove() == Black && 
+    if (m_currentBoard.toMove() == SHATRA::Black &&
         !move.move.wasInSequence() && flags & BlackNumbers)
         lann += QString::number(moveNumber(node)) + "... ";
-    else if (m_currentBoard.toMove() == White && 
+    else if (m_currentBoard.toMove() == SHATRA::White &&
         !move.move.wasInSequence() && flags & WhiteNumbers)
         lann += QString::number(moveNumber(node)) + ". ";
 
@@ -1162,12 +1167,12 @@ void Game::dumpAllMoveNodes()
     qDebug() << "Moves: " << moves << " Comments: " << comments << " Nags: " << nags;
 }
 
-int Game::findPosition(const Board& position)
+int Game::findPosition(const SHATRA::Board& position)
 {
     moveToStart();
 
     int current = m_currentNode;
-    Board currentBoard(m_currentBoard);
+    SHATRA::Board currentBoard(m_currentBoard);
 
     for (;;) {
         if (currentBoard == position && currentBoard.positionIsSame(position))

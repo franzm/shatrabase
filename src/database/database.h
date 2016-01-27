@@ -73,7 +73,8 @@ public:
     /** Loads a game from the given position, returns true if successful */
 	virtual bool loadGame(int index, Game& game) = 0;
     /** Load all tags for GameId from index into game object */
-	virtual void loadGameHeaders(GameId id, Game& game) { m_index.loadGameHeaders(id, game); }
+    virtual void loadGameHeaders(SHATRA::GameId id, Game& game)
+        { m_index.loadGameHeaders(id, game); }
     /** Loads only moves into a game from the given position */
 	virtual void loadGameMoves(int index, Game& game) = 0;
     /** Saves a game at the given position, returns true if successful */
@@ -99,9 +100,9 @@ public:
     /** Set / Reset the modification flag. */
     virtual void setModified(bool) { }
     /** Get the Valid Flag for a given game id from the index */
-    virtual bool getValidFlag(GameId id) const { return m_index.isValidFlag(id); }
+    virtual bool getValidFlag(SHATRA::GameId id) const { return m_index.isValidFlag(id); }
     /** Get deleted flag for a given game id from the index */
-    virtual bool deleted(GameId id) const { return m_index.deleted(id); }
+    virtual bool deleted(SHATRA::GameId id) const { return m_index.deleted(id); }
 
     /** fill the indextags at @p index with infos from the @p game */
     void addGameInfo(int index, Game * game);

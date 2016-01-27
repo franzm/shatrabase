@@ -61,11 +61,13 @@ bool PlayGameEngine::createEngine_()
 
         connect(engine_, SIGNAL(activated()), SLOT(engineActivated_()));
         connect(engine_, SIGNAL(readyOk()), SLOT(engineReadyOk_()));
-        connect(engine_, SIGNAL(error(QProcess::ProcessError)), SLOT(engineError_(QProcess::ProcessError)));
+        connect(engine_, SIGNAL(error(QProcess::ProcessError)),
+                        SLOT(engineError_(QProcess::ProcessError)));
         connect(engine_, SIGNAL(deactivated()), SLOT(engineDeactivated_()));
         connect(engine_, SIGNAL(analysisUpdated(Analysis)),
                                     SLOT(engineAnalysis_(const Analysis&)));
-        connect(engine_, SIGNAL(bestMoveSend(Move)), SLOT(engineBestMove_(Move)));
+        connect(engine_, SIGNAL(bestMoveSend(SHATRA::Move)),
+                        SLOT(engineBestMove_(SHATRA::Move)));
 
         // debug
         if (engineDebug_)
@@ -141,10 +143,9 @@ void PlayGameEngine::engineError_(QProcess::ProcessError e)
     emit engineCrashed(Engine::processErrorText(e));
 }
 
-void PlayGameEngine::engineBestMove_(const Move& m)
+void PlayGameEngine::engineBestMove_(const SHATRA::Move& m)
 {
     SB_PLAY_DEBUG("PlayGameEngine::engineBestMove_() listening_="<<listening_);
-    //qDebug() << "PlayGameEngine::engineBestMove_() listening_="<<listening_;
 
     if (!listening_)
         return;
@@ -226,7 +227,8 @@ void PlayGameEngine::sendMoves_()
 
 }
 
-bool PlayGameEngine::setPosition(const Board &b, const Engine::SearchSettings& settings)
+bool PlayGameEngine::setPosition(const SHATRA::Board &b,
+                                 const Engine::SearchSettings& settings)
 {
     SB_PLAY_DEBUG("PlayGameEngine::setPosition() stopBetweenMoves_=" << stopBetweenMoves_);
 
@@ -256,7 +258,7 @@ bool PlayGameEngine::setPosition(const Board &b, const Engine::SearchSettings& s
 }
 
 
-bool PlayGameEngine::startAnalysis_(const Board& b)
+bool PlayGameEngine::startAnalysis_(const SHATRA::Board& b)
 {
     SB_PLAY_DEBUG("PlayGameEngine::startAnalysis_(...) engine_="<<engine_);
 

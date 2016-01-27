@@ -43,13 +43,13 @@ void PositionBase::addDatabase(Database &db)
             continue;
         }
 
-        if (g.result() == ResultUnknown)
+        if (g.result() == SHATRA::ResultUnknown)
         {
             qDebug() << "skipping unknown result game " << i;
             continue;
         }
 
-        if (g.result() == Draw)
+        if (g.result() == SHATRA::Draw)
         {
             qDebug() << "skipping draw result game " << i;
             continue;
@@ -63,12 +63,12 @@ void PositionBase::addGame(const Game &g)
 {
     qDebug() << "adding game";
 
-    SBoard b;
+    SHATRA::SBoard b;
     b.setStandardPosition();
 
     for (int i=1; ; ++i)
     {
-        const Move m = g.move(i);
+        const SHATRA::Move m = g.move(i);
         if (!m.isLegal())
         {
             qDebug() << "break at ply " << i;
@@ -89,7 +89,7 @@ void PositionBase::addGame(const Game &g)
     }
 }
 
-void PositionBase::addPosition(const SBoard & b, Result r)
+void PositionBase::addPosition(const SHATRA::SBoard& b, SHATRA::Result r)
 {
     // append an entry
     size_t pos = data_.size();
@@ -97,18 +97,18 @@ void PositionBase::addPosition(const SBoard & b, Result r)
     // and go to start of it
     float * data = &data_[pos];
 
-    *data++ = r == WhiteWin? 0.9 : 0.1;
+    *data++ = r == SHATRA::WhiteWin ? 0.9 : 0.1;
 
     for (int i=0; i<62; ++i)
     {
-        const Piece p = b.pieceAt(i+1);
-        *data++ = isValidPiece(p)? 1 : 0;
+        const SHATRA::Piece p = b.pieceAt(i+1);
+        *data++ = SHATRA::isValidPiece(p)? 1 : 0;
     }
 
     for (int i=0; i<62; ++i)
     {
-        const Piece p = b.pieceAt(i+1);
-        *data++ = isWhite(p)? 1 : 0;
+        const SHATRA::Piece p = b.pieceAt(i+1);
+        *data++ = SHATRA::isWhite(p)? 1 : 0;
     }
 
     num_++;

@@ -31,7 +31,7 @@ Index::~Index()
 {
 }
 
-GameId Index::add()
+SHATRA::GameId Index::add()
 {
     int gameId = m_indexItems.count();
     m_indexItems.append(new IndexItem);
@@ -40,7 +40,7 @@ GameId Index::add()
     return gameId;
 }
 
-TagIndex Index::AddTagName(QString name)
+SHATRA::TagIndex Index::AddTagName(QString name)
 {
     if (m_tagNameIndex.contains(name))
     {
@@ -52,7 +52,7 @@ TagIndex Index::AddTagName(QString name)
     return n;
 }
 
-ValueIndex Index::AddTagValue(QString name)
+SHATRA::ValueIndex Index::AddTagValue(QString name)
 {
     if (m_tagValueIndex.contains(name))
     {
@@ -66,8 +66,8 @@ ValueIndex Index::AddTagValue(QString name)
 
 void Index::setTag(const QString& tagName, const QString& value, int gameId)
 {
-    TagIndex tagIndex = AddTagName(tagName);
-    ValueIndex valueIndex = AddTagValue(value);
+    SHATRA::TagIndex tagIndex = AddTagName(tagName);
+    SHATRA::ValueIndex valueIndex = AddTagValue(value);
 
     if (m_indexItems.count() <= gameId)
     {
@@ -154,7 +154,7 @@ void Index::calculateReverseMaps(volatile bool* breakFlag)
 {
     if (m_tagNameIndex.isEmpty())
     {
-        foreach (TagIndex tagIndex, m_tagNames.keys())
+        foreach (SHATRA::TagIndex tagIndex, m_tagNames.keys())
         {
             if (breakFlag && *breakFlag) return;
             m_tagNameIndex.insert(m_tagNames.value(tagIndex), tagIndex);
@@ -162,7 +162,7 @@ void Index::calculateReverseMaps(volatile bool* breakFlag)
     }
     if (m_tagValueIndex.isEmpty())
     {
-        foreach (ValueIndex valueIndex, m_tagValues.keys())
+        foreach (SHATRA::ValueIndex valueIndex, m_tagValues.keys())
         {
             if (breakFlag && *breakFlag) return;
             m_tagValueIndex.insert(m_tagValues.value(valueIndex), valueIndex);
@@ -174,11 +174,12 @@ void Index::calculateTagMap(volatile bool *breakFlag)
 {
     if (m_mapTagToIndexItems.isEmpty())
     {
-        foreach (TagIndex tagIndex, m_tagNames.keys())
+        foreach (SHATRA::TagIndex tagIndex, m_tagNames.keys())
         {
-            for (GameId gameId=0; gameId<(GameId)m_indexItems.size(); ++gameId)
+            for (SHATRA::GameId gameId=0; gameId<(SHATRA::GameId)m_indexItems.size(); ++gameId)
             {
-                if (breakFlag && *breakFlag) return;
+                if (breakFlag && *breakFlag)
+                    return;
                 if (indexItemHasTag(tagIndex, gameId))
                 {
                     m_mapTagToIndexItems.insertMulti(tagIndex, gameId);
@@ -211,8 +212,8 @@ int Index::count() const
 
 QBitArray Index::listContainingValue(const QString& tagName, const QString& value) const
 {
-    TagIndex tagIndex = m_tagNameIndex.value(tagName);
-    ValueIndex valueIndex = m_tagValueIndex.value(value);
+    SHATRA::TagIndex tagIndex = m_tagNameIndex.value(tagName);
+    SHATRA::ValueIndex valueIndex = m_tagValueIndex.value(value);
 
     QBitArray list(count(), false);
     for (int i = 0; i < count(); ++i) {
@@ -221,9 +222,10 @@ QBitArray Index::listContainingValue(const QString& tagName, const QString& valu
     return list;
 }
 
-QBitArray Index::listInRange(const QString& tagName, const QString& minValue, const QString& maxValue) const
+QBitArray Index::listInRange(const QString& tagName,
+                             const QString& minValue, const QString& maxValue) const
 {
-    TagIndex tagIndex = m_tagNameIndex.value(tagName);
+    SHATRA::TagIndex tagIndex = m_tagNameIndex.value(tagName);
 
     QBitArray list(count(), false);
     for (int i = 0; i < count(); ++i) {
@@ -235,7 +237,7 @@ QBitArray Index::listInRange(const QString& tagName, const QString& minValue, co
 
 QBitArray Index::listPartialValue(const QString& tagName, const QString& value) const
 {
-    TagIndex tagIndex = m_tagNameIndex.value(tagName);
+    SHATRA::TagIndex tagIndex = m_tagNameIndex.value(tagName);
 
     QBitArray list(count(), false);
     for (int i = 0; i < count(); ++i) {
@@ -245,51 +247,53 @@ QBitArray Index::listPartialValue(const QString& tagName, const QString& value) 
     return list;
 }
 
-QString Index::tagValue(TagIndex tagIndex, int gameId) const
+QString Index::tagValue(SHATRA::TagIndex tagIndex, int gameId) const
 {
-    ValueIndex valueIndex = m_indexItems[gameId]->valueIndex(tagIndex);
+    SHATRA::ValueIndex valueIndex = m_indexItems[gameId]->valueIndex(tagIndex);
 
     return m_tagValues.value(valueIndex);
 }
 
-QString Index::tagName(TagIndex tagIndex) const
+QString Index::tagName(SHATRA::TagIndex tagIndex) const
 {
     return m_tagNames.value(tagIndex);
 }
 
-QString Index::tagValueName(ValueIndex valueIndex) const
+QString Index::tagValueName(SHATRA::ValueIndex valueIndex) const
 {
     return m_tagValues.value(valueIndex);
 }
 
-QString Index::tagValue(const QString& tagName, GameId gameId) const
+QString Index::tagValue(const QString& tagName, SHATRA::GameId gameId) const
 {
-    TagIndex tagIndex = m_tagNameIndex.value(tagName);
+    SHATRA::TagIndex tagIndex = m_tagNameIndex.value(tagName);
     return tagValue(tagIndex, gameId);
 }
 
-ValueIndex Index::valueIndexFromTag(const QString& tagName, GameId gameId) const
+SHATRA::ValueIndex Index::valueIndexFromTag(
+        const QString& tagName, SHATRA::GameId gameId) const
 {
-    TagIndex tagIndex = m_tagNameIndex.value(tagName);
+    SHATRA::TagIndex tagIndex = m_tagNameIndex.value(tagName);
     return m_indexItems[gameId]->valueIndex(tagIndex);
 }
 
-bool Index::indexItemHasTag(TagIndex tagIndex, GameId gameId) const
+bool Index::indexItemHasTag(SHATRA::TagIndex tagIndex, SHATRA::GameId gameId) const
 {
     return m_indexItems[gameId]->hasTagIndex(tagIndex);
 }
 
-inline ValueIndex Index::valueIndexFromIndex(TagIndex tagIndex, GameId gameId) const
+inline SHATRA::ValueIndex Index::valueIndexFromIndex(
+        SHATRA::TagIndex tagIndex, SHATRA::GameId gameId) const
 {
     return m_indexItems[gameId]->valueIndex(tagIndex);
 }
 
-TagIndex Index::getTagIndex(const QString& value) const
+SHATRA::TagIndex Index::getTagIndex(const QString& value) const
 {
     return m_tagNameIndex.value(value);
 }
 
-ValueIndex Index::getValueIndex(const QString& value) const
+SHATRA::ValueIndex Index::getValueIndex(const QString& value) const
 {
     return m_tagValueIndex.value(value);
 }
@@ -299,10 +303,10 @@ IndexItem* Index::item(int gameId)
 	return m_indexItems[gameId];
 }
 
-void Index::loadGameHeaders(GameId id, Game& game)
+void Index::loadGameHeaders(SHATRA::GameId id, Game& game)
 {
     game.clearTags();
-    foreach (TagIndex tagIndex, m_indexItems[id]->getTagMapping().keys())
+    foreach (SHATRA::TagIndex tagIndex, m_indexItems[id]->getTagMapping().keys())
     {
         // qDebug() << "lGH>" << &game << " " << id << " " << tagName(tagIndex) << " " << tagValue(tagIndex, id);
         game.setTag(tagName(tagIndex), tagValue(tagIndex, id));
@@ -312,23 +316,23 @@ void Index::loadGameHeaders(GameId id, Game& game)
 QStringList Index::playerNames() const
 {
     QStringList allPlayerNames;
-    QSet<ValueIndex> playerNameIndex;
+    QSet<SHATRA::ValueIndex> playerNameIndex;
 
-    TagIndex tagIndex = getTagIndex(TagNameWhite);
-
-    foreach(int gameId, m_mapTagToIndexItems.values(tagIndex))
-    {
-        playerNameIndex.insert(m_indexItems[gameId]->valueIndex(tagIndex));
-    }
-
-    tagIndex = getTagIndex(TagNameBlack);
+    SHATRA::TagIndex tagIndex = getTagIndex(SHATRA::TagNameWhite);
 
     foreach(int gameId, m_mapTagToIndexItems.values(tagIndex))
     {
         playerNameIndex.insert(m_indexItems[gameId]->valueIndex(tagIndex));
     }
 
-    foreach(ValueIndex valueIndex, playerNameIndex)
+    tagIndex = getTagIndex(SHATRA::TagNameBlack);
+
+    foreach (int gameId, m_mapTagToIndexItems.values(tagIndex))
+    {
+        playerNameIndex.insert(m_indexItems[gameId]->valueIndex(tagIndex));
+    }
+
+    foreach (SHATRA::ValueIndex valueIndex, playerNameIndex)
     {
         allPlayerNames.append(tagValueName(valueIndex));
     }
@@ -339,15 +343,15 @@ QStringList Index::playerNames() const
 QStringList Index::tagValues(const QString& tagName) const
 {
     QStringList allTagNames;
-    QSet<ValueIndex> tagNameIndex;
-    TagIndex tagIndex = getTagIndex(tagName);
+    QSet<SHATRA::ValueIndex> tagNameIndex;
+    SHATRA::TagIndex tagIndex = getTagIndex(tagName);
 
     foreach(int gameId, m_mapTagToIndexItems.values(tagIndex))
     {
         tagNameIndex.insert(m_indexItems[gameId]->valueIndex(tagIndex));
     }
 
-    foreach(ValueIndex valueIndex, tagNameIndex)
+    foreach(SHATRA::ValueIndex valueIndex, tagNameIndex)
     {
         allTagNames.append(tagValueName(valueIndex));
     }

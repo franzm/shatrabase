@@ -23,7 +23,7 @@ class MoveData
 public:
 	enum MoveType {StandardMove, GameEnd};
 	MoveData();
-	void addGame(Game& g, Color c, MoveType movetype = StandardMove);
+    void addGame(Game& g, SHATRA::Color c, MoveType movetype = StandardMove);
 	double percentage() const;
 	int averageRating() const;
 	int averageYear() const;
@@ -48,11 +48,11 @@ class OpeningTreeUpdater : public QThread
 public:
     void run();
     void cancel();
-    bool update(Database& f, const Board& b, QList<MoveData>&, int&, bool updateFilter);
+    bool update(Database& f, const SHATRA::Board& b, QList<MoveData>&, int&, bool updateFilter);
 
 signals:
-    void UpdateFinished(Board*);
-    void UpdateTerminated(Board*);
+    void UpdateFinished(SHATRA::Board*);
+    void UpdateTerminated(SHATRA::Board*);
     void progress(int);
 
 private:
@@ -61,7 +61,7 @@ private:
 
     bool    m_break;
     bool    m_updateFilter;
-    Board   m_board;
+    SHATRA::Board   m_board;
     Database* m_database;
 };
 
@@ -75,11 +75,11 @@ public:
 	/** Empty constructor. */
     OpeningTree(QObject * parent);
     /** Initialized constructor, performing automatic update */
-    OpeningTree(Database& db, const Board& b, bool updateFilter, QObject * parent);
+    OpeningTree(Database& db, const SHATRA::Board& b, bool updateFilter, QObject * parent);
     /** Calculate opening tree from given position, using given filter. It sets
     the filter to contain only game matching position @p b .
     @return true if the update was not cancelled.*/
-    bool update(Database& db, const Board& b, bool updateFilter);
+    bool update(Database& db, const SHATRA::Board& b, bool updateFilter);
     /** Debug string */
 	QString debug();
 	/** Returns the number of moves in the Opening Tree */
@@ -101,8 +101,8 @@ public slots:
     /** Cancel a running update */
     void cancel(bool);
 protected slots:
-    void updateFinished(Board*);
-    void updateTerminated(Board*);
+    void updateFinished(SHATRA::Board*);
+    void updateTerminated(SHATRA::Board*);
 signals:
 	void progress(int);
     void openingTreeUpdated();
@@ -114,7 +114,7 @@ private:
 	QStringList m_names;
 	int m_sortcolumn;
 	Qt::SortOrder m_order;
-	Board m_board;
+    SHATRA::Board m_board;
     Database* m_database;
     bool m_updateFilter;
 };

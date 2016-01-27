@@ -113,24 +113,24 @@ void Analysis::setNodesPerSecond(quint64 nodes)
     m_nps = nodes;
 }
 
-MoveList Analysis::variation() const
+SHATRA::MoveList Analysis::variation() const
 {
 	return m_variation;
 }
 
-void Analysis::setVariation(const MoveList& variation)
+void Analysis::setVariation(const SHATRA::MoveList& variation)
 {
 	m_variation = variation;
 }
 
 bool Analysis::isWin() const
 {
-    return m_resultIn != 0 && m_rtype == Win;
+    return m_resultIn != 0 && m_rtype == SHATRA::Win;
 }
 
 bool Analysis::isLoss() const
 {
-    return m_resultIn != 0 && m_rtype == Loss;
+    return m_resultIn != 0 && m_rtype == SHATRA::Loss;
 }
 
 bool Analysis::isResult() const
@@ -149,9 +149,9 @@ void Analysis::setMovesToResult(int distance, int rtype)
     m_rtype = rtype;
 }
 
-QString Analysis::toString(const Board& board) const
+QString Analysis::toString(const SHATRA::Board& board) const
 {
-	Board testBoard = board;
+    SHATRA::Board testBoard = board;
 	QString out;
 
     if (isResult()) {
@@ -165,8 +165,9 @@ QString Analysis::toString(const Board& board) const
 	else out = QString("<font color=\"#800000\"><b>%1</b></font> ").arg(score() / 100.0, 0, 'f', 2);
 
 	int moveNo = testBoard.moveNumber();
-	bool white = testBoard.toMove() == White;
-	QString moveText; Move move;
+    bool white = testBoard.toMove() == SHATRA::White;
+    QString moveText;
+    SHATRA::Move move;
     for (int i = 0; i < variation().count(); i++) {
         move = variation()[i];
 		if (white)

@@ -17,11 +17,15 @@
 #include "move.h"
 #include "urvct.hpp"
 
+namespace SHATRA {
+
 class BoardList : public urvct<Move,MaxGen>
 {
   public:
     BoardList() : urvct<Move,MaxGen>() {}
     inline Move& add() { append(Move()); return back(); }    
 };
+
+} // namespace SHATRA
 
 #endif // __BOARDLIST_H__

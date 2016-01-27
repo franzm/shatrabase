@@ -103,12 +103,12 @@ void MemoryDatabase::parseGame()
 
 bool MemoryDatabase::parseFile()
 {
-    g_totalNodes = 0;
-    g_resModified = false;
+    SHATRA::g_totalNodes = 0;
+    SHATRA::g_resModified = false;
     parseFileIntern();
 	m_isModified = false;
     if (m_count)
-        g_aveNodes = g_totalNodes / m_count;
+        SHATRA::g_aveNodes = SHATRA::g_totalNodes / m_count;
 	return true;
 }
 

@@ -83,7 +83,7 @@ public:
     /** Maps the view coordinates to board coords */
     QPoint mapToBoard(const QPoint& view_coords) const;
 
-    Square squareAt(const QPoint& view_coords) const;
+    SHATRA::Square squareAt(const QPoint& view_coords) const;
 
     bool isFlipped() const { return m_flipped; }
     void setFlipped(bool flipped) { m_flipped = flipped; onFlip_(); }
@@ -103,26 +103,30 @@ public:
 
     /** Simply updates the board with or without animation.
         A move with goal square @p ignore_move_to will not be animated. */
-    void setBoard(const Board& board, const Move * move = 0, Square ignore_move_to = 0);
+    void setBoard(const SHATRA::Board& board,
+                  const SHATRA::Move * move = 0,
+                  SHATRA::Square ignore_move_to = 0);
 
     // --------- indicators ---------
 
     /** Adds a OR combination of highlights to the particular square */
-    void addHighlight(Square sq, int highlights);
+    void addHighlight(SHATRA::Square sq, int highlights);
     /** Clears all given OR-combined highlights for the particular square */
-    void clearHighlight(Square sq, int highlights = AllHighlights);
+    void clearHighlight(SHATRA::Square sq, int highlights = AllHighlights);
     /** Clears all given OR-combined highlights for all squares. */
     void clearHighlights(int highlights = AllHighlights);
 
     /** Sets the drag/move display.
         @p view is the current mouse coords for the piece.
         Set @p sq to InvalidSquare to stop dragging. */
-    void setDragPiece(Square sq = InvalidSquare, Piece piece = InvalidPiece,
-                      const QPoint& view = QPoint(), bool previous_visible = false);
+    void setDragPiece(SHATRA::Square sq = SHATRA::InvalidSquare,
+                      SHATRA::Piece piece = SHATRA::InvalidPiece,
+                      const QPoint& view = QPoint(),
+                      bool previous_visible = false);
 signals:
 
     /** Emitted when a move animation has ended. */
-    void animationFinished(const Board& b);
+    void animationFinished(const SHATRA::Board& b);
 
     /** Signal to display a message, e.g. on hover. */
     void displayMessage(const QString& msg);
@@ -151,31 +155,34 @@ protected:
     // -------- coords ---------------
 
     /** rect of a square in scene coords */
-    QRectF squareRect(Square sq) const;
+    QRectF squareRect(SHATRA::Square sq) const;
     /** (corner) position of a square in scene coords */
-    QPointF squarePos(Square sq) const { return squareRect(sq).topLeft(); }
+    QPointF squarePos(SHATRA::Square sq) const { return squareRect(sq).topLeft(); }
 
     /** Returns the SquareItem for the position, or 0 */
-    SquareItem * squareItemAt(Square sq) const;
+    SquareItem * squareItemAt(SHATRA::Square sq) const;
     /** Returns the PieceItem for the position, or 0 */
-    PieceItem * pieceItemAt(Square sq) const;
+    PieceItem * pieceItemAt(SHATRA::Square sq) const;
 
     // --------- internal ------------
 
     /** Compares new board with old board and sets up animations.
         A move with goal square @p ignore_move_to will not be animated. */
-    void guessAnimations_(const Board& newBoard, const Move& move, Square ignore_move_to = 0);
+    void guessAnimations_(const SHATRA::Board& newBoard,
+                          const SHATRA::Move& move,
+                          SHATRA::Square ignore_move_to = 0);
 
-    void createBoard_(const Board& board);
-    void createPieces_(const Board& board);
-    PieceItem * createPiece_(const Board& board, Square sq, Piece p);
+    void createBoard_(const SHATRA::Board& board);
+    void createPieces_(const SHATRA::Board& board);
+    PieceItem * createPiece_(const SHATRA::Board& board, SHATRA::Square sq, SHATRA::Piece p);
 
     void updateMoveIndicators_();
     /** Recalculates item positions after a board flip. */
     void onFlip_();
 
     /** Returns msecs for an animation, optionally with distance influence */
-    int animationLength_(Square from = InvalidSquare, Square to = InvalidSquare) const;
+    int animationLength_(SHATRA::Square from = SHATRA::InvalidSquare,
+                         SHATRA::Square to = SHATRA::InvalidSquare) const;
 
     /** Sets the PieceItem to final animation state and clears anim flags */
     void endPieceAnimation_(PieceItem * p);
@@ -183,10 +190,10 @@ protected:
     /** Ques a move animation.
         PieceItems at @p from and @p to are supposed to represent the FINAL position
         and must be set up already. */
-    void addMoveAnimation_(Square from, Square to);
+    void addMoveAnimation_(SHATRA::Square from, SHATRA::Square to);
     /** Ques an animation for removing a piece.
         PieceItem of removed piece may exist already or will be created. */
-    void addRemoveAnimation_(const Board& board, Square s, Piece p);
+    void addRemoveAnimation_(const SHATRA::Board& board, SHATRA::Square s, SHATRA::Piece p);
     /** Ques an animation from @p old_pixmap to current pixmap */
     void addPixmapAnimation_(PieceItem * piece, const QPixmap& old_pixmap);
 
@@ -249,7 +256,7 @@ protected:
     int m_own_from, m_own_to;
 
     /** used to automatically trigger animations */
-    Board oldBoard_;
+    SHATRA::Board oldBoard_;
 };
 
 #endif // BOARDPAINTER_H

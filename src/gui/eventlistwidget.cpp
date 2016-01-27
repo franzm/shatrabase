@@ -135,7 +135,7 @@ void EventListWidget::setDatabase(Database* db)
     m_list.clear();
     if (db && db->index())
     {
-        m_list = db->index()->tagValues(TagNameEvent);
+        m_list = db->index()->tagValues(SHATRA::TagNameEvent);
     }
     m_filterModel->setStringList(m_list);
     m_filterModel->sort(0);

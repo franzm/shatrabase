@@ -18,9 +18,12 @@
 #include "movelist.h"
 #include "nag.h"
 
-#define NO_MOVE -1
-#define CURRENT_MOVE -2
-#define CURRENT_VARIATION -3
+enum MoveFlags
+{
+    NO_MOVE = -1,
+    CURRENT_MOVE = -2,
+    CURRENT_VARIATION = -3
+};
 
 typedef int MoveId;
 
@@ -76,17 +79,17 @@ public :
 	~Game();
 	// **** Querying game information ****
     /* @return current position */
-	const Board& board() const;
+    const SHATRA::Board& board() const;
 	/* @return current position in SPN */
 	QString toSPN() const;
 	/* @return whether the current position is in the mainline */
 	bool isMainline(MoveId moveId = CURRENT_MOVE) const;
 	/* @return start position of game */
-	Board startingBoard() const;
+    SHATRA::Board startingBoard() const;
 	/* @return game result */
-	Result result() const;
+    SHATRA::Result result() const;
 	/* @return the move at node @p moveId. */
-	Move move(MoveId moveId = CURRENT_MOVE) const;
+    SHATRA::Move move(MoveId moveId = CURRENT_MOVE) const;
 	/* @return current move id. */
 	MoveId currentMove() const { return m_currentNode; }
 	/* @return comment at move at node @p moveId. */
@@ -124,7 +127,7 @@ public :
     bool setSquareAnnotation(QString squareAnnotation, MoveId moveId = CURRENT_MOVE);
 
     /* Append a square to the existing lists of annotations, if there is none, create one */
-    bool appendSquareAnnotation(Square s, QChar colorCode);
+    bool appendSquareAnnotation(SHATRA::Square s, QChar colorCode);
 
     /* Sets the arrowAnnotation associated with move at node @p moveId */
     bool setArrowAnnotation(QString arrowAnnotation, MoveId moveId = CURRENT_MOVE);
@@ -193,10 +196,11 @@ public :
 	/* Move back the given number of moves, returns actual number of moves undone */
 	int backward(int count = 1);
     /* Moves forward if the next move matches (from,to,promotionPiece) */
-    bool findNextMove(Square from, Square to, PieceType promotionPiece = None);
+    bool findNextMove(SHATRA::Square from, SHATRA::Square to,
+                      SHATRA::PieceType promotionPiece = SHATRA::NoPiece);
 
     /** Fill @p movelist with all plies from mainline */
-    void getAllPlies(MoveList& plylist);
+    void getAllPlies(SHATRA::MoveList& plylist);
 
 	/* Enters the variation that corresponds to moveId. moveId must be a MoveId that
 	    corresponds to a subvariation of the current position. Compared to moveToId
@@ -206,19 +210,19 @@ public :
 
 	// ***** game modification methods *****
 	/* Adds a move at the current position, returns the move id of the added move */
-	MoveId addMove(const Move& move, const QString& annotation = QString(), NagSet nags = NagSet());
+    MoveId addMove(const SHATRA::Move& move, const QString& annotation = QString(), NagSet nags = NagSet());
 	/* Adds a move at the current position, returns the move id of the added move */
 	MoveId addMove(const QString& lannMove, const QString& annotation = QString(), NagSet nags = NagSet());
     /* Replace the move after the current position */
-    bool replaceMove(const Move& move, const QString& annotation = QString(), NagSet nags = NagSet());
+    bool replaceMove(const SHATRA::Move& move, const QString& annotation = QString(), NagSet nags = NagSet());
 	/* Replace the move after the current position */
 	bool replaceMove(const QString& lannMove, const QString& annotation = QString(), NagSet nags = NagSet());
 	/* Adds a move at the current position as a variation,
 	 * returns the move id of the added move */
-	MoveId addVariation(const Move& move, const QString& annotation = QString(), NagSet nags = NagSet());
+    MoveId addVariation(const SHATRA::Move& move, const QString& annotation = QString(), NagSet nags = NagSet());
 	/* Adds a move at the current position as a variation,
 	 * returns the move id of the added move */
-	MoveId addVariation(const MoveList& moveList, const QString& annotation = QString());
+    MoveId addVariation(const SHATRA::MoveList& moveList, const QString& annotation = QString());
 	/* Adds a move at the current position as a variation,
 	 * returns the move id of the added move */
 	MoveId addVariation(const QString& lannMove, const QString& annotation = QString(), NagSet nags = NagSet());
@@ -232,7 +236,7 @@ public :
 	/* Removes all tags and moves */
 	void clear();
 	/* Set the game start position */
-	void setStartingBoard(const Board& startingBoard);
+    void setStartingBoard(const SHATRA::Board& startingBoard);
 	/* Set the game start position from SPN. */
 	void setStartingBoard(const QString& spn);
     /* set comment associated with game */
@@ -254,15 +258,15 @@ public :
 	/* Removes a tag */
 	void removeTag(const QString& tag);
 	/* Set the game result */
-	void setResult(Result result);
+    void setResult(SHATRA::Result result);
 
 	// Searching
 	/* Search game to see if given position exists, if it does return move id */
-	MoveId findPosition(const Board& position);
+    MoveId findPosition(const SHATRA::Board& position);
     /* @return true if the move @p from @p to is already main move or variation */
-    bool currentNodeHasMove(Square from, Square to) const;
+    bool currentNodeHasMove(SHATRA::Square from, SHATRA::Square to) const;
     /* @return true if the move @p from @p to is already in a variation */
-    bool currentNodeHasVariation(Square from, Square to) const;
+    bool currentNodeHasVariation(SHATRA::Square from, SHATRA::Square to) const;
 
 	/* Debug */
 	/* Dump a move node using qDebug() */
@@ -280,7 +284,7 @@ private:
 
     struct MoveNode
     {
-		Move move;
+        SHATRA::Move move;
 		NagSet nags;
 		MoveId previousNode;
 		MoveId nextNode;
@@ -301,9 +305,9 @@ private:
 	/* Keeps the current node in the game */
 	MoveId m_currentNode;
 	/* Keeps the start position of the game */
-	Board m_startingBoard;
+    SHATRA::Board m_startingBoard;
 	/* Keeps the current position of the game */
-	Board m_currentBoard;
+    SHATRA::Board m_currentBoard;
 	/* Keeps the start ply of the game, 0 for standard starting position */
     int m_startPly;
 	/* Flag indicating if the game has been modified */

@@ -51,7 +51,7 @@ const int gBoard[64][2] = // graphics board x, y
 class SquareItem : public QGraphicsPixmapItem
 {
 public:
-    SquareItem(Square square, const QPixmap& pixmap,
+    SquareItem(SHATRA::Square square, const QPixmap& pixmap,
                const BoardPainter::Decoration& decoration,
                QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
@@ -63,7 +63,7 @@ public:
             highlights (0)
     { }
 
-    Square square;
+    SHATRA::Square square;
 
     const BoardPainter::Decoration& deco;
 
@@ -161,12 +161,12 @@ protected:
 class PieceItem : public QGraphicsPixmapItem
 {
 public:
-    PieceItem(Piece piece, Square square, const QPixmap& pixmap,
+    PieceItem(SHATRA::Piece piece, SHATRA::Square square, const QPixmap& pixmap,
               QGraphicsItem * parent = 0)
         :   QGraphicsPixmapItem(pixmap, parent),
             piece           (piece),
             square          (square),
-            squareTo        (InvalidSquare),
+            squareTo        (SHATRA::InvalidSquare),
             animate         (false),
             animateRemove   (false),
             anim_length     (0),
@@ -181,9 +181,9 @@ public:
     }
 
     /** associated Piece */
-    Piece piece;
+    SHATRA::Piece piece;
     /** assoiciated Square */
-    Square square,
+    SHATRA::Square square,
     /** Square to go to in animation */
         squareTo;
     /** should this piece be animated (square > squareTo) */
@@ -371,12 +371,14 @@ void BoardPainter::paintEvent(QPaintEvent * e)
 }
 
 
-void BoardPainter::setBoard(const Board& board, const Move * move, Square ignore_to)
+void BoardPainter::setBoard(const SHATRA::Board& board,
+                            const SHATRA::Move * move, SHATRA::Square ignore_to)
 {
-    SB_PAINTER_DEBUG("BoardPainter::setBoard(board," << (move? "anim" : "-") << ", " << ignore_to << ")");
+    SB_PAINTER_DEBUG("BoardPainter::setBoard(board," <<
+                     (move? "anim" : "-") << ", " << ignore_to << ")");
 
     // keep side to turn
-    m_is_white = board.toMove() == White;
+    m_is_white = board.toMove() == SHATRA::White;
 
     /** @todo Right now, the QGraphicsItems are recreated for each ply.
         It would probably be more cpu friendly to update only what's needed.
@@ -412,15 +414,16 @@ void BoardPainter::setBoard(const Board& board, const Move * move, Square ignore
 }
 
 
-void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ignore_to)
+void BoardPainter::guessAnimations_(const SHATRA::Board& b,
+                                    const SHATRA::Move& move, SHATRA::Square ignore_to)
 {
     /* PieceItems are already placed at the new positions on entry. */
 
-    int from = BN[move.from()],
-        to = BN[move.to()];
+    int from = SHATRA::BN[move.from()],
+        to = SHATRA::BN[move.to()];
 
     // move animation
-    if (from != InvalidSquare && to != InvalidSquare
+    if (from != SHATRA::InvalidSquare && to != SHATRA::InvalidSquare
         && to != ignore_to
         // don't animate if did the same last time
         // XXX not perfect for gamebrowsing (now checked in MainWindow::slotMoveChanged())
@@ -428,19 +431,20 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
             )
             addMoveAnimation_(from, to);
 
-    for (int i=fsq; i<=lsq; ++i)
+    for (int i=SHATRA::fsq; i<=SHATRA::lsq; ++i)
     {
-        Piece pold = oldBoard_.pieceAt(i),
-              pnew = b.pieceAt(i);
+        SHATRA::Piece
+                pold = oldBoard_.pieceAt(i),
+                pnew = b.pieceAt(i);
 
         // nothing's changed on that square?
         if (pold == pnew)
             continue;
 
         // became defunkt
-        if (isDefunkt(pnew) && pieceType(pold) != None
+        if (SHATRA::isDefunkt(pnew) && SHATRA::pieceType(pold) != SHATRA::NoPiece
             // only animate the last captured piece
-            && BN[move.capturedAt()] == i
+            && SHATRA::BN[move.capturedAt()] == i
             // don't animate when user dragged
             && to != ignore_to)
         {
@@ -450,16 +454,16 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
             addPixmapAnimation_(pinew,
                 // get previous pixmap (of real piece)
                 m_theme->piece(pold,
-                             (isFlipped() && pold == BlackBatyr)
-                          || (!isFlipped() && pold == WhiteBatyr) ) );
+                             (isFlipped() && pold == SHATRA::BlackBatyr)
+                          || (!isFlipped() && pold == SHATRA::WhiteBatyr) ) );
             continue;
         }
 
         // disappeared
-        if (pnew == Empty && pold != Empty)
+        if (pnew == SHATRA::EmptyPiece && pold != SHATRA::EmptyPiece)
         {
             // removed defunkt
-            if (isDefunkt(pold))
+            if (SHATRA::isDefunkt(pold))
             {
                 SB_PAINTER_DEBUG("removed defunkt" << i);
                 addRemoveAnimation_(b, i, pold);
@@ -467,7 +471,7 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
             }
 
             // captured?
-            int cap = BN[move.capturedAt()];
+            int cap = SHATRA::BN[move.capturedAt()];
             if (cap == i)
             {
                 SB_PAINTER_DEBUG("capturedAt" << cap);
@@ -479,7 +483,7 @@ void BoardPainter::guessAnimations_(const Board& b, const Move& move, Square ign
 }
 
 
-void BoardPainter::createBoard_(const Board& board)
+void BoardPainter::createBoard_(const SHATRA::Board& board)
 {
     // delete previous
     for (size_t i=0; i<m_squares.size(); ++i)
@@ -511,7 +515,7 @@ void BoardPainter::createBoard_(const Board& board)
     // XXX m_deco.font.setFamily(?);
 
     // create board squares
-    for (Square i=fsq; i<=lsq; ++i)
+    for (SHATRA::Square i=SHATRA::fsq; i<=SHATRA::lsq; ++i)
     {
         const int x = gBoard[i][0],
                   y = gBoard[i][1];
@@ -530,13 +534,13 @@ void BoardPainter::createBoard_(const Board& board)
             s->frame = true;
         }
 
-        if (g_version == Extended)
+        if (SHATRA::g_version == SHATRA::Extended)
         {
             // set temdek flag
-            if ((i == gateAt[Black] && board.temdekOn(Black)) ||
-                    (i == gateAt[White] && board.temdekOn(White)))
+            if ((i == SHATRA::gateAt[SHATRA::Black] && board.temdekOn(SHATRA::Black)) ||
+                (i == SHATRA::gateAt[SHATRA::White] && board.temdekOn(SHATRA::White)))
             {
-                s->temdek = (i == gateAt[White])? 2 : 1;
+                s->temdek = (i == SHATRA::gateAt[SHATRA::White])? 2 : 1;
             }
 
             // set tower square overlay
@@ -557,7 +561,7 @@ void BoardPainter::createBoard_(const Board& board)
         // number display
         if (m_do_square_numbers)
         {
-            Square j = g_numRev? 63 - i : i;
+            SHATRA::Square j = SHATRA::g_numRev? 63 - i : i;
             s->numberStr = QString::number(j);
         }
 
@@ -569,7 +573,7 @@ void BoardPainter::createBoard_(const Board& board)
 
 
 
-void BoardPainter::createPieces_(const Board& board)
+void BoardPainter::createPieces_(const SHATRA::Board& board)
 {
     // delete previous
     for (size_t i=0; i<m_pieces.size(); ++i)
@@ -583,21 +587,23 @@ void BoardPainter::createPieces_(const Board& board)
     m_drag_piece = 0;
 
     // create pieces
-    for (Square i=fsq; i<=lsq; ++i)
+    for (SHATRA::Square i=SHATRA::fsq; i<=SHATRA::lsq; ++i)
     {
-        Piece p = board.pieceAt(i);
-        if (p == InvalidPiece) continue;
+        SHATRA::Piece p = board.pieceAt(i);
+        if (p == SHATRA::InvalidPiece)
+            continue;
 
         createPiece_(board, i, p);
     }
 }
 
-PieceItem * BoardPainter::createPiece_(const Board& board, Square sq, Piece p)
+PieceItem * BoardPainter::createPiece_(const SHATRA::Board& board,
+                                       SHATRA::Square sq, SHATRA::Piece p)
 {
     // pixmap for piece
     const QPixmap& pm = m_theme->piece(p,
-                (isFlipped() && p == BlackBatyr)
-            || (!isFlipped() && p == WhiteBatyr) );
+                (isFlipped() && p == SHATRA::BlackBatyr)
+            || (!isFlipped() && p == SHATRA::WhiteBatyr) );
 
     PieceItem * item = new PieceItem(p, sq, pm);
     item->setPos(squarePos(sq));
@@ -664,10 +670,10 @@ void BoardPainter::onFlip_()
     {
         m_pieces[i]->setPos(squarePos(m_pieces[i]->square));
         // update batyr graphic
-        if (m_pieces[i]->piece == WhiteBatyr)
-            m_pieces[i]->setPixmap(m_theme->piece(WhiteBatyr, !isFlipped()));
-        if (m_pieces[i]->piece == BlackBatyr)
-            m_pieces[i]->setPixmap(m_theme->piece(BlackBatyr, isFlipped()));
+        if (m_pieces[i]->piece == SHATRA::WhiteBatyr)
+            m_pieces[i]->setPixmap(m_theme->piece(SHATRA::WhiteBatyr, !isFlipped()));
+        if (m_pieces[i]->piece == SHATRA::BlackBatyr)
+            m_pieces[i]->setPixmap(m_theme->piece(SHATRA::BlackBatyr, isFlipped()));
     }
 
     updateMoveIndicators_();
@@ -675,7 +681,7 @@ void BoardPainter::onFlip_()
 
 // -------------------- coords ---------------------------
 
-QRectF BoardPainter::squareRect(Square sq) const
+QRectF BoardPainter::squareRect(SHATRA::Square sq) const
 {
     const int x = isFlipped()?  8 - gBoard[sq][0] : gBoard[sq][0],
               y = isFlipped()? 13 - gBoard[sq][1] : gBoard[sq][1];
@@ -706,25 +712,26 @@ QPoint BoardPainter::mapToBoard(const QPoint& viewpos) const
         );
 }
 
-Square BoardPainter::squareAt(const QPoint& viewpos) const
+SHATRA::Square BoardPainter::squareAt(const QPoint& viewpos) const
 {
     QPoint p = mapToBoard(viewpos);
 
     if (p.x() <= 0 || p.y() < 0 || p.x() >= 8 || p.y() >= 15)
-        return InvalidSquare;
+        return SHATRA::InvalidSquare;
 
-    Square sq = !isFlipped() ?
-                BN[((8 - p.x())<<4) + p.y() + 1] :
-                BN[(p.x()<<4) + 14 - p.y()];
+    SHATRA::Square sq = !isFlipped() ?
+                SHATRA::BN[((8 - p.x())<<4) + p.y() + 1] :
+                SHATRA::BN[(p.x()<<4) + 14 - p.y()];
 
     // make illegal output always InvalidSquare,
     // otherwise would be 0 from BN[]
-    return (sq>=fsq && sq<=lsq)? sq : InvalidSquare;
+    return (sq>=SHATRA::fsq && sq<=SHATRA::lsq)? sq : SHATRA::InvalidSquare;
 }
 
-SquareItem * BoardPainter::squareItemAt(Square sq) const
+SquareItem * BoardPainter::squareItemAt(SHATRA::Square sq) const
 {
-    if (!(sq>=fsq && sq<=lsq)) return 0;
+    if (!(sq>=SHATRA::fsq && sq<=SHATRA::lsq))
+        return 0;
 
     // search the SquareItem that fits
     for (size_t i=0; i<m_squares.size(); ++i)
@@ -734,9 +741,10 @@ SquareItem * BoardPainter::squareItemAt(Square sq) const
     return 0;
 }
 
-PieceItem * BoardPainter::pieceItemAt(Square sq) const
+PieceItem * BoardPainter::pieceItemAt(SHATRA::Square sq) const
 {
-    if (!(sq>=fsq && sq<=lsq)) return 0;
+    if (!(sq>=SHATRA::fsq && sq<=SHATRA::lsq))
+        return 0;
 
     // search the PieceItem that fits
     for (size_t i=0; i<m_pieces.size(); ++i)
@@ -748,23 +756,27 @@ PieceItem * BoardPainter::pieceItemAt(Square sq) const
 
 // ---------------- highlights ---------------------
 
-void BoardPainter::addHighlight(Square sq, int highlights)
+void BoardPainter::addHighlight(SHATRA::Square sq, int highlights)
 {
     SquareItem * s = squareItemAt(sq);
-    if (!s) return;
+    if (!s)
+        return;
 
-    if ((s->highlights & highlights) == highlights) return;
+    if ((s->highlights & highlights) == highlights)
+        return;
 
     s->highlights |= highlights;
     s->update();
 }
 
-void BoardPainter::clearHighlight(Square sq, int highlights)
+void BoardPainter::clearHighlight(SHATRA::Square sq, int highlights)
 {
     SquareItem * s = squareItemAt(sq);
-    if (!s) return;
+    if (!s)
+        return;
 
-    if (!(s->highlights & highlights)) return;
+    if (!(s->highlights & highlights))
+        return;
 
     s->highlights &= ~highlights;
     s->update();
@@ -787,9 +799,10 @@ void BoardPainter::clearHighlights(int highlights)
 
 
 
-void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view, bool visible)
+void BoardPainter::setDragPiece(SHATRA::Square sq, SHATRA::Piece piece,
+                                const QPoint& view, bool visible)
 {
-    bool remove = (sq == InvalidSquare || piece == InvalidPiece);
+    bool remove = (sq == SHATRA::InvalidSquare || piece == SHATRA::InvalidPiece);
 
     // delete previous m_drag_piece
     if (remove || (m_drag_piece && m_drag_piece->piece != piece))
@@ -837,10 +850,10 @@ void BoardPainter::setDragPiece(Square sq, Piece piece, const QPoint& view, bool
 
 // --------------------- animation -------------------------
 
-int BoardPainter::animationLength_(Square from, Square to) const
+int BoardPainter::animationLength_(SHATRA::Square from, SHATRA::Square to) const
 {
     // fixed?
-    if (from == InvalidSquare || to == InvalidSquare)
+    if (from == SHATRA::InvalidSquare || to == SHATRA::InvalidSquare)
     {
         from = 1;
         to = 3;
@@ -860,7 +873,7 @@ int BoardPainter::animationLength_(Square from, Square to) const
     return 1000 * (length_from_speed * (1.0-t) + t * (m_fixed_anim_length));
 }
 
-void BoardPainter::addMoveAnimation_(Square from, Square to)
+void BoardPainter::addMoveAnimation_(SHATRA::Square from, SHATRA::Square to)
 {
     SB_PAINTER_DEBUG("BoardPainter::addMoveAnimation_("<<from<<","<<to<<")");
 
@@ -881,7 +894,8 @@ void BoardPainter::addMoveAnimation_(Square from, Square to)
     p->squareTo = to; // say it's a move animation
 }
 
-void BoardPainter::addRemoveAnimation_(const Board& board, Square s, Piece p)
+void BoardPainter::addRemoveAnimation_(const SHATRA::Board& board,
+                                       SHATRA::Square s, SHATRA::Piece p)
 {
     SB_PAINTER_DEBUG("BoardPainter::addRemoveAnimation_("<<s<<","<<p<<")");
 
@@ -947,7 +961,7 @@ void BoardPainter::endPieceAnimation_(PieceItem * p)
 
     // a move animation
     else
-    if (p->squareTo != InvalidSquare)
+    if (p->squareTo != SHATRA::InvalidSquare)
     {
         // set final position
         p->square = p->squareTo;
@@ -1006,7 +1020,7 @@ void BoardPainter::animationStep_()
         }
 
         // a move animation
-        if (p->squareTo != InvalidSquare)
+        if (p->squareTo != SHATRA::InvalidSquare)
         {
             QPointF
                 from = squarePos(p->square),

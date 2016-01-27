@@ -367,19 +367,21 @@ void PreferencesDialog::slotShowOptionDialog()
 
 void PreferencesDialog::slotNumericNotation()
 {
-    g_notation = NUM; g_nChanged = true;
+    SHATRA::g_notation = SHATRA::NUM;
+    SHATRA::g_nChanged = true;
     ui.notationNumeric->setChecked(true);
 }
 
 void PreferencesDialog::slotAlgebraicNotation()
 {
-    g_notation = ALG; g_nChanged = true;
+    SHATRA::g_notation = SHATRA::ALG;
+    SHATRA::g_nChanged = true;
     ui.notationAlgebraic->setChecked(true);
 }
 
 void PreferencesDialog::slotNumrevChanged()
 {
-    g_nChanged = true;
+    SHATRA::g_nChanged = true;
 }
 
 int PreferencesDialog::exec()
@@ -423,7 +425,7 @@ void PreferencesDialog::restoreSettings()
             ui.languageCombo->setCurrentIndex(i);
     ui.notationNumeric->setChecked(!AppSettings->getValue("Notation").toBool());
     ui.notationAlgebraic->setChecked(AppSettings->getValue("Notation").toBool());
-    g_notation = AppSettings->getValue("Notation").toBool();
+    SHATRA::g_notation = AppSettings->getValue("Notation").toBool();
     ui.useIndexFile->setChecked(AppSettings->getValue("useIndexFile").toBool());
     ui.cbAutoCommitDB->setChecked(AppSettings->getValue("autoCommitDB").toBool());
     ui.cbAutoResult->setChecked(AppSettings->getValue("autoGameResult").toBool());
@@ -571,7 +573,7 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("useIndexFile",QVariant(ui.useIndexFile->isChecked()));
     AppSettings->setValue("autoCommitDB",QVariant(ui.cbAutoCommitDB->isChecked()));
     AppSettings->setValue("autoGameResult",QVariant(ui.cbAutoResult->isChecked()));
-    g_autoResultOnLoad = ui.cbAutoResult->isChecked();
+    SHATRA::g_autoResultOnLoad = ui.cbAutoResult->isChecked();
     AppSettings->setValue("restartAnalysisOnMpv",QVariant(ui.engineRestartCheck->isChecked()));
     AppSettings->endGroup();
 
@@ -583,7 +585,7 @@ void PreferencesDialog::saveSettings()
     AppSettings->setValue("showFrame", QVariant(ui.boardFrameCheck->isChecked()));
     AppSettings->setValue("showSquareNumbers", QVariant(ui.boardSNumbersCheck->isChecked()));
     AppSettings->setValue("reverseSquareNumbers", QVariant(ui.boardReverseNum->isChecked()));
-    g_numRev = !ui.boardReverseNum->isChecked();
+    SHATRA::g_numRev = !ui.boardReverseNum->isChecked();
     AppSettings->setValue("frameWidth", QVariant(ui.boardFrameSize->value()));
     AppSettings->setValue("showCurrentMove", QVariant(ui.hilightCurrentMove->isChecked()));
     AppSettings->setValue("showAllMoves", QVariant(ui.hilightAllMoves->isChecked()));

@@ -208,7 +208,7 @@ QAction* ChessBrowser::createNagAction(const Nag& nag)
 	return action;
 }
 
-void ChessBrowser::slotDisplayTime(const QString& text, Color color)
+void ChessBrowser::slotDisplayTime(const QString& text, SHATRA::Color color)
 {
     if (toolBar)
     {

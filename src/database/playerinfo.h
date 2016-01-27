@@ -55,7 +55,7 @@ private:
 	/** Clears all statistics. */
 	void reset();
 	/** Add statistics for game @p index when player has given color. */
-	void addGameStats(int index, Color color);
+    void addGameStats(int index, SHATRA::Color color);
     /** Format score statistics for single color. */
 	QString formattedScore(const int results[4], int count) const;
     int toResult(const QString& res) const;

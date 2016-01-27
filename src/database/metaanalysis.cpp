@@ -35,7 +35,7 @@ bool MetaAnalysis::activate(int index)
     return true;
 }
 
-bool MetaAnalysis::startAnalysis(const Board& board, int nv,
+bool MetaAnalysis::startAnalysis(const SHATRA::Board& board, int nv,
                                 const Engine::SearchSettings & settings)
 {
 //    qDebug() << "MetaAnalysis::startAnalysis(...)";

@@ -33,20 +33,20 @@ public:
 	/* Destroy dialog */
 	virtual ~BoardSetupDialog();
 	/* Set current board */
-	void setBoard(const Board& b);
+    void setBoard(const SHATRA::Board& b);
 	/* Set current board */
 	void setFlipped(bool flipped);
 	/* Return current board */
-	Board board() const;
+    SHATRA::Board board() const;
 
 public slots:
 	/* Execute dialog */
 	int exec();
     /* Start a drag operation */
     void startDrag(QWidget* w, QMouseEvent* event);
-    void labelClicked(Piece p);
+    void labelClicked(SHATRA::Piece p);
 signals:
-    void signalClearBackground(Piece p);
+    void signalClearBackground(SHATRA::Piece p);
 
 private slots:
 	/* If the position is legal, accept it and close the dialog. */
@@ -62,19 +62,19 @@ private slots:
 	/* Change current piece using wheel */
 	void slotChangePiece(int dir);
     /* A Drop operation was inidcated by the boardview */
-    void slotDroppedPiece(Square s, Piece p);
+    void slotDroppedPiece(SHATRA::Square s, SHATRA::Piece p);
 	/* Select square and insert piece */
-	void slotSelected(Square s, int button);
+    void slotSelected(SHATRA::Square s, int button);
 	/* Manually adjust en passant square. */
     //void slotEnPassantSquare();
 	/* Adjust move number. */
 	void slotMoveNumber();
 	/* Move piece */
-	void slotMovePiece(Square from, Square to);
+    void slotMovePiece(SHATRA::Square from, SHATRA::Square to);
 	/* Copy piece */
-	void slotCopyPiece(Square from, Square to);
+    void slotCopyPiece(SHATRA::Square from, SHATRA::Square to);
     /* Remove piece */
-    void slotInvalidMove(Square from);
+    void slotInvalidMove(SHATRA::Square from);
 	/* Toggle side to move */
 	void slotToggleSide();
 
@@ -87,7 +87,7 @@ private slots:
 private:
 	Ui::BoardSetupDialog ui;
 
-	Color m_toMove;
+    SHATRA::Color m_toMove;
 	/* Display side to move */
 	void showSideToMove();
 	/* Message for incorrect setups. Returns empty string if the position is correct. */
@@ -95,18 +95,18 @@ private:
 	/* Sets status message for the board (either spn or error message). */
 	void setStatusMessage();
 
-    void openSquarePopup(Square s);
+    void openSquarePopup(SHATRA::Square s);
 
 protected:
 	/* Scroll current piece with a wheel */
 	virtual void wheelEvent(QWheelEvent* e);
     int m_wheelCurrentDelta;
     int m_minDeltaWheel;
-    Piece m_selectedPiece;
+    SHATRA::Piece m_selectedPiece;
     BoardView * m_boardView;
-    Board m_board;
+    SHATRA::Board m_board;
     QMenu * m_popmenu;
-    Square m_popsquare;
+    SHATRA::Square m_popsquare;
     // popup actions
     QAction * pa_defunkt,
             * pa_transit,

@@ -48,9 +48,9 @@ public:
     /* @return one of the board colors. */
     QColor color(ColorRole role) const;
     /* @return pixmap for given piece scaled to current size(). */
-    const QPixmap& piece(Piece p, bool flipped = false) const;
+    const QPixmap& piece(SHATRA::Piece p, bool flipped = false) const;
     /* @return unscaled pixmap for given piece. */
-    const QPixmap& originalPiece(Piece p, bool flipped = false) const;
+    const QPixmap& originalPiece(SHATRA::Piece p, bool flipped = false) const;
     /* @return pixmap for square. */
     const QPixmap& square(bool dark) const;
     /* @return unscaled pixmap for square. */
@@ -84,8 +84,8 @@ public:
 
 private:
     bool isBoardPlain() const;
-    QPixmap m_originalPiece[ConstPieceTypes+2];
-    QPixmap m_piece[ConstPieceTypes+2];
+    QPixmap m_originalPiece[SHATRA::ConstPieceTypes+2];
+    QPixmap m_piece[SHATRA::ConstPieceTypes+2];
     QPixmap m_originalSquare[2];
     QPixmap m_square[2];
     QPixmap m_originalUrgent;

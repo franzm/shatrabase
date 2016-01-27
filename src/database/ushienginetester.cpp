@@ -45,7 +45,7 @@ bool USHIEngineTester::startTests()
     if (!startEngine_(1))
         return false;
 
-    return startGame_(White);
+    return startGame_(SHATRA::White);
 }
 
 void USHIEngineTester::stopTests()
@@ -67,17 +67,19 @@ bool USHIEngineTester::startEngine_(int stm)
     process->setReadChannel(QProcess::StandardOutput);
     process->setWorkingDirectory(QDir(filename_[stm]).absolutePath());
 
-    if (stm == White)
+    if (stm == SHATRA::White)
     {
         connect(process, SIGNAL(started()), SLOT(eStart1_()));
-        connect(process, SIGNAL(error(QProcess::ProcessError)), SLOT(eError1_(QProcess::ProcessError)));
+        connect(process, SIGNAL(error(QProcess::ProcessError)),
+                        SLOT(eError1_(QProcess::ProcessError)));
         connect(process, SIGNAL(readyReadStandardOutput()), SLOT(ePoll1_()));
         connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(eFinish1_()));
     }
     else
     {
         connect(process, SIGNAL(started()), SLOT(eStart2_()));
-        connect(process, SIGNAL(error(QProcess::ProcessError)), SLOT(eError2_(QProcess::ProcessError)));
+        connect(process, SIGNAL(error(QProcess::ProcessError)),
+                        SLOT(eError2_(QProcess::ProcessError)));
         connect(process, SIGNAL(readyReadStandardOutput()), SLOT(ePoll2_()));
         connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(eFinish2_()));
     }
@@ -145,7 +147,7 @@ void USHIEngineTester::send_(int stm, const QString &msg)
 bool USHIEngineTester::startGame_(int startstm)
 {
     board_.setStandardPosition();
-    board_.setToMove((Color)startstm);
+    board_.setToMove((SHATRA::Color)startstm);
     game_.clear();
 
     // prepare new game for each
@@ -184,7 +186,7 @@ void USHIEngineTester::processMessage_(int stm, const QString &msg)
         QString moveText = info.section(' ', 0, 0, QString::SectionSkipEmpty);
 
         // check move
-        Move move = board_.parseMove(moveText);
+        SHATRA::Move move = board_.parseMove(moveText);
         if (!move.isLegal())
         {
             SB_ET_DEBUG(stm, "illegal move '"<<moveText<<"'"

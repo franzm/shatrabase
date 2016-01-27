@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+namespace SHATRA {
+
 class SBoard;
 
 class Move
@@ -352,5 +354,7 @@ inline QString Move::toNumeric() const
     n += QString::number((g_numRev? 63 - BN[to()] : BN[to()]));
     return n;
 }
+
+} // namespace SHATRA
 
 #endif // MOVE_H

@@ -16,6 +16,8 @@
 #include <QVector>
 #include "board.h"
 
+namespace SHATRA {
+
 quint64 RAND_VALUES[MAX_PIECES][MAX_SQUARES];
 quint64 RAND_EN_PASSANT[MAX_EN_PASSANT_SQUARES];
 quint64 RAND_URGENT[MAX_URGENT_SQUARES];
@@ -151,7 +153,7 @@ bool Board::doIt(const Move& m, bool undo)
 
 inline void Board::hashPiece(Square s, Piece p)
 {
-    if ((p > Empty) && (p < InvalidPiece))
+    if ((p > EmptyPiece) && (p < InvalidPiece))
         m_hashValue ^= RAND_VALUES[p - 1][BN[s]];
 }
 
@@ -305,3 +307,5 @@ bool Board::isRepeating(const QVector<quint64> &his)
 
     return false;
 }
+
+} // namespace SHATRA

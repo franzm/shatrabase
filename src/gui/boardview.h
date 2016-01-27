@@ -62,12 +62,12 @@ public:
         @p to and @p from trigger an animation of the piece. */
     //void setBoard(const Board& value, int from = InvalidSquare, int to = InvalidSquare);
     /** Updates the board with animation */
-    void setBoard(const Board& board, const Move & move);
+    void setBoard(const SHATRA::Board& board, const SHATRA::Move & move);
     /** Updates the board without animation */
-    void setBoard(const Board& board) { setBoard(board, Move()); }
+    void setBoard(const SHATRA::Board& board) { setBoard(board, SHATRA::Move()); }
 
     /** @return displayed position. */
-    Board board() const;
+    SHATRA::Board board() const;
     /** @return current theme */
     const BoardTheme& theme() const;
     /** Flips/unflips board. */
@@ -87,9 +87,10 @@ public slots:
     void configure();
 
     /** Tell the BoardView the best current move, e.g. from analysis. */
-    void setBestMove(const Move& move) { setBestMove(BN[move.from()], BN[move.to()]); }
+    void setBestMove(const SHATRA::Move& move)
+        { setBestMove(SHATRA::BN[move.from()], SHATRA::BN[move.to()]); }
     /** Tell the BoardView the best current move, e.g. from analysis. */
-    void setBestMove(int from = InvalidSquare, int to = InvalidSquare);
+    void setBestMove(int from = SHATRA::InvalidSquare, int to = SHATRA::InvalidSquare);
     /** Executes current set best move. Returns true when there was one, false otherwise. */
     bool execBestMove();
 
@@ -97,21 +98,21 @@ protected slots:
     /** Weiterleitung from BoardPainter */
     void slotDisplayMessage(const QString& msg) { emit displayMessage(msg); }
     /** Weiterleitung from BoardPainter */
-    void slotAnimationFinished(const Board& b) { emit animationFinished(b); }
+    void slotAnimationFinished(const SHATRA::Board& b) { emit animationFinished(b); }
 
 signals:
     /** User clicked source and destination squares */
-    void moveMade(Square from, Square to, int button);
+    void moveMade(SHATRA::Square from, SHATRA::Square to, int button);
     /** User dragged and dropped a piece holding Control */
-    void copyPiece(Square from, Square to);
+    void copyPiece(SHATRA::Square from, SHATRA::Square to);
     /** User attempted an out of board move, used for position setup */
-    void invalidMove(Square from);
+    void invalidMove(SHATRA::Square from);
     /** User clicked square */
-    void clicked(Square square, int button, QPoint pos);
+    void clicked(SHATRA::Square square, int button, QPoint pos);
     /** User moved mouse wheel. */
     void wheelScrolled(int dir);
     /** Indicate that a piece was dropped to the board */
-    void pieceDropped(Square to, Piece p);
+    void pieceDropped(SHATRA::Square to, SHATRA::Piece p);
     /** Board came back from external window. */
     void externalClosed();
     /** Signal to display a message, e.g. on hover. */
@@ -120,7 +121,7 @@ signals:
     void signalDisplayPositionInfo(const QString& msg);
 
     /** A piece move animation has been finished */
-    void animationFinished(const Board& b);
+    void animationFinished(const SHATRA::Board& b);
 
 protected:
     /** Calls signalDisplayMessage and keeps a flag that
@@ -154,33 +155,27 @@ protected:
 
 private:
     /** @return square at given position */
-    Square squareAt(const QPoint& p) const;
+    SHATRA::Square squareAt(const QPoint& p) const;
     /** Check if piece at square @p square can be dragged */
-    bool canDrag(Square s);
-    //bool eventFilter(QObject *obj, QEvent *ev);
-
+    bool canDrag(SHATRA::Square s);
     /** Returns a nice string for each square */
-    QString squareToString_(Square s) const;
+    QString squareToString_(SHATRA::Square s) const;
 
     // ------ highlighting ------
 
-    /* Selects given square. Previously selected square is unselected automatically.
-       Clear hightlight with s = InvalidSquare. */
-    //void selectSquare_(Square s = InvalidSquare);
-
     /** Sets m_selectedSquare + cares for all highlights. */
-    void selectSquare_(Square s = InvalidSquare);
+    void selectSquare_(SHATRA::Square s = SHATRA::InvalidSquare);
 
     /** Sets the m_hoverSquare to @p s. Previously selected square is unselected.
        Clear hightlights with s = InvalidSquare */
-    void setHoverSquare_(Square s = InvalidSquare);
+    void setHoverSquare_(SHATRA::Square s = SHATRA::InvalidSquare);
     /** Sets highlights for all possible goal squares for @p s.
         Previous highlights are cleared.
         @p goal_index controls the selected target square (m_goal_index).
         if -1, it will be reset to 0,
         if 0, stays unchanged,
         if 1, selects next */
-    void showGoals_(Square s = InvalidSquare, int goal_index = -1);
+    void showGoals_(SHATRA::Square s = SHATRA::InvalidSquare, int goal_index = -1);
 
 #if(0)
     void drawSquares(QPaintEvent* event);
@@ -196,11 +191,11 @@ private:
     /** original parent (when not externalized) */
     QWidget * m_parent;
     /** current position */
-    Board m_board;
+    SHATRA::Board m_board;
     /** current move */
-    Move m_move;
+    SHATRA::Move m_move;
     /** all current moves (as Square) */
-    std::vector<SquareMove> m_moves;
+    std::vector<SHATRA::SquareMove> m_moves;
 
     /** graphics container */
     BoardTheme m_theme;
@@ -240,15 +235,15 @@ private:
     //int m_currentFrom;
     //int m_currentTo;
     /** piece currently dragged, or InvalidPiece */
-    Piece m_dragged;
+    SHATRA::Piece m_dragged;
     /** start square of drag */
-    Square m_dragStartSquare;
+    SHATRA::Square m_dragStartSquare;
     /** mouse start of drag (window space) */
     QPoint m_dragStart;
     /** current end of drag (window space) */
     QPoint m_dragPoint;
     /** Last dragged-to square to turn off move animation */
-    Square m_lastDropped;
+    SHATRA::Square m_lastDropped;
     /** flag for deleting the statusbar on leaveEvent() */
     bool m_messageSend;
 
@@ -264,7 +259,7 @@ class BoardViewMimeData : public QMimeData
     Q_OBJECT
 
 public:
-    Piece m_piece;
+    SHATRA::Piece m_piece;
 };
 
 #endif

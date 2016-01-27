@@ -60,14 +60,15 @@ void SgnDatabase::parseGame()
 
 Game * SgnDatabase::parseGameIntern()
 {
-    g_autoResultOnLoad = AppSettings->getValue("/General/autoGameResult").toBool();
-    g_numRev = !AppSettings->getValue("/Board/reverseSquareNumbers").toBool();
+    SHATRA::g_autoResultOnLoad = AppSettings->getValue("/General/autoGameResult").toBool();
+    SHATRA::g_numRev = !AppSettings->getValue("/Board/reverseSquareNumbers").toBool();
 
-    Game* game = new Game; g_newGame = true;
+    Game* game = new Game;
+    SHATRA::g_newGame = true;
     // indextags index
     IndexBaseType n = m_count - 1;
     // get the start board
-    QString spn = m_index.tagValue(TagNameSPN, n);
+    QString spn = m_index.tagValue(SHATRA::TagNameSPN, n);
 //    qDebug() << spn;
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
@@ -86,8 +87,8 @@ Game * SgnDatabase::parseGameIntern()
         g_resModified = true;
     }
     */
-    g_totalNodes += game->currentMove();
-    g_inRev = false;
+    SHATRA::g_totalNodes += game->currentMove();
+    SHATRA::g_inRev = false;
 
     return game;
 }
@@ -362,7 +363,7 @@ void SgnDatabase::loadGameMoves(int index, Game& game)
 	game.clear();
 	seekGame(index);
 	skipTags();
-    QString spn = m_index.tagValue(TagNameSPN, index); // was m_count -1
+    QString spn = m_index.tagValue(SHATRA::TagNameSPN, index); // was m_count -1
 	if (spn != "?")
 		game.setStartingBoard(spn);
 	parseMoves(&game);
@@ -379,7 +380,7 @@ bool SgnDatabase::loadGame(int index, Game& game)
 	loadGameHeaders(index, game);
 	seekGame(index);
 	skipTags();
-    QString spn = m_index.tagValue(TagNameSPN, index ); // was m_count - 1
+    QString spn = m_index.tagValue(SHATRA::TagNameSPN, index ); // was m_count - 1
 	if (spn != "?")
 		game.setStartingBoard(spn);
     parseMoves(&game);
@@ -398,7 +399,7 @@ void SgnDatabase::initialise()
 	m_filename = QString();
 	m_count = 0;
 	m_allocated = 0;
-    g_nErrors = 0;
+    SHATRA::g_nErrors = 0;
 }
 
 
@@ -510,7 +511,7 @@ bool SgnDatabase::parseMoves(Game* game)
 		} else {
 			parseLine(game);
             if (m_variation == -1) {
-                ++g_nErrors;
+                ++SHATRA::g_nErrors;
                 return false;
 			}
 		}
@@ -612,7 +613,7 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
             }
             m_newVariation = false;
         } else {	// next move in the game
-            if (g_newGame) { // parse first 'from' value
+            if (SHATRA::g_newGame) { // parse first 'from' value
                 qDebug() << token;
                 int sq = 0;
                 for (int c = 0; c < 2; ++c) {
@@ -620,8 +621,8 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
                         break;
                     else sq = (sq * 10) + token.at(c).digitValue();
                 }
-                g_inRev = sq > 31; // game starts from high end
-                g_newGame = false;
+                SHATRA::g_inRev = sq > 31; // game starts from high end
+                SHATRA::g_newGame = false;
             }
             m_variation = game->addMove(token, QString(), nag);
             if (!m_precomment.isEmpty()) {
@@ -686,19 +687,19 @@ void SgnDatabase::parseToken(Game* game, const QString& token)
 		}
 		break;
 	case '*':
-		game->setResult(ResultUnknown);
+        game->setResult(SHATRA::ResultUnknown);
 		m_gameOver = true;
         break;
     // From here, cases may fall through into default!!
 	case '1':
 		if (token == "1-0") {
-			game->setResult(WhiteWin);
+            game->setResult(SHATRA::WhiteWin);
 			m_gameOver = true;
             break;
         }
         else if (token == "1/2-1/2" || token == "1/2")
         {
-			game->setResult(Draw);
+            game->setResult(SHATRA::Draw);
 			m_gameOver = true;
             break;
         }
@@ -706,7 +707,7 @@ void SgnDatabase::parseToken(Game* game, const QString& token)
 	case '0':
         if (token == "0-1")
         {
-			game->setResult(BlackWin);
+            game->setResult(SHATRA::BlackWin);
 			m_gameOver = true;
 			break;
 		}
@@ -805,7 +806,7 @@ void SgnDatabase::skipTags()
 
 void SgnDatabase::skipMoves()
 {
-    QString tag = m_index.tagValue(TagNamePlyCount, m_count - 1);
+    QString tag = m_index.tagValue(SHATRA::TagNamePlyCount, m_count - 1);
     if (tag=="?") tag.clear();
     if (!tag.isEmpty())
     {

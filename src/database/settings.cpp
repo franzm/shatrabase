@@ -197,8 +197,8 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/General/executed", (int)0);
     map.insert("/Path/databaseExportPath", QDir::homePath());
     map.insert("/General/EditLimit", 10);
-    map.insert("/General/Notation", NUM);
-    map.insert("/General/autoGameResult", g_autoResultOnLoad);
+    map.insert("/General/Notation", SHATRA::NUM);
+    map.insert("/General/autoGameResult", SHATRA::g_autoResultOnLoad);
     map.insert("/General/useIndexFile", true);
     map.insert("/General/ListFontSize", DEFAULT_LISTFONTSIZE);
     map.insert("/General/autoCommitDB", false);
@@ -270,7 +270,7 @@ QMap<QString, QVariant> Settings::initDefaultValues() const
     map.insert("/Board/showTower", true);
     map.insert("/Board/showFrame", true);
     map.insert("/Board/showSquareNumbers", false);
-    map.insert("/Board/reverseSquareNumbers", !g_numRev);
+    map.insert("/Board/reverseSquareNumbers", !SHATRA::g_numRev);
     map.insert("/Board/frameWidth", 4);
     map.insert("/Board/showCurrentMove", true);
     map.insert("/Board/showAllMoves", true);

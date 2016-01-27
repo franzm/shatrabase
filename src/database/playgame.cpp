@@ -35,11 +35,11 @@ PlayGame::PlayGame(EngineDebugWidget * debug, QObject *parent)
 {
     SB_PLAY_DEBUG("PlayGame::PlayGame(...)");
 
-    connect(engine1_, SIGNAL(moveMade(Move)), SLOT(engineMove1_(Move)));
-    connect(engine2_, SIGNAL(moveMade(Move)), SLOT(engineMove2_(Move)));
+    connect(engine1_, SIGNAL(moveMade(SHATRA::Move)), SLOT(engineMove1_(SHATRA::Move)));
+    connect(engine2_, SIGNAL(moveMade(SHATRA::Move)), SLOT(engineMove2_(SHATRA::Move)));
 
-    connect(engine1_, SIGNAL(moveInfo(Move,int)), SIGNAL(moveInfo1(Move,int)));
-    connect(engine2_, SIGNAL(moveInfo(Move,int)), SIGNAL(moveInfo2(Move,int)));
+    connect(engine1_, SIGNAL(moveInfo(SHATRA::Move,int)), SIGNAL(moveInfo1(SHATRA::Move,int)));
+    connect(engine2_, SIGNAL(moveInfo(SHATRA::Move,int)), SIGNAL(moveInfo2(SHATRA::Move,int)));
 
     connect(engine1_, SIGNAL(ready()), SLOT(engineActivated1_()));
     connect(engine2_, SIGNAL(ready()), SLOT(engineActivated2_()));
@@ -172,11 +172,11 @@ void PlayGame::setEngineName2(const QString &s)
 }
 
 
-bool PlayGame::setPosition(const Board& board, const Engine::SearchSettings& settings)
+bool PlayGame::setPosition(const SHATRA::Board& board, const Engine::SearchSettings& settings)
 {
     SB_PLAY_DEBUG("PlayGame::setPosition(Board) stm = " << board.toMove());
 
-    if (board.toMove() == White)
+    if (board.toMove() == SHATRA::White)
     {
         if (engine1_) return engine1_->setPosition(board, settings);
     }
@@ -191,14 +191,14 @@ bool PlayGame::setPosition(const Board& board, const Engine::SearchSettings& set
     return false;
 }
 
-void PlayGame::engineMove1_(Move m)
+void PlayGame::engineMove1_(SHATRA::Move m)
 {
     SB_PLAY_DEBUG("PlayGame::engineMove1_("<<m.from()<<"-"<<m.to()<<")");
 
     emit moveMade1(m);
 }
 
-void PlayGame::engineMove2_(Move m)
+void PlayGame::engineMove2_(SHATRA::Move m)
 {
     SB_PLAY_DEBUG("PlayGame::engineMove2_("<<m.from()<<"-"<<m.to()<<")");
 

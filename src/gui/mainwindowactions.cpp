@@ -375,7 +375,7 @@ void MainWindow::slotEditVarRemove()
 void MainWindow::slotEditPasteSPN()
 {
 	QString spn = QApplication::clipboard()->text().trimmed();
-	Board board;
+    SHATRA::Board board;
     if (!board.isValidSPN(spn)) {
 		QString msg = spn.length() ?
             tr("Text in clipboard does not represent valid SPN:<br><i>%1</i>").arg(spn) :
@@ -384,14 +384,14 @@ void MainWindow::slotEditPasteSPN()
 		return;
 	}
 	board.fromSPN(spn);
-	if (board.validate() != Valid) {
+    if (board.validate() != SHATRA::Valid) {
         MessageDialog::warning(tr("The clipboard contains SPN, but an illegal position. "
             "You can only paste such positions in <b>Setup position</b> dialog."));
 		return;
 	}
 	game().setStartingBoard(board);
 //    game().setResult(ResultUnknown);
-    game().removeTag(TagNameResult);
+    game().removeTag(SHATRA::TagNameResult);
 	slotGameChanged();
 }
 
@@ -427,7 +427,7 @@ void MainWindow::slotEditTruncateEnd()
 
 void MainWindow::slotEditRemoveResult()
 {
-    game().removeTag(TagNameResult);
+    game().removeTag(SHATRA::TagNameResult);
     slotGameChanged();
 }
 
@@ -462,15 +462,16 @@ void MainWindow::slotHelpBug()
 //    ("http://sourceforge.net/tracker/?group_id=163833&atid=829300"));
 }
 
-void MainWindow::slotBoardMove(Square from, Square to, int button)
+void MainWindow::slotBoardMove(SHATRA::Square from, SHATRA::Square to, int button)
 {
-    const Board& board = game().board();
-    Move m(board.prepareMove(from, to));
+    const SHATRA::Board& board = game().board();
+    SHATRA::Move m(board.prepareMove(from, to));
     if (!m.isLegal()) return;
 
-    PieceType promotionPiece = None;
+    SHATRA::PieceType promotionPiece = SHATRA::NoPiece;
 
-    if (m.pieceTypeMoved() == Biy || g_version == Original)
+    if (m.pieceTypeMoved() == SHATRA::Biy
+            || SHATRA::g_version == SHATRA::Original)
     {
         if (m.isCapture() && board.moveIsDual(from, to))
         {
@@ -498,19 +499,20 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
     }
     if (m.isPromotion())
     {
-        if (g_version == Original) m.setPromotionPiece(Batyr);
+        if (SHATRA::g_version == SHATRA::Original)
+            m.setPromotionPiece(SHATRA::Batyr);
         else
         {
             bool ok; int i = 0;
-            PieceType ix[3];
+            SHATRA::PieceType ix[3];
             QStringList moves;
 
-            if (board.canPromoteTo(Batyr))
-                moves << tr("Batyr"), ix[i++] = Batyr;
-            if (board.canPromoteTo(Tura))
-                moves << tr("Tura"), ix[i++] = Tura;
-            if (board.canPromoteTo(Yalkyn))
-                moves << tr("Yalkyn"), ix[i++] = Yalkyn;
+            if (board.canPromoteTo(SHATRA::Batyr))
+                moves << tr("Batyr"), ix[i++] = SHATRA::Batyr;
+            if (board.canPromoteTo(SHATRA::Tura))
+                moves << tr("Tura"), ix[i++] = SHATRA::Tura;
+            if (board.canPromoteTo(SHATRA::Yalkyn))
+                moves << tr("Yalkyn"), ix[i++] = SHATRA::Yalkyn;
             if (i)
             {
                 int index = moves.indexOf(QInputDialog::getItem(0,
@@ -552,7 +554,7 @@ void MainWindow::slotBoardMove(Square from, Square to, int button)
     slotGameChanged();
 }
 
-void MainWindow::slotBoardClick(Square s, int button, QPoint pos)
+void MainWindow::slotBoardClick(SHATRA::Square s, int button, QPoint pos)
 {
     if (button & Qt::RightButton)
     {
@@ -607,10 +609,10 @@ void MainWindow::slotMoveChanged()
 
 void MainWindow::slotNotationChanged()
 {
-    if (g_nChanged)
+    if (SHATRA::g_nChanged)
     {
         slotGameChanged();
-        g_nChanged = false;
+        SHATRA::g_nChanged = false;
     }
 }
 
@@ -827,7 +829,7 @@ void MainWindow::slotPlayGameEnd()
     }
 }
 
-void MainWindow::slotPlayGameMove(Move m)
+void MainWindow::slotPlayGameMove(SHATRA::Move m)
 {
     if (game().atLineEnd())
         game().addMove(m);
@@ -869,7 +871,7 @@ void MainWindow::slotPlayOtherWins()
                              );
 }
 
-void MainWindow::slotBoardAnimationFinished(const Board& b)
+void MainWindow::slotBoardAnimationFinished(const SHATRA::Board& b)
 {
     m_playGame->animationFinished(b);
 }
@@ -991,7 +993,7 @@ void MainWindow::slotGameChanged(bool updateMove)
 	QString header = "<i>";
 	if (!event.isEmpty()) {
 		header.append(site);
-		if (game().result() != ResultUnknown)
+        if (game().result() != SHATRA::ResultUnknown)
 			header.append(QString(" (%1)").arg(game().tag("Round")));
 		if (!site.isEmpty())
 			header.append(", ");
@@ -1008,7 +1010,7 @@ void MainWindow::slotGameChanged(bool updateMove)
 	if (!white.isEmpty() || !black.isEmpty())
 		title.append(players);
 	else title.append(tr("<b>New game</b>"));
-	if (game().result() != ResultUnknown || !eco.isEmpty())
+    if (game().result() != SHATRA::ResultUnknown || !eco.isEmpty())
 		title.append(QString(", ") + result);
 	if (header.length() > 8)
 		title.append(QString("<br>") + header);
@@ -1148,7 +1150,7 @@ void MainWindow::slotAutoPlayTimeout()
         Analysis a = m_mainAnalysis->getMainLine();
         if (!a.variation().isEmpty())
         {
-            Move m = a.variation().first();
+            SHATRA::Move m = a.variation().first();
             if (!game().currentNodeHasMove(m.from(), m.to()))
             {
                 slotGameAddVariation(a);
@@ -1425,7 +1427,7 @@ void MainWindow::slotSearchTreeMove(const QModelIndex& index)
 {
     m_bGameChange = false;
     QString move = qobject_cast<OpeningTree*>(m_openingTreeView->model())->move(index);
-	Move m = m_boardView->board().parseMove(move);
+    SHATRA::Move m = m_boardView->board().parseMove(move);
 	if (!m.isLegal())
 		return;
 	else if (m == game().move(game().nextMove()))

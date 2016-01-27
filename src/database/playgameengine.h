@@ -47,10 +47,10 @@ signals:
     void ready();
 
     /** The Engine returned a move */
-    void moveMade(Move);
+    void moveMade(SHATRA::Move);
 
     /** The Engine has updated pv line */
-    void moveInfo(Move, int score);
+    void moveInfo(SHATRA::Move, int score);
 
     /** The Engine did not return a move in the maximum time allowed. */
     void engineClueless();
@@ -65,7 +65,7 @@ public slots:
 
     /** Sets new position and queries the Engine.
         Returns true when the Engine is (at least) requested to analyze. */
-    bool setPosition(const Board&, const Engine::SearchSettings& settings);
+    bool setPosition(const SHATRA::Board&, const Engine::SearchSettings& settings);
 
 private slots:
 
@@ -76,7 +76,7 @@ private slots:
     void engineReadyOk_();
     void engineError_(QProcess::ProcessError);
     void engineAnalysis_(const Analysis&);
-    void engineBestMove_(const Move&);
+    void engineBestMove_(const SHATRA::Move&);
 
     // ---- other callbacks ----------
 
@@ -94,7 +94,7 @@ private:
     void destroyEngine_();
 
     /** Will send the board to engine and init the timer */
-    bool startAnalysis_(const Board&);
+    bool startAnalysis_(const SHATRA::Board&);
 
     // __________ PRIVATE MEMBER _____________
 
@@ -106,14 +106,14 @@ private:
     QString name_;
 
     /** current board to send */
-    Board board_;
+    SHATRA::Board board_;
     /** Settings used for search */
     Engine::SearchSettings settings_;
 
     /** Best moves so far (MoveList from variation) */
-    MoveList bestMoves_;
+    SHATRA::MoveList bestMoves_;
     /** Best move */
-    Move bestMove_;
+    SHATRA::Move bestMove_;
 
     /** For leaving the Engine some time to think */
     QTime waitTimer_;

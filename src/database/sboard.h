@@ -20,6 +20,8 @@
 #include "boardlist.h"
 #include "urstack.hpp"
 
+namespace SHATRA {
+
 class Move;
 
 enum BoardStatus
@@ -338,7 +340,7 @@ inline bool SBoard::inSequence() const
 
 inline bool SBoard::isVacant(const int at) const
 {
-    return m_sb[at] == Empty;
+    return m_sb[at] == EmptyPiece;
 }
 
 inline bool SBoard::isBiyOnTemdek(const Square s) const
@@ -434,7 +436,7 @@ inline PieceType SBoard::pieceTypeAt(const int at) const
 
 inline int SBoard::pieceMoving(const Move m) const
 {
-    return m_sb[m.from()] != Empty? m_sb[m.from()] : m_sb[m.to()];
+    return m_sb[m.from()] != EmptyPiece? m_sb[m.from()] : m_sb[m.to()];
 }
 
 inline void SBoard::doUrgentAt(const Move& m)
@@ -476,5 +478,8 @@ inline void SBoard::initState()
     memcpy(m_sb, SB, sizeof(SB));    // no one will notice it
                                      // aha! saw it - sb
 }
+
+} // namespace SHATRA
+
 
 #endif // __SBOARD_H__

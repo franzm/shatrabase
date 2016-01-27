@@ -18,6 +18,8 @@
 #include <QString>
 //#include <QStringList>
 
+namespace SHATRA {
+
 typedef unsigned char ubyte;
 typedef unsigned char Square;
 typedef quint64 bb;
@@ -30,23 +32,23 @@ struct SquareMove
 
 // masks for board pieces
 //#define DEFUNKT         0x40        // doing this a new way
-#define URGENT          0x80
+const int URGENT = 0x80;
 
 // masks for flags byte
-#define PROMO           0x03        // detect promo (PieceType 1-3)
+const ubyte PROMO = 0x03;           // detect promo (PieceType 1-3)
 
-#define STM             0x04        // side to move
-#define DECTDK          0x08        // decrement temdek counter for stm
-#define FLIP_URGENT     0x10        // must drop on next non-capture move
+const ubyte STM = 0x04;             // side to move
+const int DECTDK = 0x08;            // decrement temdek counter for stm
+const int FLIP_URGENT = 0x10;       // must drop on next non-capture move
                                     // or capture out
-#define DECTDK_sntm     0x20        // capture in enemy fortress    (   NB  } 
-#define PROMO_sntm      0x40        // for slider capture/autopromo ( 'sntm'}
-#define C_CONT          0x80        // capture continuation from this move
+const int DECTDK_sntm = 0x20;       // capture in enemy fortress    (   NB  }
+const int PROMO_sntm = 0x40;        // for slider capture/autopromo ( 'sntm'}
+const int C_CONT = 0x80;            // capture continuation from this move
 
-#define NUM             false
-#define ALG             true
-#define MOVES           false
-#define CAPTC           true
+const int NUM = false;
+const int ALG = true;
+const int MOVES = false;
+const int CAPTC = true;
 
 
 #define x 0x20
@@ -100,13 +102,13 @@ const int NB[64] = {  // numeric indices into array of board squares
 
 enum Piece
 {
-    Empty,
+    EmptyPiece,
         WhiteBatyr, WhiteTura, WhiteYalkyn, WhiteBiy, WhiteShatra,
         BlackBatyr, BlackTura, BlackYalkyn, BlackBiy, BlackShatra,
         WasBatyr, WasTura, WasYalkyn, InvalidPiece, WasShatra
 };
 
-enum PieceType { None, Batyr, Tura, Yalkyn, Biy, Shatra };
+enum PieceType { NoPiece, Batyr, Tura, Yalkyn, Biy, Shatra };
 enum Color { White, Black };
 enum BoardLimits { fsq = 1, lsq = 62 };
 enum ShatraVersion { Unspecified, Original, Extended };
@@ -129,7 +131,7 @@ extern int  g_totalNodes;
 const int MaxGen = 256; // actual max appears to be 250
 const int ConstPieceTypes = WasShatra + 1;
 const int Was = WasBatyr - Batyr;
-const int PC[2] = { Empty, WhiteShatra }; // piece 'color constant'
+const int PC[2] = { EmptyPiece, WhiteShatra }; // piece 'color constant'
 const Square InvalidSquare = 255;
 const Square NoSquare = 0; // also used for board coord..
 const Square gateAt[2] = { 10, 53 };
@@ -145,7 +147,7 @@ inline Color oppositeColor(const Color c)
 
 /* Return true if given piece is White */
 inline bool isWhite(const Piece p)
-    { return p <= WhiteShatra && p > Empty; }
+    { return p <= WhiteShatra && p > EmptyPiece; }
 
 /* Return true if given piece is Black */
 inline bool isBlack(const Piece p)
@@ -157,7 +159,7 @@ inline bool isDefunkt(const Piece p)
 
 /* Return PieceType of given Piece */
 inline PieceType pieceType(const Piece p)
-    { return PieceType(isWhite(p) ? p : (isBlack(p) ? p -5 : Empty)); }
+    { return PieceType(isWhite(p) ? p : (isBlack(p) ? p -5 : NoPiece)); }
 
 /* Return Color of given Piece */
 inline Color pieceColor(const Piece p)
@@ -256,6 +258,8 @@ const QString StandardTags[7] = {"Event", "Site", "Date", "Round", "White", "Bla
 typedef quint32 TagIndex;
 typedef quint32 ValueIndex;
 typedef quint32 GameId;
+
+} // namespace SHATRA
 
 #endif
 

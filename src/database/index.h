@@ -43,7 +43,7 @@ public:
 	~Index();
 
     /* Adds an empty indexitem */
-    GameId add ();
+    SHATRA::GameId add();
     int count() const;
 
 	// Storing tags //
@@ -54,16 +54,16 @@ public:
 	// Retrieving tags //
 	//
     /* Restore all tags for gameId from Index into game object */
-	void loadGameHeaders(GameId id, Game& game);
+    void loadGameHeaders(SHATRA::GameId id, Game& game);
 
     /* Get the tag value for given game */
-    QString tagValue(const QString&, GameId gameId) const;
-    ValueIndex getValueIndex(const QString&) const;
-    TagIndex getTagIndex(const QString& value) const;
-    ValueIndex valueIndexFromTag(const QString& tagName, GameId gameId) const;
-    ValueIndex valueIndexFromIndex(TagIndex tagIndex, GameId gameId) const;
-    bool indexItemHasTag(TagIndex tagIndex, GameId gameId) const;
-    QString tagValueName(ValueIndex getValueIndex) const;
+    QString tagValue(const QString&, SHATRA::GameId gameId) const;
+    SHATRA::ValueIndex getValueIndex(const QString&) const;
+    SHATRA::TagIndex getTagIndex(const QString& value) const;
+    SHATRA::ValueIndex valueIndexFromTag(const QString& tagName, SHATRA::GameId gameId) const;
+    SHATRA::ValueIndex valueIndexFromIndex(SHATRA::TagIndex tagIndex, SHATRA::GameId gameId) const;
+    bool indexItemHasTag(SHATRA::TagIndex tagIndex, SHATRA::GameId gameId) const;
+    QString tagValueName(SHATRA::ValueIndex getValueIndex) const;
     QStringList tagValues(const QString& tagName) const;
     /* Set the valid flag accordingly */
     void setValidFlag(const int& gameId, bool value);
@@ -120,23 +120,23 @@ private:
 	IndexItem* item(int gameId);
 
     /* Map an Index to a tagName */
-    QHash<TagIndex, QString> m_tagNames;
-    QHash<QString, TagIndex> m_tagNameIndex;
-    TagIndex AddTagName(QString);
+    QHash<SHATRA::TagIndex, QString> m_tagNames;
+    QHash<QString, SHATRA::TagIndex> m_tagNameIndex;
+    SHATRA::TagIndex AddTagName(QString);
 
     /* Map an Index to a tagValue */
-    QHash<ValueIndex, QString> m_tagValues;
-    QHash<QString, ValueIndex> m_tagValueIndex;
-    ValueIndex AddTagValue(QString);
+    QHash<SHATRA::ValueIndex, QString> m_tagValues;
+    QHash<QString, SHATRA::ValueIndex> m_tagValueIndex;
+    SHATRA::ValueIndex AddTagValue(QString);
 
     QList<IndexItem*> m_indexItems;
 
     /* Contains information which games are marked for deletion */
     QList<bool> m_validFlags;
-    QMultiHash<TagIndex, int> m_mapTagToIndexItems;
+    QMultiHash<SHATRA::TagIndex, int> m_mapTagToIndexItems;
 
-    QString tagValue(TagIndex tagIndex, int gameId) const;
-    QString tagName(TagIndex tagIndex) const;
+    QString tagValue(SHATRA::TagIndex tagIndex, int gameId) const;
+    QString tagName(SHATRA::TagIndex tagIndex) const;
 
 };
 

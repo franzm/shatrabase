@@ -245,12 +245,13 @@ void Output::writeMove(MoveToWrite moveToWrite)
 	}
 
  // *** Write the move number
-	Color c = m_game->board().toMove();
-    if (moveToWrite == PreviousMove) c = oppositeColor(c);
+    SHATRA::Color c = m_game->board().toMove();
+    if (moveToWrite == PreviousMove)
+        c = oppositeColor(c);
 
     if (!m_game->board().inSequence())
     {
-        if (c == White)
+        if (c == SHATRA::White)
             m_output += QString::number(m_game->moveNumber(moveId)) + ". ";
         else if (m_dirtyBlack)
             m_output += QString::number(m_game->moveNumber(moveId) -
@@ -402,8 +403,8 @@ void Output::writeAllTags()
 	QMap<QString, QString> tags = m_game->tags();
 	// write standard tags
     for (int i = 0; i < 7; ++i) {
-		writeTag(StandardTags[i], tags[StandardTags[i]]);
-		tags.remove(StandardTags[i]);
+        writeTag(SHATRA::StandardTags[i], tags[SHATRA::StandardTags[i]]);
+        tags.remove(SHATRA::StandardTags[i]);
 	}
 
 	// write other tags written in ascii order, as suggested by standard
@@ -437,7 +438,7 @@ QString Output::output(Game* game)
 	int start = m_output.length();
 
 	m_game->moveToStart();
-	m_dirtyBlack = m_game->board().toMove() == Black;
+    m_dirtyBlack = m_game->board().toMove() == SHATRA::Black;
 	m_output += m_startTagMap[MarkupNotationBlock];
 	m_output += m_startTagMap[MarkupMainLine];
 	if (m_options.getOptionAsBool("ColumnStyle")) {

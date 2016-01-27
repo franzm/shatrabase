@@ -88,10 +88,10 @@ PlayGameWidget::PlayGameWidget(EngineDebugWidget * debug, QWidget *parent) :
 
     // ----- setup PlayGame -----
 
-    connect(play_, SIGNAL(moveMade1(Move)), SLOT(moveFromEngine(Move)));
-    connect(play_, SIGNAL(moveMade2(Move)), SLOT(moveFromEngine(Move)));
-    connect(play_, SIGNAL(moveInfo1(Move,int)), SLOT(infoFromEngine(Move,int)));
-    connect(play_, SIGNAL(moveInfo2(Move,int)), SLOT(infoFromEngine(Move,int)));
+    connect(play_, SIGNAL(moveMade1(SHATRA::Move)), SLOT(moveFromEngine(SHATRA::Move)));
+    connect(play_, SIGNAL(moveMade2(SHATRA::Move)), SLOT(moveFromEngine(SHATRA::Move)));
+    connect(play_, SIGNAL(moveInfo1(SHATRA::Move,int)), SLOT(infoFromEngine(SHATRA::Move,int)));
+    connect(play_, SIGNAL(moveInfo2(SHATRA::Move,int)), SLOT(infoFromEngine(SHATRA::Move,int)));
     connect(play_, SIGNAL(ready()), SLOT(enginesReady()));
     connect(play_, SIGNAL(engineClueless()), SLOT(engineClueless()));
     connect(play_, SIGNAL(engineError(QString)), SLOT(engineError(const QString&)));
@@ -106,11 +106,11 @@ PlayGameWidget::~PlayGameWidget()
     delete ui_;
 }
 
-bool PlayGameWidget::isHuman(Color stm) const
+bool PlayGameWidget::isHuman(SHATRA::Color stm) const
 {
-    return (stm == White && !play_->player1IsEngine())
+    return (stm == SHATRA::White && !play_->player1IsEngine())
             ||
-           (stm == Black && !play_->player2IsEngine());
+           (stm == SHATRA::Black && !play_->player2IsEngine());
 }
 
 bool PlayGameWidget::whiteCanMove() const
@@ -154,9 +154,9 @@ QString PlayGameWidget::resultString() const
 {
     if (winStm_ < 0)
         return "";
-    if (winStm_ == White)
+    if (winStm_ == SHATRA::White)
         return "1-0";
-    if (winStm_ == Black)
+    if (winStm_ == SHATRA::Black)
         return "0-1";
     return "1/2-1/2";
 }
@@ -261,10 +261,10 @@ void PlayGameWidget::start_()
 {
     // predefine the known game tags
     QMap<QString, QString> tags;
-    tags.insert(TagNameWhite, play_->playerName1());
-    tags.insert(TagNameBlack, play_->playerName2());
-    tags.insert(TagNameDate, QDate::currentDate().toString(Qt::ISODate).replace('-',"."));
-    tags.insert(TagNameTimeControl, tc_.humanReadable());
+    tags.insert(SHATRA::TagNameWhite, play_->playerName1());
+    tags.insert(SHATRA::TagNameBlack, play_->playerName2());
+    tags.insert(SHATRA::TagNameDate, QDate::currentDate().toString(Qt::ISODate).replace('-',"."));
+    tags.insert(SHATRA::TagNameTimeControl, tc_.humanReadable());
 
     emit startNewGameRequest(tags);
 }
@@ -280,11 +280,11 @@ void PlayGameWidget::startNewGameOk()
         stop();
 
     // update widget Spaß
-    setWidgetsPlayer_(White);
+    setWidgetsPlayer_(SHATRA::White);
     setWidgetsPlaying_(true);
 
     winStm_ = -1;
-    curStm_ = White;
+    curStm_ = SHATRA::White;
     playing_ = true;
     userMoved_ = false;
     ignoreAnswer_ = false;
@@ -302,7 +302,7 @@ void PlayGameWidget::startNewGameOk()
 
     // start counting player 1
     initTiming_();
-    if (isHuman(White))
+    if (isHuman(SHATRA::White))
         tc_.startMove();
 }
 
@@ -311,7 +311,7 @@ void PlayGameWidget::continue_()
     emit continueGameRequest();
 }
 
-void PlayGameWidget::continuePosition(const Board &board)
+void PlayGameWidget::continuePosition(const SHATRA::Board &board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::continuePosition(..)");
 
@@ -341,7 +341,7 @@ void PlayGameWidget::continuePosition(const Board &board)
     if (isHuman(curStm_))
         tc_.startMove();
 
-    curStm_ = (Color)(!curStm_);
+    curStm_ = (SHATRA::Color)(!curStm_);
 
 }
 
@@ -378,7 +378,7 @@ void PlayGameWidget::resign_()
         == QMessageBox::Yes)
     {
         winStm_ = play_->player2IsEngine()? 1 : 0;
-        gameComment(winStm_==White? tr("Black resigned") : tr("White resigned"));
+        gameComment(winStm_==SHATRA::White? tr("Black resigned") : tr("White resigned"));
         stop();
         emit playerLoses();
     }
@@ -397,8 +397,8 @@ void PlayGameWidget::flipPlayers_()
 void PlayGameWidget::setWidgetsPlayer_(int stm)
 {
     activeLed_ = stm;
-    ui_->led1->setValue(stm == White);
-    ui_->led2->setValue(stm != White);
+    ui_->led1->setValue(stm == SHATRA::White);
+    ui_->led2->setValue(stm != SHATRA::White);
 }
 
 void PlayGameWidget::setWidgetsPlaying_(bool p)
@@ -502,9 +502,10 @@ void PlayGameWidget::engineError(const QString & str)
     emit gameComment("*ERROR* " + str);
 }
 
-void PlayGameWidget::setPosition(const Board& board)
+void PlayGameWidget::setPosition(const SHATRA::Board& board)
 {
-    SB_PLAY_DEBUG("PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size());
+    SB_PLAY_DEBUG("PlayGameWidget::setPosition() stm="
+                  << board.toMove() << "plyQue_.size()=" << plyQue_.size());
 
     //qDebug() << "PlayGameWidget::setPosition() stm="<<board.toMove()<<"plyQue_.size()=" << plyQue_.size();
 
@@ -517,14 +518,14 @@ void PlayGameWidget::setPosition(const Board& board)
     tc_.stopMove();
 
     // when move ended, !stm == side that made last move
-    curStm_ = board.transitAt() == 0?
-                (Color)(!board.toMove())
-                       : board.toMove();
+    curStm_ = board.transitAt() == 0 ?
+                (SHATRA::Color)(!board.toMove())
+                               : board.toMove();
 
-    userMoved_ = isHuman((Color)curStm_);
+    userMoved_ = isHuman((SHATRA::Color)curStm_);
 }
 
-void PlayGameWidget::infoFromEngine(Move m, int s)
+void PlayGameWidget::infoFromEngine(SHATRA::Move m, int s)
 {
     QLabel * l = ui_->labelInfo1;
     if (m.sideMoving() == 1)
@@ -535,7 +536,7 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
 
     score_[m.sideMoving()] = s;
 
-    bool isNum = AppSettings->getValue("/General/Notation").toBool() == NUM;
+    bool isNum = AppSettings->getValue("/General/Notation").toBool() == SHATRA::NUM;
 
     l->setText(QString("<html><b>%1</b> (<font color=\"#%4\">%2%3</font>)</html>")
                .arg(isNum? m.toNumeric() : m.toAlgebraic())
@@ -544,10 +545,9 @@ void PlayGameWidget::infoFromEngine(Move m, int s)
                .arg(s>0? "080" : s<0? "800" : "000"));
 }
 
-void PlayGameWidget::moveFromEngine(Move m)
+void PlayGameWidget::moveFromEngine(SHATRA::Move m)
 {
     SB_PLAY_DEBUG("PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size());
-    //qDebug() << "PlayGameWidget::moveFromEngine() plyQue_.size()=" << plyQue_.size();
 
 #ifndef SB_SINGLE_CAPTURE
     // stop counter on first engine move
@@ -583,7 +583,7 @@ void PlayGameWidget::moveFromEngine(Move m)
 
     {
 //        qDebug() << "ENGINE MOVED";
-        curStm_ = (Color)m.sideMoving();
+        curStm_ = (SHATRA::Color)m.sideMoving();
         emit moveMade(m);
 
         // clear 'what-was-i-thinking-field'
@@ -596,9 +596,9 @@ void PlayGameWidget::moveFromEngine(Move m)
     }
 }
 
-void PlayGameWidget::animationFinished(const Board& board)
+void PlayGameWidget::animationFinished(const SHATRA::Board& board)
 {
-    SB_PLAY_DEBUG("PlayGameWidget::animationFinished() stm="<<board.toMove()
+    SB_PLAY_DEBUG("PlayGameWidget::animationFinished() stm=" << board.toMove()
                   << " plyQue_.size()=" << plyQue_.size());
 
     if (!playing_)
@@ -607,10 +607,10 @@ void PlayGameWidget::animationFinished(const Board& board)
     if (board.moveNumber() > lastMoveNumber_)
     {
         hashHistory_.push_back(board.getHashValue());
-        if (Board::isRepeating(hashHistory_))
+        if (SHATRA::Board::isRepeating(hashHistory_))
         {
             // XXX may work :|
-            winStm_ = Draw;
+            winStm_ = SHATRA::Draw;
             emit gameComment("Draw by repetition");
             stop();
             // XXX need a signal/slot for player notice
@@ -626,7 +626,7 @@ void PlayGameWidget::animationFinished(const Board& board)
 
     // get last moving side on board
     const bool transit = board.transitAt() != 0;
-    const Color stm = transit? board.toMove() : (Color)(!board.toMove());
+    const SHATRA::Color stm = transit? board.toMove() : (SHATRA::Color)(!board.toMove());
 
     // user move
     if (isHuman(stm))
@@ -691,11 +691,11 @@ void PlayGameWidget::animationFinished(const Board& board)
     }
 }
 
-void PlayGameWidget::startNewMove_(const Board& board)
+void PlayGameWidget::startNewMove_(const SHATRA::Board& board)
 {
     SB_PLAY_DEBUG("PlayGameWidget::startNewMove_(..)");
 
-    const Color stm = board.toMove();
+    const SHATRA::Color stm = board.toMove();
 
     // update widets
     setWidgetsPlayer_(stm);
@@ -712,13 +712,13 @@ void PlayGameWidget::startNewMove_(const Board& board)
 }
 
 
-bool PlayGameWidget::checkGameResult_(const Board & board, bool trigger, bool dostop)
+bool PlayGameWidget::checkGameResult_(const SHATRA::Board & board, bool trigger, bool dostop)
 {
     bool end = false;
 
     const bool
-        wwin = board.gameResult() == WhiteWin,
-        bwin = board.gameResult() == BlackWin,
+        wwin = board.gameResult() == SHATRA::WhiteWin,
+        bwin = board.gameResult() == SHATRA::BlackWin,
         draw = false, //XXX need to fix this// board.gameResult() == Draw,
         e1 = play_->player1IsEngine(),
         e2 = play_->player2IsEngine();
@@ -771,8 +771,8 @@ Engine::SearchSettings PlayGameWidget::settings_(int stm) const
 
     if (tc_.type() == TimeControl::T_Tournament)
     {
-        s.wtime = tc_.getTotalTime(White);
-        s.btime = tc_.getTotalTime(Black);
+        s.wtime = tc_.getTotalTime(SHATRA::White);
+        s.btime = tc_.getTotalTime(SHATRA::Black);
         s.movestogo = tc_.movesToGo();
         return s;
     }
@@ -811,7 +811,7 @@ void PlayGameWidget::slotTimeout_(int stm)
     // player vs engine
     else
     {
-        if (isHuman((Color)stm))
+        if (isHuman((SHATRA::Color)stm))
             emit playerLoses();
         else
             emit playerWins();
@@ -820,8 +820,8 @@ void PlayGameWidget::slotTimeout_(int stm)
 
 void PlayGameWidget::slotUpdateClocks_()
 {
-    ui_->clock1->setTime(tc_.getTotalTime(White), tc_.getMoveTime(White));
-    ui_->clock2->setTime(tc_.getTotalTime(Black), tc_.getMoveTime(Black));
+    ui_->clock1->setTime(tc_.getTotalTime(SHATRA::White), tc_.getMoveTime(SHATRA::White));
+    ui_->clock2->setTime(tc_.getTotalTime(SHATRA::Black), tc_.getMoveTime(SHATRA::Black));
 }
 
 void PlayGameWidget::initTiming_(int stm, bool reset)

@@ -24,8 +24,8 @@
 
 class Analysis;
 class MetaAnalysis;
-class Board;
 class EngineDebugWidget;
+namespace SHATRA { class Board; }
 
 class AnalysisWidget : public QWidget
 {
@@ -40,7 +40,7 @@ public:
 public slots:
     /** Sets new position. If analysis is active, the current content will be cleared and
     new analysis will be performed. */
-    void setPosition(const Board& board);
+    void setPosition(const SHATRA::Board& board);
     /** Called when configuration was changed (either on startup or from Preferences dialog. */
     void slotReconfigure();
     /** Start currently selected engine. */
@@ -71,12 +71,12 @@ private slots:
     void slotLinkClicked(const QUrl& link);
     /** Number of visible lines was changed. */
     void slotMpvChanged(int mpv);
-    /** Show tablebase move information. */
-//  void showTablebaseMove(Move move, int score);
+    /* Show tablebase move information. */
+//  void showTablebaseMove(SHATRA::Move move, int score);
 signals:
     void addVariation(const Analysis& analysis);
     void addVariation(const QString& san);
-    void bestMove(const Move &);
+    void bestMove(const SHATRA::Move &);
 private:
     /** Should analysis be running. */
     bool isAnalysisEnabled() const;
@@ -88,7 +88,7 @@ private:
     Engine* m_engine;
     MetaAnalysis * m_metaengine;
     bool m_active, m_ignore;
-    Board m_board;
+    SHATRA::Board m_board;
     int m_windowNumber;
 //  QString m_tablebaseEvaluation;
 //  Tablebase* m_tablebase;

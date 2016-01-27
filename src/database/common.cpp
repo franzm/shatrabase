@@ -12,6 +12,9 @@
  ***************************************************************************/
 
 #include "common.h"
+
+namespace SHATRA {
+
 /*
 Piece& operator++(Piece& w)
 {
@@ -73,3 +76,4 @@ QString resultString(Result result)
 	}
 }
 
+} // namespace SHATRA

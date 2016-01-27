@@ -47,7 +47,7 @@ public slots:
 	void slotDatabaseChanged(DatabaseInfo* dbInfo);
 
     /* Show the time in the String for the player with @p color */
-    void slotDisplayTime(const QString& text, Color color);
+    void slotDisplayTime(const QString& text, SHATRA::Color color);
 
 signals:
 	void actionRequested(const EditAction& action);

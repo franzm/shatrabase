@@ -16,7 +16,7 @@ PlayEngineTester::PlayEngineTester(QObject *parent) :
     engine_[1] = new PlayGameEngine(0, this);
 
     connect(engine_[0], SIGNAL(ready()), SLOT(engineReady_()));
-    connect(engine_[0], SIGNAL(moveMade(Move)), SLOT(engineMove_(Move)));
+    connect(engine_[0], SIGNAL(moveMade(SHATRA::Move)), SLOT(engineMove_(SHATRA::Move)));
     connect(engine_[0], SIGNAL(engineClueless()), SLOT(engineClueless_()));
     connect(engine_[0], SIGNAL(engineCrashed(QString)), SLOT(engineCrashed_(QString)));
     connect(engine_[0], SIGNAL(engineDebug(Engine*,Engine::DebugType,QString)),
@@ -39,7 +39,7 @@ void PlayEngineTester::engineReady_()
     engine_[0]->setPosition(board_, settings_);
 }
 
-void PlayEngineTester::engineMove_(const Move& m)
+void PlayEngineTester::engineMove_(const SHATRA::Move& m)
 {
     qDebug() << "move " << m.toNumeric();
 }

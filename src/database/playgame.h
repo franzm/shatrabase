@@ -80,15 +80,15 @@ signals:
     void engineError(const QString& str);
 
     /** Emitted when a move has been suggested by Engine for Player 1 */
-    void moveMade1(Move);
+    void moveMade1(SHATRA::Move);
     /** Emitted when a move has been suggested by Engine for Player 2 */
-    void moveMade2(Move);
+    void moveMade2(SHATRA::Move);
 
     /** The Engine 1 has updated pv line */
-    void moveInfo1(Move, int score);
+    void moveInfo1(SHATRA::Move, int score);
 
     /** The Engine 2 has updated pv line */
-    void moveInfo2(Move, int score);
+    void moveInfo2(SHATRA::Move, int score);
 
 public slots:
 
@@ -106,7 +106,7 @@ public slots:
     /** Sets new position. Signals, that a move has been performed.
         If required, the Engine will be queried.
         Returns true when the Engine is (at least) requested to analyse. */
-    bool setPosition(const Board& board, const Engine::SearchSettings& settings);
+    bool setPosition(const SHATRA::Board& board, const Engine::SearchSettings& settings);
 
 protected slots:
 
@@ -115,8 +115,8 @@ protected slots:
     void engineActivated1_();
     void engineActivated2_();
 
-    void engineMove1_(Move);
-    void engineMove2_(Move);
+    void engineMove1_(SHATRA::Move);
+    void engineMove2_(SHATRA::Move);
 
     void engineError_(const QString& str)
     {

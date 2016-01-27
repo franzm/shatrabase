@@ -62,10 +62,10 @@ void PlayerInfo::setName(const QString& player)
 
 int PlayerInfo::toResult(const QString& res) const
 {
-	if (res.startsWith("1/2")) return Draw;
-	else if (res.startsWith('1')) return WhiteWin;
-	else if (res.startsWith('0')) return BlackWin;
-	else return ResultUnknown;
+    if (res.startsWith("1/2")) return SHATRA::Draw;
+    else if (res.startsWith('1')) return SHATRA::WhiteWin;
+    else if (res.startsWith('0')) return SHATRA::BlackWin;
+    else return SHATRA::ResultUnknown;
 }
 
 void PlayerInfo::update()
@@ -74,27 +74,28 @@ void PlayerInfo::update()
     const Index* index = m_database->index();
 
 	// Determine matching tag values
-    ValueIndex player = index->getValueIndex(m_name);
+    SHATRA::ValueIndex player = index->getValueIndex(m_name);
 
 	// Clean previous statistics
 	reset();
 
     for (int i = 0; i < m_database->count(); ++i) {
-		Color c;
-        if (index->valueIndexFromTag(TagNameWhite, i) == player)
-			c = White;
-        else if (index->valueIndexFromTag(TagNameBlack, i) == player)
-			c = Black;
+        SHATRA::Color c;
+        if (index->valueIndexFromTag(SHATRA::TagNameWhite, i) == player)
+            c = SHATRA::White;
+        else if (index->valueIndexFromTag(SHATRA::TagNameBlack, i) == player)
+            c = SHATRA::Black;
 		else continue;
-        int res = toResult(index->tagValue(TagNameResult, i));
+        int res = toResult(index->tagValue(SHATRA::TagNameResult, i));
 		m_result[c][res]++;
 		m_count[c]++;
-        int elo = index->tagValue(c == White ? TagNameWhiteElo : TagNameBlackElo, i).toInt();
+        int elo = index->tagValue(
+              c == SHATRA::White ? SHATRA::TagNameWhiteElo : SHATRA::TagNameBlackElo, i).toInt();
 		if (elo) {
 			m_rating[0] = qMin(elo, m_rating[0]);
 			m_rating[1] = qMax(elo, m_rating[1]);
 		}
-        PartialDate date(index->tagValue(TagNameDate, i));
+        PartialDate date(index->tagValue(SHATRA::TagNameDate, i));
 		if (date.year() > 1000) {
 			m_date[0] = qMin(date, m_date[0]);
 			m_date[1] = qMax(date, m_date[1]);
@@ -113,7 +114,8 @@ void PlayerInfo::update()
         }
     }
 */
-	qSwap(m_result[Black][WhiteWin], m_result[Black][BlackWin]);
+    qSwap(m_result[SHATRA::Black][SHATRA::WhiteWin],
+          m_result[SHATRA::Black][SHATRA::BlackWin]);
 }
 
 
@@ -123,12 +125,13 @@ QString PlayerInfo::formattedScore(const int result[4], int count) const
 		return QCoreApplication::translate("PlayerInfo", "<i>no games</i>");
 	QString score = "<b>";
 	QChar scoresign[4] = {'*', '+', '=', '-'};
-    for (int i = WhiteWin; i <= BlackWin; ++i)
+    for (int i = SHATRA::WhiteWin; i <= SHATRA::BlackWin; ++i)
 		score += QString(" &nbsp;%1%2").arg(scoresign[i]).arg(result[i]);
-	if (result[ResultUnknown])
-		score += QString(" &nbsp;*%1").arg(result[ResultUnknown]);
-	if (count - result[ResultUnknown])
-		score += QString(" &nbsp;(%1%)").arg((100.0 * result[WhiteWin] + 50.0 * result[Draw]) / (count - result[ResultUnknown]),
+    if (result[SHATRA::ResultUnknown])
+        score += QString(" &nbsp;*%1").arg(result[SHATRA::ResultUnknown]);
+    if (count - result[SHATRA::ResultUnknown])
+        score += QString(" &nbsp;(%1%)").arg((100.0 * result[SHATRA::WhiteWin]
+                    + 50.0 * result[SHATRA::Draw]) / (count - result[SHATRA::ResultUnknown]),
 														 1, 'f', 1);
 	score += "</b>";
 	return score;
@@ -139,17 +142,17 @@ QString PlayerInfo::formattedScore() const
 {
 	int total[4];
     for (int i = 0; i < 4; ++i)
-		total[i] = m_result[White][i] + m_result[Black][i];
-	int count = m_count[White] + m_count[Black];
+        total[i] = m_result[SHATRA::White][i] + m_result[SHATRA::Black][i];
+    int count = m_count[SHATRA::White] + m_count[SHATRA::Black];
 	return QCoreApplication::translate("PlayerInfo", "Total: %1<br>White: %2<br>Black: %3<br>")
 			.arg(formattedScore(total, count))
-			.arg(formattedScore(m_result[White], m_count[White]))
-			.arg(formattedScore(m_result[Black], m_count[Black]));
+            .arg(formattedScore(m_result[SHATRA::White], m_count[SHATRA::White]))
+            .arg(formattedScore(m_result[SHATRA::Black], m_count[SHATRA::Black]));
 }
 
 void PlayerInfo::reset()
 {
-    for (int c = White; c <= Black; ++c) {
+    for (int c = SHATRA::White; c <= SHATRA::Black; ++c) {
         for (int r = 0; r < 4; ++r)
 			m_result[c][r] = 0;
 		m_count[c] = 0;
@@ -165,7 +168,7 @@ void PlayerInfo::reset()
 QString PlayerInfo::formattedGameCount() const
 {
 	return QCoreApplication::translate("PlayerInfo", "Games in database <i>%1</i>: <b>%2</b><br>")
-			.arg(m_database->name()).arg(m_count[White] + m_count[Black]);
+            .arg(m_database->name()).arg(m_count[SHATRA::White] + m_count[SHATRA::Black]);
 }
 
 QString PlayerInfo::formattedRating() const

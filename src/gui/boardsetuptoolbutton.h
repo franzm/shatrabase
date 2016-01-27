@@ -18,14 +18,14 @@ class BoardSetupToolButton : public QLabel
 public:
     explicit BoardSetupToolButton(QWidget *parent = 0);
     QPixmap m_pixmap;
-    Piece m_piece;
+    SHATRA::Piece m_piece;
 
 signals:
     void signalDragStarted(QWidget*, QMouseEvent*);
-    void signalClicked(Piece p);
+    void signalClicked(SHATRA::Piece p);
 
 public slots:
-    void slotClearBackground(Piece p);
+    void slotClearBackground(SHATRA::Piece p);
     void slotSetSelected();
     
 protected:

@@ -40,7 +40,7 @@ public slots:
     /** Creates the main engine */
     bool activate(int engineIndex);
 
-    bool startAnalysis(const Board& board, int nv = 1,
+    bool startAnalysis(const SHATRA::Board& board, int nv = 1,
                        const Engine::SearchSettings & settings = Engine::SearchSettings());
 
     void stopAnalysis();
@@ -61,7 +61,7 @@ protected:
             analyses_,
             /** single pv for each additional engine */
             analyses2_;
-    Board board_;
+    SHATRA::Board board_;
 
     bool running_;
 };

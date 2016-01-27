@@ -18,6 +18,8 @@
 #include <sstream>
 #include <iomanip>
 
+namespace SHATRA {
+
 SBoard getStandardPosition();
 
 SBoard standardPosition = getStandardPosition();
@@ -198,7 +200,7 @@ bool SBoard::setAt(const int at, const Piece p, bool urg)
         m_sb[at] = p; return true; // NB m_dfs.push(NB[s]) in setup
     }
     PieceType pt = pieceType(p);
-    if (pt == None || m_offBoard[p] == 0) return false;
+    if (pt == NoPiece || m_offBoard[p] == 0) return false;
     
     m_sb[at] = p;
     if (urg) setUrgentAt(at);
@@ -214,10 +216,10 @@ bool SBoard::setAt(const int at, const Piece p, bool urg)
 void SBoard::removeAt(const int at) // also board coords
 {
     Piece p = Piece(m_sb[at] & 0xf);
-    m_sb[at] = Empty;
+    m_sb[at] = EmptyPiece;
 
-    if (isDefunkt(p)) p = Empty;
-    if (p == Empty) return;
+    if (isDefunkt(p)) p = EmptyPiece;
+    if (p == EmptyPiece) return;
 
     PieceType pt = pieceType(p);
 
@@ -283,44 +285,44 @@ bool SBoard::epPossible(int sq, Color side) const // should be Square?
         if (pieceAt(bsq + n) != BlackShatra)
             break;
         if (pieceAt(bsq + ne) == WhiteShatra
-         && pieceAt(bsq + sw) == Empty)
+         && pieceAt(bsq + sw) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + nw) == WhiteShatra
-         && pieceAt(bsq + se) == Empty)
+         && pieceAt(bsq + se) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + e) == WhiteShatra
-         && pieceAt(bsq + w) == Empty)
+         && pieceAt(bsq + w) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + w) == WhiteShatra
-         && pieceAt(bsq + e) == Empty)
+         && pieceAt(bsq + e) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + se) == WhiteShatra
-         && pieceAt(bsq + nw) == Empty)
+         && pieceAt(bsq + nw) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + sw) == WhiteShatra
-         && pieceAt(bsq + ne) == Empty)
+         && pieceAt(bsq + ne) == EmptyPiece)
             { okay = true; break; }
         break;
     case Black :
         if (pieceAt(bsq + s) != WhiteShatra)
             break;
         if (pieceAt(bsq + ne) == BlackShatra
-         && pieceAt(bsq + sw) == Empty)
+         && pieceAt(bsq + sw) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + nw) == BlackShatra
-         && pieceAt(bsq + se) == Empty)
+         && pieceAt(bsq + se) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + e) == BlackShatra
-         && pieceAt(bsq + w) == Empty)
+         && pieceAt(bsq + w) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + w) == BlackShatra
-         && pieceAt(bsq + e) == Empty)
+         && pieceAt(bsq + e) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + se) == BlackShatra
-         && pieceAt(bsq + nw) == Empty)
+         && pieceAt(bsq + nw) == EmptyPiece)
             { okay = true; break; }
         if (pieceAt(bsq + sw) == BlackShatra
-         && pieceAt(bsq + ne) == Empty)
+         && pieceAt(bsq + ne) == EmptyPiece)
             { okay = true; break; }
     }
     return okay;
@@ -375,7 +377,7 @@ bool SBoard::SPNToBoard(const QString& qspn)
     {
         if (sp > 0)
         {
-            while(sp--) m_sb[NB[j++]] = Empty;
+            while(sp--) m_sb[NB[j++]] = EmptyPiece;
             c = spn[++i]; if (c == ' ') continue;
         }
         if (c == '/')
@@ -872,7 +874,7 @@ int SBoard::generate(bool cc, int first, int last) // last defaults to 0
 {
     int s, at, r, pr, bstm( m_stm<<2 ), pieces_capturing = 0;
     bool c( !cc ), inFort, doneDrop, biyCaps = false;
-    PieceType homeGate = None, awayGate = None;
+    PieceType homeGate = NoPiece, awayGate = NoPiece;
     m_promoWait[m_sntm] = promoWaiting();
     m_epVictim = NoSquare;
     m_ml.clear();
@@ -1081,7 +1083,7 @@ Move SBoard::parseMove(const QString& algebraic)
     to = (alph? at : g_inRev? NB[63-at] : NB[at]);
     if (!BN[to]) return move;
 
-    type = Empty;
+    type = EmptyPiece;
 
     temp = strlen(lann) - (s - lann);
     if (temp >= 0 && c != 'x' && c != 'X')
@@ -1101,7 +1103,7 @@ Move SBoard::parseMove(const QString& algebraic)
     {
         if (type)
             move.setPromoted(m_offBoard[type + PC[m_stm]]? type : 0);
-        else move.setPromoted(Empty);
+        else move.setPromoted(EmptyPiece);
     }
 //    if (!move.m)
 //        alph = true;
@@ -1209,7 +1211,7 @@ bool SBoard::doMove(const Move& m)
 
     int p = m_sb[m_from];
     Piece piece = Piece(p & 0xf);
-    m_sb[m_from] = Empty; m_sb[m_to] = p; // NB pass (from == to)
+    m_sb[m_from] = EmptyPiece; m_sb[m_to] = p; // NB pass (from == to)
     m_epSquare = m_transit = m_latePromo = NoSquare;
 
     if (m.flipsUrgent())
@@ -1259,8 +1261,8 @@ bool SBoard::doMove(const Move& m)
         int victim_at = m.capturedAt();
         if (m_sb[victim_at] & URGENT)
             clearUrgentAt(victim_at);
-        m_sb[victim_at] = Empty; --m_pieceCount[m_sntm];
-        if (v == Biy) m_biyAt[m_sntm] = Empty;
+        m_sb[victim_at] = EmptyPiece; --m_pieceCount[m_sntm];
+        if (v == Biy) m_biyAt[m_sntm] = EmptyPiece;
 
         if (m.isPromoSntm())
         {
@@ -1281,7 +1283,7 @@ bool SBoard::doMove(const Move& m)
         }
         else
         {
-            m_sb[victim_at] = Empty;
+            m_sb[victim_at] = EmptyPiece;
             m_temdekPending[m_stm] = false;
         }
     }
@@ -1298,7 +1300,7 @@ bool SBoard::doMove(const Move& m)
     if (!inSequence())
     { // NB if we were inseq, clear up defunkts
         if (m.wasInSequence())
-            while (m_dfs.count()) m_sb[m_dfs.remove()] = Empty;
+            while (m_dfs.count()) m_sb[m_dfs.remove()] = EmptyPiece;
             
         if (m_stm == Black) ++m_moveNumber;        
         swapToMove(); // NB this and below are the only two places...
@@ -1316,7 +1318,7 @@ void SBoard::undoMove(const Move& m)
 
     int p = m_sb[m_to];
     Piece piece = Piece(p & 0xf);
-    m_sb[m_to] = Empty; m_sb[m_from] = p;
+    m_sb[m_to] = EmptyPiece; m_sb[m_from] = p;
 
     m_lstm = m_stm;
     if (!inSequence())
@@ -1415,7 +1417,8 @@ void SBoard::getMoveSquares(std::vector<SquareMove>& vec) const
 /* Init board values before starting */
 void SBoardInit()
 {
-    if (g_version == Unspecified) return;
+    if (g_version == Unspecified)
+        return;
     SBoardInitRun = true;
     standardPosition.fromSPN(startPosition());
 }
@@ -1481,3 +1484,5 @@ QString SBoard::dumpAll(const SBoard * comp) const
 
     return QString::fromStdString(str.str());
 }
+
+} // namespace SHATRA

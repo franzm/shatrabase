@@ -78,16 +78,16 @@ int SaveDialog::exec(Database* database, Game& game)
 	ui.roundEdit->setText(game.tag("Round"));
 	ui.dateEdit->setText(game.tag("Date"));
 	ui.eventDateEdit->setText(game.tag("EventDate"));
-    ui.timeControl->setText(game.tag(TagNameTimeControl));
+    ui.timeControl->setText(game.tag(SHATRA::TagNameTimeControl));
 	QList<QAbstractButton*> buttons = ui.result1Button->group()->buttons();
     for (int i = 0; i < buttons.count(); ++i)
 		if (buttons[i]->text() == game.tag("Result"))
 			buttons[i]->setChecked(true);
 	// Completion
-    setLineEdit(ui.whiteEdit, database, TagNameWhite);
-    setLineEdit(ui.blackEdit, database, TagNameBlack);
-    setLineEdit(ui.siteEdit,  database, TagNameSite);
-    setLineEdit(ui.eventEdit, database, TagNameEvent);
+    setLineEdit(ui.whiteEdit, database, SHATRA::TagNameWhite);
+    setLineEdit(ui.blackEdit, database, SHATRA::TagNameBlack);
+    setLineEdit(ui.siteEdit,  database, SHATRA::TagNameSite);
+    setLineEdit(ui.eventEdit, database, SHATRA::TagNameEvent);
 
     int result = QDialog::exec();
 
@@ -123,7 +123,8 @@ int SaveDialog::exec(Database* database, Game& game)
 void SaveDialog::setLineEdit(QLineEdit* edit, Database* database, const QString &tagName)
 {
     QStringList words;
-    if (tagName == TagNameWhite || tagName == TagNameBlack)
+    if (tagName == SHATRA::TagNameWhite
+            || tagName == SHATRA::TagNameBlack)
     {
         words = database->index()->playerNames();
     }

@@ -63,7 +63,7 @@ PositionSearch::PositionSearch()
 {
 }
 
-PositionSearch::PositionSearch(Database* db, const Board& position)
+PositionSearch::PositionSearch(Database* db, const SHATRA::Board& position)
 {
 	setPosition(position);
 	m_database = db;
@@ -83,12 +83,12 @@ Search::Type PositionSearch::type() const
 	return Search::PositionSearch;
 }
 
-Board PositionSearch::position() const
+SHATRA::Board PositionSearch::position() const
 {
 	return m_position;
 }
 
-void PositionSearch::setPosition(const Board& position)
+void PositionSearch::setPosition(const SHATRA::Board& position)
 {
 	m_position = position;
 }
@@ -119,10 +119,14 @@ EloSearch::~EloSearch()
 
 void EloSearch::initialize()
 {
-    m_matches = m_database->index()->listInRange(TagNameWhiteElo, QString::number(m_minWhiteElo),
-			QString::number(m_maxWhiteElo));
-    m_matches &= m_database->index()->listInRange(TagNameBlackElo, QString::number(m_minBlackElo),
-			QString::number(m_maxBlackElo));
+    m_matches = m_database->index()->listInRange(
+                SHATRA::TagNameWhiteElo,
+                QString::number(m_minWhiteElo),
+                QString::number(m_maxWhiteElo));
+    m_matches &= m_database->index()->listInRange(
+                SHATRA::TagNameBlackElo,
+                QString::number(m_minBlackElo),
+                QString::number(m_maxBlackElo));
 }
 
 void EloSearch::setEloSearch(int minWhiteElo, int maxWhiteElo, int minBlackElo, int maxBlackElo)

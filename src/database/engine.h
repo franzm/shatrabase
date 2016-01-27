@@ -114,7 +114,7 @@ public:
     /** Analyzes the given position.
         If @p movetime_ms > 0, limit the analysis time to given millisecs.
         If @p max_ply > 0, only the specified number of plies will be searched. */
-    virtual bool startAnalysis(const Board& board, int nv = 1,
+    virtual bool startAnalysis(const SHATRA::Board& board, int nv = 1,
                                const SearchSettings & settings = SearchSettings()) = 0;
 
     /** Stops any analysis */
@@ -158,7 +158,7 @@ signals:
 	void analysisUpdated(const Analysis& analysis);
 
     /** Engine has sent bestmove */
-    void bestMoveSend(const Move& move);
+    void bestMoveSend(const SHATRA::Move& move);
 
     /** Sends debug info out */
     void engineDebug(Engine * engine, Engine::DebugType t, const QString& str);

@@ -36,7 +36,7 @@ public:
     /** Analyses the the given position.
         If @p movetime_ms > 0, limit the analysis time to given millisecs.
         If @p max_ply > 0, only the specified number of plies will be searched. */
-    bool startAnalysis(const Board& board, int nv,
+    bool startAnalysis(const SHATRA::Board& board, int nv,
                        const SearchSettings & settings = SearchSettings());
 
 	/** Stops any analysis */
@@ -72,7 +72,7 @@ private:
     /** Parse option string */
     void parseOptions(const QString &message);
 
-	Board m_board;
+    SHATRA::Board m_board;
 
 	QString m_position;
 	QString m_waitingOn;

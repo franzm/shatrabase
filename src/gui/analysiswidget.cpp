@@ -39,7 +39,8 @@ AnalysisWidget::AnalysisWidget(int num, EngineDebugWidget * debug)
     ui.cbMeta->setVisible(false);
 
     //  m_tablebase = new Shredder;
-//  connect(m_tablebase, SIGNAL(bestMove(Move, int)), this, SLOT(showTablebaseMove(Move, int)));
+//  connect(m_tablebase, SIGNAL(bestMove(SHATRA::Move, int)),
+//                    this, SLOT(showTablebaseMove(SHATRA::Move, int)));
 }
 
 AnalysisWidget::~AnalysisWidget()
@@ -229,7 +230,7 @@ void AnalysisWidget::showAnalysis(const Analysis& analysis)
     updateAnalysis();
 }
 
-void AnalysisWidget::setPosition(const Board& board)
+void AnalysisWidget::setPosition(const SHATRA::Board& board)
 {
     if (ui.freezeButton->isChecked())
         return;
@@ -331,7 +332,7 @@ void AnalysisWidget::updateAnalysis()
     if (m_ignore)
         return;
 
-    Move bestMove;
+    SHATRA::Move bestMove;
     int  bestScore = -10000;
     bool hasminnps=false;
     quint64 minnps = 0, maxnps = 0,

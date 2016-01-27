@@ -66,17 +66,17 @@ signals:
 
 private slots:
 
-    void eStart1_() { eStart_(White); }
-    void eStart2_() { eStart_(Black); }
+    void eStart1_() { eStart_(SHATRA::White); }
+    void eStart2_() { eStart_(SHATRA::Black); }
 
-    void eFinish1_() { eFinish_(White); }
-    void eFinish2_() { eFinish_(Black); }
+    void eFinish1_() { eFinish_(SHATRA::White); }
+    void eFinish2_() { eFinish_(SHATRA::Black); }
 
-    void eError1_(QProcess::ProcessError e) { eError_(White, e); }
-    void eError2_(QProcess::ProcessError e) { eError_(Black, e); }
+    void eError1_(QProcess::ProcessError e) { eError_(SHATRA::White, e); }
+    void eError2_(QProcess::ProcessError e) { eError_(SHATRA::Black, e); }
 
-    void ePoll1_() { ePoll_(White); }
-    void ePoll2_() { ePoll_(Black); }
+    void ePoll1_() { ePoll_(SHATRA::White); }
+    void ePoll2_() { ePoll_(SHATRA::Black); }
 
 private:
 
@@ -100,7 +100,7 @@ private:
     QProcess * process_[2];
     bool active_[2];
 
-    SBoard board_;
+    SHATRA::SBoard board_;
     Game game_;
 };
 
