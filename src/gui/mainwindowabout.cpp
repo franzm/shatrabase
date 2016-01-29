@@ -18,23 +18,28 @@
 
 void MainWindow::slotHelpAbout()
 {
-    QString version = QString(STR_REVISION).replace(',','.');
+    QString version = QString(SBASE_STR_REVISION);
     QMessageBox dialog(QMessageBox::NoIcon,
                         tr("About Shatrabase"),
                         tr("<h1>Shatrabase</h1>"
                         "<p>Free Shatra database Version %1</p>"
                         "<p>Derived from Chessx Version 0.9.5</p>"
-                        COPYRIGHT
                         "<p>License: GNU Public License 3 - GPLv3</p>"
+                        "<p>" SBASE_COPYRIGHT "</p>"
                         "<p>Developers: <a href=\"mailto:francis@afkm.com\">Francis Monkman</a>"
                         " and <a href=\"mailto:stefan.berke@cymatrix.org\">Stefan Berke</a></p>"
-                        "<p>Homepage: <a href=\"https://github.com/franzm/shatrabase\">https://github.com/franzm/shatrabase</a>"
-                        "<p>Chessx maintainer: <a href=\"mailto:jens-chessx@gmx.net\">Jens Nissen</a></p>"
+                        "<p>Homepage: <a href=\"https://github.com/franzm/shatrabase\">"
+                                               "https://github.com/franzm/shatrabase</a>"
+                        "<p>Chessx maintainer: "
+                          "<a href=\"mailto:jens-chessx@gmx.net\">Jens Nissen</a></p>"
                         "<p>Testing, usability and website: Bruno Rizzuti</p>"
                         "<p>Further maintainers: Michal Rudolf, Ejner Borgbjerg</p>"
-                        "<p>Additional coding: James Coons, Marius Roets, Sean Estabrooks, Rico Zenklusen, "
+                        "<p>Additional coding: James Coons, Marius Roets, "
+                                              "Sean Estabrooks, Rico Zenklusen, "
                         "Heinz Hopfgartner, William Hoggarth.</p>"
-                        "<p>Chessx homepage: <a href=\"http://chessx.sourceforge.net\">http://chessx.sourceforge.net</a><br>")
+                        "<p>Chessx homepage: <a href=\"http://chessx.sourceforge.net\">"
+                                              "http://chessx.sourceforge.net</a><br>"
+                        )
                         .arg(version),
                 QMessageBox::Ok);
     dialog.setIconPixmap((QPixmap(":/images/shatrabase.png")));

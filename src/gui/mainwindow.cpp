@@ -1248,7 +1248,7 @@ void MainWindow::setupActions()
     pHelpDock->toggleViewAction()->setShortcut(Qt::Key_F1);
     pHelpDock->hide();
 
-    help->addAction(createAction(tr("&Report a bug..."), SLOT(slotHelpBug())));
+    //help->addAction(createAction(tr("&Report a bug..."), SLOT(slotHelpBug())));
 	help->addSeparator();
     help->addAction(createAction(tr("&About Shatrabase"), SLOT(slotHelpAbout()), QString(), QString(), QAction::AboutRole));
 

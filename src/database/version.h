@@ -10,17 +10,17 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
-#define VERSION_MAJOR   0
-#define VERSION_MINOR   9
-#define REVISION        6
+#define SBASE_VERSION_MAJOR   0
+#define SBASE_VERSION_MINOR   9
+#define SBASE_REVISION        7
 
-#define XGLUE2(a,b) #a "," #b
-#define GLUE2(a,b)  XGLUE2(a,b)
+#define SBASE_STRINGIFYX(a__) #a__
+#define SBASE_STRINGIFY(a__) SBASE_STRINGIFYX(a__)
 
-#define XGLUE4(a,b,c,d) #a "," #b "," #c "," #d
-#define GLUE4(a,b,c,d)  XGLUE4(a,b,c,d)
+#define SBASE_STR_VERSION     SBASE_STRINGIFY(SBASE_VERSION_MAJOR) "." \
+                              SBASE_STRINGIFY(SBASE_VERSION_MINOR)
+#define SBASE_STR_REVISION    SBASE_STRINGIFY(SBASE_VERSION_MAJOR) "." \
+                              SBASE_STRINGIFY(SBASE_VERSION_MINOR) "." \
+                              SBASE_STRINGIFY(SBASE_REVISION)
 
-#define STR_VERSION     GLUE2(VERSION_MAJOR,VERSION_MINOR)
-#define STR_REVISION    GLUE4(VERSION_MAJOR,VERSION_MINOR,REVISION,0)
-
-#define COPYRIGHT "Copyright (C) 2014"
+#define SBASE_COPYRIGHT "Copyright (C) 2016"
