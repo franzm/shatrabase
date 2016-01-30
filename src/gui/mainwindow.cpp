@@ -76,7 +76,26 @@ MainWindow::MainWindow() : QMainWindow(),
     m_autoPlayTimer->setSingleShot(true);
     connect(m_autoPlayTimer, SIGNAL(timeout()), this, SLOT(slotAutoPlayTimeout()));
 
-	/* Create clipboard database */
+    /* Input Shatra Version for this session */
+    QMessageBox mb(
+                QMessageBox::Question,
+                tr("Shatra Version"),
+                tr("Choose Shatra version"),
+                QMessageBox::Yes | QMessageBox::No);
+#ifndef Q_OS_WIN
+    mb.setButtonText(QMessageBox::Yes, tr("Extended"));
+    mb.setButtonText(QMessageBox::No, tr("Original"));
+    SHATRA::g_version = mb.exec() == QMessageBox::No ?
+                SHATRA::Original : SHATRA::Extended;
+#else
+    mb.setButtonText(QMessageBox::Yes, tr("Original"));
+    mb.setButtonText(QMessageBox::No, tr("Extended"));
+    SHATRA::g_version = mb.exec() == QMessageBox::Yes ?
+                SHATRA::Original : SHATRA::Extended;
+#endif
+    SHATRA::SBoardInit();
+
+    /* Create clipboard database */
 	m_databases.append(new DatabaseInfo);
 	m_currentDatabase = 0;
     m_prevDatabase = 0;
@@ -368,25 +387,6 @@ MainWindow::MainWindow() : QMainWindow(),
 
 	/* Randomize */
 	srand(time(0));
-
-    /* Input Shatra Version for this session */
-    QMessageBox mb(
-                QMessageBox::Question,
-                tr("Shatra Version"),
-                tr("Choose Shatra version"),
-                QMessageBox::Yes | QMessageBox::No);
-#ifndef Q_OS_WIN
-    mb.setButtonText(QMessageBox::Yes, tr("Extended"));
-    mb.setButtonText(QMessageBox::No, tr("Original"));
-    SHATRA::g_version = mb.exec() == QMessageBox::No ?
-                SHATRA::Original : SHATRA::Extended;
-#else
-    mb.setButtonText(QMessageBox::Yes, tr("Original"));
-    mb.setButtonText(QMessageBox::No, tr("Extended"));
-    SHATRA::g_version = mb.exec() == QMessageBox::Yes ?
-                SHATRA::Original : SHATRA::Extended;
-#endif
-    SHATRA::SBoardInit();
 
     /* Restoring layouts */
 	if (!AppSettings->layout(this))
