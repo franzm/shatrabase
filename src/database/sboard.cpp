@@ -633,8 +633,8 @@ bool SBoard::prohibited(int to, PieceType p)
 {
 //    bool fortW = Rank(to) < (p == Biy? 4 : 5);
 //    bool fortB = Rank(to) > (p == Biy? 11 : 10);
-    bool fortW = Rank(to) < (5  - (p == Biy));
-    bool fortB = Rank(to) > (10 + (p == Biy));
+    bool fortW = Rank(to) < (5  - ((p == Biy) || (p==Batyr && m_ver == Original)));
+    bool fortB = Rank(to) > (10 + ((p == Biy) || (p==Batyr && m_ver == Original)));
 
     if (m_stm) { if (fortB && temdekOn(Black)) return true; }
     else         if (fortW && temdekOn(White)) return true;
