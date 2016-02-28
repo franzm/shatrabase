@@ -92,10 +92,14 @@ public :
     SHATRA::Move move(MoveId moveId = CURRENT_MOVE) const;
 	/* @return current move id. */
 	MoveId currentMove() const { return m_currentNode; }
+	/* @return starting board's stm */
+    int startingStm() const { return m_startingBoard.toMove(); }
+    /* @return color of piece at given square on starting board */
+    int startingColor(int at) const { return pieceColor(m_startingBoard.pieceAt(at)); }
 	/* @return comment at move at node @p moveId. */
 	QString annotation(MoveId moveId = CURRENT_MOVE, Position position = AfterMove) const;
 
-    /* Show annotations on the board for the Nose @p moveId. */
+    /* Show annotations on the board for the node @p moveId. */
     void indicateAnnotationsOnBoard(MoveId moveId);
     /* @return squareAnnotation at move at node @p moveId. */
     QString squareAnnotation(MoveId moveId = CURRENT_MOVE) const;

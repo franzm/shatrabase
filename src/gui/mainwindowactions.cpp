@@ -398,6 +398,7 @@ void MainWindow::slotEditPasteSPN()
 void MainWindow::slotEditPasteSGN()
 {
     QString sgn = QApplication::clipboard()->text().trimmed();
+    qDebug() << sgn;
     if (!sgn.isEmpty())
     {
         MemoryDatabase sgnDatabase;

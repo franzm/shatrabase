@@ -324,6 +324,7 @@ bool SBoard::epPossible(int sq, Color side) const // should be Square?
         if (pieceAt(bsq + sw) == BlackShatra
          && pieceAt(bsq + ne) == EmptyPiece)
             { okay = true; break; }
+    default : return false;
     }
     return okay;
 }
@@ -574,6 +575,7 @@ QString SBoard::toSPN() const
 
  // temdeks
     if (temdekOn(White)) spn += 'T'; if (temdekOn(Black)) spn += 't';
+    qDebug() << spn;
     if (temdekOff(White) && temdekOff(Black)) spn += '-'; spn += ' ';
  // piece in sequence
     if (inSequence()) spn += QString::number(transitAt());
