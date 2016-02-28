@@ -575,7 +575,7 @@ QString SBoard::toSPN() const
 
  // temdeks
     if (temdekOn(White)) spn += 'T'; if (temdekOn(Black)) spn += 't';
-    qDebug() << spn;
+//    qDebug() << spn;
     if (temdekOff(White) && temdekOff(Black)) spn += '-'; spn += ' ';
  // piece in sequence
     if (inSequence()) spn += QString::number(transitAt());
@@ -635,8 +635,8 @@ bool SBoard::prohibited(int to, PieceType p)
 {
 //    bool fortW = Rank(to) < (p == Biy? 4 : 5);
 //    bool fortB = Rank(to) > (p == Biy? 11 : 10);
-    bool fortW = Rank(to) < (5  - ((p == Biy) || (p==Batyr && m_ver == Original)));
-    bool fortB = Rank(to) > (10 + ((p == Biy) || (p==Batyr && m_ver == Original)));
+    bool fortW = Rank(to) < (5  - ((p == Biy) || (p == Batyr && m_ver == Original)));
+    bool fortB = Rank(to) > (10 + ((p == Biy) || (p == Batyr && m_ver == Original)));
 
     if (m_stm) { if (fortB && temdekOn(Black)) return true; }
     else         if (fortW && temdekOn(White)) return true;
@@ -657,33 +657,35 @@ void SBoard::doCFlags(int from, int to, int cp)
 {
     if (m_promoWait[m_sntm])
         if (pieceTypeAt(cp) <= Yalkyn) m_b |= PROMO_sntm;
-
+        
+        
+    int thW = 3 + g_version, thB = 12 - g_version;
     switch (m_stm)
     {
     case White:
-        if (Rank(to) <= 4)
+        if (Rank(to) < thW)
         {
-            if (temdekOn(White) && Rank(from) <= 4)  m_b |= FLIP_URGENT;
+            if (temdekOn(White) && Rank(from) < thW)  m_b |= FLIP_URGENT;
         }
         else if (from == m_urgent[White]) m_b |= FLIP_URGENT;
 
         if (temdekOn(White))
-            if (Rank(from) < 5 && Rank(to) > 4) m_b |= DECTDK;
+            if (Rank(from) < thW && Rank(to) >= thW) m_b |= DECTDK;
 
-        if (Rank(cp) > 10 && temdekOn(Black)) m_b |= DECTDK_sntm;
+        if (Rank(cp) > thB && temdekOn(Black)) m_b |= DECTDK_sntm;
         break;
 
     case Black:
-        if (Rank(to) >= 11)
+        if (Rank(to) > thB)
         {
-            if (temdekOn(Black) && Rank(from) >= 11)  m_b |= FLIP_URGENT;
+            if (temdekOn(Black) && Rank(from) > thB)  m_b |= FLIP_URGENT;
         }
         else if (from == m_urgent[Black]) m_b |= FLIP_URGENT;
 
         if (temdekOn(Black))
-            if (Rank(from) > 10 && Rank(to) < 11) m_b |= DECTDK;
+            if (Rank(from) > thB && Rank(to) <= thB) m_b |= DECTDK;
 
-        if (Rank(cp) < 5  && temdekOn(White)) m_b |= DECTDK_sntm;
+        if (Rank(cp) < thW  && temdekOn(White)) m_b |= DECTDK_sntm;
     }
 }
  // if dropping from home fort, add decTemdek flag if T on
@@ -1174,7 +1176,7 @@ Move SBoard::prepareMove2(const int f, const int t) const
         if (from == m_ml[p].from() && to == m_ml[p].to())
         {
             ++found;
-            if (found == 2) {move = m_ml[p]; break; }
+            if (found == 2) { move = m_ml[p]; break; }
         }
     }
 /*

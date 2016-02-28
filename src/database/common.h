@@ -230,8 +230,8 @@ enum MoveType
 enum ResultType { NoResult, Win, Loss };
 enum Result { ResultUnknown, WhiteWin, Draw, BlackWin };
 
-//#define MIN(a,b) b^((a^b) & -(a<b))
-//#define MAX(a,b) a^((a^b) & -(a<b))
+//#define MIN(a,b) (b^((a^b) & -(a<b)))
+//#define MAX(a,b) (a^((a^b) & -(a<b)))
 //#define SWAP(a,b) (((a)^=(b)), ((b)^=(a)), ((a)^=(b)))
 
 QString startPosition();

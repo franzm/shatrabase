@@ -614,7 +614,7 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
             m_newVariation = false;
         } else {  // next move in the game
             if (SHATRA::g_newGame) { // parse first 'from' value
-                qDebug() << token;
+//                qDebug() << token;
                 int sq = 0;
                 for (int c = 0; c < 2; ++c) {
                     if (!token.at(c).isDigit())
