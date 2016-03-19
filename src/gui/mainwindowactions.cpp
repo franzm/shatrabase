@@ -398,6 +398,7 @@ void MainWindow::slotEditPasteSPN()
 void MainWindow::slotEditPasteSGN()
 {
     QString sgn = QApplication::clipboard()->text().trimmed();
+    qDebug() << sgn;
     if (!sgn.isEmpty())
     {
         MemoryDatabase sgnDatabase;
@@ -477,7 +478,7 @@ void MainWindow::slotBoardMove(SHATRA::Square from, SHATRA::Square to, int butto
         {
             QMessageBox mb;
             mb.setText(tr("You can either capture or drop"));
-            mb.setInformativeText(tr("   No to drop, Yes to capture"));
+            mb.setInformativeText(tr("   Yes to capture, No to drop"));
             // NB can add a Cancel button for non-HumanTournament mode
             mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
 //            if (mb.exec() == QMessageBox::Cancel) return;

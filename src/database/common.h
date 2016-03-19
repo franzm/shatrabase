@@ -109,7 +109,7 @@ enum Piece
 };
 
 enum PieceType { NoPiece, Batyr, Tura, Yalkyn, Biy, Shatra };
-enum Color { White, Black };
+enum Color { White, Black, NoColor };
 enum BoardLimits { fsq = 1, lsq = 62 };
 enum ShatraVersion { Unspecified, Original, Extended };
 
@@ -163,7 +163,8 @@ inline PieceType pieceType(const Piece p)
 
 /* Return Color of given Piece */
 inline Color pieceColor(const Piece p)
-    { return isBlack(p) ? Black : White; }
+    { return isBlack(p) ? Black :
+             isWhite(p) ? White : NoColor; }
 
 /* Verify that given Piece is within ranges */
 inline bool isValidPiece(const Piece p)
@@ -229,8 +230,8 @@ enum MoveType
 enum ResultType { NoResult, Win, Loss };
 enum Result { ResultUnknown, WhiteWin, Draw, BlackWin };
 
-//#define MIN(a,b) b^((a^b) & -(a<b))
-//#define MAX(a,b) a^((a^b) & -(a<b))
+//#define MIN(a,b) (b^((a^b) & -(a<b)))
+//#define MAX(a,b) (a^((a^b) & -(a<b)))
 //#define SWAP(a,b) (((a)^=(b)), ((b)^=(a)), ((a)^=(b)))
 
 QString startPosition();

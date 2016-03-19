@@ -28,7 +28,7 @@ SgnDatabase::SgnDatabase(bool b64bit) :
     Database(),
     bUse64bit(b64bit)
 {
-	initialise();
+    initialise();
 }
 
 SgnDatabase::~SgnDatabase()
@@ -40,17 +40,17 @@ bool SgnDatabase::open(const QString& filename, bool utf8)
 {
     if (m_isOpen)
     {
-		return false;
-	}
+        return false;
+    }
     m_break = false;
-	m_filename = filename;
+    m_filename = filename;
     if (openFile(filename))
     {
         m_isOpen = true;
         m_utf8 = utf8;
-		return true;
-	}
-	return false;
+    return true;
+  }
+  return false;
 }
 
 void SgnDatabase::parseGame()
@@ -69,7 +69,7 @@ Game * SgnDatabase::parseGameIntern()
     IndexBaseType n = m_count - 1;
     // get the start board
     QString spn = m_index.tagValue(SHATRA::TagNameSPN, n);
-//    qDebug() << spn;
+    qDebug() << spn;
     if (spn != "?" && spn != "0")
         game->setStartingBoard(spn);
     // parse game and set tag values
@@ -295,8 +295,8 @@ bool SgnDatabase::parseFileIntern()
                 {
                     if (fp > nextDiff)
                     {
-                       nextDiff += countDiff;
-                       emit progress(++percentDone);
+                        nextDiff += countDiff;
+                        emit progress(++percentDone);
                     }
                 }
                 else
@@ -306,20 +306,20 @@ bool SgnDatabase::parseFileIntern()
             }
         }
     }
-	return true;
+    return true;
 }
 
 bool SgnDatabase::openFile(const QString& filename)
 {
-	//open file
+  //open file
     QFile* file = new QFile(filename);
     if (!file->exists()) {
         delete file;
-		return false;
-	}
+        return false;
+    }
     file->open(QIODevice::ReadOnly);
     m_file = file;
-	return true;
+    return true;
 }
 
 bool SgnDatabase::openString(const QString& content)
@@ -340,49 +340,49 @@ bool SgnDatabase::openString(const QString& content)
 
 QString SgnDatabase::filename() const
 {
-	return m_filename;
+    return m_filename;
 }
 
 void SgnDatabase::close()
 {
     //close the file, and delete objects
     if (m_file) m_file->close();
-	delete m_file;
+    delete m_file;
     m_file = 0;
     delete[] m_gameOffsets64;
     delete[] m_gameOffsets32;
 
-	//reset member variables
-	initialise();
+    //reset member variables
+    initialise();
 }
 
 void SgnDatabase::loadGameMoves(int index, Game& game)
 {
-	if (!m_isOpen || index >= m_count)
-		return;
-	game.clear();
-	seekGame(index);
-	skipTags();
+    if (!m_isOpen || index >= m_count)
+        return;
+    game.clear();
+    seekGame(index);
+    skipTags();
     QString spn = m_index.tagValue(SHATRA::TagNameSPN, index); // was m_count -1
-	if (spn != "?")
-		game.setStartingBoard(spn);
-	parseMoves(&game);
+    if (spn != "?")
+        game.setStartingBoard(spn);
+    parseMoves(&game);
 }
 
 bool SgnDatabase::loadGame(int index, Game& game)
 {
     if (!m_isOpen || index >= m_count) {
-		return false;
-	}
+        return false;
+    }
 
-	//parse the game
+  //parse the game
     game.clear();
-	loadGameHeaders(index, game);
-	seekGame(index);
-	skipTags();
+    loadGameHeaders(index, game);
+    seekGame(index);
+    skipTags();
     QString spn = m_index.tagValue(SHATRA::TagNameSPN, index ); // was m_count - 1
-	if (spn != "?")
-		game.setStartingBoard(spn);
+    if (spn != "?")
+        game.setStartingBoard(spn);
     parseMoves(&game);
 
     return m_variation != -1 || spn != "?";  // Not sure of all of the ramifications of this
@@ -395,10 +395,10 @@ void SgnDatabase::initialise()
     m_gameOffsets64 = 0;
     m_gameOffsets32 = 0;
     m_inComment = false;
-	m_isOpen = false;
-	m_filename = QString();
-	m_count = 0;
-	m_allocated = 0;
+    m_isOpen = false;
+    m_filename = QString();
+    m_count = 0;
+    m_allocated = 0;
     SHATRA::g_nErrors = 0;
 }
 
@@ -407,7 +407,7 @@ void SgnDatabase::initialise()
 void SgnDatabase::addOffset()
 {
     IndexBaseType fp = m_file->pos();
-	addOffset(fp);
+    addOffset(fp);
 }
 
 void SgnDatabase::readLine()
@@ -418,7 +418,7 @@ void SgnDatabase::readLine()
         m_currentLine.clear();
         return;
     }
-	m_lineBuffer = m_file->readLine();
+    m_lineBuffer = m_file->readLine();
     if (m_utf8)
     {
         QTextStream textStream(m_lineBuffer);
@@ -450,7 +450,7 @@ void SgnDatabase::seekGame(int index)
     {
         qDebug() << "Seeking offset " << n << " failed!";
     }
-	readLine();
+    readLine();
 }
 
 void SgnDatabase::parseTagsIntoIndex()
@@ -460,62 +460,62 @@ void SgnDatabase::parseTagsIntoIndex()
 
     while (m_currentLine.startsWith(QString("[")) && !m_file->atEnd())
     {
-		int tagend = m_currentLine.indexOf(' ');
-		QString tag = m_currentLine.mid(1, tagend - 1);
-		int valuestart = m_currentLine.indexOf('\"', tagend + 1);
+        int tagend = m_currentLine.indexOf(' ');
+        QString tag = m_currentLine.mid(1, tagend - 1);
+        int valuestart = m_currentLine.indexOf('\"', tagend + 1);
         QString value = m_currentLine.mid(valuestart + 1);
-		bool hasNextTag = false;
+        bool hasNextTag = false;
 
-		while (!value.endsWith("]") && !m_file->atEnd()) {
-			readLine();
+        while (!value.endsWith("]") && !m_file->atEnd()) {
+            readLine();
             if (m_currentLine.isEmpty() || m_currentLine.startsWith("[")) {
-				hasNextTag = true;
-				break;
-			}
-			value += ' ' + m_currentLine;
-		}
-		int valueend = value.lastIndexOf('\"');
-		if (valueend != -1)
-			value.truncate(valueend);
-		if (value.contains("\\\""))
-			value.replace("\\\"", "\"");
-	
-		// quick fix for non-standard draw mark.
-		if (tag == "Result" && value == "1/2")
-			value = "1/2-1/2";
+                hasNextTag = true;
+                break;
+            }
+            value += ' ' + m_currentLine;
+        }
+        int valueend = value.lastIndexOf('\"');
+        if (valueend != -1)
+            value.truncate(valueend);
+        if (value.contains("\\\""))
+            value.replace("\\\"", "\"");
+  
+        // quick fix for non-standard draw mark.
+        if (tag == "Result" && value == "1/2")
+            value = "1/2-1/2";
 
-		// update index
+        // update index
         m_index.setTag(tag, value, m_count - 1);
 
-		if (!hasNextTag)
-			readLine();
-	}
+        if (!hasNextTag)
+        readLine();
+    }
 
-	// skip trailing whitespace
-	while (m_currentLine.isEmpty() && !m_file->atEnd()) 
-		readLine();
+  // skip trailing whitespace
+  while (m_currentLine.isEmpty() && !m_file->atEnd()) 
+    readLine();
 }
 
 bool SgnDatabase::parseMoves(Game* game)
 {
     m_gameOver = false;
-	m_inComment = false;
-	m_comment.clear();
-	m_precomment.clear();
-	m_newVariation = false;
-	m_variation = 0;
+    m_inComment = false;
+    m_comment.clear();
+    m_precomment.clear();
+    m_newVariation = false;
+    m_variation = 0;
 
-	do {
-		if (m_inComment) {
-			parseComment(game);
-		} else {
-			parseLine(game);
+    do {
+        if (m_inComment) {
+            parseComment(game);
+        } else {
+            parseLine(game);
             if (m_variation == -1) {
                 ++SHATRA::g_nErrors;
                 return false;
-			}
-		}
-	} while (!m_gameOver && (!m_file->atEnd() || m_currentLine != ""));
+            }
+        }
+    } while (!m_gameOver && (!m_file->atEnd() || m_currentLine != ""));
 
     if( m_gameOver )
     {
@@ -544,26 +544,26 @@ bool SgnDatabase::parseMoves(Game* game)
 void SgnDatabase::parseLine(Game* game)
 {
     QStringList list = m_currentLine.split(" ");
-	m_pos = 0;
+    m_pos = 0;
 
     for (QStringList::Iterator it = list.begin(); it != list.end() && !m_inComment; ++it) {
-		if (*it != "") {
-			parseToken(game, *it);
+        if (*it != "") {
+            parseToken(game, *it);
             if (m_variation == -1)
             {
                 if (!(m_currentLine.startsWith("[")))
                 {
                    skipLine(); // illegal move in the buffer!
                 }
-				return;
-			}
-		}
-		m_pos += (*it).length() + 1;
-	}
+                return;
+            }
+        }
+        m_pos += (*it).length() + 1;
+    }
 
-	if (!m_inComment) {
-		readLine();
-	}
+    if (!m_inComment) {
+        readLine();
+    }
 }
 
 inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
@@ -575,7 +575,7 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
     }
     else if (token.contains('.'))
     {
-        token = token.section('.',	1, 1);
+        token = token.section('.',  1, 1);
     }
  // necessary to remove the following to allow numeric notation
 /*    else if (token.indexOf(QRegExp("[1-9]"))==0)
@@ -612,16 +612,17 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
                 m_precomment.clear();
             }
             m_newVariation = false;
-        } else {	// next move in the game
+        } else {  // next move in the game
             if (SHATRA::g_newGame) { // parse first 'from' value
-                qDebug() << token;
+//                qDebug() << token;
                 int sq = 0;
                 for (int c = 0; c < 2; ++c) {
                     if (!token.at(c).isDigit())
                         break;
                     else sq = (sq * 10) + token.at(c).digitValue();
                 }
-                SHATRA::g_inRev = sq > 31; // game starts from high end
+                 // game starts from high end!
+                SHATRA::g_inRev = game->startingColor(sq) != game->startingStm();
                 SHATRA::g_newGame = false;
             }
             m_variation = game->addMove(token, QString(), nag);
@@ -635,120 +636,121 @@ inline void SgnDatabase::parseDefaultToken(Game* game, QString token)
 
 void SgnDatabase::parseToken(Game* game, const QString& token)
 {
-	switch (token.at(0).toLatin1()) {
-	case '(':
-		m_newVariation = true;
-		break;
-	case ')':
-		game->moveToId(game->parentMove());
-		game->forward();
-		m_newVariation = false;
-		m_variation = 0;
-		break;
-	case '{':
-		m_comment.clear();
-		m_precomment.clear();
-		m_inComment = true;
-		m_currentLine = m_currentLine.right((m_currentLine.length() - m_pos) - 1);
+    switch (token.at(0).toLatin1())
+    {
+    case '(':
+        m_newVariation = true;
         break;
-	case '$':
-		game->addNag((Nag)token.mid(1).toInt());
-		break;
-	case '!':
-		if (token == "!") {
-			game->addNag(GoodMove);
-		} else if (token == "!!") {
-			game->addNag(VeryGoodMove);
-		} else if (token == "!?") {
-			game->addNag(SpeculativeMove);
-		}
-		break;
-	case '?':
-		if (token == "?") {
-			game->addNag(PoorMove);
-		} else if (token == "??") {
-			game->addNag(VeryPoorMove);
-		} else if (token == "?!") {
-			game->addNag(QuestionableMove);
-		}
-		break;
-	case '+':
-		if (token == "+=") {
-			game->addNag(WhiteHasASlightAdvantage);
-		} else if (token == "+/-") {
-			game->addNag(WhiteHasAModerateAdvantage);
-		}
-		break;
-	case '=':
-		if (token == "=") {
-			game->addNag(DrawishPosition);
-		} else if (token == "=+") {
-			game->addNag(BlackHasASlightAdvantage);
-		}
-		break;
-	case '*':
+    case ')':
+        game->moveToId(game->parentMove());
+        game->forward();
+        m_newVariation = false;
+        m_variation = 0;
+        break;
+    case '{':
+        m_comment.clear();
+        m_precomment.clear();
+        m_inComment = true;
+        m_currentLine = m_currentLine.right((m_currentLine.length() - m_pos) - 1);
+        break;
+    case '$':
+        game->addNag((Nag)token.mid(1).toInt());
+        break;
+    case '!':
+        if (token == "!") {
+            game->addNag(GoodMove);
+        } else if (token == "!!") {
+            game->addNag(VeryGoodMove);
+        } else if (token == "!?") {
+            game->addNag(SpeculativeMove);
+        }
+        break;
+    case '?':
+        if (token == "?") {
+            game->addNag(PoorMove);
+        } else if (token == "??") {
+            game->addNag(VeryPoorMove);
+        } else if (token == "?!") {
+            game->addNag(QuestionableMove);
+        }
+        break;
+    case '+':
+        if (token == "+=") {
+            game->addNag(WhiteHasASlightAdvantage);
+        } else if (token == "+/-") {
+            game->addNag(WhiteHasAModerateAdvantage);
+        }
+        break;
+    case '=':
+        if (token == "=") {
+            game->addNag(DrawishPosition);
+        } else if (token == "=+") {
+            game->addNag(BlackHasASlightAdvantage);
+        }
+        break;
+    case '*':
         game->setResult(SHATRA::ResultUnknown);
-		m_gameOver = true;
+        m_gameOver = true;
         break;
     // From here, cases may fall through into default!!
-	case '1':
-		if (token == "1-0") {
+    case '1':
+        if (token == "1-0") {
             game->setResult(SHATRA::WhiteWin);
-			m_gameOver = true;
+            m_gameOver = true;
             break;
         }
         else if (token == "1/2-1/2" || token == "1/2")
         {
             game->setResult(SHATRA::Draw);
-			m_gameOver = true;
+            m_gameOver = true;
             break;
         }
-
-	case '0':
+        
+    case '0':
         if (token == "0-1")
         {
             game->setResult(SHATRA::BlackWin);
-			m_gameOver = true;
-			break;
-		}
-
-	case '-':
-        if (token == "-/+")
-        {
-			game->addNag(BlackHasAModerateAdvantage);
+            m_gameOver = true;
             break;
         }
 
-	default:
+    case '-':
+        if (token == "-/+")
+        {
+            game->addNag(BlackHasAModerateAdvantage);
+            break;
+        }
+
+    default:
         //qDebug() << token;
         parseDefaultToken(game,token);
         break;
-	}
+    }
 }
 
 void SgnDatabase::parseComment(Game* game)
 {
-	int end = m_currentLine.indexOf('}');
+    int end = m_currentLine.indexOf('}');
 
-	if (end >= 0) {
-		m_comment.append(m_currentLine.left(end));
-		m_inComment = false;
+    if (end >= 0) {
+        m_comment.append(m_currentLine.left(end));
+        m_inComment = false;
         if (m_newVariation || game->plyCount() == 0)
-			m_precomment = m_comment.trimmed();
-		else game->setAnnotation(m_comment.trimmed());
-		m_currentLine = m_currentLine.right((m_currentLine.length() - end) - 1);
-	} else {
-		m_comment.append(m_currentLine + ' ');
-		readLine();
-	}
+            m_precomment = m_comment.trimmed();
+        else game->setAnnotation(m_comment.trimmed());
+        m_currentLine = m_currentLine.right((m_currentLine.length() - end) - 1);
+    } else {
+        m_comment.append(m_currentLine + ' ');
+        readLine();
+    }
 }
 
 inline bool onlyWhite(const QByteArray& b)
 {
     for (int i = 0; i < b.length(); ++i)
         if (!isspace(b[i]))
-			return false;
-	return true;
+            return false;
+        return true;
 }
 
 IndexBaseType SgnDatabase::skipJunk()
@@ -787,10 +789,10 @@ IndexBaseType SgnDatabase::skipJunk()
 
 void SgnDatabase::skipTags()
 {
-	while (m_lineBuffer.length() && (m_lineBuffer[0] == '[') && !m_file->atEnd())
-		skipLine();
+    while (m_lineBuffer.length() && (m_lineBuffer[0] == '[') && !m_file->atEnd())
+        skipLine();
 
-	//swallow trailing whitespace
+  //swallow trailing whitespace
     while (onlyWhite(m_lineBuffer) && !m_file->atEnd())
         skipLine();
     m_currentLine = m_lineBuffer.simplified();
@@ -836,7 +838,7 @@ void SgnDatabase::skipMoves()
         m_index.setTag("Length", gameNumber.cap(1), m_count - 1);
     }
 
-	//swallow trailing whitespace
+  //swallow trailing whitespace
     while (onlyWhite(m_lineBuffer) && !m_file->atEnd())
         skipLine();
 

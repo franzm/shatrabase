@@ -12,7 +12,7 @@
 
 #define SBASE_VERSION_MAJOR   0
 #define SBASE_VERSION_MINOR   9
-#define SBASE_REVISION        7
+#define SBASE_REVISION        8
 
 #define SBASE_STRINGIFYX(a__) #a__
 #define SBASE_STRINGIFY(a__) SBASE_STRINGIFYX(a__)

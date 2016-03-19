@@ -405,12 +405,12 @@ void PlayGameWidget::setWidgetsPlaying_(bool p)
 {    
     const bool
         tourn = isTournament(),
-        timeplay = tourn || tc_.type() == TimeControl::T_Match,
+        timeplay = (tourn && isHumanInvolved()),
         doinf = doInfoLines();
 
     ui_->b_new->setEnabled(!p);
-    ui_->b_continue->setEnabled(!p && (!timeplay || !isHumanInvolved()));
-    ui_->b_pause->setEnabled(p && (!timeplay || !isHumanInvolved()));
+    ui_->b_continue->setEnabled(!p && !timeplay);
+    ui_->b_pause->setEnabled(p && !timeplay);
     ui_->b_flip->setEnabled(!p);
     ui_->b_resign->setEnabled(p && isHumanInvolved());
     ui_->b_config->setEnabled(!p);
