@@ -36,10 +36,6 @@
         <file alias="themes/shadow/meridashatra.png">data/themes/shadow/meridashatra.png</file>
         <file alias="themes/shadow/motifshatra.png">data/themes/shadow/motifshatra.png</file>
         <file alias="themes/shadow/chess3d.png">data/themes/shadow/chess3d.png</file>
-        <file alias="help/about0.html">data/help/about0.html</file>
-        <file alias="help/about1.html">data/help/about1.html</file>
-        <file alias="help/about2.html">data/help/about2.html</file>
-        <file alias="help/about3.html">data/help/about3.html</file>
         <file alias="help/about.css">data/help/about.css</file>
         <file alias="images/shatrabase.png">data/images/shatrabase.png</file>
         <file alias="images/urgent.png">data/images/urgent.png</file>
@@ -50,7 +46,6 @@
         <file alias="images/print.png">data/images/print.png</file>
         <file alias="images/time_clear.png">data/images/time_clear.png</file>
         <file alias="images/text_clear.png">data/images/text_clear.png</file>
-        <file alias="help/about4.html">data/help/about4.html</file>
         <file alias="images/circle_black.svg">data/images/circle_black.svg</file>
         <file alias="images/circle_blue.svg">data/images/circle_blue.svg</file>
         <file alias="images/circle_green.svg">data/images/circle_green.svg</file>

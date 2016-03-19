@@ -19,7 +19,8 @@ macx {
     QMAKE_CXXFLAGS += -fvisibility=hidden
 }
 
-RESOURCES = resources.qrc
+RESOURCES = resources.qrc \
+    src/gui/resources_help.qrc
 
 FORMS += \
     src/gui/preferences.ui \
@@ -278,6 +279,7 @@ unix:!macx {
 }
 
 RESOURCES = resources.qrc
+RESOURCES += resources_help.qrc
 
 TRANSLATIONS = \
      translation/shatrabase_de.ts \

@@ -1,0 +1,106 @@
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href=":/help/about.css" />
+<link rel="stylesheet" type="text/css" href="about.css" />
+<meta content="en" name="language" />
+<meta content="en" http-equiv="Content-Language" />
+<meta name="viewport" content="user-scalable=no, width=device-width" />
+
+<title>Shatrabase Manual</title>
+
+<body>
+
+<div id="container">
+<div id="header">
+
+<h1>Shatrabase Help</h1>
+
+<div id="nav">
+<ul>
+
+ <li><a href="about0.html">Basics</a></li>
+ <li><b>Manual</b></li>
+ <li><a href="about2.html">Reference</a></li>
+ <li><a href="about3.html">About Shatra</a></li>
+ <li><a href="about4.html">Copyright</a></li>
+
+</ul>
+</div>
+</div>
+
+<div id="content">
+<h2><a name="Handbuch">Shatrabase Manual</a></h2>
+
+ <h3>Opening a database</h3>
+ <p>You can open a database either from the File menu or drag a file from Explorer / Finder into the Databases view.</p>
+ <p>You can make a database stay permanently in the database list by turning it into a "Favorite" (right-click the file).
+ A database is reopened from there by clicking the asterisk or again by the context menu.</p>
+ <p>You can also drag files from your Internet Browser into the Shatrabase Database List, they are downloaded into
+ the configured default path (see the Preferences-Advanced-Default Data Path entry).</p>
+
+ <h3>Making moves</h3>
+ <p>A move is done by grabbing a piece and dragging it
+ to another square.</p>
+ <p>Depending on your settings in the board preferences,
+ you can either
+ <ul>
+  <li>Click on a piece and a target square (if move guesses are deactivated)
+  <li>Click on a piece and accept the move quess (in case of deactivated next guess on right click)
+  <li>Right Click on a piece and then again until the correct target square is highlighted, then press the
+  left mouse button to make the move (in case right click is used for next guess).
+ </ul>
+ </p>
+ <p>Going back a move can be done by a right-click (in case the right click is not configured for backtracking a move)
+ or by pressing CTRL-right click if backtracking is assigned to the right mouse key.</p>
+
+ <p>Usually, making a move will insert a new variation unless you are at the end of the game or a variation. If you do not
+want to create a new variation, press CTRL+SHIFT while moving, which replaces the current move by the new move.</p>
+
+<h3>Annotating moves</h3>
+<p>Move annotations can be done by activating the context menu in the games text browser or by simply pressing the corresponding key sequence,
+e.g. '!?','!!','??','!x','?x','=','+-','-+' and so on, where 'x' is used in case the first character is ambiguous, 'x' can be the
+Return/Enter-Key or literally the small letter 'x'.</p>
+
+<h3>Saving games</h3>
+<p>Saving games is slightly confusing! A game needs to be saved into the database (Press CTRL+S, Menu Game/Save). From there,
+the whole database needs to be saved to disk by pressing CTRL+Shift+S / Menu File/Save. This is somewhat inconvenient but on the other hand prevents
+you from mistakenly overwriting games or files.</p>
+<p>By default, a clipboard database is open, which does not have a backing file on disk. Anything that remains in the Clipboard is
+lost upon closing Shatrabase! So you need to open at least one other database for writing and transfer anything from the Clipboard
+into this database by either dragging the games to that database or using "Copy Games" from the Database menu.</p>
+
+<h3>Switching databases</h3>
+<p>Switching between open databases can be achieved by either the Database menu, pressing CTRL+Number 0 .. 9 or clicking onto the asterisk
+in the database list. The currently selected database is also highlighted there!</p>
+
+<h3>Analysing games</h3>
+<p>There are two analysis windows where two different engines can be configured to analyse the current board position.</p>
+<p>Engines must be configured before in the Preferences Dialog. A default engine (Stockfish) comes with this installation
+and will be configured as first engine, if no other entries exist.
+Stockfish is an open source engine (see <a href="http://stockfishShatra.org">Homepage of Stockfish</a>. The Mac OS
+version has been compiled less agressively than the original one so that users of pre-I5 Intel computers will have their fun, too.
+The source code for the Stockfish engine is completely unmodified so you can replace the pre-installed versions by the original
+or any other version. The source code for stockfish is also located on the homepage. Note that Sotckfish is licensed under GPLv3,
+see the license text on the Stockfish home.</p>
+<p>You can fine-tune engines with the protocol options dialog (works for USHI only, Winboard is seldom used and due to the clumsy specification
+hard to implement for GUI developers.</p>
+
+<h3>Generating content</h3>
+<p>You can copy/paste positions(SPN and images) and complete games(SGN) from/into the clipboard, export games in LATEX, HTML or SGN again.
+See the Edit menu and the File/Export Dialog.</p>
+
+<h3>Customizing Listviews</h3>
+<p>All views can have their font-size set in the Preferences Dialog. In addtion, all list header support resizing,
+moving and hiding of columns. Columns are hidden / shown by right-clicking the list header element. All changes are persistent.</p>
+
+<h3>Filtering Games</h3>
+<p>The list of games can be filtered either by the opening tree or by clicking the list header. Several searches can be combined or inverted.
+Further occurrences of the current board position in the current database can be found via the Find / Find Position menu.</p>
+
+</div>
+</div>
+
+</body>
+
+</html>

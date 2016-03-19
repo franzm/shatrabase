@@ -1,0 +1,61 @@
+<html>
+
+<head>
+
+<link rel="stylesheet" type="text/css" href=":/help/about.css" />
+<link rel="stylesheet" type="text/css" href="about.css" />
+<meta content="en" name="language" />
+<meta content="en" http-equiv="Content-Language" />
+<meta name="viewport" content="user-scalable=no, width=device-width" />
+
+<title>Shatrabase Reference</title>
+
+<body>
+
+<div id="container">
+<div id="header">
+
+<h1>Shatrabase Help</h1>
+
+<div id="nav">
+<ul>
+
+ <li><a href="about0.html">Basics</a></li>
+ <li><a href="about1.html">Manual</a></li>
+ <li><b>Reference</b></li>
+ <li><a href="about3.html">About Shatra</a></li>
+ <li><a href="about4.html">Copyright</a></li>
+
+</ul>
+</div>
+</div>
+
+<div id="content">
+
+<h2><a name="Referenz">Shatrabase Reference</a></h2>
+
+<h3>About SGN Databases</h3>
+
+<p>SGN is a portable format between different Shatra programs, a file format 
+that can be written and read sequentially, but not modified at random places.</p>
+<p>Shatrabase is a viewer for these files, thus Shatrabase is somewhat limited in handling Shatra data
+as these files can <i>not really</i> be handled like a proper database.</p>
+<p>To work around some of these issues, Shatrabase handles smaller and larger files differently.
+You can configure the limit where Shatrabase switches the algorithm according to your computers performance.</p>
+<p>Smaller databases are read completely into memory and can be read and written.</p>
+<p>Larger files are only indexed and as of version 0.9.4, the index is also saved to disk for a faster reopening
+of a SGN file. As the games are not in memory, this algorithm does not allow saving the files again, so the
+database is opened read-only</p>
+<p>The index files are saved in the index-subdirectory of the Default Data Path. If the index directory or one
+of its files is deleted, Shatrabase will recreate the Index file the next time you open the SGN file.</p>
+<p>Shatrabase will open the index file instead of the SGN file if the filename fits (e.g. "Shatra.cxi" fits to any "Shatra.SGN")
+if the date of the last modification fits to the date stored in the index file. So Shatrabase won't care for the path
+where your SGN is located (you can relocate the file after indexing), but this limits the Index to only one file
+with the same basename.</p>
+
+</div>
+</div>
+
+</body>
+
+</html>

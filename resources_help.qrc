@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/help">
+        <file alias="about0.html">data/help/en/about0.html</file>
+        <file alias="about1.html">data/help/en/about1.html</file>
+        <file alias="about2.html">data/help/en/about2.html</file>
+        <file alias="about3.html">data/help/en/about3.html</file>
+        <file alias="about4.html">data/help/en/about4.html</file>
+    </qresource>
+    <qresource prefix="/help" lang="de">
+        <file alias="about0.html">data/help/de/about0.html</file>
+        <file alias="about1.html">data/help/de/about1.html</file>
+        <file alias="about2.html">data/help/de/about2.html</file>
+        <file alias="about3.html">data/help/de/about3.html</file>
+        <file alias="about4.html">data/help/de/about4.html</file>
+    </qresource>
+    <qresource prefix="/help" lang="ru">
+        <file alias="about0.html">data/help/ru/about0.html</file>
+        <file alias="about1.html">data/help/ru/about1.html</file>
+        <file alias="about2.html">data/help/ru/about2.html</file>
+        <file alias="about3.html">data/help/ru/about3.html</file>
+        <file alias="about4.html">data/help/ru/about4.html</file>
+    </qresource>
+</RCC>
