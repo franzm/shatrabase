@@ -1524,8 +1524,13 @@ void MainWindow::slotTestEngineEngine()
 
 void MainWindow::slotTestPositionBase()
 {
+    QString fn = QFileDialog::getSaveFileName(this, tr("Save game positions"),
+                                              "./");
+    if (fn.isEmpty())
+        return;
+
     PositionBase pb;
 
     pb.addDatabase(*database());
-    pb.saveFile("/home/prog/shatra/positions.nn_input");
+    pb.saveFile(fn.toLatin1().constData());
 }

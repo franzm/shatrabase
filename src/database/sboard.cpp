@@ -241,8 +241,10 @@ bool SBoard::fromSPN(const QString& spn)
     if (isValidSPN(spn))
     {
         SPNToBoard(spn);
-        if (inSequence()) generate(CAPTC, transitAt());
-        else generate(MOVES, fsq, lsq);
+        if (inSequence())
+            generate(CAPTC, transitAt());
+        else
+            generate(MOVES, fsq, lsq);
         m_movesLoaded = true;
         return true;
     }

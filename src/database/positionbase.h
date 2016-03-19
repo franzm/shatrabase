@@ -10,39 +10,65 @@
 #ifndef POSITIONBASE_H
 #define POSITIONBASE_H
 
-#include <QObject>
-#include "game.h"
-#include "database.h"
+#include <stdint.h>
+#include <vector>
+#include <iostream>
 
-/** Container for positions and scores. */
-class PositionBase : public QObject
+#ifdef SBASE_PRESENT
+#   include "game.h"
+#   include "database.h"
+#else
+    namespace SHATRA {
+        enum Piece
+        {
+            EmptyPiece,
+                WhiteBatyr, WhiteTura, WhiteYalkyn, WhiteBiy, WhiteShatra,
+                BlackBatyr, BlackTura, BlackYalkyn, BlackBiy, BlackShatra,
+                WasBatyr, WasTura, WasYalkyn, InvalidPiece, WasShatra
+        };
+    }
+#endif
+
+
+/** Container for positions and scores.
+    Experimental thing for training NNs */
+class PositionBase
 {
-    Q_OBJECT
 public:
-    explicit PositionBase(QObject *parent = 0);
 
-    static int entryLength() { return 1+62*2; }
+    explicit PositionBase();
+
     int numPositions() const { return num_; }
-    const float * position(int index) const { return &data_[index * entryLength()]; }
+    int entrySize() const { return 1 + 62; }
 
-signals:
+    const uint8_t * entry(size_t index) const { return &entries_[index * entrySize()]; }
 
-public slots:
+
+    /** Each position is coded as,
+        1 reward +
+        for each side: 5 (14*7) planes for each piece,
+        shatra boards are placed inside the 14*7 rectangle
+        */
+    static int stateSize() { return 1 + (14*7)*5*2; }
+
+    void dumpEntry(size_t index, std::ostream& out = std::cout) const;
 
     void clear();
 
+#ifdef SBASE_PRESENT
     void addDatabase(Database&);
 
     void addGame(const Game&);
 
     void addPosition(const SHATRA::SBoard&, SHATRA::Result);
+#endif
 
-    bool saveFile(const QString filename);
-    bool loadFile(const QString filename);
+    bool saveFile(const std::string& filename);
+    bool loadFile(const std::string& filename);
 
 protected:
 
-    std::vector<float> data_;
+    std::vector<uint8_t> entries_;
     int num_;
 };
 

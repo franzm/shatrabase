@@ -1,5 +1,5 @@
 # Main application
-#DEFINES +=
+DEFINES += SBASE_PRESENT
 CONFIG += uic warn_on
 QT += xml network svg
 
