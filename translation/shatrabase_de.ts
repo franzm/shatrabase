@@ -14,13 +14,13 @@
         <translation>Verloren in</translation>
     </message>
     <message>
-        <location filename="../src/database/analysis.cpp" line="187"/>
+        <location filename="../src/database/analysis.cpp" line="190"/>
         <source>h:mm:ss</source>
         <translatorcomment>nicht ganz klar</translatorcomment>
         <translation>h:mm:ss</translation>
     </message>
     <message>
-        <location filename="../src/database/analysis.cpp" line="188"/>
+        <location filename="../src/database/analysis.cpp" line="191"/>
         <source> (depth %1, %2)</source>
         <translation>Tiefe (%1, %2)</translation>
     </message>
@@ -1255,12 +1255,12 @@ Please check your installation.</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="125"/>
+        <location filename="../src/gui/mainwindow.cpp" line="144"/>
         <source>Game Text</source>
         <translation>Notation</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="178"/>
+        <location filename="../src/gui/mainwindow.cpp" line="197"/>
         <source>Game List</source>
         <translation>Partien</translation>
     </message>
@@ -1361,146 +1361,151 @@ Please check your installation.</source>
         <translation>Die Zwischenablage enthält ein SPN aber eine nicht legale Stellung. Solche Stellungen können nur im &lt;b&gt;Stellung setzen&lt;/b&gt;-Dialog eingefügt werden.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="414"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="415"/>
         <source>Text in clipboard does not represent valid SGN</source>
         <translation>Der Text in der Zwischenablage enthält kein ordentliches SGN</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="479"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="480"/>
         <source>You can either capture or drop</source>
         <translation type="unfinished">Sie können schlagen oder XXX</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="480"/>
-        <source>   No to drop, Yes to capture</source>
+        <location filename="../src/gui/mainwindowactions.cpp" line="481"/>
+        <source>   Yes to capture, No to drop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="494"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="495"/>
         <source>You have the option not to move</source>
         <translation>Sie haben die Wahl, nicht zu ziehen</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="495"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="496"/>
         <source>Do you really want to pass?</source>
         <translation>Wollen Sie wirklich passen?</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="511"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="512"/>
         <source>Batyr</source>
         <translation>Batyr</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="513"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="514"/>
         <source>Tura</source>
         <translation>Tura</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="515"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="516"/>
         <source>Yalkyn</source>
         <translation>Yalkyn</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="566"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="567"/>
         <source>Red Square</source>
         <translation>Rotes Feld</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="568"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="569"/>
         <source>Yellow Square</source>
         <translation>Gelbes Feld</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="570"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="571"/>
         <source>Green Square</source>
         <translation>Grünes Feld</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="572"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="573"/>
         <source>Remove Color</source>
         <translation>Entferne Farbe</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="574"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="575"/>
         <source>Red Arrow to here</source>
         <translation>Roter Pfeil nach hier</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="575"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="576"/>
         <source>Yellow Arrow to here</source>
         <translation>Gelber Pfeil nach hier</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="576"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="577"/>
         <source>Green Arrow to here</source>
         <translation>Grüner Pfeil nach hier</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="577"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="578"/>
         <source>Remove Arrow to here</source>
         <translation>Entferne Pfeil</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="860"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="861"/>
         <source>!!!</source>
         <translation>!!!</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="861"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="862"/>
         <source>You win!
 (XXX This should trigger an animation)</source>
         <translation>Sie haben gewonnen!</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="869"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="870"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="870"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="871"/>
         <source>You did not win!
 (XXX This should trigger an animation)</source>
         <translation>Sie haben nicht gewonnen!</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1012"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1013"/>
         <source>&lt;b&gt;New game&lt;/b&gt;</source>
         <translation>&lt;b&gt;Neues Spiel&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1114"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1115"/>
         <source>Analysis Pane 1 is not running an engine for automatic analysis.</source>
         <translation>Analyse 1 hat keine Engine eingestellt</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1215"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1216"/>
         <source>Also look for symmetric/mirrored duplicates?</source>
         <translation>Gespiegelte Duplikate mit einbeziehen?</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1224"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1225"/>
         <source>No duplicate games found in database.</source>
         <translation>Keine Duplikate in der Datenbank.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1229"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1230"/>
         <source>There are %1 duplicate games in this Database, do you want to flag them as deleted?</source>
         <translation>Es wurden %1 Duplikate in der Datenbank gefunden, wollen Sie sie als gelöscht markieren?</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1337"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1338"/>
         <source>%1 - Shatrabase</source>
         <translation>%1 - Shatrabase</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1366"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1367"/>
         <source>Search ended</source>
         <translation>Suche beendet</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1403"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1404"/>
         <source>Tree updated.</source>
         <translation>Baum erneuert.</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1528"/>
+        <source>Save game positions</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Text in clipboard does not represent valid FEN:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;</source>
@@ -1528,18 +1533,18 @@ Please check your installation.</source>
         <translation type="obsolete">Springer</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="519"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="520"/>
         <source>Promotion</source>
         <translation>Umwandlung</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="519"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="520"/>
         <source>Promote to:</source>
         <translation>Umwandeln in:</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1371"/>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1413"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1372"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1414"/>
         <source>Updating tree...</source>
         <translation>Erneuere Baum...</translation>
     </message>
@@ -1626,12 +1631,12 @@ Please check your installation.</source>
         <translation type="obsolete">&lt;br&gt;Tablebase: &lt;a href=&quot;egtb:%1&quot;&gt;%2%3 %1&lt;/a&gt; -- %4</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="725"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="726"/>
         <source>Load Game</source>
         <translation>Partie laden</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="725"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="726"/>
         <source>Game number:</source>
         <translation>Partienummer:</translation>
     </message>
@@ -1640,8 +1645,8 @@ Please check your installation.</source>
         <translation type="obsolete">Partie sichern</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="735"/>
-        <location filename="../src/gui/mainwindowactions.cpp" line="910"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="736"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="911"/>
         <source>This database is read only.</source>
         <translation>Diese Datenbank ist nicht änderbar.</translation>
     </message>
@@ -1798,7 +1803,7 @@ Please check your installation.</source>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="1187"/>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1115"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1116"/>
         <source>Auto Analysis</source>
         <translation>Automatische Analyse</translation>
     </message>
@@ -1914,22 +1919,22 @@ Please check your installation.</source>
         <translation>&amp;Ansicht</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="133"/>
+        <location filename="../src/gui/mainwindow.cpp" line="152"/>
         <source>Game Time</source>
         <translation>Spielzeit</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="196"/>
+        <location filename="../src/gui/mainwindow.cpp" line="215"/>
         <source>Database Statistics</source>
         <translation>Datenbank Statistiken</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="207"/>
+        <location filename="../src/gui/mainwindow.cpp" line="226"/>
         <source>Engine Debugger</source>
         <translation>Engine Debugger</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="217"/>
+        <location filename="../src/gui/mainwindow.cpp" line="236"/>
         <source>Play Game</source>
         <translation>Spielen</translation>
     </message>
@@ -1938,39 +1943,39 @@ Please check your installation.</source>
         <translation type="obsolete">Spieler</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="268"/>
+        <location filename="../src/gui/mainwindow.cpp" line="287"/>
         <source>Databases</source>
         <translation>Datenbanken</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="321"/>
+        <location filename="../src/gui/mainwindow.cpp" line="340"/>
         <source>Analysis 1</source>
         <translation>Analyse 1</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="346"/>
+        <location filename="../src/gui/mainwindow.cpp" line="365"/>
         <source>Analysis 2</source>
         <translation>Analyse 2</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="375"/>
+        <location filename="../src/gui/mainwindow.cpp" line="82"/>
         <source>Shatra Version</source>
         <translation>Shatra Version</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="376"/>
+        <location filename="../src/gui/mainwindow.cpp" line="83"/>
         <source>Choose Shatra version</source>
         <translation>Wählen Sie die Version</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="379"/>
-        <location filename="../src/gui/mainwindow.cpp" line="385"/>
+        <location filename="../src/gui/mainwindow.cpp" line="86"/>
+        <location filename="../src/gui/mainwindow.cpp" line="92"/>
         <source>Extended</source>
         <translation>Erweitert</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="380"/>
-        <location filename="../src/gui/mainwindow.cpp" line="384"/>
+        <location filename="../src/gui/mainwindow.cpp" line="87"/>
+        <location filename="../src/gui/mainwindow.cpp" line="91"/>
         <source>Original</source>
         <translation>Original</translation>
     </message>
@@ -2086,9 +2091,8 @@ Please check your installation.</source>
         <translation type="obsolete">&amp;Tip des Tages</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1251"/>
         <source>&amp;Report a bug...</source>
-        <translation>&amp;Bug melden...</translation>
+        <translation type="vanished">&amp;Bug melden...</translation>
     </message>
     <message>
         <source>&amp;About ChessX</source>
@@ -2109,7 +2113,7 @@ Please check your installation.</source>
         <translation type="obsolete">Ja</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="297"/>
+        <location filename="../src/gui/mainwindow.cpp" line="316"/>
         <source>Opening Tree</source>
         <translation>Eröffnungsbaum
 </translation>
@@ -2203,12 +2207,12 @@ Please check your installation.</source>
         <translation type="obsolete">Kopiere Partien</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1274"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1275"/>
         <source>You need at least two open databases to copy games</source>
         <translation>Mindestens zwei offene Datenbanken benötigt um Partien zu kopieren</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindowactions.cpp" line="1284"/>
+        <location filename="../src/gui/mainwindowactions.cpp" line="1285"/>
         <source>%1. %2 (%3 games)</source>
         <translation>%1. %2 (%3 Partien)</translation>
     </message>
@@ -2264,8 +2268,12 @@ Please check your installation.</source>
     </message>
     <message>
         <location filename="../src/gui/mainwindowabout.cpp" line="24"/>
+        <source>&lt;h1&gt;Shatrabase&lt;/h1&gt;&lt;p&gt;Free Shatra database Version %1&lt;/p&gt;&lt;p&gt;Derived from Chessx Version 0.9.5&lt;/p&gt;&lt;p&gt;License: GNU Public License 3 - GPLv3&lt;/p&gt;&lt;p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&lt;h1&gt;Shatrabase&lt;/h1&gt;&lt;p&gt;Free Shatra database Version %1&lt;/p&gt;&lt;p&gt;Derived from Chessx Version 0.9.5&lt;/p&gt;</source>
-        <translation>&lt;h1&gt;Shatravase&lt;/h1&gt;&lt;p&gt;Freie Shatra Datenbank Version %1&lt;/p&gt;&lt;p&gt;Geforkt von ChessX 0.9.5&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;h1&gt;Shatravase&lt;/h1&gt;&lt;p&gt;Freie Shatra Datenbank Version %1&lt;/p&gt;&lt;p&gt;Geforkt von ChessX 0.9.5&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;h1&gt;Shatrabase&lt;/h1&gt;&lt;p&gt;Free Shatra database Version %1&lt;/p&gt;&lt;p&gt;Derived from Chessx Version %1&lt;/p&gt;</source>
