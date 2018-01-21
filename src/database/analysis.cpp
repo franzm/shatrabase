@@ -149,6 +149,11 @@ void Analysis::setMovesToResult(int distance, int rtype)
     m_rtype = rtype;
 }
 
+int Analysis::packResult() const
+{
+    return (m_rtype<<8) + m_resultIn + 0x40000000;
+}	
+
 QString Analysis::toString(const SHATRA::Board& board) const
 {
     SHATRA::Board testBoard = board;

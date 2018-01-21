@@ -163,7 +163,10 @@ void PlayGameEngine::engineAnalysis_(const Analysis& a)
     SB_PLAY_DEBUG("PlayGameEngine::engineAnalysis_()");
 
     if (!a.variation().empty())
-        emit moveInfo(a.variation()[0], a.score());
+    {
+        int s = a.isResult()? a.packResult() : a.score();
+        emit moveInfo(a.variation()[0], s);
+    }
 
     /*
     // discard output if not wanted

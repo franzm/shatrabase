@@ -533,16 +533,28 @@ void PlayGameWidget::infoFromEngine(SHATRA::Move m, int s)
 
     //if (m.sideMoving() == 1)
     //    s = -s;
-
-    score_[m.sideMoving()] = s;
-
     bool isNum = AppSettings->getValue("/General/Notation").toBool() == SHATRA::NUM;
 
-    l->setText(QString("<html><b>%1</b> (<font color=\"#%4\">%2%3</font>)</html>")
-               .arg(isNum? m.toNumeric() : m.toAlgebraic())
-               .arg(s>0? "+" : "")
-               .arg((qreal)s/100)
-               .arg(s>0? "080" : s<0? "800" : "000"));
+    if (isPacked_(s))
+	{
+    	score_[m.sideMoving()] = 0;
+    	
+        QString text = isWin_(s)? tr("Win in ") : isLoss_(s)? tr("Loss in ") : "";
+	    l->setText(QString("<html><b>%1</b> (<font color=\"#%4\">%2%3</font>)</html>")
+    	           .arg(isNum? m.toNumeric() : m.toAlgebraic())
+                   .arg(text)
+                   .arg(distance_(s)));
+	}
+    else
+    {
+    	score_[m.sideMoving()] = s;
+
+        l->setText(QString("<html><b>%1</b> (<font color=\"#%4\">%2%3</font>)</html>")
+                   .arg(isNum? m.toNumeric() : m.toAlgebraic())
+                   .arg(s>0? "+" : "")
+                   .arg((qreal)s/100)
+                   .arg(s>0? "080" : s<0? "800" : "000"));
+    }
 }
 
 void PlayGameWidget::moveFromEngine(SHATRA::Move m)

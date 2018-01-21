@@ -195,6 +195,10 @@ private:
     /** Checks Game result and talks with MainWindow.
         Returns if game ended. */
     bool checkGameResult_(const SHATRA::Board&, bool triggerWinSignals, bool doStop);
+    bool isPacked_(int s) { return (s&0x40000000) != 0; }
+    bool isWin_(int s) { return (s&0x0100) != 0; }
+    bool isLoss_(int s) { return (s&0x0200) != 0; }
+    int  distance_(int s) { return s&0xff; }
 
     /** Sends a comment to gametext with the given info
         (according to properties) */

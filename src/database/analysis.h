@@ -66,6 +66,8 @@ public:
     /* Set moves to win or loss. */
     void setMovesToResult(int distance, int rtype);
     /* Convert analysis to formatted text. */
+    int packResult() const;
+    /* Win or Loss info packed into score - unpack in PlayGameWidget */
     QString toString(const SHATRA::Board& board) const;
     /* Assignment operator */
     Analysis& operator=(const Analysis& rhs);
