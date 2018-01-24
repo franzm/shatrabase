@@ -754,13 +754,9 @@ void SBoard::getMoves(int at, PieceType piece, D d, bool doneDrop)
         }
         else // other piece types
         {
-            if (doneDrop)
+            if (!(doneDrop && duplicate(to, fort)))
             {
-                 if(!duplicate(to, fort))
-                    m_ml.add().genMove(at, to, piece, m_b);
-            }
-            else {
-                if (!prohibited(to, piece))
+                 if(!prohibited(to, piece))
                     m_ml.add().genMove(at, to, piece, m_b);
             }
         }
