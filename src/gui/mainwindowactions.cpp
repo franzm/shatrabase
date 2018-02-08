@@ -750,7 +750,8 @@ bool MainWindow::slotGameNew()
 void MainWindow::slotPlayEnableWidgets(bool e, bool strong)
 {
     // e1 is strong/tournament
-    const bool e1 = e || !strong;
+//    const bool e1 = e || !strong;
+    e |= !strong;
 
     m_gameList->setEnabled(e);
     m_databaseList->setEnabled(e);
@@ -760,9 +761,9 @@ void MainWindow::slotPlayEnableWidgets(bool e, bool strong)
     m_menuEdit->setEnabled(e);
     m_menuFile->setEnabled(e);
     m_menuGame->setEnabled(e);
-    m_mainAnalysis->setEnabled(e1);
-    m_analysis2->setEnabled(e1);
-    m_gameView->setEnabled(e1);
+    m_mainAnalysis->setEnabled(e);
+    m_analysis2->setEnabled(e);
+    m_gameView->setEnabled(e);
 }
 
 void MainWindow::slotPlayGameNew(const QMap<QString, QString>& tags)

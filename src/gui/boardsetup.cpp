@@ -168,10 +168,10 @@ void BoardSetupDialog::slotAccept()
 void BoardSetupDialog::slotClear()
 {
     SHATRA::Board b;
-//    b.setAt(gateAt[White], WhiteBiy);
-//    b.setAt(gateAt[Black], BlackBiy);
     b.fillOffboard();
-	setBoard(b);
+    b.setAt(SHATRA::gateAt[SHATRA::White], SHATRA::WhiteBiy);
+    b.setAt(SHATRA::gateAt[SHATRA::Black], SHATRA::BlackBiy);
+    setBoard(b);
 }
 
 void BoardSetupDialog::slotSelected(SHATRA::Square square, int button)

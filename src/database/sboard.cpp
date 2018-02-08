@@ -33,6 +33,7 @@ SBoard::SBoard()
 {
     initState();
     if (!SBoardInitRun) SBoardInit();
+    m_ver = g_version;
     m_sntm = Black;
     m_moveNumber = 1;
 }
@@ -152,15 +153,15 @@ void SBoard::fillOffboard()
     switch (m_ver)
     {
     case Original :
-        m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 23; // nominal max promos
-        m_offBoard[WhiteBiy] = m_offBoard[BlackBiy] = 1;
+        m_offBoard[WhiteBatyr]  = m_offBoard[BlackBatyr] = 23; // nominal max promos!
+        m_offBoard[WhiteBiy]    = m_offBoard[BlackBiy] = 1;
         m_offBoard[WhiteShatra] = m_offBoard[BlackShatra] = 23;
         break;
     case Extended :
-        m_offBoard[WhiteBatyr] = m_offBoard[BlackBatyr] = 1;
-        m_offBoard[WhiteTura] = m_offBoard[BlackTura] = 2;
+        m_offBoard[WhiteBatyr]  = m_offBoard[BlackBatyr] = 1;
+        m_offBoard[WhiteTura]   = m_offBoard[BlackTura] = 2;
         m_offBoard[WhiteYalkyn] = m_offBoard[BlackYalkyn] = 2;
-        m_offBoard[WhiteBiy] = m_offBoard[BlackBiy] = 1;
+        m_offBoard[WhiteBiy]    = m_offBoard[BlackBiy] = 1;
         m_offBoard[WhiteShatra] = m_offBoard[BlackShatra] = 11;
         break;
     case Unspecified :
