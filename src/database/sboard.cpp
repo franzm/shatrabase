@@ -108,7 +108,7 @@ QString SBoard::moveToLann(const Move& move) const
 
     return lann;
 }
-
+/*
 QString SBoard::moveToFullLann(const Move& move) const
 {
     if (!move.wasInSequence())
@@ -119,7 +119,7 @@ QString SBoard::moveToFullLann(const Move& move) const
     }
     else return moveToLann(move);
 }
-
+*/
 void SBoard::clear()
 {
     *this = clearedPosition;

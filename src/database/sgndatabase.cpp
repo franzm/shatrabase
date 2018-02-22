@@ -750,7 +750,7 @@ inline bool onlyWhite(const QByteArray& b)
     for (int i = 0; i < b.length(); ++i)
         if (!isspace(b[i]))
             return false;
-        return true;
+    return true;
 }
 
 IndexBaseType SgnDatabase::skipJunk()

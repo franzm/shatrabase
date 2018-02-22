@@ -233,7 +233,7 @@ public:
     /** Return a LANN string representation of given move */
     QString moveToLann(const Move& move) const;
     /** Return a LANN string representing a given move with move number. */
-    QString moveToFullLann(const Move& move) const;
+//    QString moveToFullLann(const Move& move) const;
     /** Return ASCII character for given piece to be used in SPN */
     QChar pieceToChar(const Piece piece) const;
 

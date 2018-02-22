@@ -175,14 +175,14 @@ QString Analysis::toString(const SHATRA::Board& board) const
     SHATRA::Move move;
     for (int i = 0; i < variation().count(); i++) {
         move = variation()[i];
-		if (white)
+		if (white && !move.wasInSequence())
 			moveText += QString::number(moveNo++) + ". ";
 		else  if (moveText.isEmpty())
 			moveText += QString::number(moveNo++) + "... ";
 		moveText += testBoard.moveToLann(move);
 		moveText += " ";
 		testBoard.doMove(move);
-		white = !white;
+		if (!move.wasInSequence()) white = !white;
 	}
     out += " <a href=\""+QString::number(-m_numpv)+"\">[+]</a> ";
     out += " <a href=\""+QString::number(m_numpv)+"\">[*]</a> ";
